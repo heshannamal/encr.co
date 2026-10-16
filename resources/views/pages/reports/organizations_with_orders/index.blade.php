@@ -1,0 +1,349 @@
+@extends('layouts.app', ['activePage' => 'organizations_with_orders', 'titlePage' => __('Organizations with orders')])
+
+@section('content')
+<style>
+    .content-position {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+    .print_btn {
+        padding-right: 3%;
+        padding-left: 2%;
+    }
+    .table_header_text {
+        color: white;
+        height: 40px;
+    }
+    .order_sammary_table {
+        padding-top: 5px;
+        overflow-x: auto;
+        padding-left: 15PX;
+        padding-right: 15PX;
+        padding-bottom: 15px;
+    }
+    .production_text {
+        padding-left: 10px;
+        color: rgb(94, 94, 94);
+    }
+    .filter_row {
+        margin-left: unset;
+        padding-left: 8px;
+        padding-right: 9px;
+        background-color: #F8F8F8;
+        border: 1px solid#DEDEDE;
+        border-radius: 5px;
+        padding-top: 2px;
+    }
+    .date_selection {
+        background-color: transparent;
+        padding: unset;
+        border: unset;
+        color: #47D6B6;
+        font-size: 11px;
+    }
+    .date_p {
+        margin: unset;
+        font-size: 11px;
+        color: black;
+        font-weight: 500;
+    }
+    .filter_btn {
+        padding: 5px;
+        text-align: center;
+        width: 70px;
+        background-color: #2dce89;
+        border: none;
+        cursor: pointer;
+        color: white !important;
+    }
+    .excel_btn {
+        padding: 5px;
+        text-align: center;
+        width: 70px;
+        border: 1px solid#DEDEDE;
+        /* background-color: #c9cecc; */
+        cursor: pointer;
+        color: rgb(0, 0, 0) !important;
+    }
+
+    .table-bottom-details2 {
+        color: #020202
+    }
+    .header-layout {
+        margin-bottom: 2rem !important;
+    }
+    .se-pre-con {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        display: none;
+        background: url("{{ asset('argon') }}/img/loader/Spinner-1s-200px.gif") center no-repeat #ffffff99;
+    }
+    .select-border-style{
+        border: 1px solid #b3b3b3 !important;
+        border-radius: 0rem !important;
+    }
+    .select2-selection--single{
+        background-color: #F8F8F8 !important;
+    }
+    .d_flex_and_align_center{
+        display: flex;
+        align-items: center;
+    }
+    .select-width-style .select2.select2-container.select2-container--default{
+        width: 8rem !important;
+    }
+    .select-width-style-item .select2.select2-container.select2-container--default{
+        width: 10rem !important;
+    }
+    .page-item .page-link, .page-item span {
+        border-radius: 0 !important;
+        font-size: 0.7rem;
+    }
+    .page-item.active .page-link {
+        z-index: 1;
+        color: grey;
+        border-color: #cccccc;
+        background-color: #e9e9e9;
+        box-shadow:none;
+    }
+    .table thead th, .table tbody td {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .table tbody td {
+        padding-top: 7.5px;
+        padding-bottom: 7.5px;
+    }
+    table.dataTable thead .sorting:before, table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:before, table.dataTable thead .sorting_desc_disabled:after {
+        bottom: 0.6rem !important;
+    }
+    table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
+        right: .7rem !important;
+    }
+    table.dataTable thead .sorting:before, table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:before, table.dataTable thead .sorting_desc_disabled:after {
+    bottom: .65em;
+    }
+    table.dataTable thead .sorting:before,table.dataTable thead .sorting_asc:before,table.dataTable thead .sorting_desc:before,table.dataTable thead .sorting_asc_disabled:before,table.dataTable thead .sorting_desc_disabled:before {
+        content: "\f0de";
+        font-family: FontAwesome;
+    }
+    table.dataTable thead .sorting:after,table.dataTable thead .sorting_asc:after,table.dataTable thead .sorting_desc:after,table.dataTable thead .sorting_asc_disabled:after,table.dataTable thead .sorting_desc_disabled:after {
+        content: "\f0dd";
+        font-family: FontAwesome;
+        right: .65rem !important;
+    }
+</style>
+<div class=" mb-5 content-position">
+
+    <div class="se-pre-con"></div>
+
+    @section('order-header')
+        <span>Lead Source Report</span>
+    @endsection
+
+    @section('back-btn')
+        <a href="{{ route('home') }}" class="home-btn-color" title="Back to home">BACK TO HOME</a>
+    @endsection
+
+    <div class="col-md-12" style="margin-top: 15px; margin-bottom: 25px; padding-bottom: 20px;" id="scrollTable">
+        <div class="card" style="border: unset;">
+            <form id="sales_tax_filter_form">
+                @csrf
+                <div class="row" style="margin: 10px;">
+                    <div class="row filter_row" style="padding-bottom: 2px;margin:5px">
+                        <p class="font_color date_p d_flex_and_align_center" style="padding-left: 5px;">Start Date |  </p>
+                        <div class="paymen_type_div date_selection d_flex_and_align_center" style="padding-left: 7px;">
+                            <input type="text" name="start_date" class="summary-datepicker invoice-inputs" style="height: 2rem;background-color:#F8F8F8;border: 1px solid #DEDEDE;" value="{{ request()->get('start_date') }}" id="start_date">
+                        </div>
+                    </div>
+                    <div class="row filter_row" style="padding-bottom: 2px;margin:5px">
+                        <p class="font_color date_p d_flex_and_align_center" style="padding-left: 5px;">End Date |  </p>
+                        <div class="paymen_type_div date_selection d_flex_and_align_center" style="padding-left: 7px;">
+                            <input type="text" name="end_date" class="summary-datepicker invoice-inputs" style="height: 2rem;background-color:#F8F8F8;border: 1px solid #DEDEDE;" value="{{ request()->get('end_date') }}" id="end_date">
+                        </div>
+                    </div>
+                    <div class="row " style="padding-bottom: 2px;margin:5px">
+                        <div class="d_flex_and_align_center" style="padding-bottom: 2px;height: 100%;">
+                            <button class="date_p filter_btn" type="button" id="pin-filter" title="Filter" style="height: 2.3rem;">
+                                <i class="fa fa-filter"></i>&nbsp;&nbsp;Filter
+                            </button>
+                        </div>
+                    </div>
+                    <div cclass="row " style="padding-bottom: 2px;margin:5px">
+                        <div class="d_flex_and_align_center" style="padding-bottom: 2px;height: 100%;">
+                            <button class="date_p excel_btn" type="button" id="clear-filter" title="Clear filter" style="height: 100%;border-radius: 5px">
+                                <i class="fa fa-times"></i>&nbsp;&nbsp;Clear
+                            </button>
+                        </div>
+                    </div>
+                    <div cclass="row ml-auto" style="padding-bottom: 2px;margin:5px">
+                        <div class="d_flex_and_align_center" style="padding-bottom: 2px;height: 100%;">
+                            <button class="date_p excel_btn" type="button" id="export-report" title="export report" style="height: 100%;border-radius: 5px">
+                                <i class="fa fa-download"></i>&nbsp;&nbsp;Export
+                            </button>
+                        </div>
+                    </div>
+                    <div cclass="row ml-auto" style="padding-bottom: 2px;margin:5px">
+                        <div class="d_flex_and_align_center" style="padding-bottom: 2px;height: 100%;">
+                            <button class="date_p excel_btn" type="button" id="export-report-yearly" title="export report yearly" style="height: 100%;border-radius: 5px;width: 7rem;">
+                                <i class="fa fa-download"></i>&nbsp;&nbsp;Export Yearly
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="col-md-12 table-responsive order_sammary_table" style="padding-top: 0px;">
+                <table class="table align-items-center" id="organizations_with_orders">
+
+                    <thead style="background-color: rgba(50, 50, 50, 1) !important;">
+                        <tr>
+                            <th scope="col" class="table_header_text">NO</th>
+                            <th scope="col" class="table_header_text">ORGANIZATION NAME</th>
+                            <th scope="col" class="table_header_text">Lead Source</th>
+                            <th scope="col" class="table_header_text"># ORDERS</th>
+                            <th scope="col" class="table_header_text">Sales Lead</th>
+                            <th scope="col" class="table_header_text" style="text-align: right;">Sum Of Orders ($)</th>
+                        </tr>
+                    </thead>
+                        @foreach($organizationsWithOrders as $key => $organization)
+                            @php
+                                $orderInDateRange = $organization->orders();
+
+                                $orderInDateRange = $orderInDateRange->where('active', 1)->where('organization_id', '!=', 1377)->where('order_status_id', '!=', 7)->where('order_status_id', '!=', 1)->whereNotNull('production_date')->where('production_date', '!=', '');
+
+                                if(request()->get('start_date')){
+                                    $start = \Carbon\Carbon::createFromFormat('m/d/Y', request()->get('start_date'))->format('Y-m-d');
+                                    $orderInDateRange = $orderInDateRange->whereRaw(
+                                        "STR_TO_DATE(production_date, '%m/%d/%Y') >= ?",
+                                        [$start]
+                                    );
+                                }
+
+                                if(request()->get('end_date')){
+                                    $end = \Carbon\Carbon::createFromFormat('m/d/Y', request()->get('end_date'))->format('Y-m-d');
+                                    $orderInDateRange = $orderInDateRange->whereRaw(
+                                        "STR_TO_DATE(production_date, '%m/%d/%Y') <= ?",
+                                        [$end]
+                                    );
+                                }
+                            @endphp
+                            <tr>
+                                <td>{{ $key + 1 }}</td>
+                                <td><a target="_blank" style="color:black !important" href="{{ route('organizations.info', $organization->id) }}">{{ $organization->organization_name }}</a></td>
+                                <td>{{ $organization->leadSourceDetails ? $organization->leadSourceDetails->lead_source_name : 'N/A' }}</td>
+                                <td>{{ $orderInDateRange->count() }}</td>
+                                <td>{{ $organization->userDetails ? $organization->userDetails->name : 'N/A' }}</td>
+                                <td style="text-align: right;">{{ number_format($orderInDateRange->sum('order_total'), 2) }}</td>
+                            </tr>
+                        @endforeach
+
+                    <tbody>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function() {
+        $('.summary-datepicker').datepicker({
+            dateFormat: 'mm/dd/yy'
+        });
+        $('#organizations_with_orders').DataTable({
+            "paging": true,
+            "pageLength": 50,
+            "searching": true,
+            "ordering": true
+        });
+        $('#pin-filter').on('click', function() {
+            $('.se-pre-con').show();
+            const rootURL = '{{ route('reports.organizations_with_orders') }}';
+            const startDate = $('#start_date').val();
+            const endDate =  $('#end_date').val();
+            let queryParams = [];
+            if (startDate) {
+                queryParams.push('start_date=' + encodeURIComponent(startDate));
+            }
+            if (endDate) {
+                queryParams.push('end_date=' + encodeURIComponent(endDate));
+            }
+            const queryString = queryParams.length ? '?' + queryParams.join('&') : '';
+            const newURL = rootURL + queryString;
+            window.location.href = newURL;
+        });
+        $('#clear-filter').on('click', function() {
+            $('.se-pre-con').show();
+            window.location.href = '{{ route('reports.organizations_with_orders') }}';
+        });
+        $('#export-report').on('click', function() {
+            $('.se-pre-con').show();
+
+            $.ajax({
+                url: '{{ route('reports.organizations_with_orders_export') }}',
+                method: 'GET',
+                data:{
+                    start_date: $('#start_date').val(),
+                    end_date: $('#end_date').val(),
+                    _token: '{{ csrf_token() }}'
+                },
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function(response) {
+                    const url = window.URL.createObjectURL(new Blob([response]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'organizations_with_orders_report.xlsx');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    $('.se-pre-con').hide();
+                },
+                error: function() {
+                    $('.se-pre-con').hide();
+                    alert('Failed to export report. Please try again.');
+                }
+            });
+        });
+        $('#export-report-yearly').on('click', function() {
+            $('.se-pre-con').show();
+
+            $.ajax({
+                url: '{{ route('reports.organizations_with_orders_export_yearly') }}',
+                method: 'GET',
+                data:{
+                    start_date: $('#start_date').val(),
+                    end_date: $('#end_date').val(),
+                    _token: '{{ csrf_token() }}'
+                },
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function(response) {
+                    const url = window.URL.createObjectURL(new Blob([response]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'organizations_with_orders_report_yearly.xlsx');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    $('.se-pre-con').hide();
+                },
+                error: function() {
+                    $('.se-pre-con').hide();
+                    alert('Failed to export report. Please try again.');
+                }
+            });
+        });
+    });
+</script>
+
+@endsection

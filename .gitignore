@@ -1,0 +1,12 @@
+.DS_Store
+.env
+encorecu_ec.sql
+
+/vendor/
+/node_modules/
+
+/bootstrap/cache/*
+/storage/*
+
+/assets/img/icons/sports/
+/modified/untracked/

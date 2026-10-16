@@ -1,0 +1,10 @@
+<li class="nav-item" title="User Groups">
+                                <a class="nav-link{{ $activePage == 'user_groups' ? ' active' : '' }}" href="{{ route('user_roles') }}">
+                                    <i class="fas fa-user-shield"></i> {{ __('User Groups') }}
+                                </a>
+                            </li>
+                            <li class="nav-item" title="User Group Members">
+                                <a class="nav-link{{ $activePage == 'user_group_members' ? ' active' : '' }}" href="{{ route('user_groups') }}">
+                                    <i class="fas fa-user-friends"></i> {{ __('User Group Members') }}
+                                </a>
+                            </li>
