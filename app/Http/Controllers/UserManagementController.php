@@ -39,45 +39,33 @@ class UserManagementController extends Controller
         }
     }
 
-    public function create(Request $request)
+    public function create(\App\Http\Requests\Users\StoreUserRequest $request, \App\Services\Users\ProfilePictureService $pictures)
     {
-        // dd(json_encode($request->new_user_role_id));
-        if ($request->has('new_profile_pic')) {
-            $logoImagePath = self::uploadPofilePicture($request);
-        } else {
-            $logoImagePath = "assets/img/organization/default.png";
-        }
-        $mail_status = User::where('email', $request->new_email)->first();
-        if ($mail_status != null) {
-            return redirect()->back()->withError('This email address already registered! | email: ' . $request->new_email);
-        }
-        $user = new User();
-        $user->name = $request->new_name;
-        $user->email = $request->new_email;
-        $user->password = Hash::make($request->new_password);
-        // $user->role_id = $request->new_user_role_id;
-        $user->role_id = json_encode($request->new_user_role_id);
-        $user->user_group_id = $request->new_user_group_id;
-        $user->profile_pic = $logoImagePath;
-        $user->active = 1;
-        $user->save();
+        $data = $request->validated();
+        $roles = Role::whereIn('id', $data['new_user_role_id'])->get();
+        $path = $request->hasFile('new_profile_pic')
+            ? $pictures->upload($request->file('new_profile_pic'))
+            : 'assets/img/organization/default.png';
 
-        // $role = Role::find($request->new_user_role_id);
-        $role = Role::whereIn('id', $request->new_user_role_id)->get();
-        $user->assignRole($role);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($data, $roles, $path): void {
+            $user = new User();
+            $user->name = $data['new_name'];
+            $user->email = $data['new_email'];
+            $user->password = Hash::make($data['new_password']);
+            $user->role_id = json_encode($data['new_user_role_id']);
+            $user->user_group_id = $data['new_user_group_id'];
+            $user->profile_pic = $path;
+            $user->active = 1;
+            $user->save();
+            $user->assignRole($roles);
+        });
 
         return redirect()->back()->withSuccess('User Saved Successfully!');
     }
 
     public function uploadPofilePicture(Request $request)
     {
-        $file = $request->file('new_profile_pic');
-
-        $destinationPath = 'assets/img/user';
-
-        $file->move($destinationPath, $file->getClientOriginalName());
-
-        return $destinationPath . '/' . $file->getClientOriginalName();
+        return app(\App\Services\Users\ProfilePictureService::class)->upload($request->file('new_profile_pic'));
     }
 
     public function sortByAlphabet($id)
@@ -88,7 +76,8 @@ class UserManagementController extends Controller
 
     public function delete($id)
     {
-        $user = User::find($id);
+        $this->authorize('delete users');
+        $user = User::findOrFail($id);
         $user->active = 0;
         $user->update();
 
@@ -97,56 +86,43 @@ class UserManagementController extends Controller
 
     public function edit($userId)
     {
-        $user = User::find($userId);
+        $this->authorize('edit users');
+        $user = User::findOrFail($userId);
         return json_encode($user);
     }
 
-    public function update(Request $request)
+    public function update(\App\Http\Requests\Users\UpdateUserRequest $request, \App\Services\Users\ProfilePictureService $pictures)
     {
-        if ($request->has('edit_profile_pic')) {
-            $logoImagePath = self::updatePofilePicture($request);
-        } else {
-            $logoImagePath = $request->edit_old_profile_pic;
-        }
+        $data = $request->validated();
+        $user = User::findOrFail($data['user_id']);
+        $roles = Role::whereIn('id', $data['edit_user_role_id'])->get();
+        $path = $request->hasFile('edit_profile_pic')
+            ? $pictures->upload($request->file('edit_profile_pic'))
+            : $user->profile_pic;
 
-        $user = User::find($request->user_id);
-        $user->name = $request->edit_name;
-        //        $user->email = $request->edit_email;
-        $user->role_id = json_encode($request->edit_user_role_id);
-        $user->user_group_id = $request->edit_user_group_id;
-        $user->profile_pic = $logoImagePath;
+        \Illuminate\Support\Facades\DB::transaction(function () use ($data, $user, $roles, $path): void {
+            $user->name = $data['edit_name'];
+            $user->role_id = json_encode($data['edit_user_role_id']);
+            $user->user_group_id = $data['edit_user_group_id'];
+            $user->profile_pic = $path;
 
-        //set username password
-        if (isset($request->change_login_details) && $request->change_login_details == 'on') {
-            $mail_status = User::where('email', $request->edit_email)->where('id', '!=', $request->user_id)->first();
-            if ($mail_status != null) {
-                return redirect()->back()->withError('This email address already registered! | email: ' . $request->edit_email);
+            if (($data['change_login_details'] ?? null) === 'on') {
+                $user->email = $data['edit_email'];
+                if (! empty($data['edit_password'])) {
+                    $user->password = Hash::make($data['edit_password']);
+                }
             }
-            if (isset($request->edit_password) && isset($request->edit_conform_password) && $request->edit_password !== $request->edit_conform_password) {
-                return redirect()->back()->withError('Password conformation does not matched!');
-            }
-            $user->email = $request->edit_email;
-            $user->password = isset($request->edit_password) ? Hash::make($request->edit_password) : $user->password;
-        }
 
-        $user->update();
-
-        $role = Role::whereIn('id', $request->edit_user_role_id)->get();
-        // $role = Role::find($request->edit_user_role_id);
-        $user->syncRoles($role);
+            $user->save();
+            $user->syncRoles($roles);
+        });
 
         return redirect()->route('users')->withSuccess('Users Updated Successfully!');
     }
 
     public function updatePofilePicture(Request $request)
     {
-        $file = $request->file('edit_profile_pic');
-
-        $destinationPath = 'assets/img/user';
-
-        $file->move($destinationPath, $file->getClientOriginalName());
-
-        return $destinationPath . '/' . $file->getClientOriginalName();
+        return app(\App\Services\Users\ProfilePictureService::class)->upload($request->file('edit_profile_pic'));
     }
 
     public function layout(Request $request)
