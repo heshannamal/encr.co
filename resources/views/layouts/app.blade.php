@@ -118,21 +118,11 @@
             @include('layouts.navbars.navbar')
 
             @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <span class="alert-inner--text">{{session('success')}}</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                <x-encore.flash>{{ session('success') }}</x-encore.flash>
             @endif
 
             @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <span class="alert-inner--text">{{session('error')}}</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                <x-encore.flash type="error">{{ session('error') }}</x-encore.flash>
             @endif
 
             @include('layouts.upload_modal')
