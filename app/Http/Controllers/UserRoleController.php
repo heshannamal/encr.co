@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Services\Users\RoleManagementService;
+use Illuminate\Validation\Rule;
 
 class UserRoleController extends Controller
 {
@@ -34,8 +36,14 @@ class UserRoleController extends Controller
 
     public function create(Request $request)
     {
-        // $userRole = new UserRole();
+        $this->authorize('add usergroups');
+        $request->validate([
+            'new_user_role_name' => ['required', 'string', 'max:255', Rule::unique('roles', 'name')->where('guard_name', 'web')],
+            'new_narration' => ['nullable', 'string'],
+        ]);
+        app(RoleManagementService::class)->assertNameAllowed($request->new_user_role_name);
         $userRole = new Role();
+        $userRole->guard_name = 'web';
         $userRole->name = $request->new_user_role_name;
         $userRole->narration = $request->new_narration;
         $userRole->active = 1;
@@ -46,11 +54,8 @@ class UserRoleController extends Controller
 
     public function delete($id)
     {
-        // $userRole = UserRole::find($id);
-        $userRole = Role::find($id);
-        $userRole->syncPermissions([]);
-        $userRole->active = 0;
-        $userRole->update();
+        $this->authorize('delete usergroups');
+        app(RoleManagementService::class)->deactivate(Role::findOrFail($id));
 
         return redirect()->route('user_roles')->withSuccess('User Role Deleted Successfully!');
     }
@@ -58,7 +63,8 @@ class UserRoleController extends Controller
     public function edit($userRoleId)
     {
         // $userRole = UserRole::find($userRoleId);
-        $userRole = Role::find($userRoleId);
+        $this->authorize('edit usergroups');
+        $userRole = Role::findOrFail($userRoleId);
         return json_encode($userRole);
 
         // return view('pages.users.user_roles.edit', ['userRole'=>$userRole]);
@@ -67,7 +73,16 @@ class UserRoleController extends Controller
     public function update(Request $request)
     {
         // $userRole = UserRole::find($request->user_role_id);
-        $userRole = Role::find($request->user_role_id);
+        $this->authorize('edit usergroups');
+        $request->validate(['user_role_id' => ['required', 'integer', 'exists:roles,id']]);
+        $userRole = Role::findOrFail($request->user_role_id);
+        $service = app(RoleManagementService::class);
+        $service->assertEditable($userRole);
+        $request->validate([
+            'edit_user_role_name' => ['required', 'string', 'max:255', Rule::unique('roles', 'name')->where('guard_name', $userRole->guard_name)->ignore($userRole->getKey())],
+            'edit_narration' => ['nullable', 'string'],
+        ]);
+        $service->assertNameAllowed($request->edit_user_role_name);
         $userRole->name = $request->edit_user_role_name;
         $userRole->narration = $request->edit_narration;
         $userRole->update();
@@ -85,6 +100,7 @@ class UserRoleController extends Controller
 
     public function detail($id)
     {
+        $this->authorize('view usergroups');
         $role = Role::find($id);
 
         if (!$role) {
@@ -109,7 +125,7 @@ class UserRoleController extends Controller
     public function layout(Request $request)
     {
         if (UserRoleLayout::where('user_id', Auth::user()->id)->first()) {
-            $userRoleLayout = UserRoleLayout::find($request->layout_id);
+            $userRoleLayout = UserRoleLayout::where('user_id', Auth::id())->findOrFail($request->layout_id);
             $userRoleLayout->user_role_name = $request->user_role_name;
             $userRoleLayout->narration = $request->narration;
             $userRoleLayout->created = $request->created_at;
@@ -134,6 +150,7 @@ class UserRoleController extends Controller
 
     public function permissions()
     {
+        abort_unless(auth()->user()?->hasRole('Super Admin'), 403);
         $userPermissions = Permission::all();
         $roles = Role::where('active', 1)->get();
 
@@ -142,44 +159,46 @@ class UserRoleController extends Controller
 
     public function createPermissions(Request $request)
     {
-        $permission = Permission::create(['name' => $request->permission_name]);
-        if (isset($request->roles)) {
-            foreach ($request->roles as $permissionRole) {
-                $role = Role::find($permissionRole);
-                $permission->assignRole($role);
-            }
-        }
+        abort_unless(auth()->user()?->hasRole('Super Admin'), 403);
+        $data = $request->validate([
+            'permission_name' => ['required', 'string', 'max:255', Rule::unique('permissions', 'name')->where('guard_name', 'web')],
+            'roles' => ['nullable', 'array'],
+            'roles.*' => ['integer', 'distinct', Rule::exists('roles', 'id')->where('active', 1)->where('guard_name', 'web')],
+        ]);
+        app(RoleManagementService::class)->savePermission(new Permission(), $data['permission_name'], $data['roles'] ?? []);
         return redirect()->back()->withSuccess('Permission Saved Successfully!');
     }
 
     public function editPermissions($id)
     {
-        $permission = Permission::find($id);
+        abort_unless(auth()->user()?->hasRole('Super Admin'), 403);
+        $permission = Permission::findOrFail($id);
         $roleArr = $permission->roles;
         return json_encode(array($permission, $roleArr));
     }
 
     public function updatePermissions(Request $request)
     {
-        $permission = Permission::find($request->permission_id);
-        $permission->name = $request->permission_name;
-        $permission->save();
-        $rIds = [];
-        if (isset($request->roles)) {
-            foreach ($request->roles as $permissionRole) {
-                array_push($rIds, $permissionRole);
-            }
-        }
-        $role = Role::whereIn('id', $rIds)->get();
-        $permission->syncRoles($role);
+        abort_unless(auth()->user()?->hasRole('Super Admin'), 403);
+        $request->validate(['permission_id' => ['required', 'integer', 'exists:permissions,id']]);
+        $permission = Permission::findOrFail($request->permission_id);
+        $data = $request->validate([
+            'permission_name' => ['required', 'string', 'max:255', Rule::unique('permissions', 'name')->where('guard_name', $permission->guard_name)->ignore($permission->getKey())],
+            'roles' => ['nullable', 'array'],
+            'roles.*' => ['integer', 'distinct', Rule::exists('roles', 'id')->where('active', 1)->where('guard_name', $permission->guard_name)],
+        ]);
+        app(RoleManagementService::class)->savePermission($permission, $data['permission_name'], $data['roles'] ?? []);
         return redirect()->back()->withSuccess('Permission Updated Successfully!');
     }
 
     public function deletePermissions($id)
     {
-        $permission = Permission::find($id);
-        $permission->syncRoles([]);
-        $permission->delete();
+        abort_unless(auth()->user()?->hasRole('Super Admin'), 403);
+        $permission = Permission::findOrFail($id);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($permission): void {
+            $permission->syncRoles([]);
+            $permission->delete();
+        });
         return redirect()->back()->withSuccess('Permission Deleted Successfully!');
     }
 }
