@@ -1,0 +1,17 @@
+/* Opt-in shared components: preserve existing Argon styles elsewhere. */
+.encore-table-region { max-width: 100%; overflow-x: auto; }
+.encore-table-region:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.encore-table-region .dataTables_wrapper { min-width: 0; }
+.encore-table-region .dataTables_filter input { max-width: 100%; }
+.encore-loading { display: inline-flex; align-items: center; gap: .5rem; }
+.encore-loading[hidden] { display: none; }
+.encore-loading .spinner-border { width: 1rem; height: 1rem; }
+[data-encore-busy][aria-busy="true"] { cursor: progress; opacity: .7; }
+@media (max-width: 767.98px) {
+    .encore-table-region .dataTables_filter,
+    .encore-table-region .dataTables_length { text-align: left; }
+    .encore-table-region .dataTables_filter input { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .encore-loading .spinner-border { animation: none; }
+}
