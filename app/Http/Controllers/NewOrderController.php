@@ -240,7 +240,10 @@ class NewOrderController extends Controller
     public function create(Request $request){
         if(auth()->user()->can('create order')){
             $contact = Contact::with('organizationDetails')->find($request->customer_id);
-            $orgnization = Organization::find($request->organization_id);
+            $orgnization = Organization::findOrFail($request->organization_id);
+            if (!$orgnization->hasShippingAddress()) {
+                return back()->withInput()->with('order_address_organization', $orgnization->id);
+            }
 
             $userArray = [];
 
@@ -1158,13 +1161,8 @@ class NewOrderController extends Controller
 
         }
         $order = Order::find($orderNo);
-        $organization = Organization::find($order->organization_id);
         $orderSubTotal = OrderItem::where('order_id', $orderNo)->sum('total');
-        if ($organization->sales_tax_active == 1) {
-            $salesTax = $organization->sales_tax;
-        } else {
-            $salesTax = 0;
-        }
+        $salesTax = $order->sales_tax_rate ?? 0;
         $orderSalesTax = ($orderSubTotal / 100) * $salesTax;
         $orderShipping = $order->shipping ?? 0;
 
@@ -1256,7 +1254,9 @@ class NewOrderController extends Controller
 
     public function customers($organizationId){
         $customers = Organization::with('contactOrganizations.contacts')->with('contactOrganizations.organizations')->where('id', $organizationId)->first();
-        return json_encode($customers);
+        return response()->json($customers ? array_merge($customers->toArray(), [
+            'has_shipping_address' => $customers->hasShippingAddress(),
+        ]) : null);
     }
 
     public function exFactoryDate(Request $request){

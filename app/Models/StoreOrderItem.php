@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 
@@ -11,11 +12,12 @@ class StoreOrderItem extends Model implements Auditable
 {
     use HasFactory;
     use AuditableTrait;
+    use SoftDeletes;
 
     protected $table = 'store_order_items';
     public function OrderItemDetails()
     {
-        return $this->hasMany(StoreOrderPlayerDetail::class, 'store_order_item_id', 'id')->with('ColorDetails', 'SizeDetails');
+        return $this->hasMany(StoreOrderPlayerDetail::class, 'store_order_item_id', 'id')->with('ColorDetails', 'SizeDetails', 'productDetails');
     }
     public function productDetails()
     {

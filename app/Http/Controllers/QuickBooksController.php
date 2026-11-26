@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use App\Models\Order;
 use App\Models\PaymentLog;
+use App\Models\CardRefundLog;
 use App\Models\CheckPayment;
 use App\Models\VenmoPayment;
 use App\Models\PaypalPayment;
@@ -1074,8 +1075,46 @@ class QuickBooksController extends Controller
             $defaultDepositAccountId
         );
 
+        /*
+         * PaymentRefundController reduces PaymentLog.amount after each successful
+         * refund. QuickBooks still needs the ORIGINAL card payment as the Sales
+         * Receipt, with each CardRefundLog exported separately as a Refund Receipt.
+         *
+         * Reconstruct the original gross card charge only for QBO financial lines:
+         *
+         *     current PaymentLog.amount + successful CardRefundLog.amount
+         */
+        $financialTransactionRecord = $transactionRecord;
+
+        if (
+            $type === 'Card'
+            && !empty($transactionRecord->transaction_id)
+        ) {
+            $successfulRefundGross = CardRefundLog::where(
+                    'order_id',
+                    $transactionRecord->order_id
+                )
+                ->where(
+                    'transaction_id',
+                    $transactionRecord->transaction_id
+                )
+                ->where('is_success', 1)
+                ->sum('amount');
+
+            if ((float) $successfulRefundGross > 0) {
+                $financialTransactionRecord =
+                    clone $transactionRecord;
+
+                $financialTransactionRecord->amount = round(
+                    (float) $transactionRecord->amount
+                    + (float) $successfulRefundGross,
+                    2
+                );
+            }
+        }
+
         $paymentApplied = $this->getNormalPaymentAppliedAmount(
-            $transactionRecord,
+            $financialTransactionRecord,
             $type
         );
 
@@ -1156,7 +1195,7 @@ class QuickBooksController extends Controller
 
             'line_items' => $this->generateDefaultLineItems(
                 $order,
-                $transactionRecord,
+                $financialTransactionRecord,
                 $type
             ),
 
@@ -1168,6 +1207,149 @@ class QuickBooksController extends Controller
         ];
 
         return $this->applyExistingQuickBooksPreferences($data, $existingRecord, false);
+    }
+
+
+    private function generateNormalRefundDefaultLineItems(
+        $order,
+        $refundRecord
+    ): array {
+        $grossRefundAmount = round(
+            (float) ($refundRecord->amount ?? 0),
+            2
+        );
+
+        $refundAmount = round(
+            $grossRefundAmount * 100 / 103,
+            2
+        );
+
+        $processingFee = round(
+            $grossRefundAmount - $refundAmount,
+            2
+        );
+
+        $lineItems = [];
+
+        if ($refundAmount > 0) {
+            $lineItems[] = [
+                'product' => 'Team Sales Item',
+                'sku' => '',
+                'description' =>
+                    'Order #'
+                    . $order->order_no
+                    . ' - REFUND ($'
+                    . number_format($refundAmount, 2)
+                    . ')',
+                'qty' => 1,
+                'rate' => $refundAmount,
+                'amount' => $refundAmount,
+                'tax' => 1,
+                'class' => 'Encore Clothing:Team Sales',
+            ];
+        }
+
+        if ($processingFee > 0) {
+            $lineItems[] = [
+                'product' => 'Authorize.Net Fee',
+                'sku' => '',
+                'description' => 'Authorize.Net Fee',
+                'qty' => 1,
+                'rate' => $processingFee,
+                'amount' => $processingFee,
+                'tax' => 0,
+                'class' => 'Encore Clothing:Team Sales',
+            ];
+        }
+
+        return $lineItems;
+    }
+
+    private function buildNormalRefundReceiptData(
+        $order,
+        $refundRecord,
+        $customers,
+        $paymentMethods,
+        $refundFromAccounts,
+        ?QuickbookRecord $existingRecord = null,
+        $defaultCustomerId = null,
+        $defaultRefundAccountId = null
+    ): array {
+        $customerId = $this->findQuickBooksCustomerId(
+            $customers,
+            $order->organizationDetails->organization_name ?? '',
+            $defaultCustomerId
+        );
+
+        $paymentMethodId = $this->findQuickBooksPaymentMethodId(
+            $paymentMethods,
+            'Card',
+            43
+        );
+
+        $refundFromAccountId = $this->findQuickBooksAccountId(
+            $refundFromAccounts,
+            '12000 Undiposited Funds',
+            $defaultRefundAccountId
+        );
+
+        $grossRefundAmount = round(
+            (float) ($refundRecord->amount ?? 0),
+            2
+        );
+
+        $data = [
+            'payment_type' => 'Card',
+            'record_id' => $refundRecord->id,
+            'order_id' => $order->id,
+            'customer_id' => $customerId,
+            'email' => $order->contactDetails->email ?? '',
+            'send_later' => 1,
+            'receipt_date' => date(
+                'Y-m-d',
+                strtotime($refundRecord->created_at)
+            ),
+            'billing_address' => $this->formatBillingAddress($order),
+            'shipping_address' => $this->formatShippingAddress($order),
+            'ship_via' => '',
+            'shipping_date' => null,
+            'tracking_no' => '',
+            'location' => '',
+            'po_number' => '',
+            'sales_rep' => $order->userDetails->name ?? '',
+            'shipping_from' => '891 4th St, San Rafael, CA 94901-3242',
+            'payment_method_id' => $paymentMethodId,
+            'reference_no' => $order->order_no,
+            'deposit_account_id' => null,
+            'refund_from_account_id' => $refundFromAccountId,
+            'from_tsr_module' => 0,
+
+            'discount_amount' => 0.0,
+            'discount_type' => 'amount',
+            'discount_value' => 0.0,
+            'discount_percent' => null,
+            'discount_label' => 'Order Discount',
+            'discount_taxable' => 0,
+            'discount_class' => 'Encore Clothing:Team Sales',
+            'tax_amount' => 0.0,
+
+            'line_items' => $this->generateNormalRefundDefaultLineItems(
+                $order,
+                $refundRecord
+            ),
+
+            // CardRefundLog.amount stores the gross card refund.
+            'amount' => $grossRefundAmount,
+            'export_status' => 0,
+            'is_refund' => 1,
+            'transaction_created_at' => $refundRecord->created_at,
+        ];
+
+        return $this->applyExistingQuickBooksPreferences(
+            $data,
+            $existingRecord,
+            true
+        );
     }
 
     private function buildStoreReceiptData(
@@ -1309,7 +1491,21 @@ class QuickBooksController extends Controller
 
         $transactions = collect(json_decode($request->input('transactions', '[]'), true) ?: [])
             ->filter(fn ($item) => isset($item['id'], $item['type'], $item['auto_generated']))
-            ->unique(fn ($item) => (int) $item['auto_generated'] . '|' . $item['type'] . '|' . (int) $item['id'])
+            ->map(function ($item) {
+                $item['is_refund'] = (int) ($item['is_refund'] ?? 0);
+
+                return $item;
+            })
+            ->unique(
+                fn ($item) =>
+                    (int) $item['auto_generated']
+                    . '|'
+                    . $item['type']
+                    . '|'
+                    . (int) $item['id']
+                    . '|'
+                    . (int) $item['is_refund']
+            )
             ->values();
 
         $storeTransactions = collect(json_decode($request->input('store_transactions', '[]'), true) ?: [])
@@ -1357,6 +1553,66 @@ class QuickBooksController extends Controller
             $isAutoGenerated = (int) $transaction['auto_generated'] === 1;
 
             if (!$isAutoGenerated) {
+                $isRefund =
+                    (int) ($transaction['is_refund'] ?? 0) === 1;
+
+                if ($isRefund) {
+                    $refundRecord = CardRefundLog::where(
+                            'id',
+                            (int) $transaction['id']
+                        )
+                        ->where('is_success', 1)
+                        ->first();
+
+                    if (!$refundRecord) {
+                        continue;
+                    }
+
+                    $order = Order::with(
+                        'organizationDetails',
+                        'contactDetails',
+                        'userDetails'
+                    )->find($refundRecord->order_id);
+
+                    if (!$order) {
+                        continue;
+                    }
+
+                    $existingRecord = $this->quickbookRecordQuery(
+                        $order->id,
+                        $refundRecord->id,
+                        'Card',
+                        0,
+                        1
+                    )->first();
+
+                    if (
+                        $existingRecord
+                        && (int) $existingRecord->export_status === 1
+                    ) {
+                        $alreadySynced++;
+                        continue;
+                    }
+
+                    $salesReceiptData =
+                        $this->buildNormalRefundReceiptData(
+                            $order,
+                            $refundRecord,
+                            $customers,
+                            $paymentMethods,
+                            $refundFromAccounts,
+                            $existingRecord,
+                            $defaultCustomerId,
+                            $defaultRefundAccountId
+                        );
+
+                    $salesReceiptDataList->push(
+                        $salesReceiptData
+                    );
+
+                    continue;
+                }
+
                 $transactionRecord = $this->findPaymentRecord(
                     (string) $transaction['type'],
                     (int) $transaction['id']
@@ -1386,13 +1642,14 @@ class QuickBooksController extends Controller
                     0
                 )->first();
 
-                if ($existingRecord && (int) $existingRecord->export_status === 1) {
+                if (
+                    $existingRecord
+                    && (int) $existingRecord->export_status === 1
+                ) {
                     $alreadySynced++;
                     continue;
                 }
 
-                // Regenerate financial lines for unsynced/saved/failed records so
-                // old full-order line items are not reused for a partial payment.
                 $salesReceiptData = $this->buildNormalReceiptData(
                     $order,
                     $transactionRecord,
@@ -1405,7 +1662,10 @@ class QuickBooksController extends Controller
                     $defaultDepositAccountId
                 );
 
-                $salesReceiptDataList->push($salesReceiptData);
+                $salesReceiptDataList->push(
+                    $salesReceiptData
+                );
+
                 continue;
             }
 
@@ -2769,7 +3029,7 @@ class QuickBooksController extends Controller
                     0
                 )->first();
 
-                if ($existingRecord && (int) $existingRecord->export_status === 1) {
+                if ($existingRecord && (int) $existingRecord->export_status === 1 || $existingRecord && (int) $existingRecord->export_status === 2) {
                     $skipped++;
                     continue;
                 }
@@ -2826,6 +3086,7 @@ class QuickBooksController extends Controller
                     'id' => $transactionRecord->id,
                     'type' => $type,
                     'auto_generated' => 0,
+                    'is_refund' => 0,
                 ]];
 
                 $viewLink = url('/import-to-quickbooks') . '?' . http_build_query([
@@ -2858,6 +3119,175 @@ class QuickBooksController extends Controller
                 ]);
             }
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | ORDER MODULE CARD REFUNDS
+        |--------------------------------------------------------------------------
+        */
+
+        $normalRefunds = CardRefundLog::where(
+                'created_at',
+                '>=',
+                $fromDate
+            )
+            ->where('is_success', 1)
+            ->get();
+
+        foreach ($normalRefunds as $refundRecord) {
+            $scanned++;
+
+            try {
+                $order = Order::with(
+                    'organizationDetails',
+                    'contactDetails',
+                    'userDetails'
+                )->find($refundRecord->order_id);
+
+                if (!$order) {
+                    $failed++;
+                    continue;
+                }
+
+                $existingRecord = $this->quickbookRecordQuery(
+                    $order->id,
+                    $refundRecord->id,
+                    'Card',
+                    0,
+                    1
+                )->first();
+
+                if (
+                    $existingRecord
+                    && (int) $existingRecord->export_status === 1
+                ) {
+                    $skipped++;
+                    continue;
+                }
+
+                $data = $this->buildNormalRefundReceiptData(
+                    $order,
+                    $refundRecord,
+                    $customers,
+                    $paymentMethods,
+                    $refundFromAccounts,
+                    $existingRecord,
+                    config(
+                        'services.qbo.default_customer_id',
+                        8853
+                    ),
+                    config(
+                        'services.qbo.default_refund_account_id',
+                        config(
+                            'services.qbo.default_deposit_account_id',
+                            148
+                        )
+                    )
+                );
+
+                $data['items'] =
+                    $this->normalizeItemsForQuickBooksRequest(
+                        $data['line_items']
+                    );
+
+                unset($data['line_items']);
+
+                $data['export_status'] = 1;
+
+                $data['doc_number'] = (string)
+                    QuickBooksService::generateRefundReceiptNo();
+
+                $internalRequest = Request::create(
+                    '/quickbooks/import-sales-receipt',
+                    'POST',
+                    $data
+                );
+
+                $response =
+                    $this->importSalesReceipt(
+                        $internalRequest
+                    );
+
+                $result =
+                    $response->getData(true);
+
+                if (!($result['success'] ?? false)) {
+                    $failed++;
+                    continue;
+                }
+
+                if ($result['already_exported'] ?? false) {
+                    $skipped++;
+                    continue;
+                }
+
+                $imported++;
+
+                $quickbookRecord =
+                    $this->quickbookRecordQuery(
+                        $order->id,
+                        $refundRecord->id,
+                        'Card',
+                        0,
+                        1
+                    )->first();
+
+                $viewTransactions = [[
+                    'id' => $refundRecord->id,
+                    'type' => 'Card',
+                    'auto_generated' => 0,
+                    'is_refund' => 1,
+                ]];
+
+                $viewLink =
+                    url('/import-to-quickbooks')
+                    . '?'
+                    . http_build_query([
+                        'transactions' =>
+                            json_encode($viewTransactions),
+                        'store_transactions' =>
+                            json_encode([]),
+                    ]);
+
+                $exportedRecords[] = [
+                    'order_id' => $order->id,
+                    'order_no' => $order->order_no,
+                    'organization_name' =>
+                        $order->organizationDetails
+                            ->organization_name
+                        ?? '-',
+                    'record_id' => $refundRecord->id,
+                    'payment_type' => 'Card',
+                    'receipt_type' => 'Refund Receipt',
+                    'amount' => $data['amount'] ?? 0,
+                    'receipt_date' =>
+                        $data['receipt_date'] ?? '',
+                    'qb_doc_number' =>
+                        $quickbookRecord->qb_doc_number
+                        ?? '-',
+                    'qb_transaction_id' =>
+                        $quickbookRecord->sales_receipt_id
+                        ?? '-',
+                    'view_link' => $viewLink,
+                ];
+            } catch (\Throwable $exception) {
+                $failed++;
+                report($exception);
+
+                \Log::error(
+                    'QuickBooks automatic Order card refund sync exception',
+                    [
+                        'record_id' => $refundRecord->id,
+                        'order_id' => $refundRecord->order_id,
+                        'transaction_id' =>
+                            $refundRecord->transaction_id,
+                        'error' => $exception->getMessage(),
+                    ]
+                );
+            }
+        }
+
+
 
         /*
         |--------------------------------------------------------------------------
@@ -2896,7 +3326,7 @@ class QuickBooksController extends Controller
                     $isRefund
                 )->first();
 
-                if ($existingRecord && (int) $existingRecord->export_status === 1) {
+                if ($existingRecord && (int) $existingRecord->export_status === 1 || $existingRecord && (int) $existingRecord->export_status === 2) {
                     $skipped++;
                     continue;
                 }

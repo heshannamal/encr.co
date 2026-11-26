@@ -18,7 +18,7 @@
             </div>
 
             <form action="{{ route('products.update') }}" method="post" enctype="multipart/form-data">
-                
+
                 <div class="modal-body">
                     <div class="col-md-12">
                         <div class="row">
@@ -122,7 +122,7 @@
                             </div>
 
                             <div class="col-md-6 form-field">
-                                <label class="form-lable">Weight (oz):</label>
+                                <label class="form-lable">Weight (lb):</label>
                                 <input type="number" class="form-control form-input" id="edit_weight" name="edit_weight"/>
                             </div>
 

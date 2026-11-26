@@ -26,6 +26,10 @@ Route::middleware(['web'])->group(function () {
  Route::post('store/OrderExtraPaymentOnline', [App\Http\Controllers\CustomerTeamStoreController::class, 'OrderExtraPaymentOnline'])->name('store.OrderExtraPaymentOnline');
 //  Route::get('store/get_customer_payments', [App\Http\Controllers\CustomerTeamStoreController::class, 'get_customer_payments'])->name('store.get_customer_payments');
 
+Route::get('store/coach-payment/{token}',[App\Http\Controllers\StoreCoachPaymentController::class, 'show'])->name('store.coach_payment.show');
+
+Route::post('store/coach-payment/{token}/pay',[App\Http\Controllers\StoreCoachPaymentController::class, 'pay'])->name('store.coach_payment.pay');
+
 
  Route::get('shippo/get_shipping_fee', [App\Http\Controllers\ShippoController::class, 'get_shipping_fee'])->name('shippo.get_shipping_fee');
 

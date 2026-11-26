@@ -1418,7 +1418,281 @@
 
 </style>
 
-<div class="navbar" style=" background-color:white; z-index:99; padding: unset;">
+@if (str_contains(url()->current(), 'admin_product_catalog'))
+<style>
+
+    .navbar {
+        /* width: unset !important; */
+    }
+
+    .container-fluid {
+        margin-bottom: unset !important;
+    }
+
+    .header-layout {
+        z-index: 9999 !important;
+    }
+
+    .col-lg-4.text-center.d-flex.justify-content-center.customer-header-logo.mobile-logo {
+        display: none !important;
+    }
+
+    .customer-header-actions {
+        display: none !important;
+    }
+
+    .admin_catalog_navbar {
+        position: absolute;
+    }
+
+    .admin_catalog_padding_l_unset {
+        padding-left: unset !important;
+    }
+
+    .admin_catalog_padding_l_unset .breadcrumb-wrapper {
+        display: none;
+    }
+
+    .admin_catalog_padding_l_unset .d-flex.align-items-center.ms-auto.filter-wrapper {
+        padding-left: 25px;
+    }
+
+    .show_more_button {
+        background-color: transparent;
+    }
+    .product_content {
+        padding-top: 0px;
+    }
+    /* ADMIN ONLY CSS */
+
+/* ===== Admin catalog: filters (left) + search (right) in one row ===== */
+
+/* 1. Make the navbar a single flex row */
+.admin_catalog_navbar {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-end;
+    width: 100%;
+}
+
+/* 2. Flatten the header wrapper so the search box becomes a direct flex item.
+      Change ".header-layout" if the root element in your header include is different */
+.admin_catalog_navbar > .header-layout,
+.admin_catalog_navbar > .header-layout > .row,
+.admin_catalog_navbar > .header-layout > .container-fluid {
+    display: contents !important;
+}
+
+/* 3. Filters take the left side and the remaining space */
+.admin_catalog_navbar .filter-sidebar {
+    order: 1;
+    flex: 1 1 auto;
+    width: auto !important;
+    border-bottom: none !important;
+}
+
+/* 4. Search box goes to the far right of the same row */
+.admin_catalog_navbar .search-box {          /* <-- your search wrapper selector */
+    order: 2;
+    flex: 0 0 auto;
+    width: 280px !important;
+    margin: 0 3.5% 15px auto !important;
+    position: static !important;
+}
+
+/* 5. Filters aligned to the left, not pushed right */
+.admin_catalog_padding_l_unset .filter-wrapper {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    align-items: flex-start !important;
+    padding-left: 3.5% !important;
+}
+
+/* 6. Label on top, field below it */
+.admin_catalog_padding_l_unset .filter-wrapper > .d-flex.flex-column > .d-flex.align-items-center {
+    flex-direction: column;
+    align-items: flex-start !important;
+}
+
+.admin_catalog_padding_l_unset .filter_text {
+    margin: 0 0 4px 0 !important;
+    font-size: 13px;
+}
+
+.admin_catalog_padding_l_unset .filter_select {
+    min-width: 110px !important;
+}
+
+/* 7. Keep the selected-filter tag under the select, left-aligned */
+.admin_catalog_padding_l_unset .selected-filter-tag {
+    margin-left: 0 !important;
+}
+
+
+    /* 1. Navbar = one row: filters left, search right */
+    .admin_catalog_navbar {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: flex-end;
+        width: 100%;
+        border-bottom: 1px solid rgb(235, 235, 235);
+    }
+
+    /* 2. Header include: keep only the search column, pin it right */
+    .admin_catalog_navbar > .customer-header-modern {
+        order: 2;
+        flex: 0 0 340px;
+        width: 340px !important;
+        padding: 0 3.5% 15px 0 !important;
+        border-bottom: none !important;
+    }
+
+    .admin_catalog_navbar .customer-header-row {
+        margin: 0 !important;
+    }
+
+    /* Hide logo and actions (back button, catalog link, filter toggle) */
+    .admin_catalog_navbar .customer-header-logo,
+    .admin_catalog_navbar .customer-header-actions {
+        display: none !important;
+    }
+
+    /* Search column takes the full width of the 340px box */
+    .admin_catalog_navbar .customer-header-search {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+
+    /* 3. Filters take the left side */
+    .admin_catalog_navbar .filter-sidebar {
+        order: 1;
+        flex: 1 1 auto;
+        width: auto !important;
+        border-bottom: none !important;
+    }
+
+    /* Hide the mobile-only filter header on desktop */
+    .admin_catalog_navbar .filter-sidebar-header {
+        display: none !important;
+    }
+
+    /* 4. Filters aligned left */
+    .admin_catalog_padding_l_unset {
+        padding-left: 4.6% !important;
+        padding-right: 0 !important;
+    }
+
+    .admin_catalog_padding_l_unset .filter-wrapper {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+        padding-left: 0 !important;
+        align-items: flex-start !important;
+    }
+
+    /* 5. Label on top, field below */
+    .admin_catalog_padding_l_unset .filter-wrapper > .d-flex.flex-column > .d-flex.align-items-center {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .admin_catalog_padding_l_unset .filter_text {
+        margin: 0 0 4px 0 !important;
+        font-size: 13px;
+    }
+
+    /* 6. Selected-filter tag stays left under the select */
+    .admin_catalog_padding_l_unset .selected-filter-tag {
+        margin-left: 0 !important;
+    }
+    .container {
+    margin-top: 100px !important;
+    }
+    .product_count {
+        padding-top: 30px;
+    }
+
+@media (max-width: 767.98px){ 
+    .admin_catalog_navbar .customer-header-logo, .admin_catalog_navbar .customer-header-actions {
+        display: block !important;
+    }
+    .mobile-toggle-wrapper {
+        top: 106px;
+        position: relative;
+        z-index: 1;
+        left: 10px;
+    }
+
+
+    .product_content {
+        position: relative !important;
+        z-index: 1 !important;
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+    .product_content {
+        padding-top: 65px !important;
+        margin-top: unset !important;
+    }
+    .admin_catalog_navbar .filter-sidebar-header {
+        display: block !important;
+    }
+    .mobile-sticky-header {
+        background-color: transparent !important;
+        width: 100% !important;
+    }
+    .admin_catalog_navbar > .customer-header-modern {
+        width: 100% !important;
+    }
+    .mobile-search .customer-search-input-wrapper {
+        width: 79%;
+        margin-left: 82px !important;
+        margin-right: 15px;
+    }
+    .enquary_attribute {
+        top: 104px;
+        position: relative;
+    }
+    .admin_catalog_navbar > .customer-header-modern {
+        padding: unset !important;
+    }
+    .mobile-search .customer-search-wrapper, .mobile-search .customer-search-column {
+        padding-left: 33px !important;
+        margin-left: 30px;
+        margin-right: 20px;
+        width: 97%;
+    }
+    .admin_catalog_navbar .filter-sidebar {
+        width: 58% !important;
+        /* position: relative !important; */
+        top: 142px !important;
+        max-height: calc(100vh - 150px) !important;
+        overflow-y: auto !important;
+    }
+    .navbar-collapse.collapsing, .navbar-collapse.show {
+        z-index: 99999 !important;
+    }
+    .main-content {
+        z-index: 1;
+    }
+    .col.common-footer {
+        z-index: 1 !important;
+    }
+    .enquary_attribute {
+        background-color: white;
+        padding-bottom: 10px;
+    }
+    .show_more_button {
+        background-color: red !important;
+    }
+}
+
+
+</style>
+@endif
+
+
+<div class="navbar admin_catalog_navbar" style=" background-color:white; z-index:99; padding: unset;">
 
 
     @section('page-route')
@@ -1460,7 +1734,17 @@
 
             </div>
 
-            <div class="row align-items-center"
+            @php
+                $currentUrl = url()->current();
+
+                $isAdminCatalog = str_contains($currentUrl, 'admin_product_catalog');
+
+                $catalogFilterRoute = $isAdminCatalog
+                    ? 'admin_product_catlog'
+                    : 'product_filter1';
+            @endphp
+
+            <div class="row align-items-center admin_catalog_padding_l_unset"
                 style="margin: unset; padding: 15px 3.5% 15px; gap: 20px;">
 
                 <!-- LEFT : Breadcrumb -->
@@ -1469,7 +1753,7 @@
                         <a href="{{ route('customer_catlog') }}" style="font-size: 15px; font-weight: 500;">Home</a>
                         <span>/</span>
 
-                        <a href="{{ route('product_filter1', [
+                        <a href="{{ route($catalogFilterRoute, [
                             'selectedGender' => 'All',
                             'selectedCategory' => '5',
                             'selectedSport' => '18',
@@ -1526,7 +1810,7 @@
                                 <div class="selected-filter-tag mt-1 ms-auto">
                                     <span>{{ $cat->category_name }}</span>
 
-                                    <a href="{{ route('product_filter1', [
+                                    <a href="{{ route($catalogFilterRoute, [
                                         'selectedCategory' => 5,
                                         'selectedGender' => $selectedGender ?? 'All',
                                         'selectedSport' => $selectedSport ?? 18,
@@ -1558,7 +1842,7 @@
                         @if(!empty($selectedGender) && $selectedGender !== 'All'  && !empty($hasAnyFilter))
                             <div class="selected-filter-tag mt-1 ms-auto">
                                 <span>{{ $selectedGender }}</span>
-                                <a href="{{ route('product_filter1', [
+                                <a href="{{ route($catalogFilterRoute, [
                                     'selectedGender' => 'All',
                                     'selectedCategory' => $selectedMainCategory ?? 5,
                                     'selectedSport' => $selectedSport ?? 18,
@@ -1597,7 +1881,7 @@
                                 <div class="selected-filter-tag mt-1 ms-auto">
                                     <span>{{ $sportObj->sport_name }}</span>
 
-                                    <a href="{{ route('product_filter1', [
+                                    <a href="{{ route($catalogFilterRoute, [
                                         'selectedSport' => 18,
                                         'selectedCategory' => $selectedMainCategory ?? 5,
                                         'selectedGender' => $selectedGender ?? 'All',
@@ -1639,7 +1923,7 @@
                                 <div class="selected-filter-tag mt-1 ms-auto">
                                     <span>{{ $styleObj->product_category_name }}</span>
 
-                                    <a href="{{ route('product_filter1', [
+                                    <a href="{{ route($catalogFilterRoute, [
                                         'selectedStyle' => 0,
                                         'selectedCategory' => $selectedMainCategory ?? 5,
                                         'selectedGender' => $selectedGender ?? 'All',
@@ -1670,7 +1954,7 @@
                         <p class="item_count mb-0" style="color: grey;"></p>
 
                         @if($hasAnyFilter)
-                            <a href="{{ route('product_filter1', [
+                            <a href="{{ route($catalogFilterRoute, [
                                 'selectedCategory' => 5,
                                 'selectedGender' => 'All',
                                 'selectedSport' => 18,
@@ -2008,7 +2292,7 @@
 </script>
 
 
-<form action="{{ route('product_filter1') }}"
+{{-- <form action="{{ route('product_filter1') }}"
       method="GET"
       id="filterForm">
 
@@ -2034,10 +2318,43 @@
            id="selectedStyleInput"
            value="">
 
+</form> --}}
+@php
+    $currentUrl = url()->current();
+
+    if (str_contains($currentUrl, 'admin_product')) {
+        $filterAction = route('admin_product_catlog');
+    } else {
+        $filterAction = route('product_filter1');
+    }
+@endphp
+
+<form action="{{ $filterAction }}" method="GET" id="filterForm">
+
+    <input type="hidden"
+           name="selectedCategory"
+           id="selectedCategoryInput"
+           value="">
+
+    <input type="hidden"
+           name="selectedGender"
+           id="selectedGenderInput"
+           value="">
+
+    <input type="hidden"
+           name="selectedSport"
+           id="selectedSportInput"
+           value="">
+
+    <input type="hidden"
+           name="selectedStyle"
+           id="selectedStyleInput"
+           value="">
+
 </form>
 
 
-<form action="{{ route('search.products') }}" method="GET" id="searchForm" onsubmit="return submitSearchForm()">
+{{-- <form action="{{ route('search.products') }}" method="GET" id="searchForm" onsubmit="return submitSearchForm()">
     @csrf
     <input type="hidden" name="search" id="searchInput" value="">
     <button style="display: none;" type="submit">Submit</button>
@@ -2050,6 +2367,65 @@
         form.action = "{{ route('search.products') }}" + "?search=" + encodeURIComponent(searchValue);
         return true;
     }
+</script> --}}
+
+@php
+    $currentUrl = url()->current();
+
+    $searchAction = str_contains($currentUrl, 'admin_product_catalog')
+        ? route('admin_product_catalog_product_search.products')
+        : route('search.products');
+@endphp
+
+<form action="{{ $searchAction }}" method="GET" id="searchForm">
+    <input type="hidden"
+           name="search"
+           id="searchInput"
+           value="">
+
+    <button style="display: none;" type="submit">
+        Submit
+    </button>
+</form>
+
+<script>
+    $(document).ready(function () {
+
+        var searchInput = $('#searchInput');
+        var searchForm = $('#searchForm');
+
+        $('.search_text').on('input', function () {
+            searchInput.val($(this).val());
+        });
+
+        $('.search_text').on('blur', function () {
+
+            var searchValue = $(this).val();
+
+            searchInput.val(searchValue);
+
+            if (searchValue.trim() !== '') {
+                searchForm.submit();
+            }
+        });
+
+        $('.search_text').on('keydown', function (event) {
+
+            if (event.key === 'Enter') {
+
+                event.preventDefault();
+
+                var searchValue = $(this).val();
+
+                searchInput.val(searchValue);
+
+                if (searchValue.trim() !== '') {
+                    searchForm.submit();
+                }
+            }
+        });
+
+    });
 </script>
 
 <script>
@@ -2154,6 +2530,8 @@
 
         return aIndex - bIndex;
     });
+
+    const isAdminCatalog = @json(str_contains(url()->current(), 'admin_product_catalog'));
 
     productCategories.forEach(productCategory => {
 
@@ -2310,7 +2688,13 @@
                         if (selectedSport) queryParams.push(`selectedSport=${encodeURIComponent(selectedSport)}`);
                         if (selectedStyle) queryParams.push(`selectedStyle=${encodeURIComponent(selectedStyle)}`);
 
-                        const productUrl = `productDetails/${productId}${queryParams.length ? '?' + queryParams.join('&') : ''}`;
+                        // const productUrl = `productDetails/${productId}${queryParams.length ? '?' + queryParams.join('&') : ''}`;
+
+                        const productBaseUrl = isAdminCatalog
+                            ? "{{ route('admin_product_catalog_product_productDetails.show', ['id' => '__ID__']) }}".replace('__ID__', productId)
+                            : `productDetails/${productId}`;
+
+                        const productUrl = `${productBaseUrl}${queryParams.length ? '?' + queryParams.join('&') : ''}`;
 
                         const cardDisplay = index < 8 ? 'block' : 'none';
                         const category_class = index >= 8 ? `show_more_category_${productCategory.id}` : '';
@@ -2484,7 +2868,13 @@
                         if (selectedSport) queryParams.push(`selectedSport=${encodeURIComponent(selectedSport)}`);
                         if (selectedStyle) queryParams.push(`selectedStyle=${encodeURIComponent(selectedStyle)}`);
 
-                        const productUrl = `productDetails/${productId}${queryParams.length ? '?' + queryParams.join('&') : ''}`;
+                        // const productUrl = `productDetails/${productId}${queryParams.length ? '?' + queryParams.join('&') : ''}`;
+
+                        const productBaseUrl = isAdminCatalog
+                            ? "{{ route('admin_product_catalog_product_productDetails.show', ['id' => '__ID__']) }}".replace('__ID__', productId)
+                            : `productDetails/${productId}`;
+
+                        const productUrl = `${productBaseUrl}${queryParams.length ? '?' + queryParams.join('&') : ''}`;
 
                         const cardDisplay = index < 8 ? 'block' : 'none';
                         const category_class = index >= 8 ? `show_more_category_${productCategory.id}` : '';
@@ -2749,38 +3139,38 @@
 
 
 <script>
-    $(document).ready(function () {
-        var searchInput = $('#searchInput');
-        var searchForm = $('#searchForm');
+    // $(document).ready(function () {
+    //     var searchInput = $('#searchInput');
+    //     var searchForm = $('#searchForm');
 
-        $('.search_text').on('input', function () {
-            var searchValue = $(this).val();
-            searchInput.val(searchValue);
-        });
+    //     $('.search_text').on('input', function () {
+    //         var searchValue = $(this).val();
+    //         searchInput.val(searchValue);
+    //     });
 
-        $('.search_text').on('blur', function () {
-            var searchValue = $(this).val();
-            searchInput.val(searchValue);
+    //     $('.search_text').on('blur', function () {
+    //         var searchValue = $(this).val();
+    //         searchInput.val(searchValue);
 
-            // Trigger form submission only if the input is not empty
-            if (searchValue.trim() !== '') {
-                searchForm.submit();
-            }
-        });
+    //         // Trigger form submission only if the input is not empty
+    //         if (searchValue.trim() !== '') {
+    //             searchForm.submit();
+    //         }
+    //     });
 
-        $('.search_text').on('keydown', function (event) {
-            if (event.key === 'Enter') {
-                // Enter key is pressed
-                var searchValue = $(this).val();
-                searchInput.val(searchValue);
+    //     $('.search_text').on('keydown', function (event) {
+    //         if (event.key === 'Enter') {
+    //             // Enter key is pressed
+    //             var searchValue = $(this).val();
+    //             searchInput.val(searchValue);
 
-                // Trigger form submission only if the input is not empty
-                if (searchValue.trim() !== '') {
-                    searchForm.submit();
-                }
-            }
-        });
-    });
+    //             // Trigger form submission only if the input is not empty
+    //             if (searchValue.trim() !== '') {
+    //                 searchForm.submit();
+    //             }
+    //         }
+    //     });
+    // });
 
 
     document.getElementById('filterToggleBtn').addEventListener('click', function() {

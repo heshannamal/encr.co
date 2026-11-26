@@ -240,6 +240,606 @@
     .no-top-border{
         border-top: none !important;
     }
+
+    /* =====================================================================
+       PAYMENT LEDGER — MOBILE LAYOUT
+       ===================================================================== */
+    .pl-m-only { display: none; }
+
+    @media (max-width: 767px) {
+
+        /* ---------- Page shell ---------- */
+        .content-position {
+            top: 0;                                  /* desktop: top -25px */
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+        }
+        .content-position > .col-md-12 { padding-left: 0; padding-right: 0; }
+        /* Layout's generic title strip / desktop top bar: replaced by the page header */
+        .main-content #header,
+        .main-content .header1,
+        .main-content > .navbar-top,
+        .main-content > #navbar-main { display: none !important; }
+
+        /* One shared outer card: drop its box so the inner cards sit on the grey page */
+        .content-position > .col-md-12 > .card {
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+            border-radius: 0;
+        }
+        .content-position > .col-md-12 > .card > .col-md-12 {
+            margin: 0 !important;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .content-position .new-style-table .table-responsive { overflow: visible; }
+
+        /* ---------- Page header ---------- */
+        .pl-m-header {
+            display: block;
+            margin: 4px 0 18px;
+        }
+        .pl-m-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 6px 0 14px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1.2px;
+            color: #4b5563;
+            text-decoration: none;
+        }
+        .pl-m-back i { font-size: 11px; }
+        .pl-m-title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #111827;
+        }
+
+        /* ---------- DataTables wrapper ---------- */
+        #payment_ledger_wrapper > .row { margin-left: 0; margin-right: 0; }
+        #payment_ledger_wrapper > .row > [class*="col-"] { padding-left: 0; padding-right: 0; }
+        #payment_ledger_wrapper .dataTables_length { display: none !important; }
+        /* scrollX: hide the cloned header, let the body flow as cards */
+        #payment_ledger_wrapper .dataTables_scrollHead { display: none !important; }
+        #payment_ledger_wrapper .dataTables_scroll,
+        #payment_ledger_wrapper .dataTables_scrollBody {
+            overflow: visible !important;
+            width: 100% !important;
+            height: auto !important;
+            border: none !important;
+        }
+
+        /* ---------- Search card ---------- */
+        #payment_ledger_wrapper .dataTables_filter {
+            float: none;
+            width: 100%;
+            margin: 0 0 14px;
+            padding: 14px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(17, 24, 39, 0.06);
+            text-align: left;
+        }
+        #payment_ledger_wrapper .dataTables_filter label {
+            position: relative;
+            display: block;
+            width: 100%;
+            margin: 0;
+            font-size: 0;                            /* only the icon + input are shown */
+        }
+        #payment_ledger_wrapper .dataTables_filter label i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 15px;
+            color: #111827;
+            pointer-events: none;
+        }
+        #payment_ledger_wrapper .dataTables_filter input {
+            display: block;
+            width: 100% !important;
+            height: 44px;
+            margin: 0 !important;
+            padding: 0 12px 0 40px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f5f6f7;
+            color: #111827;
+            font-size: 15px;
+            box-shadow: none;
+            outline: none;
+        }
+        #payment_ledger_wrapper .dataTables_filter input::placeholder { color: #9ca3af; }
+
+
+        /* ---------- Financial year card ---------- */
+        .content-position > .col-md-12 > .card > .pl-year-col {
+            margin: 0 0 14px !important;             /* inline mt-3 */
+            padding: 14px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(17, 24, 39, 0.06);
+            font-size: 0;                            /* "Select Financial Year" label: the select shows the year */
+        }
+        #financial_year {
+            display: block;
+            width: 100%;
+            height: 44px;
+            padding: 0 32px 0 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f5f6f7 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%23374151' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center / 12px 12px;
+            color: #111827;
+            font-size: 15px;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+        }
+        #financial_year:focus { border-color: #47D6B6; }
+
+        /* ---------- "Show [20] entries" / "Sort by [...]" ---------- */
+        .pl-m-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 0 0 4px;
+        }
+        .pl-m-show {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+            font-size: 14px;
+            color: #6b7280;
+            white-space: nowrap;
+        }
+        .pl-m-show select {
+            min-width: 0;
+            height: 34px;
+            padding: 0 24px 0 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%23374151' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center / 11px 11px;
+            color: #111827;
+            font-size: 14px;
+            font-weight: 500;
+            text-overflow: ellipsis;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        #pl-m-entries { flex: 0 0 auto; }
+
+        /* ---------- Table -> transaction cards ---------- */
+        #payment_ledger {
+            display: block;
+            width: 100% !important;
+            min-width: 0 !important;
+            margin: 10px 0 0 !important;
+            border: none;
+        }
+        #payment_ledger > thead { display: none; }
+        #payment_ledger > tbody { display: block; width: 100%; }
+
+        /* ENCR000003 ............ Show Invoices
+           description
+           [Invoice Total] [Overpaid] [Total Paid]
+           [Pay by Cash]   [Settle from Debit]
+           - - - - - - - - - - - - - - - - - -
+           Transaction Date .. Transaction Time */
+        #payment_ledger > tbody > tr {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            grid-template-areas:
+                "id   id   id   id   inv  inv"
+                "desc desc desc desc desc desc"
+                "tot  tot  ovr  ovr  paid paid"
+                "cash cash cash dbt  dbt  dbt"
+                "line line line line line line"
+                "date date date time time time";
+            column-gap: 10px;
+            margin-bottom: 14px;
+            padding: 16px 16px 14px;
+            background: #fff !important;
+            border: 1px solid #f0f1f3 !important;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(17, 24, 39, 0.06);
+        }
+        #payment_ledger > tbody > tr:hover { background: #fff !important; }
+        #payment_ledger > tbody > tr > td {
+            display: block;
+            box-sizing: border-box;                  /* DataTables sets content-box */
+            min-width: 0;
+            padding: 0 !important;
+            border: none !important;
+            text-align: left !important;
+            font-size: 13px !important;              /* page rule: .9rem !important */
+            color: #111827 !important;
+            white-space: normal;                     /* theme tables use nowrap */
+            overflow-wrap: anywhere;
+        }
+        #payment_ledger > tbody > tr > td a { padding: 0 !important; }       /* page rule: .4rem 1rem !important */
+
+        /* Transaction id (still opens the transaction image) */
+        #payment_ledger > tbody > tr > td.transaction-id { grid-area: id; align-self: center; }
+        #payment_ledger > tbody > tr > td.transaction-id a {
+            font-size: 18px !important;
+            font-weight: 700;
+            line-height: 1.3;
+            color: #111827 !important;
+            text-decoration: none;
+        }
+        /* "Show invoices" button -> document icon + underlined "Show Invoices" */
+        #payment_ledger > tbody > tr > td.included-invoiced { grid-area: inv; justify-self: end; align-self: center; }
+        #payment_ledger > tbody > tr > td.included-invoiced button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+            padding: 2px 0;
+            border: none;
+            background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111827' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6M8 13h8M8 17h8'/%3E%3C/svg%3E") no-repeat left center / 17px 17px;
+            padding-left: 23px;
+            color: #111827;
+            font-size: 0;                            /* desktop wording replaced below */
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        #payment_ledger > tbody > tr > td.included-invoiced button::after {
+            content: "Show Invoices";
+            font-size: 12.5px;
+            text-decoration: underline;
+        }
+        /* Description line */
+        #payment_ledger > tbody > tr > td.transaction-description {
+            grid-area: desc;
+            margin-top: 4px;
+            font-size: 11.5px !important;
+            line-height: 1.45;
+            color: #6b7280 !important;
+        }
+        #payment_ledger > tbody > tr > td.transaction-description:empty { display: none; }
+
+        /* Amount boxes */
+        #payment_ledger > tbody > tr > td.invoice-total     { grid-area: tot; }
+        #payment_ledger > tbody > tr > td.overpaid          { grid-area: ovr; }
+        #payment_ledger > tbody > tr > td.total-paid-amount { grid-area: paid; }
+        #payment_ledger > tbody > tr > td.pay-by-cash       { grid-area: cash; }
+        #payment_ledger > tbody > tr > td.setle-from-debit  { grid-area: dbt; }
+        #payment_ledger > tbody > tr > td.invoice-total,
+        #payment_ledger > tbody > tr > td.overpaid,
+        #payment_ledger > tbody > tr > td.total-paid-amount,
+        #payment_ledger > tbody > tr > td.pay-by-cash,
+        #payment_ledger > tbody > tr > td.setle-from-debit {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            margin-top: 10px;
+            padding: 6px 8px 7px !important;
+            background: #f3f4f6;
+            border-radius: 8px;
+            font-size: clamp(13px, 3.9vw, 15px) !important;
+            line-height: 1.35;
+        }
+        #payment_ledger > tbody > tr > td.invoice-total::before,
+        #payment_ledger > tbody > tr > td.overpaid::before,
+        #payment_ledger > tbody > tr > td.total-paid-amount::before,
+        #payment_ledger > tbody > tr > td.pay-by-cash::before,
+        #payment_ledger > tbody > tr > td.setle-from-debit::before {
+            order: -2;
+            flex: 0 0 100%;
+            margin-bottom: 1px;
+            font-size: clamp(11.5px, 3.4vw, 13.5px);
+            color: #8a8f98;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #payment_ledger > tbody > tr > td.invoice-total::before     { content: "Invoice Total"; }
+        #payment_ledger > tbody > tr > td.overpaid::before          { content: "Overpaid"; }
+        #payment_ledger > tbody > tr > td.total-paid-amount::before { content: "Total Paid"; }
+        #payment_ledger > tbody > tr > td.pay-by-cash::before       { content: "Pay by Cash"; }
+        #payment_ledger > tbody > tr > td.setle-from-debit::before  { content: "Settle from Debit"; }
+        #payment_ledger > tbody > tr > td.invoice-total::after,
+        #payment_ledger > tbody > tr > td.overpaid::after,
+        #payment_ledger > tbody > tr > td.total-paid-amount::after,
+        #payment_ledger > tbody > tr > td.pay-by-cash::after,
+        #payment_ledger > tbody > tr > td.setle-from-debit::after { content: "$"; order: -1; }
+
+        /* Dashed divider, then Transaction Date / Transaction Time */
+        #payment_ledger > tbody > tr::after {
+            content: "";
+            grid-area: line;
+            height: 0;
+            margin-top: 12px;
+            border-top: 1px dashed #e5e7eb;
+        }
+        #payment_ledger > tbody > tr > td.transaction-date { grid-area: date; }
+        #payment_ledger > tbody > tr > td.transaction-time { grid-area: time; justify-self: end; }
+        #payment_ledger > tbody > tr > td.transaction-date,
+        #payment_ledger > tbody > tr > td.transaction-time {
+            margin-top: 10px;
+            font-size: 12px !important;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        #payment_ledger > tbody > tr > td.transaction-date::before,
+        #payment_ledger > tbody > tr > td.transaction-time::before {
+            margin-right: 6px;
+            font-weight: 400;
+            color: #8a8f98;
+        }
+        #payment_ledger > tbody > tr > td.transaction-date::before { content: "Transaction Date"; }
+        #payment_ledger > tbody > tr > td.transaction-time::before { content: "Transaction Time"; }
+
+        /* "No data available" row */
+        #payment_ledger > tbody > tr:has(> td.dataTables_empty) { display: block; }
+        #payment_ledger > tbody > tr:has(> td.dataTables_empty)::after { display: none; }
+        #payment_ledger > tbody > tr > td.dataTables_empty {
+            padding: 6px 0 !important;
+            font-size: 14px !important;
+            text-align: center !important;
+            color: #6b7280 !important;
+        }
+
+        /* ---------- Pager ---------- */
+        #payment_ledger_wrapper > .row:last-child {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 6px;
+        }
+        #payment_ledger_wrapper > .row:last-child > [class*="col-"] {
+            flex: 0 1 auto;
+            width: auto;
+            max-width: none;
+        }
+        #payment_ledger_wrapper .dataTables_info {
+            padding: 0 !important;
+            font-size: 13px;
+            color: #9ca3af;
+            white-space: normal;
+        }
+        #payment_ledger_wrapper .dataTables_paginate { margin: 0 !important; }
+        #payment_ledger_wrapper .pagination {
+            flex-wrap: wrap;
+            justify-content: flex-end !important;
+            gap: 6px;
+            margin: 0 !important;
+        }
+        #payment_ledger_wrapper .page-item .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            margin: 0;
+            padding: 0 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px !important;
+            background: #fff;
+            color: #111827;
+            font-size: 14px;
+            box-shadow: none;
+        }
+        #payment_ledger_wrapper .page-item.active .page-link {
+            background: #111827;
+            border-color: #111827;
+            color: #fff;
+        }
+        #payment_ledger_wrapper .page-item.disabled .page-link { color: #9ca3af; }
+        #payment_ledger_wrapper .page-item.previous .page-link,
+        #payment_ledger_wrapper .page-item.next .page-link { font-size: 0; }
+        #payment_ledger_wrapper .page-item.previous .page-link::before,
+        #payment_ledger_wrapper .page-item.next .page-link::before {
+            font-size: 20px;
+            line-height: 1;
+        }
+        #payment_ledger_wrapper .page-item.previous .page-link::before { content: "\2039"; }
+        #payment_ledger_wrapper .page-item.next .page-link::before     { content: "\203A"; }
+
+
+
+        /* =================================================================
+           "Transaction - ENCR000003" popup (included invoices)
+           ================================================================= */
+        #payMultipleModal .modal-dialog,
+        #imageModal .modal-dialog {
+            display: flex;
+            align-items: center;
+            max-width: none !important;              /* inline max-width: 1200px */
+            min-height: calc(100% - 24px);
+            margin: 12px;
+        }
+        #payMultipleModal .modal-content,
+        #imageModal .modal-content {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        #payMultipleModal .modal-header,
+        #imageModal .modal-header {
+            align-items: center;
+            margin: 0 18px;
+            padding: 18px 0 14px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        #payMultipleModal .modal-title,
+        #imageModal .modal-title {
+            font-size: 19px !important;              /* inline 1.2rem */
+            font-weight: 700;
+            line-height: 1.3;
+            color: #111827;
+            overflow-wrap: anywhere;
+        }
+        /* "TRANSACTION - " -> "Transaction - " (the id itself is the span) */
+        #payMultipleModal #payMultipleModalLabel { font-size: 0 !important; }
+        #payMultipleModal #payMultipleModalLabel::before { content: "Transaction - "; font-size: 19px; }
+        #payMultipleModal #payMultipleModalLabel #transaction_id_span { font-size: 19px; }
+        #payMultipleModal .modal-header .close,
+        #imageModal .modal-header .close { margin: 0 0 0 12px; padding: 0 2px; opacity: 1; }
+        #payMultipleModal .modal-header .close span,
+        #imageModal .modal-header .close span { font-size: 26px; font-weight: 300; color: #111827; }
+        /* The design closes with the "x" only */
+        #payMultipleModal .modal-footer,
+        #imageModal .modal-footer { display: none; }
+
+        #payMultipleModal .modal-body {
+            max-height: calc(100vh - 110px);
+            overflow-y: auto;
+            padding: 14px 18px 16px !important;
+        }
+        #payMultipleModal .modal-body > .table { display: block; width: 100%; margin: 0; }
+        #payMultipleModal .modal-body > .table > thead { display: none; }
+        #payMultipleModal #selectedInvoiceTr { display: block; }
+        #payMultipleModal .table td {
+            display: block;
+            height: auto;                            /* page rule: 2rem */
+            min-width: 0;
+            padding: 0 !important;
+            border: none !important;
+            text-align: left !important;
+            font-size: 13px;
+            color: #111827;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+        /* Invoice card */
+        #selectedInvoiceTr > tr:not(:last-child) {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            column-gap: 10px;
+            margin-bottom: 12px;
+            padding: 12px 14px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(17, 24, 39, 0.05);
+        }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(1) { order: 1; flex: 1 1 auto; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(1) a {
+            color: #111827;
+            font-size: 17px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(6) { order: 2; flex: 0 0 auto; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(2) { order: 3; flex: 0 0 100%; margin-top: 2px; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(2) a {
+            color: #111827;
+            font-size: 15px;
+            text-decoration: none;
+        }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(2) a::before { content: "Order ID - "; }
+        /* Order number with leading zeros (#002574), set by JS in data-m-order */
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(2) a[data-m-order] { font-size: 0; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(2) a[data-m-order]::before { font-size: 15px; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(2) a[data-m-order]::after { content: attr(data-m-order); font-size: 15px; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(3) { order: 4; flex: 0 0 100%; margin-top: 3px; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(3)::before { content: "Organization"; margin-right: 10px; color: #8a8f98; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(4) { order: 5; flex: 1 1 auto; margin-top: 6px; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(5) { order: 6; flex: 0 0 auto; margin-top: 6px; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(4)::before { content: "Total Amount"; margin-right: 10px; color: #8a8f98; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(5)::before { content: "Paid Amount"; margin-right: 10px; color: #8a8f98; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(4),
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(5) { display: flex; }
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(4)::before,
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(5)::before { order: -2; }
+        /* "$" before the amounts (the cell holds the plain number) */
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(4)::after,
+        #selectedInvoiceTr > tr:not(:last-child) > td:nth-child(5)::after { content: "$"; order: -1; }
+        /* Download button -> icon + underlined "Export" (still downloads the PDF) */
+        #selectedInvoiceTr .download_invoice_pdf {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+            padding: 0 !important;                   /* inline .2rem .5rem */
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            color: #111827;
+            font-size: 16px;
+            line-height: 1;
+        }
+        #selectedInvoiceTr .download_invoice_pdf::after {
+            content: "Export";
+            font-size: 12.5px;
+            text-decoration: underline;
+        }
+        /* Last row = "Paid Invoice Amount ...... $27732.00" */
+        #selectedInvoiceTr > tr:last-child {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 14px 0;
+        }
+        #selectedInvoiceTr > tr:last-child > td:nth-child(-n+3) { display: none; }
+        #selectedInvoiceTr > tr:last-child > td:nth-child(4) {
+            font-size: 0;
+            font-weight: 400 !important;             /* inline 800 */
+        }
+        #selectedInvoiceTr > tr:last-child > td:nth-child(4)::after { content: "Paid Invoice Amount"; font-size: 14px; color: #6b7280; }
+        #selectedInvoiceTr > tr:last-child > td:nth-child(5) { display: flex; font-size: 15px; font-weight: 700; }
+        #selectedInvoiceTr > tr:last-child > td:nth-child(5)::before { content: "$"; }
+
+        /* =================================================================
+           "Transaction Image #ENCR000003" popup
+           ================================================================= */
+        #imageModal .modal-body {
+            margin: 14px 18px 18px;
+            padding: 16px !important;
+            background: #f3f4f6;
+            border-radius: 12px;
+        }
+        #imageModal #transactionImage {
+            display: block;
+            max-width: 100%;
+            max-height: calc(100vh - 220px);
+            margin: 0 auto;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+    }
+
+    /* Very small phones (320px - 359px) */
+    @media (max-width: 359px) {
+        .content-position {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+        .pl-m-show, .pl-m-show select { font-size: 12.5px; }
+        .pl-m-show { gap: 6px; }
+        .pl-m-show select { padding: 0 22px 0 8px; background-position: right 7px center; }
+        #payment_ledger > tbody > tr { padding: 14px 12px 12px; column-gap: 8px; }
+        #payment_ledger > tbody > tr > td.invoice-total,
+        #payment_ledger > tbody > tr > td.overpaid,
+        #payment_ledger > tbody > tr > td.total-paid-amount,
+        #payment_ledger > tbody > tr > td.pay-by-cash,
+        #payment_ledger > tbody > tr > td.setle-from-debit { padding: 5px 6px 6px !important; }
+        #payment_ledger > tbody > tr > td.transaction-date,
+        #payment_ledger > tbody > tr > td.transaction-time { font-size: 11px !important; }
+        /* Date / time: label above the value so both fit side by side */
+        #payment_ledger > tbody > tr > td.transaction-date::before,
+        #payment_ledger > tbody > tr > td.transaction-time::before { display: block; margin: 0 0 1px; }
+        #payment_ledger > tbody > tr > td.transaction-time { text-align: right !important; }
+        #pl-m-toolbar .pl-m-show:first-child > span:last-child { display: none; }   /* "entries": no room */
+        #payMultipleModal .modal-dialog, #imageModal .modal-dialog { margin: 8px; min-height: calc(100% - 16px); }
+        #payMultipleModal .modal-header, #imageModal .modal-header { margin: 0 14px; }
+        #payMultipleModal .modal-body { padding-left: 14px !important; padding-right: 14px !important; }
+    }
 </style>
 
 @if ($errors->any())
@@ -259,9 +859,38 @@
         <a href="{{ route('home') }}" class="home-btn-color" title="Back to home">BACK TO HOME</a>
     @endsection
 
+    {{-- Mobile only: page header --}}
+    <div class="pl-m-only pl-m-header">
+        {{-- <a href="{{ route('home') }}" class="pl-m-back"><i class="fa fa-chevron-left"></i> BACK TO HOME</a> --}}
+        <h1 class="pl-m-title">Payment Ledger</h1>
+    </div>
+
+    {{-- Mobile only: "Show [n] entries" + "Sort by" (moved under the search box by JS) --}}
+    <div class="pl-m-only pl-m-toolbar" id="pl-m-toolbar">
+        <div class="pl-m-show">
+            <span>Show</span>
+            <select id="pl-m-entries">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            <span>entries</span>
+        </div>
+        <div class="pl-m-show">
+            <span>Sort by</span>
+            <select id="pl-m-sort">
+                <option value="default">Transaction ID</option>
+                <option value="date_desc">Newest First</option>
+                <option value="date_asc">Oldest First</option>
+                <option value="paid_desc">Total Paid</option>
+            </select>
+        </div>
+    </div>
+
     <div class="col-md-12">
         <div class="card">
-                <div class="col-md-12 mt-3">
+                <div class="col-md-12 mt-3 pl-year-col">
                     <span>Select Financial Year &nbsp;<span>
                         <select id="financial_year" name="financial_year">
                             @foreach($yearList as $year)
@@ -304,7 +933,7 @@
                                         <td class="total-paid-amount text-right">{{$Transaction->paid_amount}}</td>
                                         <td class="included-invoiced text-center"><button type="button" onclick="showIncludedInvoices([{{$Transaction->invoice_ids}}], '{{ $Transaction->transaction_id }}')">Show invoices</button></td>
                                         <td class="transaction-description">{{ $Transaction->payment_description }}</td>
-                                        <td class="transaction-date text-center">{{ $Transaction->created_at->format('m/d/Y') }}</td>
+                                        <td class="transaction-date text-center" data-order="{{ $Transaction->created_at->format('Y-m-d H:i:s') }}">{{ $Transaction->created_at->format('m/d/Y') }}</td>
                                         <td class="transaction-time text-center">{{ $Transaction->created_at->format('H:i') }}</td>
                                     </tr>
                                 @endforeach
@@ -435,6 +1064,94 @@ $(document).ready(function () {
                 searchPlaceholder: 'Transaction Search'
             }
         });
+
+    /* ---------------- MOBILE-ONLY HELPERS ----------------*/
+    try {
+        var plMobileQuery = window.matchMedia('(max-width: 767px)');
+        var isPlMobile = function () { return plMobileQuery.matches; };
+
+        if (isPlMobile()) {
+            // stateSave is on: keep the saved (desktop) page length out of the mobile view
+            var plSaved = payment_ledger.state.loaded();
+            var plDesktopLen = plSaved && plSaved.length ? plSaved.length : 50;
+            payment_ledger.on('stateSaveParams.dt', function (e, settings, data) {
+                if (isPlMobile()) { data.length = plDesktopLen; }
+            });
+
+            $('#pl-m-toolbar').insertAfter($('#payment_ledger_wrapper .dataTables_filter'));
+            $('#payment_ledger_filter input').attr('placeholder', 'Search by transaction ID');
+            payment_ledger.page.len(20).draw();
+        }
+        (function () {
+            var len = String(payment_ledger.page.len());
+            if (!$('#pl-m-entries option[value="' + len + '"]').length) {
+                $('#pl-m-entries').append($('<option>', { value: len, text: len }));
+            }
+            $('#pl-m-entries').val(len);
+        })();
+        $('#pl-m-entries').on('change', function () {
+            payment_ledger.page.len(parseInt(this.value, 10)).draw();
+        });
+
+        // Sort by: the table is created with sorting off (bSort: false); switch it on
+        // only for this call. "Transaction ID" = the order the server sent.
+        var plOriginalOrder = payment_ledger.settings()[0].aiDisplayMaster.slice();
+        $('#pl-m-sort').on('change', function () {
+            var settings = payment_ledger.settings()[0];
+            var map = { date_desc: [[8, 'desc']], date_asc: [[8, 'asc']], paid_desc: [[5, 'desc']] };
+            if (map[this.value]) {
+                settings.oFeatures.bSort = true;
+                payment_ledger.order(map[this.value]).draw();
+                settings.oFeatures.bSort = false;
+            } else {
+                // back to the order the server sent
+                settings.aaSorting = [];
+                settings.aiDisplayMaster = plOriginalOrder.slice();
+                payment_ledger.draw();
+            }
+        });
+
+        // Popup: order number with leading zeros like the list (#2574 -> #002574)
+        $('#payMultipleModal').on('show.bs.modal', function () {
+            $('#selectedInvoiceTr > tr > td:nth-child(2) a').each(function () {
+                var n = $.trim($(this).text()).replace(/^#/, '');
+                if (/^\d+$/.test(n)) { this.setAttribute('data-m-order', '#' + ('000000' + n).slice(-Math.max(6, n.length))); }
+            });
+        });
+
+        // Place the page header 16px below the layout's fixed mobile bar(s).
+        var fixPlHeaderOffset = function () {
+            var top = document.querySelector('.pl-m-header');
+            var nav = document.getElementById('sidenav-main');
+            if (!top) return;
+            top.style.marginTop = '';
+            if (!isPlMobile() || !nav || getComputedStyle(nav).position !== 'fixed') return;
+            var barBottom = nav.getBoundingClientRect().bottom;
+            $('.main-content nav, .main-content .navbar').each(function () {
+                var cs = getComputedStyle(this), r = this.getBoundingClientRect();
+                if (cs.position === 'fixed' && cs.display !== 'none' && cs.visibility !== 'hidden' && r.height > 0 && r.top <= 5) {
+                    barBottom = Math.max(barBottom, r.bottom);
+                }
+            });
+            for (var i = 0; i < 5; i++) {     // margins can collapse: adjust, re-measure, correct
+                var diff = Math.round(barBottom + 16 - (top.getBoundingClientRect().top + window.pageYOffset));
+                if (Math.abs(diff) <= 1) break;
+                top.style.marginTop = (parseFloat(getComputedStyle(top).marginTop) + diff) + 'px';
+            }
+        };
+        fixPlHeaderOffset();
+        setTimeout(fixPlHeaderOffset, 350);
+        setTimeout(fixPlHeaderOffset, 1300);
+        $(window).on('load', fixPlHeaderOffset);
+        var plResizeTimer;
+        $(window).on('resize', function () {
+            clearTimeout(plResizeTimer);
+            plResizeTimer = setTimeout(fixPlHeaderOffset, 150);
+        });
+    } catch (plErr) {
+        if (window.console) console.error('Payment ledger mobile view:', plErr);
+    }
+    /* -------------------------------------------------------------------- */
 });
 
 $(document).ready(function() {

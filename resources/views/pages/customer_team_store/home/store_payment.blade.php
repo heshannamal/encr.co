@@ -1,6 +1,25 @@
 @extends('layouts.customer_team_store.app')
 
 @section('content')
+@php
+    /* USPS domestic checkout helpers */
+    $uspsStates = [
+        'AL'=>'Alabama','AK'=>'Alaska','AZ'=>'Arizona','AR'=>'Arkansas','CA'=>'California','CO'=>'Colorado','CT'=>'Connecticut','DE'=>'Delaware','DC'=>'District of Columbia','FL'=>'Florida','GA'=>'Georgia','HI'=>'Hawaii','ID'=>'Idaho','IL'=>'Illinois','IN'=>'Indiana','IA'=>'Iowa','KS'=>'Kansas','KY'=>'Kentucky','LA'=>'Louisiana','ME'=>'Maine','MD'=>'Maryland','MA'=>'Massachusetts','MI'=>'Michigan','MN'=>'Minnesota','MS'=>'Mississippi','MO'=>'Missouri','MT'=>'Montana','NE'=>'Nebraska','NV'=>'Nevada','NH'=>'New Hampshire','NJ'=>'New Jersey','NM'=>'New Mexico','NY'=>'New York','NC'=>'North Carolina','ND'=>'North Dakota','OH'=>'Ohio','OK'=>'Oklahoma','OR'=>'Oregon','PA'=>'Pennsylvania','RI'=>'Rhode Island','SC'=>'South Carolina','SD'=>'South Dakota','TN'=>'Tennessee','TX'=>'Texas','UT'=>'Utah','VT'=>'Vermont','VA'=>'Virginia','WA'=>'Washington','WV'=>'West Virginia','WI'=>'Wisconsin','WY'=>'Wyoming',
+        'AS'=>'American Samoa','GU'=>'Guam','MP'=>'Northern Mariana Islands','PR'=>'Puerto Rico','VI'=>'U.S. Virgin Islands','AA'=>'Armed Forces Americas','AE'=>'Armed Forces Europe','AP'=>'Armed Forces Pacific',
+    ];
+
+    $normalizeUspsPhone = function ($phone) {
+        $digits = preg_replace('/\\D+/', '', (string) $phone);
+        if (strlen($digits) === 11 && substr($digits, 0, 1) === '1') {
+            $digits = substr($digits, 1);
+        }
+        return $digits;
+    };
+
+    $billingStateValue = strtoupper(trim((string) old('state', $newStoreCustomer->state ?? '')));
+    $shippingStateValue = strtoupper(trim((string) old('shipping_state', $newStoreCustomer->shipping_state ?? '')));
+@endphp
+
 
 <style>
     .top-navbar {
@@ -931,7 +950,14 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="state" class="form-label">State <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="state" name="state" value="{{$newStoreCustomer->state ?? ''}}" required />
+                                                    <select class="form-control" id="state" name="state" required style="height: calc(2rem + 1px) !important;">
+                                                        <option value="">Select State</option>
+                                                        @foreach($uspsStates as $stateCode => $stateName)
+                                                            <option value="{{ $stateCode }}" {{ ($billingStateValue === $stateCode || $billingStateValue === strtoupper($stateName)) ? 'selected' : '' }}>
+                                                                {{ $stateName }} ({{ $stateCode }})
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="country" class="form-label">Country <span class="text-danger">*</span></label>
@@ -943,7 +969,12 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="phone" class="form-label">Phone No <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="phone" name="phone" value="{{$newStoreCustomer->phone_number ?? ''}}" required />
+                                                    <input type="tel" class="form-control usps-phone-input" id="phone" name="phone"
+                                                        value="{{ $normalizeUspsPhone(old('phone', $newStoreCustomer->phone_number ?? '')) }}"
+                                                        inputmode="numeric" autocomplete="tel" minlength="10" maxlength="10" pattern="[0-9]{10}"
+                                                        placeholder="6193396706"
+                                                        title="Enter exactly 10 digits including area code, without spaces, dashes, parentheses, or +1." required />
+                                                    <small class="text-muted" style="font-size:10px;">10 digits only, including area code. Example: 6193396706</small>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
@@ -996,8 +1027,15 @@
                                                     <input type="text" class="form-control" id="shipping_city" name="shipping_city" value="{{$newStoreCustomer->shipping_city ?? ''}}" />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label for="state" class="form-label">State <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="shipping_state" name="shipping_state" value="{{$newStoreCustomer->shipping_state ?? ''}}" />
+                                                    <label for="shipping_state" class="form-label">State <span class="text-danger">*</span></label>
+                                                    <select class="form-control" id="shipping_state" name="shipping_state" style="height: calc(2rem + 1px) !important;">
+                                                        <option value="">Select State</option>
+                                                        @foreach($uspsStates as $stateCode => $stateName)
+                                                            <option value="{{ $stateCode }}" {{ ($shippingStateValue === $stateCode || $shippingStateValue === strtoupper($stateName)) ? 'selected' : '' }}>
+                                                                {{ $stateName }} ({{ $stateCode }})
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="country" class="form-label">Country <span class="text-danger">*</span></label>
@@ -1008,8 +1046,13 @@
                                                     <input type="text" class="form-control" id="shipping_zip_code" name="shipping_zip_code" value="{{$newStoreCustomer->shipping_postal_code ?? ''}}" />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label for="phone" class="form-label">Phone No</label>
-                                                    <input type="text" class="form-control" id="shipping_phone" name="shipping_phone" value="{{$newStoreCustomer->shipping_phone ?? ''}}" />
+                                                    <label for="shipping_phone" class="form-label">Phone No</label>
+                                                    <input type="tel" class="form-control usps-phone-input" id="shipping_phone" name="shipping_phone"
+                                                        value="{{ $normalizeUspsPhone(old('shipping_phone', $newStoreCustomer->shipping_phone ?? '')) }}"
+                                                        inputmode="numeric" autocomplete="tel" minlength="10" maxlength="10" pattern="[0-9]{10}"
+                                                        placeholder="6193396706"
+                                                        title="If provided, enter exactly 10 digits including area code, without spaces, dashes, parentheses, or +1." />
+                                                    <small class="text-muted" style="font-size:10px;">Optional. If entered, use 10 digits only.</small>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="email" class="form-label">Email</label>
@@ -1262,6 +1305,24 @@
         $('.se-pre-con').fadeIn('slow');
         $("#confirm-purchase-card").click();
     }
+
+    function normalizeUspsPhoneValue(value) {
+        var digits = String(value || '').replace(/\D/g, '');
+        if (digits.length === 11 && digits.charAt(0) === '1') {
+            digits = digits.substring(1);
+        }
+        return digits.substring(0, 10);
+    }
+
+    $(document).on('input blur', '.usps-phone-input', function() {
+        this.value = normalizeUspsPhoneValue(this.value);
+    });
+
+    $('#payment-card-info').on('submit', function() {
+        $(this).find('.usps-phone-input').each(function() {
+            this.value = normalizeUspsPhoneValue(this.value);
+        });
+    });
 
     $(document).ready(function() {
 

@@ -63,22 +63,149 @@ class USPSService
         return $json['access_token'];
     }
 
+    // public function getDomesticRates(array $data)
+    // {
+    //     $response = Http::withToken($this->getAccessToken())
+    //         ->acceptJson()
+    //         ->asJson()
+    //         ->post($this->apiUrl . '/prices/v3/base-rates/search', $data);
+
+    //     if (!$response->successful()) {
+    //         Log::error('USPS rate request failed', [
+    //             'status' => $response->status(),
+    //             'body' => $response->body(),
+    //         ]);
+    //         throw new Exception('Unable to get USPS shipping rates. Status: ' . $response->status() . ' Body: ' . $response->body());
+    //     }
+
+    //     return $response->json() ?: [];
+    // }
+
     public function getDomesticRates(array $data)
     {
+        $accountType = config('services.usps.account_type', 'EPS');
+        $accountNumber = config('services.usps.account_number');
+
+        if (empty($accountType) || empty($accountNumber)) {
+            throw new Exception(
+                'USPS rate account details are missing. '
+                . 'Check USPS_ACCOUNT_TYPE and USPS_ACCOUNT_NUMBER.'
+            );
+        }
+
+        $data['priceType'] = 'CONTRACT';
+        $data['accountType'] = $accountType;
+        $data['accountNumber'] = (string) $accountNumber;
+
+
+        if (empty($data['mailingDate'])) {
+            $data['mailingDate'] = now()->format('Y-m-d');
+        }
+
+        if (!array_key_exists('destinationEntryFacilityType', $data)) {
+            $data['destinationEntryFacilityType'] = 'NONE';
+        }
+
+        if (!array_key_exists('hasNonstandardCharacteristics', $data)) {
+            $data['hasNonstandardCharacteristics'] = false;
+        }
+
+        Log::info('USPS RATE REQUEST', [
+            'request' => $data,
+        ]);
+
         $response = Http::withToken($this->getAccessToken())
             ->acceptJson()
             ->asJson()
-            ->post($this->apiUrl . '/prices/v3/base-rates/search', $data);
+            ->post(
+                $this->apiUrl . '/prices/v3/base-rates/search',
+                $data
+            );
+
+        $responseData = $response->json();
+
+        Log::info('USPS RATE RESPONSE', [
+            'status' => $response->status(),
+            'response' => $responseData,
+        ]);
 
         if (!$response->successful()) {
             Log::error('USPS rate request failed', [
                 'status' => $response->status(),
+                'request' => $data,
                 'body' => $response->body(),
             ]);
-            throw new Exception('Unable to get USPS shipping rates. Status: ' . $response->status() . ' Body: ' . $response->body());
+
+            throw new Exception(
+                'Unable to get USPS shipping rates. Status: '
+                . $response->status()
+                . ' Body: '
+                . $response->body()
+            );
         }
 
-        return $response->json() ?: [];
+        $result = is_array($responseData)
+            ? $responseData
+            : [];
+
+
+            
+        if (isset($result['rates']) && is_array($result['rates'])) {
+            foreach ($result['rates'] as $rate) {
+
+                $returnedPriceType = $rate['priceType'] ?? null;
+
+                if (
+                    $returnedPriceType
+                    && strtoupper((string) $returnedPriceType) !== 'CONTRACT'
+                ) {
+                    Log::warning('USPS DID NOT RETURN CONTRACT RATE', [
+                        'requested_price_type' => 'CONTRACT',
+                        'returned_price_type' => $returnedPriceType,
+                        'price' => $rate['price'] ?? null,
+                        'mail_class' => $rate['mailClass'] ?? ($data['mailClass'] ?? null),
+                        'account_type' => $accountType,
+                        'account_number_last4' => substr(
+                            (string) $accountNumber,
+                            -4
+                        ),
+                        'warnings' => $rate['warnings'] ?? [],
+                    ]);
+                }
+
+                if (
+                    isset($rate['warnings'])
+                    && is_array($rate['warnings'])
+                ) {
+                    foreach ($rate['warnings'] as $warning) {
+
+                        $description =
+                            $warning['warningDescription']
+                            ?? '';
+
+                        if (
+                            $description
+                            && stripos(
+                                $description,
+                                'contract rate not found'
+                            ) !== false
+                        ) {
+                            Log::warning(
+                                'USPS CONTRACT RATE NOT FOUND - PUBLISHED RATE RETURNED',
+                                [
+                                    'price' => $rate['price'] ?? null,
+                                    'mail_class' => $rate['mailClass']
+                                        ?? ($data['mailClass'] ?? null),
+                                    'warning' => $warning,
+                                ]
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
     }
 
     public function getPaymentAuthorizationToken()
@@ -379,5 +506,114 @@ class USPSService
             config('services.usps.mid') . '_' .
             config('services.usps.account_number')
         ));
+    }
+    public function reprintDomesticLabelByIdempotencyKey(
+        $requestUuid,
+        $suppressPostage = true
+    ) {
+        $requestUuid = trim((string) $requestUuid);
+
+        if ($requestUuid === '') {
+            throw new Exception(
+                'USPS label recovery requires the original X-Idempotency-Key.'
+            );
+        }
+
+        $response = Http::withToken($this->getAccessToken())
+            ->withHeaders([
+                'X-Payment-Authorization-Token' =>
+                    $this->getPaymentAuthorizationToken(),
+
+                'X-Idempotency-Key' => $requestUuid,
+            ])
+            ->timeout(90)
+            ->asJson()
+            ->post(
+                $this->apiUrl . '/labels/v3/label-reprint',
+                [
+                    'imageInfo' => [
+                        'imageType' => 'PDF',
+                        'labelType' => '4X6LABEL',
+                        'suppressPostage' => (bool) $suppressPostage,
+                    ],
+                ]
+            );
+
+        if (!$response->successful()) {
+
+            Log::warning(
+                'USPS label recovery by idempotency key failed',
+                [
+                    'status' => $response->status(),
+                    'request_uuid' => $requestUuid,
+                    'body' => $response->body(),
+                ]
+            );
+
+            throw new Exception(
+                'USPS label recovery failed. Status: ' .
+                $response->status() .
+                ' Body: ' .
+                $response->body()
+            );
+        }
+
+        return $this->parseDomesticLabelResponse(
+            $response->body(),
+            (string) $response->header('Content-Type')
+        );
+    }
+
+
+    /**
+     * Cancel an uncertain USPS label or request a refund by the original
+     * X-Idempotency-Key.
+     *
+     * USPS uses DELETE /labels/v3/label when identifying the original label
+     * by X-Idempotency-Key. This is different from the tracking-number route:
+     * DELETE /labels/v3/label/{trackingNumber}
+     */
+    public function cancelOrRefundLabelByIdempotencyKey($requestUuid)
+    {
+        $requestUuid = trim((string) $requestUuid);
+
+        if ($requestUuid === '') {
+            throw new Exception(
+                'USPS cancellation/refund requires the original X-Idempotency-Key.'
+            );
+        }
+
+        $response = Http::withToken($this->getAccessToken())
+            ->withHeaders([
+                'X-Payment-Authorization-Token' =>
+                    $this->getPaymentAuthorizationToken(),
+
+                'X-Idempotency-Key' => $requestUuid,
+            ])
+            ->acceptJson()
+            ->delete(
+                $this->apiUrl . '/labels/v3/label'
+            );
+
+        if (!$response->successful()) {
+
+            Log::warning(
+                'USPS cancel/refund by idempotency key failed',
+                [
+                    'status' => $response->status(),
+                    'request_uuid' => $requestUuid,
+                    'body' => $response->body(),
+                ]
+            );
+
+            throw new Exception(
+                'USPS cancellation/refund by original request UUID failed. Status: ' .
+                $response->status() .
+                ' Body: ' .
+                $response->body()
+            );
+        }
+
+        return $response->json() ?: [];
     }
 }

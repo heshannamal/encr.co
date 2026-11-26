@@ -183,6 +183,7 @@
             position: inherit !important;
         }
 
+@media (max-width: 767.98px) { .ex-factory-address-table { width: 96% !important; max-width: 96% !important; table-layout: fixed !important; } .ex-factory-address-cell .select2-container { width: 100% !important; max-width: 100% !important; min-width: 0 !important; } .ex-factory-address-cell .select2-selection--single { width: 100% !important; max-width: 100% !important; height: 35px !important; overflow: hidden !important; box-sizing: border-box !important; } .ex-factory-address-cell .select2-selection__rendered { display: block !important; width: 100% !important; max-width: 100% !important; height: 33px !important; line-height: 33px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; padding-right: 30px !important; box-sizing: border-box !important; } .ex-factory-address-cell .select2-selection__arrow { height: 35px !important; } }
 </style>
 
 
@@ -484,28 +485,35 @@
                                                 <td><input class="invoice-inputs item-datepicker" name="item_encore_packing_date" id="item_encore_packing_date" type='text' value='' onchange="changeAddItemEncorePackingDate()" required /></td>
                                             </tr>
                                         </table>
-                                        <table class="table invoice_details" style="border: none;margin-left: 2%;margin-right: 2%;">
-                                            <tr>
-                                                <th class="form-label">Ex-Factory Address</th>
-                                            </tr>
-                                            <tr>
-                                                <td style="display: flex;">
-                                                    <select class="invoice-inputs select2-add-item" name="item_ex_factory_id" id="item_ex_factory_id" required>
-                                                        <option value="0">Same as Customer Address</option>
-                                                        @foreach ($exFactories as $exFactory)
-                                                            <option value="{{$exFactory->id}}">{{$exFactory->ex_factory_name}} | {{$exFactory->po_box}}, {{$exFactory->city}}, {{$exFactory->state}}, {{$exFactory->postal_code}}, {{$exFactory->country}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <a href="#" class="btn input-group-text add_new_add_btn mobile_add_new_add_btn" style="" data-toggle="modal" data-target="#add_ex_factory_modal">
-                                                        <i class="fas fa-plus"></i>&nbsp;ADD NEW ADDRESS
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                        <table class="table invoice_details ex-factory-address-table"
+       style="border: none; margin-left: 2%; margin-right: 2%;">
+    <tr>
+        <th class="form-label">Ex-Factory Address</th>
+    </tr>
+    <tr>
+        <td class="ex-factory-address-cell">
+            <select class="invoice-inputs select2-add-item ex-factory-address-select"
+                    name="item_ex_factory_id"
+                    id="item_ex_factory_id"
+                    required>
+                <option value="0">Same as Customer Address</option>
+                @foreach ($exFactories as $exFactory)
+                    <option value="{{ $exFactory->id }}">
+                        {{ $exFactory->ex_factory_name }} | {{ $exFactory->po_box }}, {{ $exFactory->city }}, {{ $exFactory->state }}, {{ $exFactory->postal_code }}, {{ $exFactory->country }}
+                    </option>
+                @endforeach
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="#" class="btn input-group-text add_new_add_btn mobile_add_new_add_btn"
+               data-toggle="modal" data-target="#add_ex_factory_modal">
+                <i class="fas fa-plus"></i>&nbsp;ADD NEW ADDRESS
+            </a>
+        </td>
+    </tr>
+</table>
                                 </div>
 
                             </div>

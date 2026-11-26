@@ -1218,6 +1218,7 @@
         .container-fluid.store-unique-styles {
             padding-left: 10px !important;
             padding-right: 10px !important;
+            padding-top: 43px;
         }
         .container-fluid.store-unique-styles .row {
             margin-left: 0px !important;
@@ -1558,8 +1559,12 @@
             display: none !important;
         }
         #mobile_catalog_actions.mobile-bottom-bar {
-        display: none !important;
-    }
+            display: none !important;
+        }
+        /* Hide the mobile expanded row (Price + Edit/Clone/Delete) on desktop */
+        .store-product-mobile-row-expanded {
+            display: none !important;
+        }
     }
 
 </style>
@@ -4425,6 +4430,11 @@ $(document).on('click', '#mobile_delete_store_btn', function () {
 
         // Accordion expand/collapse on mobile view
         $(document).on('click', '.store-product-row-toggle', function(e) {
+            // Ignore click if user clicked on checkbox or image view
+            if (window.innerWidth >= 768) {
+                return;
+            }
+
             // Ignore click if user clicked on checkbox or image view
             if ($(e.target).is('input[type="checkbox"]') || $(e.target).closest('.view_store_product').length || $(e.target).is('i.remove_store_product') || $(e.target).is('i.clone_store_product')) {
                 return;

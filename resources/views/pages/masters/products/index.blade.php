@@ -245,6 +245,884 @@
         font-weight: unset !important;
     }
 
+    /* MOBILE RESPONSIVE STYLES (≤ 768px) */
+    @media (max-width: 768px) {
+
+        /* ── Page Layout ── */
+        .content-position {
+            position: relative !important;
+            top: 0 !important;
+            padding: 12px 14px 40px 14px !important;
+        }
+
+        /* Hide desktop action bar row and alphabet search */
+        .content-position > .row.col-md-12:first-of-type,
+        div.alphabet {
+            display: none !important;
+        }
+
+        .card {
+            background-color: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .col-md-12 {
+            padding: 0 !important;
+        }
+
+        /* ── Action Buttons Container: Export & +Add Product ── */
+        .col-md-9.row.mt-3.mb-3.ml-auto {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 0 14px 0 !important;
+        }
+
+        .col-md-10.ml-auto {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+        }
+
+        .btn-inside-table {
+            width: 100% !important;
+            table-layout: fixed !important;
+            margin: 0 !important;
+            display: block !important;
+        }
+
+        .btn-inside-table tbody,
+        .btn-inside-table tr {
+            display: flex !important;
+            width: 100% !important;
+            gap: 12px !important;
+            align-items: center !important;
+        }
+
+        /* Hide "Show inactive products" checkbox and "Table Layout" button on mobile */
+        .btn-inside-table tr td:first-child,
+        .btn-inside-table tr td:nth-child(3) {
+            display: none !important;
+        }
+
+        /* Export button cell */
+        .btn-inside-table tr td:nth-child(2) {
+            flex: 0 0 calc(50% - 6px) !important;
+            width: calc(50% - 6px) !important;
+            padding: 0 !important;
+        }
+
+        /* +Add Product button cell */
+        .btn-inside-table tr td:last-child {
+            flex: 0 0 calc(50% - 6px) !important;
+            width: calc(50% - 6px) !important;
+            padding: 0 !important;
+        }
+
+        /* Export button matching */
+        #display_csv.styled-button {
+            width: 100% !important;
+            height: 44px !important;
+            background-color: #ffffff !important;
+            color: #475569 !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            margin: 0 !important;
+            cursor: pointer !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            padding: 0 10px !important;
+        }
+
+        #display_csv.styled-button::before {
+            content: "" !important;
+            display: inline-block !important;
+            width: 16px !important;
+            height: 16px !important;
+            background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'></path><polyline points='7 10 12 15 17 10'></polyline><line x1='12' y1='15' x2='12' y2='3'></line></svg>") no-repeat center !important;
+            background-size: contain !important;
+        }
+
+        /* +Add Product button matching  */
+        #add_product_btn.btn-green-filled {
+            width: 100% !important;
+            height: 44px !important;
+            background-color: #14b8a6 !important; /* Emerald / Teal */
+            border: none !important;
+            border-radius: 12px !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            color: #ffffff !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 2px 8px rgba(20, 184, 166, 0.28) !important;
+            cursor: pointer !important;
+            text-transform: none !important;
+            margin: 0 !important;
+            padding: 0 10px !important;
+        }
+
+        /* ── DataTables Top Controls (Search Bar) ── */
+        .dataTables_wrapper {
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .dataTables_wrapper .row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            width: 100% !important;
+        }
+
+        .dataTables_wrapper .row > [class*="col-"] {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: 0 0 100% !important;
+        }
+
+        /* Hide default page length on mobile */
+        .dataTables_length {
+            display: none !important;
+        }
+
+        /* Search input styled as "Search this product" */
+        .dataTables_filter {
+            order: -1 !important;
+            width: 100% !important;
+            margin: 0 0 14px 0 !important;
+            padding: 0 !important;
+            text-align: left !important;
+            float: none !important;
+        }
+
+        .dataTables_filter label {
+            width: 100% !important;
+            position: relative !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            display: block !important;
+            color: transparent !important;
+            font-size: 0 !important;
+            text-align: left !important;
+        }
+
+        .dataTables_filter label i {
+            display: none !important;
+        }
+
+        .dataTables_filter input[type="search"],
+        .dataTables_filter input.form-control {
+            display: block !important;
+            width: 100% !important;
+            height: 48px !important;
+            border-radius: 12px !important;
+            border: 1px solid #e2e8f0 !important;
+            background-color: #ffffff !important;
+            padding: 0 16px 0 46px !important;
+            font-size: 15px !important;
+            color: #334155 !important;
+            box-sizing: border-box !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: 16px center !important;
+            margin: 0 !important;
+            outline: none !important;
+        }
+
+        .dataTables_filter input::placeholder {
+            color: #94a3b8 !important;
+            font-size: 14px !important;
+        }
+
+        /* ── Showing count & Sort info row ("Showing 4 of 128 | Sorted: Product No.") ── */
+        .dataTables_info,
+        .new-style-table .dataTables_info {
+            font-size: 13.5px !important;
+            font-weight: 500 !important;
+            color: #64748b !important;
+            padding: 0 4px 12px 4px !important;
+            margin: 0 !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important;
+        }
+
+        /* .dataTables_info::after {
+            content: "Sorted: Product No." !important;
+            font-size: 13px !important;
+            color: #64748b !important;
+            font-weight: 500 !important;
+            margin-left: auto !important;
+        } */
+
+        /* ── Table Container & Reset ── */
+        .col-md-12.new-style-table {
+            padding: 0 !important;
+        }
+
+        .new-style-table > div {
+            overflow: visible !important;
+        }
+
+        #product_table.table-responsive {
+            overflow-x: visible !important;
+            overflow-y: visible !important;
+            border: none !important;
+            margin: 0 !important;
+            display: block !important;
+            width: 100% !important;
+            min-width: unset !important;
+            background: transparent !important;
+        }
+
+        /* Hide table thead on mobile */
+        #product_table thead {
+            display: none !important;
+        }
+
+        /* tbody: vertical list of cards */
+        #product_table tbody.list {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 0 !important;
+            width: 100% !important;
+            border: none !important;
+        }
+
+        .new-style-table table tr {
+            border-bottom: none !important;
+            border-top: none !important;
+            background-color: transparent !important;
+        }
+
+        .new-style-table table tbody tr:hover {
+            background-color: transparent !important;
+        }
+
+        .new-style-table .table tbody td,
+        .new-style-table .table tbody td a {
+            padding: 0 !important;
+            font-size: inherit !important;
+        }
+
+        /* ── Main Product Card (Parent TR) ── */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            align-items: center !important;
+            position: relative !important;
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 18px !important;
+            padding: 16px 16px 14px 16px !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            min-height: 0 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            margin-bottom: 12px !important;
+        }
+
+        /* When expanded: parent card top border & rounded top corners, seamless bottom to subproducts */
+        #product_table tbody.list tr.is-expanded:not([class*="trOfProduct"]) {
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+            border-top: 1px solid #e2e8f0 !important;
+            border-left: 1px solid #e2e8f0 !important;
+            border-right: 1px solid #e2e8f0 !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            border-top-left-radius: 18px !important;
+            border-top-right-radius: 18px !important;
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+            margin-bottom: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* Cloned sub-product rows inserted after parent */
+        #product_table tbody.list tr[class*="trOfProduct"] {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            align-items: center !important;
+            position: relative !important;
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+            border-left: 1px solid #e2e8f0 !important;
+            border-right: 1px solid #e2e8f0 !important;
+            border-top: none !important;
+            border-bottom: none !important;
+            border-radius: 0 !important;
+            padding: 7px 14px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* The last sub-product row gets bottom border and rounded bottom corners */
+        #product_table tbody.list tr.is-last-subproduct[class*="trOfProduct"] {
+            border-bottom: 1px solid #e2e8f0 !important;
+            border-bottom-left-radius: 18px !important;
+            border-bottom-right-radius: 18px !important;
+            padding-bottom: 14px !important;
+            margin-bottom: 12px !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03) !important;
+        }
+
+        /* Inner card inside each sub-product row */
+        .subproduct-card-inner {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            align-items: center !important;
+            width: 100% !important;
+            background-color: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 14px !important;
+            padding: 14px 16px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+        }
+
+        /* Strip default td borders/padding */
+        #product_table tbody.list tr td {
+            border: none !important;
+            padding: 0 !important;
+            background: transparent !important;
+            min-height: 0 !important;
+        }
+
+        /* collapseButton td positioned over the top-right corner on mobile */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.collapseButton {
+            position: absolute !important;
+            right: 0 !important;
+            top: 0 !important;
+            width: 60px !important;
+            height: 60px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            /* z-index: 10 !important; */
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* The actual FontAwesome chevron inside td.collapseButton */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.collapseButton i#charvonIconStyle,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.collapseButton i {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 40px !important;
+            height: 40px !important;
+            font-size: 14px !important;
+            color: #1F2933 !important;
+            cursor: pointer !important;
+            margin-top: -8px;
+            margin-right: -8px;
+        }
+
+        /* When chevron is right (collapsed) */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.collapseButton i.fa-chevron-right::before {
+            content: "\f078" !important; /* fa-chevron-down icon */
+        }
+
+        /* When chevron is down (expanded) */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.collapseButton i.fa-chevron-down::before {
+            content: "\f077" !important; /* fa-chevron-up icon */
+        }
+
+        /* ── 1. Product Name (Line 1) ── */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-name {
+            order: 1 !important;
+            flex: 0 0 calc(100% - 32px) !important;
+            max-width: calc(100% - 32px) !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            color: #1F2933 !important;
+            line-height: 1.3 !important;
+            margin-bottom: 4px !important;
+            padding-right: 20px !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-name a {
+            color: #1F2933 !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            text-decoration: none !important;
+            white-space: break-spaces !important;
+        }
+
+        /* ── Line 2: Meta Sub-header: No.X • DWC0120 • $30.00 ── */
+        /* We arrange product-no, pattern-code, default-price on line 2 */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-no {
+            order: 2 !important;
+            flex: 0 0 auto !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            color: #6B7280 !important;
+            margin-right: 4px !important;
+            text-align: left !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-no a {
+            color: #6B7280 !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            text-decoration: none !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-no::before {
+            content: "No." !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-no::after {
+            content: " • " !important;
+            color: #94a3b8 !important;
+            margin: 0 3px !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.pattern-code {
+            order: 3 !important;
+            flex: 0 0 auto !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            color: #6B7280 !important;
+            margin-right: 4px !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.pattern-code a {
+            color: #6B7280 !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            text-decoration: none !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.pattern-code::after {
+            content: " • " !important;
+            color: #94a3b8 !important;
+            margin: 0 3px !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.default-price {
+            order: 4 !important;
+            flex: 0 0 calc(100% - 180px) !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            color: #6B7280 !important;
+            text-align: left !important;
+        }
+
+        /* ── Line 3: Product Status Badge (Active / Draft / Inactive) ── */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-status {
+            order: 5 !important;
+            flex: 0 0 100% !important;
+            width: 100% !important;
+            margin-top: 6px !important;
+            margin-bottom: 12px !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-status span {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            padding: 4px 10px !important;
+            border-radius: 999px !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            line-height: 1.4 !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-status span.text-success{
+        /* #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-status span:contains("Active") { */
+            background-color: #e6f7f2 !important;
+            color: #10b981 !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-status span.text-success::before {
+            content: "●" !important;
+            font-size: 10px !important;
+            color: #10b981 !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-status span.text-danger {
+            background-color: #fef3c7 !important;
+            color: #d97706 !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-status span.text-danger::before {
+            content: "●" !important;
+            font-size: 10px !important;
+            color: #d97706 !important;
+        }
+
+        /* ── Line 4: Bottom Meta Row (SPORT, SUB PRODUCT, View Button) ── */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.sport {
+            order: 6 !important;
+            flex: 0 0 auto !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            color: #6B7280 !important;
+            text-transform: uppercase !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.sport::before {
+            content: "SPORT" !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            color: #6B7280 !important;
+        }
+
+        /* Sport pill (All, Lacrosse, etc.) */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.sport {
+            padding-right: 14px !important;
+        }
+
+        /* Styled pill for Sport */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.sport {
+            font-size: 0 !important; /* Hide unstyled text */
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.sport::before {
+            content: "SPORT" !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            color: #6B7280 !important;
+            margin-right: 8px !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.sport::after {
+            content: attr(data-sport-name) !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            color: #1F2933 !important;
+            background-color: #f1f5f9 !important;
+            border-radius: 8px !important;
+            padding: 4px 10px !important;
+            display: inline-block !important;
+        }
+
+        /* Row 1: SPORT takes the full line, long sport names wrap */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.sport {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            display: flex !important;
+            align-items: flex-start !important;
+            padding-right: 0 !important;
+            margin-bottom: 5px !important;
+        }
+
+        /* "SPORT" label stays fixed, pill takes the rest and wraps */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.sport::before {
+            flex: 0 0 auto !important;
+            margin-top: 4px !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.sport::after {
+            flex: 0 1 auto !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            white-space: normal !important;
+            line-height: 1.4 !important;
+        }
+
+        /* Row 2: SUB PRODUCT (left) + View (right) */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.gender {
+            flex: 1 1 0 !important;
+            min-width: 0 !important;
+        }
+        
+        /* SUB PRODUCT count & View Button placed using gender / category cells */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.gender {
+            order: 7 !important;
+            flex: 1 1 auto !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            font-size: 0 !important; /* Hide male/female */
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.gender::before {
+            content: "SUB PRODUCT" !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            color: #6B7280 !important;
+            margin-right: 4px !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.gender::after {
+            content: attr(data-sub-count) !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            color: #1F2933 !important;
+        }
+
+        /* View Button Pill on right */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-category-id {
+            order: 8 !important;
+            flex: 0 0 auto !important;
+            margin-left: auto !important;
+            font-size: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+        }
+
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-category-id::after {
+            content: "View" !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            color: #6B7280 !important;
+            background: #ffffff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'></path><circle cx='12' cy='12' r='3'></circle></svg>") 10px center no-repeat !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 999px !important;
+            padding: 5px 14px 5px 32px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            cursor: pointer !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
+        }
+
+        /* Hide other non-mobile columns on parent card */
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.main-category-id,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.product-size,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.standard-fabric,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.fabric-options,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.embellishment-options,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.attributes,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.weight,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.factories,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.description,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.notes,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.created-at,
+        #product_table tbody.list tr:not([class*="trOfProduct"]) td.updated-at {
+            display: none !important;
+        }
+
+        /* ── Sub-Product Cards (Cloned TRs: trOfProductX) ── */
+        /* Hide collapseButton on sub-product card */
+        #product_table tbody.list tr[class*="trOfProduct"] td.collapseButton {
+            display: none !important;
+        }
+
+        /* 1. Sub-product Name */
+        #product_table tbody.list tr[class*="trOfProduct"] .subproduct-card-inner td.product-name,
+        #product_table tbody.list tr[class*="trOfProduct"] td.product-name {
+            order: 1 !important;
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            line-height: 1.3 !important;
+            margin-bottom: 4px !important;
+        }
+
+        #product_table tbody.list tr[class*="trOfProduct"] .subproduct-card-inner td.product-name a,
+        #product_table tbody.list tr[class*="trOfProduct"] td.product-name a {
+            color: #0f172a !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            text-decoration: none !important;
+            white-space: break-spaces !important;
+        }
+
+        /* 2. Sub-product No, pattern code & price */
+        #product_table tbody.list tr[class*="trOfProduct"] .subproduct-card-inner td.product-no,
+        #product_table tbody.list tr[class*="trOfProduct"] td.product-no {
+            order: 2 !important;
+            flex: 0 0 auto !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            color: #6B7280 !important;
+            margin-right: 3px !important;
+            text-align: left !important;
+        }
+
+        #product_table tbody.list tr[class*="trOfProduct"] td.product-no::before {
+            content: "No." !important;
+        }
+
+        #product_table tbody.list tr[class*="trOfProduct"] td.product-no::after {
+            content: " • " !important;
+            color: #94a3b8 !important;
+            margin: 0 3px !important;
+        }
+
+        #product_table tbody.list tr[class*="trOfProduct"] .subproduct-card-inner td.pattern-code,
+        #product_table tbody.list tr[class*="trOfProduct"] td.pattern-code {
+            order: 3 !important;
+            flex: 0 0 auto !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            color: #6B7280 !important;
+            margin-right: 3px !important;
+        }
+
+        #product_table tbody.list tr[class*="trOfProduct"] td.pattern-code::after {
+            content: " • " !important;
+            color: #94a3b8 !important;
+            margin: 0 3px !important;
+        }
+
+        #product_table tbody.list tr[class*="trOfProduct"] .subproduct-card-inner td.default-price,
+        #product_table tbody.list tr[class*="trOfProduct"] td.default-price {
+            order: 4 !important;
+            flex: 0 0 auto !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            color: #6B7280 !important;
+            text-align: left !important;
+        }
+        
+        /* force line break after meta row */
+        .subproduct-card-inner::after {
+            content: "" !important;
+            order: 5 !important;
+            flex: 0 0 100% !important;
+            height: 0 !important;
+        }
+        /* 3. Sub-product Status */
+        #product_table tbody.list tr[class*="trOfProduct"] .subproduct-card-inner td.product-status,
+        #product_table tbody.list tr[class*="trOfProduct"] td.product-status {
+            order: 6 !important;
+            flex: 0 0 auto !important;
+            margin-top: 10px !important;
+            margin-right: auto !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            padding: 4px 12px !important;
+            border-radius: 999px !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            background-color: #e6f7f2 !important;
+            color: #10b981 !important;
+        }
+
+        #product_table tbody.list tr[class*="trOfProduct"] td.product-status::before {
+            content: "●" !important;
+            font-size: 9px !important;
+            color: #10b981 !important;
+        }
+
+        /* 4. Sub-product View button on the right */
+        #product_table tbody.list tr[class*="trOfProduct"] .subproduct-card-inner td.product-category-id,
+        #product_table tbody.list tr[class*="trOfProduct"] td.product-category-id {
+            order: 7 !important;
+            flex: 0 0 auto !important;
+            margin-left: auto !important;
+            margin-top: 8px !important;
+            font-size: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+        }
+
+        #product_table tbody.list tr[class*="trOfProduct"] td.product-category-id::after {
+            content: "View" !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            color: #6B7280 !important;
+            background: #ffffff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'></path><circle cx='12' cy='12' r='3'></circle></svg>") 8px center no-repeat !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 999px !important;
+            padding: 4px 12px 4px 28px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            cursor: pointer !important;
+        }
+
+        /* Hide unused columns in subproduct card */
+        #product_table tbody.list tr[class*="trOfProduct"] td.sport,
+        #product_table tbody.list tr[class*="trOfProduct"] td.gender,
+        #product_table tbody.list tr[class*="trOfProduct"] td.main-category-id,
+        #product_table tbody.list tr[class*="trOfProduct"] td.product-size,
+        #product_table tbody.list tr[class*="trOfProduct"] td.standard-fabric,
+        #product_table tbody.list tr[class*="trOfProduct"] td.fabric-options,
+        #product_table tbody.list tr[class*="trOfProduct"] td.embellishment-options,
+        #product_table tbody.list tr[class*="trOfProduct"] td.attributes,
+        #product_table tbody.list tr[class*="trOfProduct"] td.weight,
+        #product_table tbody.list tr[class*="trOfProduct"] td.factories,
+        #product_table tbody.list tr[class*="trOfProduct"] td.description,
+        #product_table tbody.list tr[class*="trOfProduct"] td.notes,
+        #product_table tbody.list tr[class*="trOfProduct"] td.created-at,
+        #product_table tbody.list tr[class*="trOfProduct"] td.updated-at {
+            display: none !important;
+        }
+
+        /* ── Pagination ── */
+        .dataTables_paginate {
+            display: flex !important;
+            justify-content: center !important;
+            margin-top: 18px !important;
+            width: 100% !important;
+        }
+
+        .dataTables_paginate ul.pagination {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+        }
+
+        .dataTables_paginate .page-item .page-link,
+        .dataTables_paginate .page-item span {
+            border-radius: 8px !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #475569 !important;
+            font-size: 13px !important;
+            padding: 6px 12px !important;
+            background: #ffffff !important;
+        }
+
+        .dataTables_paginate .page-item.active .page-link {
+            background-color: #14b8a6 !important;
+            border-color: #14b8a6 !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+        }
+        /* Inactive / under construction sub-product status */
+        #product_table tbody.list tr.is-inactive-sub td.product-status {
+            background-color: #fef3c7 !important;
+            color: #d97706 !important;
+        }
+        #product_table tbody.list tr.is-inactive-sub td.product-status::before {
+            color: #d97706 !important;
+        }
+        /* Inactive / under construction sub-product status (light red) */
+        #product_table tbody.list tr.is-inactive-sub td.product-status,
+        #product_table tbody.list tr.is-inactive-sub .subproduct-card-inner td.product-status {
+            background-color: #fee2e2 !important;
+            color: #dc2626 !important;
+        }
+        #product_table tbody.list tr[class*="trOfProduct"].is-inactive-sub td.product-status::before,
+        #product_table tbody.list tr[class*="trOfProduct"].is-inactive-sub .subproduct-card-inner td.product-status::before {
+            color: #dc2626 !important;
+        }
+    }
+
 </style>
 
 {{-- {{dd($subProducts)}} --}}
@@ -453,7 +1331,8 @@
                                             @endif
 
                                         </td>
-                                        <td class="gender">{{$product->gender}}</td>
+                                        <!-- <td class="gender">{{$product->gender}}</td> -->
+                                        <td class="gender" data-sub-count="{{ count($subProductsUnique) }}">{{$product->gender}}</td>
                                         <td class="default-price text-right">$ {{$product->default_price}}</td>
                                         <td class="product-category-id">
                                             @php
@@ -847,18 +1726,43 @@
         var $row = $(event.target).closest('tr');
         $row.css('background-color', 'rgb(238 238 238)');
 
-        subProductsUnique.sort(function(a, b) {
-            return b.id - a.id;
-        });
+        // subProductsUnique.sort(function(a, b) {
+        //     return b.id - a.id;
+        // });
+        if (window.innerWidth <= 768) {
+            // Mobile: active first, then inactive. Inside each group, newest first.
+            subProductsUnique.sort(function(a, b) {
+                var aActive = (a.active == 1) ? 0 : 1;
+                var bActive = (b.active == 1) ? 0 : 1;
+
+                if (aActive !== bActive) {
+                    return aActive - bActive;
+                }
+                return b.id - a.id;
+            });
+        } else {
+            // Desktop: original order
+            subProductsUnique.sort(function(a, b) {
+                return b.id - a.id;
+            });
+        }
 
         var active_checkbox = document.getElementById("inactive_show");
+        var isMobileView = window.innerWidth <= 768;
 
-        if (active_checkbox.checked) {
-        } else {
+        // Mobile: always show inactive sub products. Desktop: follow the checkbox.
+        if (!isMobileView && !active_checkbox.checked) {
             subProductsUnique = subProductsUnique.filter(function(subProduct) {
                 return subProduct.active == 1;
             });
         }
+
+        // if (active_checkbox.checked) {
+        // } else {
+        //     subProductsUnique = subProductsUnique.filter(function(subProduct) {
+        //         return subProduct.active == 1;
+        //     });
+        // }
 
 
         if($('.trOfProduct' + productID).length > 0){
@@ -867,12 +1771,20 @@
             });
             $row.css('background-color', 'rgb(255 255 255)');
         }else{
-            for (var i = 0; i < subProductsUnique.length; i++) {
+            var isMobileList = window.innerWidth <= 768;
+
+            for (var n = 0; n < subProductsUnique.length; n++) {
+                // Mobile: walk backwards so the first item in the sorted list ends up on top
+                var i = isMobileList ? (subProductsUnique.length - 1 - n) : n;
+            // for (var i = 0; i < subProductsUnique.length; i++) {
                 var $clone = $row.clone();
                 $clone.removeAttr('id').css('display', 'table-row');
 
                 $clone.removeClass();
                 $clone.addClass('trOfProduct'+productID);
+                if (subProductsUnique[i].active != 1) {
+                    $clone.addClass('is-inactive-sub');
+                }
                 $clone.css('color', (subProductsUnique[i].active == 1 ? '#b3b3b3' : '#ff9292') + ' !important');
                 $clone.css('background-color', 'rgb(255 255 255)');
 
@@ -891,6 +1803,8 @@
                     } else if (status == 3) {
                         return "Under Construction";
                     } else if (status == 0) {
+                        return "Inactive";
+                    } else if (status == 0 || status == 4) {
                         return "Inactive";
                     } else {
                         return "Unknown Status";
@@ -1873,5 +2787,102 @@ console.log(productImages);
         $(this).parent().find('.select2-selection.select2-selection--multiple').height(parseInt(ulHeight)+51);
     });
 
+    // Mobile View Setup: data attributes & collapse trigger
+    const isMobileDevice = () => window.innerWidth <= 768;
+
+    const setupMobileProductCards = () => {
+        if (!isMobileDevice()) return;
+
+        $('#product_table tbody.list tr:not([class*="trOfProduct"])').each(function () {
+            const $row = $(this);
+            const $sportTd = $row.find('td.sport');
+            const $genderTd = $row.find('td.gender');
+
+            if (!$sportTd.attr('data-sport-name')) {
+                const sportText = $sportTd.text().trim() || 'All';
+                $sportTd.attr('data-sport-name', sportText);
+            }
+
+            if ($genderTd.attr('data-sub-count') === undefined) {
+                $genderTd.attr('data-sub-count', 0);
+            }
+            
+            // if (!$genderTd.attr('data-sub-count')) {
+            //     const chevron = $row.find('td.collapseButton i');
+            //     let count = 0;
+            //     if (chevron.attr('onclick')) {
+            //         const match = chevron.attr('onclick').match(/\[(.*?)\]/);
+            //         if (match && match[0]) {
+            //             try {
+            //                 const subList = JSON.parse(match[0]);
+            //                 count = subList.length;
+            //             } catch (e) {
+            //                 count = 0;
+            //             }
+            //         }
+            //     }
+            //     $genderTd.attr('data-sub-count', count);
+            // }
+        });
+    };
+
+    $(document).ready(function () {
+        setupMobileProductCards();
+        $('#product_table').on('draw.dt', setupMobileProductCards);
+        $(window).on('resize', setupMobileProductCards);
+
+        // View button click on card navigates to edit_product
+        $(document).on('click', '#product_table tbody.list tr td.product-category-id', function (e) {
+            if (!isMobileDevice()) return;
+            const $row = $(this).closest('tr');
+            const editUrl = $row.find('td.product-name a').attr('href');
+            if (editUrl) {
+                window.location.href = editUrl;
+            }
+        });
+
+        // Mobile: style expanded parent + sub-product rows as connected white card group
+        $(document).on('click', '#product_table tbody.list tr td.collapseButton', function () {
+            if (!isMobileDevice()) return;
+            const $parentRow = $(this).closest('tr');
+            setTimeout(function () {
+                const chevronIcon = $parentRow.find('td.collapseButton i');
+                const isExpanded = chevronIcon.hasClass('fa-chevron-down');
+
+                if (isExpanded) {
+                    // Add expanded class to parent
+                    $parentRow.addClass('is-expanded');
+                    // Find all cloned sub-product rows immediately after parent
+                    const $clones = $parentRow.nextAll('[class*="trOfProduct"]').filter(function () {
+                        // Only get clones belonging to this parent (stop at next non-subproduct row)
+                        return true;
+                    });
+                    // Get the specific product ID clones
+                    const parentClasses = $parentRow.attr('class') || '';
+                    const allClones = [];
+                    let $next = $parentRow.next();
+                    while ($next.length && $next.attr('class') && $next.attr('class').indexOf('trOfProduct') !== -1) {
+                        allClones.push($next);
+                        $next = $next.next();
+                    }
+                    // Mark the last clone
+                    if (allClones.length > 0) {
+                        // Remove old marks
+                        for (let i = 0; i < allClones.length; i++) {
+                            allClones[i].removeClass('is-last-subproduct');
+                            // Wrap TDs in inner card div if not already wrapped
+                            if (allClones[i].find('.subproduct-card-inner').length === 0) {
+                                allClones[i].children('td').wrapAll('<div class="subproduct-card-inner"></div>');
+                            }
+                        }
+                        allClones[allClones.length - 1].addClass('is-last-subproduct');
+                    }
+                } else {
+                    // Collapsed: remove expanded class
+                    $parentRow.removeClass('is-expanded');
+                }
+            }, 80);
+        });
+    });
 </script>
 @endsection

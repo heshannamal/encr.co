@@ -1,0 +1,7261 @@
+{
+  "CA": {
+    "acalanes ridge": [
+      "Contra Costa County"
+    ],
+    "acampo": [
+      "San Joaquin County"
+    ],
+    "acton": [
+      "Los Angeles County"
+    ],
+    "adelanto": [
+      "San Bernardino County"
+    ],
+    "adin": [
+      "Modoc County"
+    ],
+    "agoura hills": [
+      "Los Angeles County"
+    ],
+    "agua dulce": [
+      "Los Angeles County"
+    ],
+    "aguanga": [
+      "Riverside County"
+    ],
+    "ahwahnee": [
+      "Madera County"
+    ],
+    "airport": [
+      "Stanislaus County"
+    ],
+    "alameda": [
+      "Alameda County"
+    ],
+    "alamo": [
+      "Contra Costa County"
+    ],
+    "albany": [
+      "Alameda County"
+    ],
+    "albion": [
+      "Mendocino County"
+    ],
+    "alderpoint": [
+      "Humboldt County"
+    ],
+    "alhambra": [
+      "Los Angeles County"
+    ],
+    "alhambra valley": [
+      "Contra Costa County"
+    ],
+    "aliso viejo": [
+      "Orange County"
+    ],
+    "alleghany": [
+      "Sierra County"
+    ],
+    "allendale": [
+      "Solano County"
+    ],
+    "allensworth": [
+      "Tulare County"
+    ],
+    "almanor": [
+      "Plumas County"
+    ],
+    "alondra park": [
+      "Los Angeles County"
+    ],
+    "alpaugh": [
+      "Tulare County"
+    ],
+    "alpine": [
+      "San Diego County"
+    ],
+    "alpine village": [
+      "Alpine County"
+    ],
+    "alta": [
+      "Placer County"
+    ],
+    "altadena": [
+      "Los Angeles County"
+    ],
+    "alta sierra": [
+      "Kern County",
+      "Nevada County"
+    ],
+    "alto": [
+      "Marin County"
+    ],
+    "alturas": [
+      "Modoc County"
+    ],
+    "alum rock": [
+      "Santa Clara County"
+    ],
+    "amador city": [
+      "Amador County"
+    ],
+    "amador pines": [
+      "Amador County"
+    ],
+    "american canyon": [
+      "Napa County"
+    ],
+    "amesti": [
+      "Santa Cruz County"
+    ],
+    "anaheim": [
+      "Orange County"
+    ],
+    "anchor bay": [
+      "Mendocino County"
+    ],
+    "anderson": [
+      "Shasta County"
+    ],
+    "angels": [
+      "Calaveras County"
+    ],
+    "angwin": [
+      "Napa County"
+    ],
+    "antelope": [
+      "Sacramento County"
+    ],
+    "antioch": [
+      "Contra Costa County"
+    ],
+    "anza": [
+      "Riverside County"
+    ],
+    "apple valley": [
+      "San Bernardino County"
+    ],
+    "aptos": [
+      "Santa Cruz County"
+    ],
+    "aptos hills-larkin valley": [
+      "Santa Cruz County"
+    ],
+    "arbuckle": [
+      "Colusa County"
+    ],
+    "arcadia": [
+      "Los Angeles County"
+    ],
+    "arcata": [
+      "Humboldt County"
+    ],
+    "arden-arcade": [
+      "Sacramento County"
+    ],
+    "armona": [
+      "Kings County"
+    ],
+    "arnold": [
+      "Calaveras County"
+    ],
+    "aromas": [
+      "Monterey County",
+      "San Benito County"
+    ],
+    "arroyo grande": [
+      "San Luis Obispo County"
+    ],
+    "artesia": [
+      "Los Angeles County"
+    ],
+    "artois": [
+      "Glenn County"
+    ],
+    "arvin": [
+      "Kern County"
+    ],
+    "ashland": [
+      "Alameda County"
+    ],
+    "aspen springs": [
+      "Mono County"
+    ],
+    "atascadero": [
+      "San Luis Obispo County"
+    ],
+    "atherton": [
+      "San Mateo County"
+    ],
+    "atwater": [
+      "Merced County"
+    ],
+    "auberry": [
+      "Fresno County"
+    ],
+    "auburn": [
+      "Placer County"
+    ],
+    "auburn lake trails": [
+      "El Dorado County"
+    ],
+    "august": [
+      "San Joaquin County"
+    ],
+    "avalon": [
+      "Los Angeles County"
+    ],
+    "avenal": [
+      "Kings County"
+    ],
+    "avery": [
+      "Calaveras County"
+    ],
+    "avila beach": [
+      "San Luis Obispo County"
+    ],
+    "avocado heights": [
+      "Los Angeles County"
+    ],
+    "azusa": [
+      "Los Angeles County"
+    ],
+    "baker": [
+      "San Bernardino County"
+    ],
+    "bakersfield": [
+      "Kern County"
+    ],
+    "bakersfield country club": [
+      "Kern County"
+    ],
+    "baldwin park": [
+      "Los Angeles County"
+    ],
+    "ballard": [
+      "Santa Barbara County"
+    ],
+    "ballico": [
+      "Merced County"
+    ],
+    "bangor": [
+      "Butte County"
+    ],
+    "banning": [
+      "Riverside County"
+    ],
+    "barstow": [
+      "San Bernardino County"
+    ],
+    "bass lake": [
+      "Madera County"
+    ],
+    "bay point": [
+      "Contra Costa County"
+    ],
+    "bayview": [
+      "Contra Costa County",
+      "Humboldt County"
+    ],
+    "baywood park": [
+      "San Mateo County"
+    ],
+    "beale afb": [
+      "Yuba County"
+    ],
+    "bear creek": [
+      "Merced County"
+    ],
+    "bear valley": [
+      "Alpine County",
+      "Mariposa County"
+    ],
+    "bear valley springs": [
+      "Kern County"
+    ],
+    "beaumont": [
+      "Riverside County"
+    ],
+    "beckwourth": [
+      "Plumas County"
+    ],
+    "belden": [
+      "Plumas County"
+    ],
+    "bell": [
+      "Los Angeles County"
+    ],
+    "bella vista": [
+      "Shasta County"
+    ],
+    "bell canyon": [
+      "Ventura County"
+    ],
+    "bellflower": [
+      "Los Angeles County"
+    ],
+    "bell gardens": [
+      "Los Angeles County"
+    ],
+    "belmont": [
+      "San Mateo County"
+    ],
+    "belvedere": [
+      "Marin County"
+    ],
+    "benbow": [
+      "Humboldt County"
+    ],
+    "bend": [
+      "Tehama County"
+    ],
+    "benicia": [
+      "Solano County"
+    ],
+    "ben lomond": [
+      "Santa Cruz County"
+    ],
+    "benton": [
+      "Mono County"
+    ],
+    "benton park": [
+      "Kern County"
+    ],
+    "berkeley": [
+      "Alameda County"
+    ],
+    "bermuda dunes": [
+      "Riverside County"
+    ],
+    "berry creek": [
+      "Butte County"
+    ],
+    "bertsch-oceanview": [
+      "Del Norte County"
+    ],
+    "bethel island": [
+      "Contra Costa County"
+    ],
+    "beverly hills": [
+      "Los Angeles County"
+    ],
+    "bieber": [
+      "Lassen County"
+    ],
+    "big bear city": [
+      "San Bernardino County"
+    ],
+    "big bear lake": [
+      "San Bernardino County"
+    ],
+    "big bend": [
+      "Shasta County"
+    ],
+    "big creek": [
+      "Fresno County"
+    ],
+    "biggs": [
+      "Butte County"
+    ],
+    "big lagoon": [
+      "Humboldt County"
+    ],
+    "big pine": [
+      "Inyo County"
+    ],
+    "big river": [
+      "San Bernardino County"
+    ],
+    "biola": [
+      "Fresno County"
+    ],
+    "bishop": [
+      "Inyo County"
+    ],
+    "blackhawk": [
+      "Contra Costa County"
+    ],
+    "blacklake": [
+      "San Luis Obispo County"
+    ],
+    "black point-green point": [
+      "Marin County"
+    ],
+    "blairsden": [
+      "Plumas County"
+    ],
+    "bloomfield": [
+      "Sonoma County"
+    ],
+    "bloomington": [
+      "San Bernardino County"
+    ],
+    "blue lake": [
+      "Humboldt County"
+    ],
+    "bluewater": [
+      "San Bernardino County"
+    ],
+    "blythe": [
+      "Riverside County"
+    ],
+    "bodega": [
+      "Sonoma County"
+    ],
+    "bodega bay": [
+      "Sonoma County"
+    ],
+    "bodfish": [
+      "Kern County"
+    ],
+    "bolinas": [
+      "Marin County"
+    ],
+    "bombay beach": [
+      "Imperial County"
+    ],
+    "bonadelle ranchos": [
+      "Madera County"
+    ],
+    "bonita": [
+      "San Diego County"
+    ],
+    "bonny doon": [
+      "Santa Cruz County"
+    ],
+    "bonsall": [
+      "San Diego County"
+    ],
+    "boonville": [
+      "Mendocino County"
+    ],
+    "bootjack": [
+      "Mariposa County"
+    ],
+    "boron": [
+      "Kern County"
+    ],
+    "boronda": [
+      "Monterey County"
+    ],
+    "borrego springs": [
+      "San Diego County"
+    ],
+    "bostonia": [
+      "San Diego County"
+    ],
+    "boulder creek": [
+      "Santa Cruz County"
+    ],
+    "boulevard": [
+      "San Diego County"
+    ],
+    "bowles": [
+      "Fresno County"
+    ],
+    "boyes hot springs": [
+      "Sonoma County"
+    ],
+    "bradbury": [
+      "Los Angeles County"
+    ],
+    "bradley": [
+      "Monterey County"
+    ],
+    "brawley": [
+      "Imperial County"
+    ],
+    "brea": [
+      "Orange County"
+    ],
+    "brentwood": [
+      "Contra Costa County"
+    ],
+    "bret harte": [
+      "Stanislaus County"
+    ],
+    "bridgeport": [
+      "Mono County"
+    ],
+    "brisbane": [
+      "San Mateo County"
+    ],
+    "broadmoor": [
+      "San Mateo County"
+    ],
+    "brookdale": [
+      "Santa Cruz County"
+    ],
+    "brooks": [
+      "Yolo County"
+    ],
+    "brooktrails": [
+      "Mendocino County"
+    ],
+    "buckhorn": [
+      "Amador County"
+    ],
+    "buck meadows": [
+      "Mariposa County"
+    ],
+    "bucks lake": [
+      "Plumas County"
+    ],
+    "buellton": [
+      "Santa Barbara County"
+    ],
+    "buena park": [
+      "Orange County"
+    ],
+    "buena vista": [
+      "Amador County"
+    ],
+    "burbank": [
+      "Los Angeles County",
+      "Santa Clara County"
+    ],
+    "burlingame": [
+      "San Mateo County"
+    ],
+    "burney": [
+      "Shasta County"
+    ],
+    "burnt ranch": [
+      "Trinity County"
+    ],
+    "butte creek canyon": [
+      "Butte County"
+    ],
+    "butte meadows": [
+      "Butte County"
+    ],
+    "butte valley": [
+      "Butte County"
+    ],
+    "buttonwillow": [
+      "Kern County"
+    ],
+    "byron": [
+      "Contra Costa County"
+    ],
+    "bystrom": [
+      "Stanislaus County"
+    ],
+    "cabazon": [
+      "Riverside County"
+    ],
+    "calabasas": [
+      "Los Angeles County"
+    ],
+    "calexico": [
+      "Imperial County"
+    ],
+    "california city": [
+      "Kern County"
+    ],
+    "california hot springs": [
+      "Tulare County"
+    ],
+    "california pines": [
+      "Modoc County"
+    ],
+    "california polytechnic state university": [
+      "San Luis Obispo County"
+    ],
+    "calimesa": [
+      "Riverside County"
+    ],
+    "calipatria": [
+      "Imperial County"
+    ],
+    "calistoga": [
+      "Napa County"
+    ],
+    "callender": [
+      "San Luis Obispo County"
+    ],
+    "calpella": [
+      "Mendocino County"
+    ],
+    "calpine": [
+      "Sierra County"
+    ],
+    "calwa": [
+      "Fresno County"
+    ],
+    "camanche north shore": [
+      "Amador County"
+    ],
+    "camanche village": [
+      "Amador County"
+    ],
+    "camarillo": [
+      "Ventura County"
+    ],
+    "cambria": [
+      "San Luis Obispo County"
+    ],
+    "cambrian park": [
+      "Santa Clara County"
+    ],
+    "cameron park": [
+      "El Dorado County"
+    ],
+    "camino": [
+      "El Dorado County"
+    ],
+    "camino tassajara": [
+      "Contra Costa County"
+    ],
+    "campbell": [
+      "Santa Clara County"
+    ],
+    "camp nelson": [
+      "Tulare County"
+    ],
+    "campo": [
+      "San Diego County"
+    ],
+    "camp pendleton mainside": [
+      "San Diego County"
+    ],
+    "camp pendleton south": [
+      "San Diego County"
+    ],
+    "camptonville": [
+      "Yuba County"
+    ],
+    "canby": [
+      "Modoc County"
+    ],
+    "cantua creek": [
+      "Fresno County"
+    ],
+    "canyondam": [
+      "Plumas County"
+    ],
+    "canyon lake": [
+      "Riverside County"
+    ],
+    "capitola": [
+      "Santa Cruz County"
+    ],
+    "caribou": [
+      "Plumas County"
+    ],
+    "carlsbad": [
+      "San Diego County"
+    ],
+    "carmel-by-the-sea": [
+      "Monterey County"
+    ],
+    "carmel valley village": [
+      "Monterey County"
+    ],
+    "carmet": [
+      "Sonoma County"
+    ],
+    "carmichael": [
+      "Sacramento County"
+    ],
+    "carnelian bay": [
+      "Placer County"
+    ],
+    "carpinteria": [
+      "Santa Barbara County"
+    ],
+    "carrick": [
+      "Siskiyou County"
+    ],
+    "carson": [
+      "Los Angeles County"
+    ],
+    "cartago": [
+      "Inyo County"
+    ],
+    "caruthers": [
+      "Fresno County"
+    ],
+    "casa conejo": [
+      "Ventura County"
+    ],
+    "casa de oro-mount helix": [
+      "San Diego County"
+    ],
+    "casa loma": [
+      "Kern County"
+    ],
+    "casmalia": [
+      "Santa Barbara County"
+    ],
+    "caspar": [
+      "Mendocino County"
+    ],
+    "cassel": [
+      "Shasta County"
+    ],
+    "castaic": [
+      "Los Angeles County"
+    ],
+    "castella": [
+      "Shasta County"
+    ],
+    "castle hill": [
+      "Contra Costa County"
+    ],
+    "castro valley": [
+      "Alameda County"
+    ],
+    "castroville": [
+      "Monterey County"
+    ],
+    "cathedral city": [
+      "Riverside County"
+    ],
+    "catheys valley": [
+      "Mariposa County"
+    ],
+    "cayucos": [
+      "San Luis Obispo County"
+    ],
+    "cazadero": [
+      "Sonoma County"
+    ],
+    "cedar flat": [
+      "Placer County"
+    ],
+    "cedar ridge": [
+      "Tuolumne County"
+    ],
+    "cedar slope": [
+      "Tulare County"
+    ],
+    "cedarville": [
+      "Modoc County"
+    ],
+    "centerville": [
+      "Fresno County",
+      "Shasta County"
+    ],
+    "ceres": [
+      "Stanislaus County"
+    ],
+    "cerritos": [
+      "Los Angeles County"
+    ],
+    "chalfant": [
+      "Mono County"
+    ],
+    "challenge-brownsville": [
+      "Yuba County"
+    ],
+    "channel islands beach": [
+      "Ventura County"
+    ],
+    "charleston view": [
+      "Inyo County"
+    ],
+    "charter oak": [
+      "Los Angeles County"
+    ],
+    "cherokee": [
+      "Butte County"
+    ],
+    "cherokee strip": [
+      "Kern County"
+    ],
+    "cherryland": [
+      "Alameda County"
+    ],
+    "cherry valley": [
+      "Riverside County"
+    ],
+    "chester": [
+      "Plumas County"
+    ],
+    "chico": [
+      "Butte County"
+    ],
+    "chilcoot-vinton": [
+      "Plumas County"
+    ],
+    "china lake acres": [
+      "Kern County"
+    ],
+    "chinese camp": [
+      "Tuolumne County"
+    ],
+    "chino": [
+      "San Bernardino County"
+    ],
+    "chino hills": [
+      "San Bernardino County"
+    ],
+    "choctaw valley": [
+      "Kern County"
+    ],
+    "chowchilla": [
+      "Madera County"
+    ],
+    "chualar": [
+      "Monterey County"
+    ],
+    "chula vista": [
+      "San Diego County"
+    ],
+    "citrus": [
+      "Los Angeles County"
+    ],
+    "citrus heights": [
+      "Sacramento County"
+    ],
+    "claremont": [
+      "Los Angeles County"
+    ],
+    "clarksburg": [
+      "Yolo County"
+    ],
+    "clay": [
+      "Sacramento County"
+    ],
+    "clayton": [
+      "Contra Costa County"
+    ],
+    "clear creek": [
+      "Lassen County"
+    ],
+    "clearlake": [
+      "Lake County"
+    ],
+    "clearlake oaks": [
+      "Lake County"
+    ],
+    "clearlake riviera": [
+      "Lake County"
+    ],
+    "cleone": [
+      "Mendocino County"
+    ],
+    "clio": [
+      "Plumas County"
+    ],
+    "clipper mills": [
+      "Butte County"
+    ],
+    "cloverdale": [
+      "Sonoma County"
+    ],
+    "clovis": [
+      "Fresno County"
+    ],
+    "clyde": [
+      "Contra Costa County"
+    ],
+    "coachella": [
+      "Riverside County"
+    ],
+    "coalinga": [
+      "Fresno County"
+    ],
+    "coarsegold": [
+      "Madera County"
+    ],
+    "cobb": [
+      "Lake County"
+    ],
+    "coffee creek": [
+      "Trinity County"
+    ],
+    "cohasset": [
+      "Butte County"
+    ],
+    "cold springs": [
+      "El Dorado County",
+      "Tuolumne County"
+    ],
+    "coleville": [
+      "Mono County"
+    ],
+    "colfax": [
+      "Placer County"
+    ],
+    "college city": [
+      "Colusa County"
+    ],
+    "collierville": [
+      "San Joaquin County"
+    ],
+    "colma": [
+      "San Mateo County"
+    ],
+    "coloma": [
+      "El Dorado County"
+    ],
+    "colton": [
+      "San Bernardino County"
+    ],
+    "columbia": [
+      "Tuolumne County"
+    ],
+    "colusa": [
+      "Colusa County"
+    ],
+    "commerce": [
+      "Los Angeles County"
+    ],
+    "comptche": [
+      "Mendocino County"
+    ],
+    "compton": [
+      "Los Angeles County"
+    ],
+    "concord": [
+      "Contra Costa County"
+    ],
+    "concow": [
+      "Butte County"
+    ],
+    "contra costa centre": [
+      "Contra Costa County"
+    ],
+    "copperopolis": [
+      "Calaveras County"
+    ],
+    "corcoran": [
+      "Kings County"
+    ],
+    "corning": [
+      "Tehama County"
+    ],
+    "corona": [
+      "Riverside County"
+    ],
+    "coronado": [
+      "San Diego County"
+    ],
+    "coronita": [
+      "Riverside County"
+    ],
+    "corralitos": [
+      "Santa Cruz County"
+    ],
+    "corte madera": [
+      "Marin County"
+    ],
+    "costa mesa": [
+      "Orange County"
+    ],
+    "cotati": [
+      "Sonoma County"
+    ],
+    "coto de caza": [
+      "Orange County"
+    ],
+    "cottonwood": [
+      "Kern County",
+      "Shasta County"
+    ],
+    "coulterville": [
+      "Mariposa County"
+    ],
+    "country club": [
+      "San Joaquin County"
+    ],
+    "courtland": [
+      "Sacramento County"
+    ],
+    "covelo": [
+      "Mendocino County"
+    ],
+    "covina": [
+      "Los Angeles County"
+    ],
+    "cowan": [
+      "Stanislaus County"
+    ],
+    "crane creek": [
+      "Mariposa County"
+    ],
+    "crescent city": [
+      "Del Norte County"
+    ],
+    "crescent mills": [
+      "Plumas County"
+    ],
+    "cressey": [
+      "Merced County"
+    ],
+    "crest": [
+      "San Diego County"
+    ],
+    "crestline": [
+      "San Bernardino County"
+    ],
+    "creston": [
+      "San Luis Obispo County"
+    ],
+    "c-road": [
+      "Plumas County"
+    ],
+    "crockett": [
+      "Contra Costa County"
+    ],
+    "cromberg": [
+      "Plumas County"
+    ],
+    "crowley lake": [
+      "Mono County"
+    ],
+    "crows landing": [
+      "Stanislaus County"
+    ],
+    "cudahy": [
+      "Los Angeles County"
+    ],
+    "culver city": [
+      "Los Angeles County"
+    ],
+    "cupertino": [
+      "Santa Clara County"
+    ],
+    "cutler": [
+      "Tulare County"
+    ],
+    "cutten": [
+      "Humboldt County"
+    ],
+    "cuyama": [
+      "Santa Barbara County"
+    ],
+    "cypress": [
+      "Orange County"
+    ],
+    "dales": [
+      "Tehama County"
+    ],
+    "daly city": [
+      "San Mateo County"
+    ],
+    "dana point": [
+      "Orange County"
+    ],
+    "danville": [
+      "Contra Costa County"
+    ],
+    "daphnedale park": [
+      "Modoc County"
+    ],
+    "darwin": [
+      "Inyo County"
+    ],
+    "davenport": [
+      "Santa Cruz County"
+    ],
+    "davis": [
+      "Yolo County"
+    ],
+    "day valley": [
+      "Santa Cruz County"
+    ],
+    "deer park": [
+      "Napa County"
+    ],
+    "del aire": [
+      "Los Angeles County"
+    ],
+    "delano": [
+      "Kern County"
+    ],
+    "del dios": [
+      "San Diego County"
+    ],
+    "delft colony": [
+      "Tulare County"
+    ],
+    "delhi": [
+      "Merced County"
+    ],
+    "delleker": [
+      "Plumas County"
+    ],
+    "del mar": [
+      "San Diego County"
+    ],
+    "del monte forest": [
+      "Monterey County"
+    ],
+    "del rey": [
+      "Fresno County"
+    ],
+    "del rey oaks": [
+      "Monterey County"
+    ],
+    "del rio": [
+      "Stanislaus County"
+    ],
+    "denair": [
+      "Stanislaus County"
+    ],
+    "derby acres": [
+      "Kern County"
+    ],
+    "descanso": [
+      "San Diego County"
+    ],
+    "desert center": [
+      "Riverside County"
+    ],
+    "desert edge": [
+      "Riverside County"
+    ],
+    "desert hot springs": [
+      "Riverside County"
+    ],
+    "desert palms": [
+      "Riverside County"
+    ],
+    "desert shores": [
+      "Imperial County"
+    ],
+    "desert view highlands": [
+      "Los Angeles County"
+    ],
+    "diablo": [
+      "Contra Costa County"
+    ],
+    "diablo grande": [
+      "Stanislaus County"
+    ],
+    "diamond bar": [
+      "Los Angeles County"
+    ],
+    "diamond springs": [
+      "El Dorado County"
+    ],
+    "di giorgio": [
+      "Kern County"
+    ],
+    "dillon beach": [
+      "Marin County"
+    ],
+    "dinuba": [
+      "Tulare County"
+    ],
+    "discovery bay": [
+      "Contra Costa County"
+    ],
+    "dixon": [
+      "Solano County"
+    ],
+    "dixon lane-meadowcreek": [
+      "Inyo County"
+    ],
+    "dobbins": [
+      "Yuba County"
+    ],
+    "dogtown": [
+      "San Joaquin County"
+    ],
+    "dollar point": [
+      "Placer County"
+    ],
+    "dorrington": [
+      "Calaveras County"
+    ],
+    "dorris": [
+      "Siskiyou County"
+    ],
+    "dos palos": [
+      "Merced County"
+    ],
+    "dos palos y": [
+      "Merced County"
+    ],
+    "douglas city": [
+      "Trinity County"
+    ],
+    "downey": [
+      "Los Angeles County"
+    ],
+    "downieville": [
+      "Sierra County"
+    ],
+    "doyle": [
+      "Lassen County"
+    ],
+    "drytown": [
+      "Amador County"
+    ],
+    "duarte": [
+      "Los Angeles County"
+    ],
+    "dublin": [
+      "Alameda County"
+    ],
+    "ducor": [
+      "Tulare County"
+    ],
+    "dunnigan": [
+      "Yolo County"
+    ],
+    "dunsmuir": [
+      "Siskiyou County"
+    ],
+    "durham": [
+      "Butte County"
+    ],
+    "dustin acres": [
+      "Kern County"
+    ],
+    "dutch flat": [
+      "Placer County"
+    ],
+    "eagleville": [
+      "Modoc County"
+    ],
+    "earlimart": [
+      "Tulare County"
+    ],
+    "east bakersfield": [
+      "Kern County"
+    ],
+    "eastern goleta valley": [
+      "Santa Barbara County"
+    ],
+    "east foothills": [
+      "Santa Clara County"
+    ],
+    "east hemet": [
+      "Riverside County"
+    ],
+    "east los angeles": [
+      "Los Angeles County"
+    ],
+    "east nicolaus": [
+      "Sutter County"
+    ],
+    "east niles": [
+      "Kern County"
+    ],
+    "east oakdale": [
+      "Stanislaus County"
+    ],
+    "easton": [
+      "Fresno County"
+    ],
+    "east orosi": [
+      "Tulare County"
+    ],
+    "east palo alto": [
+      "San Mateo County"
+    ],
+    "east pasadena": [
+      "Los Angeles County"
+    ],
+    "east porterville": [
+      "Tulare County"
+    ],
+    "east quincy": [
+      "Plumas County"
+    ],
+    "east rancho dominguez": [
+      "Los Angeles County"
+    ],
+    "east richmond heights": [
+      "Contra Costa County"
+    ],
+    "east san gabriel": [
+      "Los Angeles County"
+    ],
+    "east shore": [
+      "Plumas County"
+    ],
+    "east sonora": [
+      "Tuolumne County"
+    ],
+    "east tulare villa": [
+      "Tulare County"
+    ],
+    "eastvale": [
+      "Riverside County"
+    ],
+    "east whittier": [
+      "Los Angeles County"
+    ],
+    "edgewood": [
+      "Siskiyou County"
+    ],
+    "edison": [
+      "Kern County"
+    ],
+    "edmundson acres": [
+      "Kern County"
+    ],
+    "edna": [
+      "San Luis Obispo County"
+    ],
+    "edwards afb": [
+      "Kern County"
+    ],
+    "el adobe": [
+      "Kern County"
+    ],
+    "el cajon": [
+      "San Diego County"
+    ],
+    "el centro": [
+      "Imperial County"
+    ],
+    "el centro naval air facility": [
+      "Imperial County"
+    ],
+    "el cerrito": [
+      "Contra Costa County",
+      "Riverside County"
+    ],
+    "el dorado hills": [
+      "El Dorado County"
+    ],
+    "eldridge": [
+      "Sonoma County"
+    ],
+    "elfin forest": [
+      "San Diego County"
+    ],
+    "el granada": [
+      "San Mateo County"
+    ],
+    "elizabeth lake": [
+      "Los Angeles County"
+    ],
+    "elk creek": [
+      "Glenn County"
+    ],
+    "elk grove": [
+      "Sacramento County"
+    ],
+    "elkhorn": [
+      "Monterey County"
+    ],
+    "el macero": [
+      "Yolo County"
+    ],
+    "elmira": [
+      "Solano County"
+    ],
+    "el monte": [
+      "Los Angeles County"
+    ],
+    "el monte mobile village": [
+      "Tulare County"
+    ],
+    "el nido": [
+      "Merced County"
+    ],
+    "el paso de robles (paso robles)": [
+      "San Luis Obispo County"
+    ],
+    "el portal": [
+      "Mariposa County"
+    ],
+    "el rancho": [
+      "Tulare County"
+    ],
+    "el rio": [
+      "Ventura County"
+    ],
+    "el segundo": [
+      "Los Angeles County"
+    ],
+    "el sobrante": [
+      "Contra Costa County",
+      "Riverside County"
+    ],
+    "el verano": [
+      "Sonoma County"
+    ],
+    "elverta": [
+      "Sacramento County"
+    ],
+    "emerald lake hills": [
+      "San Mateo County"
+    ],
+    "emeryville": [
+      "Alameda County"
+    ],
+    "empire": [
+      "Stanislaus County"
+    ],
+    "encinitas": [
+      "San Diego County"
+    ],
+    "escalon": [
+      "San Joaquin County"
+    ],
+    "escondido": [
+      "San Diego County"
+    ],
+    "esparto": [
+      "Yolo County"
+    ],
+    "etna": [
+      "Siskiyou County"
+    ],
+    "eucalyptus hills": [
+      "San Diego County"
+    ],
+    "eureka": [
+      "Humboldt County"
+    ],
+    "exeter": [
+      "Tulare County"
+    ],
+    "fairbanks ranch": [
+      "San Diego County"
+    ],
+    "fairfax": [
+      "Kern County",
+      "Marin County"
+    ],
+    "fairfield": [
+      "Solano County"
+    ],
+    "fairhaven": [
+      "Humboldt County"
+    ],
+    "fairmead": [
+      "Madera County"
+    ],
+    "fair oaks": [
+      "Sacramento County"
+    ],
+    "fairview": [
+      "Alameda County"
+    ],
+    "fallbrook": [
+      "San Diego County"
+    ],
+    "fall river mills": [
+      "Shasta County"
+    ],
+    "farmersville": [
+      "Tulare County"
+    ],
+    "farmington": [
+      "San Joaquin County"
+    ],
+    "fellows": [
+      "Kern County"
+    ],
+    "felton": [
+      "Santa Cruz County"
+    ],
+    "ferndale": [
+      "Humboldt County"
+    ],
+    "fetters hot springs-agua caliente": [
+      "Sonoma County"
+    ],
+    "fiddletown": [
+      "Amador County"
+    ],
+    "fieldbrook": [
+      "Humboldt County"
+    ],
+    "fields landing": [
+      "Humboldt County"
+    ],
+    "fillmore": [
+      "Ventura County"
+    ],
+    "firebaugh": [
+      "Fresno County"
+    ],
+    "fish camp": [
+      "Mariposa County"
+    ],
+    "florence-graham": [
+      "Los Angeles County"
+    ],
+    "florin": [
+      "Sacramento County"
+    ],
+    "floriston": [
+      "Nevada County"
+    ],
+    "flournoy": [
+      "Tehama County"
+    ],
+    "folsom": [
+      "Sacramento County"
+    ],
+    "fontana": [
+      "San Bernardino County"
+    ],
+    "foothill farms": [
+      "Sacramento County"
+    ],
+    "forbestown": [
+      "Butte County"
+    ],
+    "ford city": [
+      "Kern County"
+    ],
+    "foresthill": [
+      "Placer County"
+    ],
+    "forest meadows": [
+      "Calaveras County"
+    ],
+    "forest ranch": [
+      "Butte County"
+    ],
+    "forestville": [
+      "Sonoma County"
+    ],
+    "fort bidwell": [
+      "Modoc County"
+    ],
+    "fort bragg": [
+      "Mendocino County"
+    ],
+    "fort dick": [
+      "Del Norte County"
+    ],
+    "fort hunter liggett": [
+      "Monterey County"
+    ],
+    "fort irwin": [
+      "San Bernardino County"
+    ],
+    "fort jones": [
+      "Siskiyou County"
+    ],
+    "fortuna": [
+      "Humboldt County"
+    ],
+    "fort washington": [
+      "Fresno County"
+    ],
+    "foster city": [
+      "San Mateo County"
+    ],
+    "fountain valley": [
+      "Orange County"
+    ],
+    "fowler": [
+      "Fresno County"
+    ],
+    "franklin": [
+      "Merced County",
+      "Sacramento County"
+    ],
+    "frazier park": [
+      "Kern County"
+    ],
+    "freedom": [
+      "Santa Cruz County"
+    ],
+    "freeport": [
+      "Sacramento County"
+    ],
+    "fremont": [
+      "Alameda County"
+    ],
+    "french camp": [
+      "San Joaquin County"
+    ],
+    "french gulch": [
+      "Shasta County"
+    ],
+    "french valley": [
+      "Riverside County"
+    ],
+    "fresno": [
+      "Fresno County"
+    ],
+    "friant": [
+      "Fresno County"
+    ],
+    "fruitdale": [
+      "Santa Clara County"
+    ],
+    "fruitridge pocket": [
+      "Sacramento County"
+    ],
+    "fuller acres": [
+      "Kern County"
+    ],
+    "fullerton": [
+      "Orange County"
+    ],
+    "fulton": [
+      "Sonoma County"
+    ],
+    "furnace creek": [
+      "Inyo County"
+    ],
+    "galt": [
+      "Sacramento County"
+    ],
+    "garberville": [
+      "Humboldt County"
+    ],
+    "gardena": [
+      "Los Angeles County"
+    ],
+    "garden acres": [
+      "San Joaquin County"
+    ],
+    "garden farms": [
+      "San Luis Obispo County"
+    ],
+    "garden grove": [
+      "Orange County"
+    ],
+    "garey": [
+      "Santa Barbara County"
+    ],
+    "garnet": [
+      "Riverside County"
+    ],
+    "gasquet": [
+      "Del Norte County"
+    ],
+    "gazelle": [
+      "Siskiyou County"
+    ],
+    "georgetown": [
+      "El Dorado County"
+    ],
+    "gerber": [
+      "Tehama County"
+    ],
+    "geyserville": [
+      "Sonoma County"
+    ],
+    "gilroy": [
+      "Santa Clara County"
+    ],
+    "glendale": [
+      "Los Angeles County"
+    ],
+    "glendora": [
+      "Los Angeles County"
+    ],
+    "glen ellen": [
+      "Sonoma County"
+    ],
+    "glennville": [
+      "Kern County"
+    ],
+    "golden hills": [
+      "Kern County"
+    ],
+    "gold mountain": [
+      "Plumas County"
+    ],
+    "gold river": [
+      "Sacramento County"
+    ],
+    "goleta": [
+      "Santa Barbara County"
+    ],
+    "gonzales": [
+      "Monterey County"
+    ],
+    "good hope": [
+      "Riverside County"
+    ],
+    "goodmanville": [
+      "Kern County"
+    ],
+    "goodyears bar": [
+      "Sierra County"
+    ],
+    "goshen": [
+      "Tulare County"
+    ],
+    "graeagle": [
+      "Plumas County"
+    ],
+    "grand terrace": [
+      "San Bernardino County"
+    ],
+    "grangeville": [
+      "Kings County"
+    ],
+    "granite bay": [
+      "Placer County"
+    ],
+    "granite hills": [
+      "San Diego County"
+    ],
+    "graniteville": [
+      "Nevada County"
+    ],
+    "grass valley": [
+      "Nevada County"
+    ],
+    "graton": [
+      "Sonoma County"
+    ],
+    "grayson": [
+      "Stanislaus County"
+    ],
+    "greeley hill": [
+      "Mariposa County"
+    ],
+    "greenacres": [
+      "Kern County"
+    ],
+    "green acres": [
+      "Riverside County"
+    ],
+    "greenfield": [
+      "Kern County",
+      "Monterey County"
+    ],
+    "greenhorn": [
+      "Plumas County"
+    ],
+    "green valley": [
+      "Los Angeles County",
+      "Solano County"
+    ],
+    "greenview": [
+      "Siskiyou County"
+    ],
+    "greenville": [
+      "Plumas County"
+    ],
+    "grenada": [
+      "Siskiyou County"
+    ],
+    "gridley": [
+      "Butte County"
+    ],
+    "grimes": [
+      "Colusa County"
+    ],
+    "grizzly flats": [
+      "El Dorado County"
+    ],
+    "groveland": [
+      "Tuolumne County"
+    ],
+    "grover beach": [
+      "San Luis Obispo County"
+    ],
+    "guadalupe": [
+      "Santa Barbara County"
+    ],
+    "guerneville": [
+      "Sonoma County"
+    ],
+    "guinda": [
+      "Yolo County"
+    ],
+    "gustine": [
+      "Merced County"
+    ],
+    "hacienda heights": [
+      "Los Angeles County"
+    ],
+    "half moon bay": [
+      "San Mateo County"
+    ],
+    "hamilton branch": [
+      "Plumas County"
+    ],
+    "hamilton city": [
+      "Glenn County"
+    ],
+    "hanford": [
+      "Kings County"
+    ],
+    "happy camp": [
+      "Siskiyou County"
+    ],
+    "happy valley": [
+      "Shasta County"
+    ],
+    "harbison canyon": [
+      "San Diego County"
+    ],
+    "hardwick": [
+      "Kings County"
+    ],
+    "harmony grove": [
+      "San Diego County"
+    ],
+    "hartland": [
+      "Tulare County"
+    ],
+    "hartley": [
+      "Solano County"
+    ],
+    "hasley canyon": [
+      "Los Angeles County"
+    ],
+    "hat creek": [
+      "Shasta County"
+    ],
+    "hawaiian gardens": [
+      "Los Angeles County"
+    ],
+    "hawthorne": [
+      "Los Angeles County"
+    ],
+    "hayfork": [
+      "Trinity County"
+    ],
+    "hayward": [
+      "Alameda County"
+    ],
+    "healdsburg": [
+      "Sonoma County"
+    ],
+    "heber": [
+      "Imperial County"
+    ],
+    "hemet": [
+      "Riverside County"
+    ],
+    "herald": [
+      "Sacramento County"
+    ],
+    "hercules": [
+      "Contra Costa County"
+    ],
+    "herlong": [
+      "Lassen County"
+    ],
+    "hermosa beach": [
+      "Los Angeles County"
+    ],
+    "hesperia": [
+      "San Bernardino County"
+    ],
+    "hickman": [
+      "Stanislaus County"
+    ],
+    "hidden hills": [
+      "Los Angeles County"
+    ],
+    "hidden meadows": [
+      "San Diego County"
+    ],
+    "hidden valley lake": [
+      "Lake County"
+    ],
+    "highgrove": [
+      "Riverside County"
+    ],
+    "highland": [
+      "San Bernardino County"
+    ],
+    "highlands": [
+      "San Mateo County"
+    ],
+    "hillcrest": [
+      "Kern County"
+    ],
+    "hillsborough": [
+      "San Mateo County"
+    ],
+    "hilmar-irwin": [
+      "Merced County"
+    ],
+    "hiouchi": [
+      "Del Norte County"
+    ],
+    "hollister": [
+      "San Benito County"
+    ],
+    "holtville": [
+      "Imperial County"
+    ],
+    "home garden": [
+      "Kings County"
+    ],
+    "home gardens": [
+      "Riverside County"
+    ],
+    "homeland": [
+      "Riverside County"
+    ],
+    "homestead valley": [
+      "San Bernardino County"
+    ],
+    "homewood canyon": [
+      "Inyo County"
+    ],
+    "honcut": [
+      "Butte County"
+    ],
+    "hood": [
+      "Sacramento County"
+    ],
+    "hoopa": [
+      "Humboldt County"
+    ],
+    "hopland": [
+      "Mendocino County"
+    ],
+    "hornbrook": [
+      "Siskiyou County"
+    ],
+    "hornitos": [
+      "Mariposa County"
+    ],
+    "hughson": [
+      "Stanislaus County"
+    ],
+    "humboldt hill": [
+      "Humboldt County"
+    ],
+    "huntington beach": [
+      "Orange County"
+    ],
+    "huntington park": [
+      "Los Angeles County"
+    ],
+    "huron": [
+      "Fresno County"
+    ],
+    "hyampom": [
+      "Trinity County"
+    ],
+    "hydesville": [
+      "Humboldt County"
+    ],
+    "hypericum": [
+      "Tulare County"
+    ],
+    "idlewild": [
+      "Tulare County"
+    ],
+    "idyllwild-pine cove": [
+      "Riverside County"
+    ],
+    "igo": [
+      "Shasta County"
+    ],
+    "imperial": [
+      "Imperial County"
+    ],
+    "imperial beach": [
+      "San Diego County"
+    ],
+    "independence": [
+      "Inyo County"
+    ],
+    "indian falls": [
+      "Plumas County"
+    ],
+    "indianola": [
+      "Humboldt County"
+    ],
+    "indian wells": [
+      "Riverside County"
+    ],
+    "indio": [
+      "Riverside County"
+    ],
+    "indio hills": [
+      "Riverside County"
+    ],
+    "industry": [
+      "Los Angeles County"
+    ],
+    "inglewood": [
+      "Los Angeles County"
+    ],
+    "interlaken": [
+      "Santa Cruz County"
+    ],
+    "inverness": [
+      "Marin County"
+    ],
+    "inyokern": [
+      "Kern County"
+    ],
+    "ione": [
+      "Amador County"
+    ],
+    "iron horse": [
+      "Plumas County"
+    ],
+    "irvine": [
+      "Orange County"
+    ],
+    "irwindale": [
+      "Los Angeles County"
+    ],
+    "isla vista": [
+      "Santa Barbara County"
+    ],
+    "isleton": [
+      "Sacramento County"
+    ],
+    "ivanhoe": [
+      "Tulare County"
+    ],
+    "jackson": [
+      "Amador County"
+    ],
+    "jacumba": [
+      "San Diego County"
+    ],
+    "jamestown": [
+      "Tuolumne County"
+    ],
+    "jamul": [
+      "San Diego County"
+    ],
+    "janesville": [
+      "Lassen County"
+    ],
+    "jenner": [
+      "Sonoma County"
+    ],
+    "johannesburg": [
+      "Kern County"
+    ],
+    "johnson park": [
+      "Shasta County"
+    ],
+    "johnstonville": [
+      "Lassen County"
+    ],
+    "johnsville": [
+      "Plumas County"
+    ],
+    "jones valley": [
+      "Shasta County"
+    ],
+    "joshua tree": [
+      "San Bernardino County"
+    ],
+    "jovista": [
+      "Tulare County"
+    ],
+    "julian": [
+      "San Diego County"
+    ],
+    "junction city": [
+      "Trinity County"
+    ],
+    "june lake": [
+      "Mono County"
+    ],
+    "jurupa valley": [
+      "Riverside County"
+    ],
+    "keddie": [
+      "Plumas County"
+    ],
+    "keeler": [
+      "Inyo County"
+    ],
+    "keene": [
+      "Kern County"
+    ],
+    "kelly ridge": [
+      "Butte County"
+    ],
+    "kelseyville": [
+      "Lake County"
+    ],
+    "kennedy": [
+      "San Joaquin County"
+    ],
+    "kennedy meadows": [
+      "Tulare County"
+    ],
+    "kensington": [
+      "Contra Costa County"
+    ],
+    "kentfield": [
+      "Marin County"
+    ],
+    "kenwood": [
+      "Sonoma County"
+    ],
+    "kep'el": [
+      "Humboldt County"
+    ],
+    "kerman": [
+      "Fresno County"
+    ],
+    "kernville": [
+      "Kern County"
+    ],
+    "keswick": [
+      "Shasta County"
+    ],
+    "kettleman city": [
+      "Kings County"
+    ],
+    "keyes": [
+      "Stanislaus County"
+    ],
+    "king city": [
+      "Monterey County"
+    ],
+    "kings beach": [
+      "Placer County"
+    ],
+    "kingsburg": [
+      "Fresno County"
+    ],
+    "kingvale": [
+      "Nevada County",
+      "Placer County"
+    ],
+    "kirkwood": [
+      "Alpine County",
+      "Amador County"
+    ],
+    "klamath": [
+      "Del Norte County"
+    ],
+    "knightsen": [
+      "Contra Costa County"
+    ],
+    "knights ferry": [
+      "Stanislaus County"
+    ],
+    "knights landing": [
+      "Yolo County"
+    ],
+    "la cañada flintridge": [
+      "Los Angeles County"
+    ],
+    "la crescenta-montrose": [
+      "Los Angeles County"
+    ],
+    "la cresta": [
+      "Kern County"
+    ],
+    "ladera": [
+      "San Mateo County"
+    ],
+    "ladera heights": [
+      "Los Angeles County"
+    ],
+    "ladera ranch": [
+      "Orange County"
+    ],
+    "lafayette": [
+      "Contra Costa County"
+    ],
+    "la grange": [
+      "Stanislaus County"
+    ],
+    "laguna beach": [
+      "Orange County"
+    ],
+    "laguna hills": [
+      "Orange County"
+    ],
+    "laguna niguel": [
+      "Orange County"
+    ],
+    "laguna woods": [
+      "Orange County"
+    ],
+    "lagunitas-forest knolls": [
+      "Marin County"
+    ],
+    "la habra": [
+      "Orange County"
+    ],
+    "la habra heights": [
+      "Los Angeles County"
+    ],
+    "la honda": [
+      "San Mateo County"
+    ],
+    "lake almanor country club": [
+      "Plumas County"
+    ],
+    "lake almanor peninsula": [
+      "Plumas County"
+    ],
+    "lake almanor west": [
+      "Plumas County"
+    ],
+    "lake arrowhead": [
+      "San Bernardino County"
+    ],
+    "lake california": [
+      "Tehama County"
+    ],
+    "lake city": [
+      "Modoc County"
+    ],
+    "lake davis": [
+      "Plumas County"
+    ],
+    "lake don pedro": [
+      "Mariposa County"
+    ],
+    "lake elsinore": [
+      "Riverside County"
+    ],
+    "lake forest": [
+      "Orange County"
+    ],
+    "lakehead": [
+      "Shasta County"
+    ],
+    "lake hughes": [
+      "Los Angeles County"
+    ],
+    "lake isabella": [
+      "Kern County"
+    ],
+    "lakeland village": [
+      "Riverside County"
+    ],
+    "lake los angeles": [
+      "Los Angeles County"
+    ],
+    "lake mathews": [
+      "Riverside County"
+    ],
+    "lake nacimiento": [
+      "San Luis Obispo County"
+    ],
+    "lake of the pines": [
+      "Nevada County"
+    ],
+    "lake of the woods": [
+      "Kern County"
+    ],
+    "lakeport": [
+      "Lake County"
+    ],
+    "lake riverside": [
+      "Riverside County"
+    ],
+    "lake san marcos": [
+      "San Diego County"
+    ],
+    "lake shastina": [
+      "Siskiyou County"
+    ],
+    "lake sherwood": [
+      "Ventura County"
+    ],
+    "lakeside": [
+      "Kern County",
+      "San Diego County"
+    ],
+    "lakeview": [
+      "Riverside County"
+    ],
+    "lake wildwood": [
+      "Nevada County"
+    ],
+    "lakewood": [
+      "Los Angeles County"
+    ],
+    "la mesa": [
+      "San Diego County"
+    ],
+    "la mirada": [
+      "Los Angeles County"
+    ],
+    "lamont": [
+      "Kern County"
+    ],
+    "lanare": [
+      "Fresno County"
+    ],
+    "lancaster": [
+      "Los Angeles County"
+    ],
+    "la palma": [
+      "Orange County"
+    ],
+    "la porte": [
+      "Plumas County"
+    ],
+    "la presa": [
+      "San Diego County"
+    ],
+    "la puente": [
+      "Los Angeles County"
+    ],
+    "la quinta": [
+      "Riverside County"
+    ],
+    "la riviera": [
+      "Sacramento County"
+    ],
+    "larkfield-wikiup": [
+      "Sonoma County"
+    ],
+    "larkspur": [
+      "Marin County"
+    ],
+    "la selva beach": [
+      "Santa Cruz County"
+    ],
+    "las flores": [
+      "Orange County",
+      "Tehama County"
+    ],
+    "las lomas": [
+      "Monterey County"
+    ],
+    "lathrop": [
+      "San Joaquin County"
+    ],
+    "laton": [
+      "Fresno County"
+    ],
+    "la verne": [
+      "Los Angeles County"
+    ],
+    "la vina": [
+      "Madera County"
+    ],
+    "lawndale": [
+      "Los Angeles County"
+    ],
+    "laytonville": [
+      "Mendocino County"
+    ],
+    "lebec": [
+      "Kern County"
+    ],
+    "lee vining": [
+      "Mono County"
+    ],
+    "leggett": [
+      "Mendocino County"
+    ],
+    "le grand": [
+      "Merced County"
+    ],
+    "lemon cove": [
+      "Tulare County"
+    ],
+    "lemon grove": [
+      "San Diego County"
+    ],
+    "lemon hill": [
+      "Sacramento County"
+    ],
+    "lemoore": [
+      "Kings County"
+    ],
+    "lemoore station": [
+      "Kings County"
+    ],
+    "lennox": [
+      "Los Angeles County"
+    ],
+    "lenwood": [
+      "San Bernardino County"
+    ],
+    "leona valley": [
+      "Los Angeles County"
+    ],
+    "lewiston": [
+      "Trinity County"
+    ],
+    "lexington hills": [
+      "Santa Clara County"
+    ],
+    "likely": [
+      "Modoc County"
+    ],
+    "lincoln": [
+      "Placer County"
+    ],
+    "lincoln village": [
+      "San Joaquin County"
+    ],
+    "linda": [
+      "Yuba County"
+    ],
+    "lindcove": [
+      "Tulare County"
+    ],
+    "linden": [
+      "San Joaquin County"
+    ],
+    "lindsay": [
+      "Tulare County"
+    ],
+    "linnell camp": [
+      "Tulare County"
+    ],
+    "litchfield": [
+      "Lassen County"
+    ],
+    "little grass valley": [
+      "Plumas County"
+    ],
+    "little river": [
+      "Mendocino County"
+    ],
+    "littlerock": [
+      "Los Angeles County"
+    ],
+    "little valley": [
+      "Lassen County"
+    ],
+    "live oak": [
+      "Santa Cruz County",
+      "Sutter County"
+    ],
+    "livermore": [
+      "Alameda County"
+    ],
+    "livingston": [
+      "Merced County"
+    ],
+    "lockeford": [
+      "San Joaquin County"
+    ],
+    "lockwood": [
+      "Amador County",
+      "Monterey County"
+    ],
+    "lodi": [
+      "San Joaquin County"
+    ],
+    "lodoga": [
+      "Colusa County"
+    ],
+    "loleta": [
+      "Humboldt County"
+    ],
+    "loma linda": [
+      "San Bernardino County"
+    ],
+    "loma mar": [
+      "San Mateo County"
+    ],
+    "loma rica": [
+      "Yuba County"
+    ],
+    "lomita": [
+      "Los Angeles County"
+    ],
+    "lompico": [
+      "Santa Cruz County"
+    ],
+    "lompoc": [
+      "Santa Barbara County"
+    ],
+    "london": [
+      "Tulare County"
+    ],
+    "lone pine": [
+      "Inyo County"
+    ],
+    "long barn": [
+      "Tuolumne County"
+    ],
+    "long beach": [
+      "Los Angeles County"
+    ],
+    "lookout": [
+      "Modoc County"
+    ],
+    "loomis": [
+      "Placer County"
+    ],
+    "los alamitos": [
+      "Orange County"
+    ],
+    "los alamos": [
+      "Santa Barbara County"
+    ],
+    "los altos": [
+      "Santa Clara County"
+    ],
+    "los altos hills": [
+      "Santa Clara County"
+    ],
+    "los angeles": [
+      "Los Angeles County"
+    ],
+    "los banos": [
+      "Merced County"
+    ],
+    "los berros": [
+      "San Luis Obispo County"
+    ],
+    "los gatos": [
+      "Santa Clara County"
+    ],
+    "los molinos": [
+      "Tehama County"
+    ],
+    "los olivos": [
+      "Santa Barbara County"
+    ],
+    "los osos": [
+      "San Luis Obispo County"
+    ],
+    "los ranchos": [
+      "San Luis Obispo County"
+    ],
+    "lost hills": [
+      "Kern County"
+    ],
+    "lower lake": [
+      "Lake County"
+    ],
+    "loyalton": [
+      "Sierra County"
+    ],
+    "loyola": [
+      "Santa Clara County"
+    ],
+    "lucas valley-marinwood": [
+      "Marin County"
+    ],
+    "lucerne": [
+      "Lake County"
+    ],
+    "lucerne valley": [
+      "San Bernardino County"
+    ],
+    "lynwood": [
+      "Los Angeles County"
+    ],
+    "lytle creek": [
+      "San Bernardino County"
+    ],
+    "mabie": [
+      "Plumas County"
+    ],
+    "mcarthur": [
+      "Shasta County"
+    ],
+    "mcclellan park": [
+      "Sacramento County"
+    ],
+    "mcclenney tract": [
+      "Tulare County"
+    ],
+    "mccloud": [
+      "Siskiyou County"
+    ],
+    "macdoel": [
+      "Siskiyou County"
+    ],
+    "mcfarland": [
+      "Kern County"
+    ],
+    "mcgee creek": [
+      "Mono County"
+    ],
+    "mckinleyville": [
+      "Humboldt County"
+    ],
+    "mckittrick": [
+      "Kern County"
+    ],
+    "mcswain": [
+      "Merced County"
+    ],
+    "madeline": [
+      "Lassen County"
+    ],
+    "madera": [
+      "Madera County"
+    ],
+    "madera acres": [
+      "Madera County"
+    ],
+    "madera ranchos": [
+      "Madera County"
+    ],
+    "madison": [
+      "Yolo County"
+    ],
+    "mad river": [
+      "Trinity County"
+    ],
+    "magalia": [
+      "Butte County"
+    ],
+    "malaga": [
+      "Fresno County"
+    ],
+    "malibu": [
+      "Los Angeles County"
+    ],
+    "mammoth lakes": [
+      "Mono County"
+    ],
+    "manchester": [
+      "Mendocino County"
+    ],
+    "manhattan beach": [
+      "Los Angeles County"
+    ],
+    "manila": [
+      "Humboldt County"
+    ],
+    "manteca": [
+      "San Joaquin County"
+    ],
+    "manton": [
+      "Tehama County"
+    ],
+    "march arb": [
+      "Riverside County"
+    ],
+    "maricopa": [
+      "Kern County"
+    ],
+    "marina": [
+      "Monterey County"
+    ],
+    "marina del rey": [
+      "Los Angeles County"
+    ],
+    "marin city": [
+      "Marin County"
+    ],
+    "mariposa": [
+      "Mariposa County"
+    ],
+    "markleeville": [
+      "Alpine County"
+    ],
+    "martell": [
+      "Amador County"
+    ],
+    "martinez": [
+      "Contra Costa County"
+    ],
+    "marysville": [
+      "Yuba County"
+    ],
+    "matheny": [
+      "Tulare County"
+    ],
+    "mather": [
+      "Sacramento County"
+    ],
+    "maxwell": [
+      "Colusa County"
+    ],
+    "mayfair": [
+      "Fresno County"
+    ],
+    "mayflower village": [
+      "Los Angeles County"
+    ],
+    "maywood": [
+      "Los Angeles County"
+    ],
+    "meadowbrook": [
+      "Riverside County"
+    ],
+    "meadow valley": [
+      "Plumas County"
+    ],
+    "meadow vista": [
+      "Placer County"
+    ],
+    "mead valley": [
+      "Riverside County"
+    ],
+    "mecca": [
+      "Riverside County"
+    ],
+    "meiners oaks": [
+      "Ventura County"
+    ],
+    "mendocino": [
+      "Mendocino County"
+    ],
+    "mendota": [
+      "Fresno County"
+    ],
+    "menifee": [
+      "Riverside County"
+    ],
+    "menlo park": [
+      "San Mateo County"
+    ],
+    "mentone": [
+      "San Bernardino County"
+    ],
+    "merced": [
+      "Merced County"
+    ],
+    "meridian": [
+      "Sutter County"
+    ],
+    "mesa": [
+      "Inyo County"
+    ],
+    "mesa verde": [
+      "Riverside County"
+    ],
+    "mesa vista": [
+      "Alpine County"
+    ],
+    "mettler": [
+      "Kern County"
+    ],
+    "mexican colony": [
+      "Kern County"
+    ],
+    "meyers": [
+      "El Dorado County"
+    ],
+    "middletown": [
+      "Lake County"
+    ],
+    "midpines": [
+      "Mariposa County"
+    ],
+    "midway city": [
+      "Orange County"
+    ],
+    "milford": [
+      "Lassen County"
+    ],
+    "millbrae": [
+      "San Mateo County"
+    ],
+    "millerton": [
+      "Fresno County"
+    ],
+    "mill valley": [
+      "Marin County"
+    ],
+    "millville": [
+      "Shasta County"
+    ],
+    "milpitas": [
+      "Santa Clara County"
+    ],
+    "mineral": [
+      "Tehama County"
+    ],
+    "minkler": [
+      "Fresno County"
+    ],
+    "mira monte": [
+      "Ventura County"
+    ],
+    "miranda": [
+      "Humboldt County"
+    ],
+    "mission canyon": [
+      "Santa Barbara County"
+    ],
+    "mission hills": [
+      "Santa Barbara County"
+    ],
+    "mission viejo": [
+      "Orange County"
+    ],
+    "mi-wuk village": [
+      "Tuolumne County"
+    ],
+    "modesto": [
+      "Stanislaus County"
+    ],
+    "modjeska": [
+      "Orange County"
+    ],
+    "mohawk vista": [
+      "Plumas County"
+    ],
+    "mojave": [
+      "Kern County"
+    ],
+    "mokelumne hill": [
+      "Calaveras County"
+    ],
+    "monmouth": [
+      "Fresno County"
+    ],
+    "mono city": [
+      "Mono County"
+    ],
+    "mono vista": [
+      "Tuolumne County"
+    ],
+    "monrovia": [
+      "Los Angeles County"
+    ],
+    "monson": [
+      "Tulare County"
+    ],
+    "montague": [
+      "Siskiyou County"
+    ],
+    "montalvin manor": [
+      "Contra Costa County"
+    ],
+    "montara": [
+      "San Mateo County"
+    ],
+    "montclair": [
+      "San Bernardino County"
+    ],
+    "montebello": [
+      "Los Angeles County"
+    ],
+    "montecito": [
+      "Santa Barbara County"
+    ],
+    "monterey": [
+      "Monterey County"
+    ],
+    "monterey park": [
+      "Los Angeles County"
+    ],
+    "monterey park tract": [
+      "Stanislaus County"
+    ],
+    "monte rio": [
+      "Sonoma County"
+    ],
+    "monte sereno": [
+      "Santa Clara County"
+    ],
+    "montgomery creek": [
+      "Shasta County"
+    ],
+    "monument hills": [
+      "Yolo County"
+    ],
+    "moorpark": [
+      "Ventura County"
+    ],
+    "morada": [
+      "San Joaquin County"
+    ],
+    "moraga": [
+      "Contra Costa County"
+    ],
+    "moreno valley": [
+      "Riverside County"
+    ],
+    "morgan hill": [
+      "Santa Clara County"
+    ],
+    "morongo valley": [
+      "San Bernardino County"
+    ],
+    "morro bay": [
+      "San Luis Obispo County"
+    ],
+    "moskowite corner": [
+      "Napa County"
+    ],
+    "moss beach": [
+      "San Mateo County"
+    ],
+    "moss landing": [
+      "Monterey County"
+    ],
+    "mountain center": [
+      "Riverside County"
+    ],
+    "mountain gate": [
+      "Shasta County"
+    ],
+    "mountain house": [
+      "San Joaquin County"
+    ],
+    "mountain meadows": [
+      "Kern County"
+    ],
+    "mountain mesa": [
+      "Kern County"
+    ],
+    "mountain ranch": [
+      "Calaveras County"
+    ],
+    "mountain view": [
+      "Contra Costa County",
+      "Santa Clara County"
+    ],
+    "mountain view acres": [
+      "San Bernardino County"
+    ],
+    "mt. bullion": [
+      "Mariposa County"
+    ],
+    "mount hebron": [
+      "Siskiyou County"
+    ],
+    "mount hermon": [
+      "Santa Cruz County"
+    ],
+    "mount laguna": [
+      "San Diego County"
+    ],
+    "mount shasta": [
+      "Siskiyou County"
+    ],
+    "muir beach": [
+      "Marin County"
+    ],
+    "murphys": [
+      "Calaveras County"
+    ],
+    "murrieta": [
+      "Riverside County"
+    ],
+    "muscoy": [
+      "San Bernardino County"
+    ],
+    "myers flat": [
+      "Humboldt County"
+    ],
+    "myrtletown": [
+      "Humboldt County"
+    ],
+    "napa": [
+      "Napa County"
+    ],
+    "national city": [
+      "San Diego County"
+    ],
+    "needles": [
+      "San Bernardino County"
+    ],
+    "nevada city": [
+      "Nevada County"
+    ],
+    "newark": [
+      "Alameda County"
+    ],
+    "newcastle": [
+      "Placer County"
+    ],
+    "new cuyama": [
+      "Santa Barbara County"
+    ],
+    "newell": [
+      "Modoc County"
+    ],
+    "newman": [
+      "Stanislaus County"
+    ],
+    "new pine creek": [
+      "Modoc County"
+    ],
+    "newport beach": [
+      "Orange County"
+    ],
+    "nicasio": [
+      "Marin County"
+    ],
+    "nice": [
+      "Lake County"
+    ],
+    "nicolaus": [
+      "Sutter County"
+    ],
+    "niland": [
+      "Imperial County"
+    ],
+    "nipinnawasee": [
+      "Madera County"
+    ],
+    "nipomo": [
+      "San Luis Obispo County"
+    ],
+    "norco": [
+      "Riverside County"
+    ],
+    "nord": [
+      "Butte County"
+    ],
+    "norris canyon": [
+      "Contra Costa County"
+    ],
+    "north auburn": [
+      "Placer County"
+    ],
+    "north edwards": [
+      "Kern County"
+    ],
+    "north el monte": [
+      "Los Angeles County"
+    ],
+    "north fair oaks": [
+      "San Mateo County"
+    ],
+    "north fork": [
+      "Madera County"
+    ],
+    "north gate": [
+      "Contra Costa County"
+    ],
+    "north highlands": [
+      "Sacramento County"
+    ],
+    "north lakeport": [
+      "Lake County"
+    ],
+    "north richmond": [
+      "Contra Costa County"
+    ],
+    "north san juan": [
+      "Nevada County"
+    ],
+    "north shore": [
+      "Riverside County"
+    ],
+    "north tustin": [
+      "Orange County"
+    ],
+    "norwalk": [
+      "Los Angeles County"
+    ],
+    "novato": [
+      "Marin County"
+    ],
+    "nubieber": [
+      "Lassen County"
+    ],
+    "nuevo": [
+      "Riverside County"
+    ],
+    "oakdale": [
+      "Stanislaus County"
+    ],
+    "oak glen": [
+      "San Bernardino County"
+    ],
+    "oak hills": [
+      "San Bernardino County"
+    ],
+    "oakhurst": [
+      "Madera County"
+    ],
+    "oakland": [
+      "Alameda County"
+    ],
+    "oakley": [
+      "Contra Costa County"
+    ],
+    "oak park": [
+      "Ventura County"
+    ],
+    "oak run": [
+      "Shasta County"
+    ],
+    "oak shores": [
+      "San Luis Obispo County"
+    ],
+    "oak view": [
+      "Ventura County"
+    ],
+    "oakville": [
+      "Napa County"
+    ],
+    "oasis": [
+      "Riverside County"
+    ],
+    "occidental": [
+      "Sonoma County"
+    ],
+    "oceano": [
+      "San Luis Obispo County"
+    ],
+    "oceanside": [
+      "San Diego County"
+    ],
+    "ocotillo": [
+      "Imperial County"
+    ],
+    "oildale": [
+      "Kern County"
+    ],
+    "ojai": [
+      "Ventura County"
+    ],
+    "olancha": [
+      "Inyo County"
+    ],
+    "olde stockdale": [
+      "Kern County"
+    ],
+    "old fig garden": [
+      "Fresno County"
+    ],
+    "old river": [
+      "Kern County"
+    ],
+    "old station": [
+      "Shasta County"
+    ],
+    "old stine": [
+      "Kern County"
+    ],
+    "olivehurst": [
+      "Yuba County"
+    ],
+    "ono": [
+      "Shasta County"
+    ],
+    "ontario": [
+      "San Bernardino County"
+    ],
+    "onyx": [
+      "Kern County"
+    ],
+    "orange": [
+      "Orange County"
+    ],
+    "orange blossom": [
+      "Stanislaus County"
+    ],
+    "orange cove": [
+      "Fresno County"
+    ],
+    "orangevale": [
+      "Sacramento County"
+    ],
+    "orcutt": [
+      "Santa Barbara County"
+    ],
+    "orick": [
+      "Humboldt County"
+    ],
+    "orinda": [
+      "Contra Costa County"
+    ],
+    "orland": [
+      "Glenn County"
+    ],
+    "orosi": [
+      "Tulare County"
+    ],
+    "oroville": [
+      "Butte County"
+    ],
+    "oroville east": [
+      "Butte County"
+    ],
+    "oxnard": [
+      "Ventura County"
+    ],
+    "pacheco": [
+      "Contra Costa County"
+    ],
+    "pacifica": [
+      "San Mateo County"
+    ],
+    "pacific grove": [
+      "Monterey County"
+    ],
+    "pajaro": [
+      "Monterey County"
+    ],
+    "pajaro dunes": [
+      "Santa Cruz County"
+    ],
+    "pala": [
+      "San Diego County"
+    ],
+    "palermo": [
+      "Butte County"
+    ],
+    "palmdale": [
+      "Los Angeles County"
+    ],
+    "palm desert": [
+      "Riverside County"
+    ],
+    "palm springs": [
+      "Riverside County"
+    ],
+    "palo alto": [
+      "Santa Clara County"
+    ],
+    "palo cedro": [
+      "Shasta County"
+    ],
+    "palos verdes estates": [
+      "Los Angeles County"
+    ],
+    "palo verde": [
+      "Imperial County"
+    ],
+    "panorama heights": [
+      "Tulare County"
+    ],
+    "paradise": [
+      "Butte County",
+      "Mono County"
+    ],
+    "paradise park": [
+      "Santa Cruz County"
+    ],
+    "paramount": [
+      "Los Angeles County"
+    ],
+    "parklawn": [
+      "Stanislaus County"
+    ],
+    "parksdale": [
+      "Madera County"
+    ],
+    "parkway": [
+      "Sacramento County"
+    ],
+    "parkwood": [
+      "Madera County"
+    ],
+    "parlier": [
+      "Fresno County"
+    ],
+    "pasadena": [
+      "Los Angeles County"
+    ],
+    "pasatiempo": [
+      "Santa Cruz County"
+    ],
+    "paskenta": [
+      "Tehama County"
+    ],
+    "patterson": [
+      "Stanislaus County"
+    ],
+    "patterson tract": [
+      "Tulare County"
+    ],
+    "patton village": [
+      "Lassen County"
+    ],
+    "paxton": [
+      "Plumas County"
+    ],
+    "paynes creek": [
+      "Tehama County"
+    ],
+    "pearsonville": [
+      "Inyo County"
+    ],
+    "penngrove": [
+      "Sonoma County"
+    ],
+    "penn valley": [
+      "Nevada County"
+    ],
+    "penryn": [
+      "Placer County"
+    ],
+    "pepperdine university": [
+      "Los Angeles County"
+    ],
+    "perris": [
+      "Riverside County"
+    ],
+    "pescadero": [
+      "San Mateo County"
+    ],
+    "petaluma": [
+      "Sonoma County"
+    ],
+    "petaluma center": [
+      "Sonoma County"
+    ],
+    "peters": [
+      "San Joaquin County"
+    ],
+    "phelan": [
+      "San Bernardino County"
+    ],
+    "phillipsville": [
+      "Humboldt County"
+    ],
+    "philo": [
+      "Mendocino County"
+    ],
+    "phoenix lake": [
+      "Tuolumne County"
+    ],
+    "pico rivera": [
+      "Los Angeles County"
+    ],
+    "piedmont": [
+      "Alameda County"
+    ],
+    "pierpoint": [
+      "Tulare County"
+    ],
+    "pike": [
+      "Sierra County"
+    ],
+    "pine canyon": [
+      "Monterey County"
+    ],
+    "pine flat": [
+      "Tulare County"
+    ],
+    "pine grove": [
+      "Amador County"
+    ],
+    "pine hills": [
+      "Humboldt County"
+    ],
+    "pine mountain club": [
+      "Kern County"
+    ],
+    "pine mountain lake": [
+      "Tuolumne County"
+    ],
+    "pine valley": [
+      "San Diego County"
+    ],
+    "pinole": [
+      "Contra Costa County"
+    ],
+    "piñon hills": [
+      "San Bernardino County"
+    ],
+    "pioneer": [
+      "Amador County"
+    ],
+    "piru": [
+      "Ventura County"
+    ],
+    "pismo beach": [
+      "San Luis Obispo County"
+    ],
+    "pittsburg": [
+      "Contra Costa County"
+    ],
+    "pixley": [
+      "Tulare County"
+    ],
+    "placentia": [
+      "Orange County"
+    ],
+    "placerville": [
+      "El Dorado County"
+    ],
+    "plainview": [
+      "Tulare County"
+    ],
+    "planada": [
+      "Merced County"
+    ],
+    "platina": [
+      "Shasta County"
+    ],
+    "pleasant hill": [
+      "Contra Costa County"
+    ],
+    "pleasanton": [
+      "Alameda County"
+    ],
+    "pleasure point": [
+      "Santa Cruz County"
+    ],
+    "plumas eureka": [
+      "Plumas County"
+    ],
+    "plumas lake": [
+      "Yuba County"
+    ],
+    "plymouth": [
+      "Amador County"
+    ],
+    "point arena": [
+      "Mendocino County"
+    ],
+    "point reyes station": [
+      "Marin County"
+    ],
+    "pollock pines": [
+      "El Dorado County"
+    ],
+    "pomona": [
+      "Los Angeles County"
+    ],
+    "ponderosa": [
+      "Tulare County"
+    ],
+    "poplar-cotton center": [
+      "Tulare County"
+    ],
+    "port costa": [
+      "Contra Costa County"
+    ],
+    "porterville": [
+      "Tulare County"
+    ],
+    "port hueneme": [
+      "Ventura County"
+    ],
+    "portola": [
+      "Plumas County"
+    ],
+    "portola valley": [
+      "San Mateo County"
+    ],
+    "posey": [
+      "Tulare County"
+    ],
+    "poso park": [
+      "Tulare County"
+    ],
+    "post mountain": [
+      "Trinity County"
+    ],
+    "potomac park": [
+      "Kern County"
+    ],
+    "potrero": [
+      "San Diego County"
+    ],
+    "potter valley": [
+      "Mendocino County"
+    ],
+    "poway": [
+      "San Diego County"
+    ],
+    "prattville": [
+      "Plumas County"
+    ],
+    "princeton": [
+      "Colusa County"
+    ],
+    "proberta": [
+      "Tehama County"
+    ],
+    "prunedale": [
+      "Monterey County"
+    ],
+    "pumpkin center": [
+      "Kern County"
+    ],
+    "quartz hill": [
+      "Los Angeles County"
+    ],
+    "quincy": [
+      "Plumas County"
+    ],
+    "rackerby": [
+      "Butte County"
+    ],
+    "rail road flat": [
+      "Calaveras County"
+    ],
+    "rainbow": [
+      "San Diego County"
+    ],
+    "raisin city": [
+      "Fresno County"
+    ],
+    "ramona": [
+      "San Diego County"
+    ],
+    "rancho calaveras": [
+      "Calaveras County"
+    ],
+    "rancho cordova": [
+      "Sacramento County"
+    ],
+    "rancho cucamonga": [
+      "San Bernardino County"
+    ],
+    "rancho mirage": [
+      "Riverside County"
+    ],
+    "rancho mission viejo": [
+      "Orange County"
+    ],
+    "rancho murieta": [
+      "Sacramento County"
+    ],
+    "rancho palos verdes": [
+      "Los Angeles County"
+    ],
+    "rancho san diego": [
+      "San Diego County"
+    ],
+    "rancho santa fe": [
+      "San Diego County"
+    ],
+    "rancho santa margarita": [
+      "Orange County"
+    ],
+    "rancho tehama reserve": [
+      "Tehama County"
+    ],
+    "randsburg": [
+      "Kern County"
+    ],
+    "red bluff": [
+      "Tehama County"
+    ],
+    "red corral": [
+      "Amador County"
+    ],
+    "redcrest": [
+      "Humboldt County"
+    ],
+    "redding": [
+      "Shasta County"
+    ],
+    "redlands": [
+      "San Bernardino County"
+    ],
+    "redondo beach": [
+      "Los Angeles County"
+    ],
+    "redway": [
+      "Humboldt County"
+    ],
+    "redwood city": [
+      "San Mateo County"
+    ],
+    "redwood valley": [
+      "Mendocino County"
+    ],
+    "reedley": [
+      "Fresno County"
+    ],
+    "reliez valley": [
+      "Contra Costa County"
+    ],
+    "rexland acres": [
+      "Kern County"
+    ],
+    "rialto": [
+      "San Bernardino County"
+    ],
+    "richfield": [
+      "Tehama County"
+    ],
+    "richgrove": [
+      "Tulare County"
+    ],
+    "richmond": [
+      "Contra Costa County"
+    ],
+    "richvale": [
+      "Butte County"
+    ],
+    "ridgecrest": [
+      "Kern County"
+    ],
+    "ridgecrest heights": [
+      "Kern County"
+    ],
+    "ridgemark": [
+      "San Benito County"
+    ],
+    "rio dell": [
+      "Humboldt County"
+    ],
+    "rio del mar": [
+      "Santa Cruz County"
+    ],
+    "rio linda": [
+      "Sacramento County"
+    ],
+    "rio oso": [
+      "Sutter County"
+    ],
+    "rio vista": [
+      "Solano County"
+    ],
+    "ripley": [
+      "Riverside County"
+    ],
+    "ripon": [
+      "San Joaquin County"
+    ],
+    "riverbank": [
+      "Stanislaus County"
+    ],
+    "riverdale": [
+      "Fresno County"
+    ],
+    "riverdale park": [
+      "Stanislaus County"
+    ],
+    "rivergrove": [
+      "Kern County"
+    ],
+    "river pines": [
+      "Amador County"
+    ],
+    "riverside": [
+      "Riverside County"
+    ],
+    "robbins": [
+      "Sutter County"
+    ],
+    "robinson mill": [
+      "Butte County"
+    ],
+    "rocklin": [
+      "Placer County"
+    ],
+    "rodeo": [
+      "Contra Costa County"
+    ],
+    "rodriguez camp": [
+      "Tulare County"
+    ],
+    "rohnert park": [
+      "Sonoma County"
+    ],
+    "rolling hills": [
+      "Los Angeles County",
+      "Madera County"
+    ],
+    "rolling hills estates": [
+      "Los Angeles County"
+    ],
+    "rollingwood": [
+      "Contra Costa County"
+    ],
+    "romoland": [
+      "Riverside County"
+    ],
+    "rosamond": [
+      "Kern County"
+    ],
+    "rosedale": [
+      "Kern County"
+    ],
+    "rose hills": [
+      "Los Angeles County"
+    ],
+    "rosemead": [
+      "Los Angeles County"
+    ],
+    "rosemont": [
+      "Sacramento County"
+    ],
+    "roseville": [
+      "Placer County"
+    ],
+    "ross": [
+      "Marin County"
+    ],
+    "rossmoor": [
+      "Orange County"
+    ],
+    "rough and ready": [
+      "Nevada County"
+    ],
+    "round mountain": [
+      "Shasta County"
+    ],
+    "round valley": [
+      "Inyo County"
+    ],
+    "rouse": [
+      "Stanislaus County"
+    ],
+    "rowland heights": [
+      "Los Angeles County"
+    ],
+    "rumsey": [
+      "Yolo County"
+    ],
+    "running springs": [
+      "San Bernardino County"
+    ],
+    "ruth": [
+      "Trinity County"
+    ],
+    "rutherford": [
+      "Napa County"
+    ],
+    "sacramento": [
+      "Sacramento County"
+    ],
+    "sage": [
+      "Riverside County"
+    ],
+    "st. helena": [
+      "Napa County"
+    ],
+    "salida": [
+      "Stanislaus County"
+    ],
+    "salinas": [
+      "Monterey County"
+    ],
+    "salmon creek": [
+      "Sonoma County"
+    ],
+    "salton city": [
+      "Imperial County"
+    ],
+    "salton sea beach": [
+      "Imperial County"
+    ],
+    "salyer": [
+      "Trinity County"
+    ],
+    "samoa": [
+      "Humboldt County"
+    ],
+    "san andreas": [
+      "Calaveras County"
+    ],
+    "san anselmo": [
+      "Marin County"
+    ],
+    "san antonio heights": [
+      "San Bernardino County"
+    ],
+    "san ardo": [
+      "Monterey County"
+    ],
+    "san bernardino": [
+      "San Bernardino County"
+    ],
+    "san bruno": [
+      "San Mateo County"
+    ],
+    "san buenaventura (ventura)": [
+      "Ventura County"
+    ],
+    "san carlos": [
+      "San Mateo County"
+    ],
+    "san clemente": [
+      "Orange County"
+    ],
+    "sand city": [
+      "Monterey County"
+    ],
+    "san diego": [
+      "San Diego County"
+    ],
+    "san diego country estates": [
+      "San Diego County"
+    ],
+    "san dimas": [
+      "Los Angeles County"
+    ],
+    "san fernando": [
+      "Los Angeles County"
+    ],
+    "san francisco": [
+      "San Francisco County"
+    ],
+    "san gabriel": [
+      "Los Angeles County"
+    ],
+    "sanger": [
+      "Fresno County"
+    ],
+    "san geronimo": [
+      "Marin County"
+    ],
+    "san jacinto": [
+      "Riverside County"
+    ],
+    "san joaquin": [
+      "Fresno County"
+    ],
+    "san jose": [
+      "Santa Clara County"
+    ],
+    "san juan bautista": [
+      "San Benito County"
+    ],
+    "san juan capistrano": [
+      "Orange County"
+    ],
+    "san leandro": [
+      "Alameda County"
+    ],
+    "san lorenzo": [
+      "Alameda County"
+    ],
+    "san lucas": [
+      "Monterey County"
+    ],
+    "san luis obispo": [
+      "San Luis Obispo County"
+    ],
+    "san marcos": [
+      "San Diego County"
+    ],
+    "san marino": [
+      "Los Angeles County"
+    ],
+    "san martin": [
+      "Santa Clara County"
+    ],
+    "san mateo": [
+      "San Mateo County"
+    ],
+    "san miguel": [
+      "Contra Costa County",
+      "San Luis Obispo County"
+    ],
+    "san pablo": [
+      "Contra Costa County"
+    ],
+    "san pasqual": [
+      "Los Angeles County"
+    ],
+    "san rafael": [
+      "Marin County"
+    ],
+    "san ramon": [
+      "Contra Costa County"
+    ],
+    "san simeon": [
+      "San Luis Obispo County"
+    ],
+    "santa ana": [
+      "Orange County"
+    ],
+    "santa barbara": [
+      "Santa Barbara County"
+    ],
+    "santa clara": [
+      "Santa Clara County"
+    ],
+    "santa clarita": [
+      "Los Angeles County"
+    ],
+    "santa cruz": [
+      "Santa Cruz County"
+    ],
+    "santa fe springs": [
+      "Los Angeles County"
+    ],
+    "santa margarita": [
+      "San Luis Obispo County"
+    ],
+    "santa maria": [
+      "Santa Barbara County"
+    ],
+    "santa monica": [
+      "Los Angeles County"
+    ],
+    "santa nella": [
+      "Merced County"
+    ],
+    "santa paula": [
+      "Ventura County"
+    ],
+    "santa rosa": [
+      "Sonoma County"
+    ],
+    "santa rosa valley": [
+      "Ventura County"
+    ],
+    "santa susana": [
+      "Ventura County"
+    ],
+    "santa venetia": [
+      "Marin County"
+    ],
+    "santa ynez": [
+      "Santa Barbara County"
+    ],
+    "santee": [
+      "San Diego County"
+    ],
+    "saranap": [
+      "Contra Costa County"
+    ],
+    "saratoga": [
+      "Santa Clara County"
+    ],
+    "saticoy": [
+      "Ventura County"
+    ],
+    "sattley": [
+      "Sierra County"
+    ],
+    "sausalito": [
+      "Marin County"
+    ],
+    "scotia": [
+      "Humboldt County"
+    ],
+    "scotts valley": [
+      "Santa Cruz County"
+    ],
+    "seacliff": [
+      "Santa Cruz County"
+    ],
+    "seal beach": [
+      "Orange County"
+    ],
+    "sea ranch": [
+      "Sonoma County"
+    ],
+    "searles valley": [
+      "San Bernardino County"
+    ],
+    "seaside": [
+      "Monterey County"
+    ],
+    "sebastopol": [
+      "Sonoma County"
+    ],
+    "seeley": [
+      "Imperial County"
+    ],
+    "selma": [
+      "Fresno County"
+    ],
+    "sequoia crest": [
+      "Tulare County"
+    ],
+    "sereno del mar": [
+      "Sonoma County"
+    ],
+    "seville": [
+      "Tulare County"
+    ],
+    "shafter": [
+      "Kern County"
+    ],
+    "shandon": [
+      "San Luis Obispo County"
+    ],
+    "shasta": [
+      "Shasta County"
+    ],
+    "shasta lake": [
+      "Shasta County"
+    ],
+    "shaver lake": [
+      "Fresno County"
+    ],
+    "shell ridge": [
+      "Contra Costa County"
+    ],
+    "shelter cove": [
+      "Humboldt County"
+    ],
+    "sheridan": [
+      "Placer County"
+    ],
+    "shingle springs": [
+      "El Dorado County"
+    ],
+    "shingletown": [
+      "Shasta County"
+    ],
+    "shoshone": [
+      "Inyo County"
+    ],
+    "sierra brooks": [
+      "Sierra County"
+    ],
+    "sierra city": [
+      "Sierra County"
+    ],
+    "sierra madre": [
+      "Los Angeles County"
+    ],
+    "sierra village": [
+      "Tuolumne County"
+    ],
+    "sierraville": [
+      "Sierra County"
+    ],
+    "signal hill": [
+      "Los Angeles County"
+    ],
+    "silverado": [
+      "Orange County"
+    ],
+    "silverado resort": [
+      "Napa County"
+    ],
+    "silver city": [
+      "Tulare County"
+    ],
+    "silver lakes": [
+      "San Bernardino County"
+    ],
+    "simi valley": [
+      "Ventura County"
+    ],
+    "sisquoc": [
+      "Santa Barbara County"
+    ],
+    "sky valley": [
+      "Riverside County"
+    ],
+    "sleepy hollow": [
+      "Marin County"
+    ],
+    "smartsville": [
+      "Yuba County"
+    ],
+    "smith corner": [
+      "Kern County"
+    ],
+    "smith river": [
+      "Del Norte County"
+    ],
+    "snelling": [
+      "Merced County"
+    ],
+    "soda bay": [
+      "Lake County"
+    ],
+    "soda springs": [
+      "Nevada County"
+    ],
+    "solana beach": [
+      "San Diego County"
+    ],
+    "soledad": [
+      "Monterey County"
+    ],
+    "solvang": [
+      "Santa Barbara County"
+    ],
+    "somis": [
+      "Ventura County"
+    ],
+    "sonoma": [
+      "Sonoma County"
+    ],
+    "sonoma state university": [
+      "Sonoma County"
+    ],
+    "sonora": [
+      "Tuolumne County"
+    ],
+    "soquel": [
+      "Santa Cruz County"
+    ],
+    "soulsbyville": [
+      "Tuolumne County"
+    ],
+    "south dos palos": [
+      "Merced County"
+    ],
+    "south el monte": [
+      "Los Angeles County"
+    ],
+    "south gate": [
+      "Los Angeles County"
+    ],
+    "south lake tahoe": [
+      "El Dorado County"
+    ],
+    "south monrovia island": [
+      "Los Angeles County"
+    ],
+    "south oroville": [
+      "Butte County"
+    ],
+    "south pasadena": [
+      "Los Angeles County"
+    ],
+    "south san francisco": [
+      "San Mateo County"
+    ],
+    "south san gabriel": [
+      "Los Angeles County"
+    ],
+    "south san jose hills": [
+      "Los Angeles County"
+    ],
+    "south taft": [
+      "Kern County"
+    ],
+    "south whittier": [
+      "Los Angeles County"
+    ],
+    "spaulding": [
+      "Lassen County"
+    ],
+    "spreckels": [
+      "Monterey County"
+    ],
+    "spring garden": [
+      "Plumas County"
+    ],
+    "spring valley": [
+      "Lake County",
+      "San Diego County"
+    ],
+    "spring valley lake": [
+      "San Bernardino County"
+    ],
+    "springville": [
+      "Tulare County"
+    ],
+    "squaw valley": [
+      "Fresno County"
+    ],
+    "squirrel mountain valley": [
+      "Kern County"
+    ],
+    "stallion springs": [
+      "Kern County"
+    ],
+    "stanford": [
+      "Santa Clara County"
+    ],
+    "stanton": [
+      "Orange County"
+    ],
+    "stebbins": [
+      "Kern County"
+    ],
+    "stevenson ranch": [
+      "Los Angeles County"
+    ],
+    "stevinson": [
+      "Merced County"
+    ],
+    "stinson beach": [
+      "Marin County"
+    ],
+    "stirling city": [
+      "Butte County"
+    ],
+    "stockton": [
+      "San Joaquin County"
+    ],
+    "stones landing": [
+      "Lassen County"
+    ],
+    "stonyford": [
+      "Colusa County"
+    ],
+    "stratford": [
+      "Kings County"
+    ],
+    "strathmore": [
+      "Tulare County"
+    ],
+    "strawberry": [
+      "Marin County",
+      "Tuolumne County"
+    ],
+    "sugarloaf saw mill": [
+      "Tulare County"
+    ],
+    "sugarloaf village": [
+      "Tulare County"
+    ],
+    "suisun city": [
+      "Solano County"
+    ],
+    "sultana": [
+      "Tulare County"
+    ],
+    "summerland": [
+      "Santa Barbara County"
+    ],
+    "sunnyside": [
+      "Fresno County"
+    ],
+    "sunnyside-tahoe city": [
+      "Placer County"
+    ],
+    "sunny slopes": [
+      "Mono County"
+    ],
+    "sunnyvale": [
+      "Santa Clara County"
+    ],
+    "sunol": [
+      "Alameda County"
+    ],
+    "sun village": [
+      "Los Angeles County"
+    ],
+    "susanville": [
+      "Lassen County"
+    ],
+    "sutter": [
+      "Sutter County"
+    ],
+    "sutter creek": [
+      "Amador County"
+    ],
+    "swall meadows": [
+      "Mono County"
+    ],
+    "taft": [
+      "Kern County"
+    ],
+    "taft heights": [
+      "Kern County"
+    ],
+    "taft mosswood": [
+      "San Joaquin County"
+    ],
+    "tahoe vista": [
+      "Placer County"
+    ],
+    "tahoma": [
+      "El Dorado County",
+      "Placer County"
+    ],
+    "talmage": [
+      "Mendocino County"
+    ],
+    "tamalpais-homestead valley": [
+      "Marin County"
+    ],
+    "tancred": [
+      "Yolo County"
+    ],
+    "tara hills": [
+      "Contra Costa County"
+    ],
+    "tarina": [
+      "Kern County"
+    ],
+    "tarpey village": [
+      "Fresno County"
+    ],
+    "taylorsville": [
+      "Plumas County"
+    ],
+    "tecopa": [
+      "Inyo County"
+    ],
+    "tehachapi": [
+      "Kern County"
+    ],
+    "tehama": [
+      "Tehama County"
+    ],
+    "temecula": [
+      "Riverside County"
+    ],
+    "temelec": [
+      "Sonoma County"
+    ],
+    "temescal valley": [
+      "Riverside County"
+    ],
+    "temple city": [
+      "Los Angeles County"
+    ],
+    "templeton": [
+      "San Luis Obispo County"
+    ],
+    "tennant": [
+      "Siskiyou County"
+    ],
+    "terminous": [
+      "San Joaquin County"
+    ],
+    "terra bella": [
+      "Tulare County"
+    ],
+    "teviston": [
+      "Tulare County"
+    ],
+    "thermal": [
+      "Riverside County"
+    ],
+    "thermalito": [
+      "Butte County"
+    ],
+    "thornton": [
+      "San Joaquin County"
+    ],
+    "thousand oaks": [
+      "Ventura County"
+    ],
+    "thousand palms": [
+      "Riverside County"
+    ],
+    "three rivers": [
+      "Tulare County"
+    ],
+    "three rocks": [
+      "Fresno County"
+    ],
+    "tiburon": [
+      "Marin County"
+    ],
+    "timber cove": [
+      "Sonoma County"
+    ],
+    "tipton": [
+      "Tulare County"
+    ],
+    "tobin": [
+      "Plumas County"
+    ],
+    "tomales": [
+      "Marin County"
+    ],
+    "tonyville": [
+      "Tulare County"
+    ],
+    "tooleville": [
+      "Tulare County"
+    ],
+    "topanga": [
+      "Los Angeles County"
+    ],
+    "topaz": [
+      "Mono County"
+    ],
+    "toro canyon": [
+      "Santa Barbara County"
+    ],
+    "torrance": [
+      "Los Angeles County"
+    ],
+    "trabuco canyon": [
+      "Orange County"
+    ],
+    "tracy": [
+      "San Joaquin County"
+    ],
+    "tranquillity": [
+      "Fresno County"
+    ],
+    "traver": [
+      "Tulare County"
+    ],
+    "tres pinos": [
+      "San Benito County"
+    ],
+    "trinidad": [
+      "Humboldt County"
+    ],
+    "trinity center": [
+      "Trinity County"
+    ],
+    "trinity village": [
+      "Trinity County"
+    ],
+    "trona": [
+      "Inyo County"
+    ],
+    "trowbridge": [
+      "Sutter County"
+    ],
+    "truckee": [
+      "Nevada County"
+    ],
+    "tulare": [
+      "Tulare County"
+    ],
+    "tulelake": [
+      "Siskiyou County"
+    ],
+    "tuolumne city": [
+      "Tuolumne County"
+    ],
+    "tupman": [
+      "Kern County"
+    ],
+    "turlock": [
+      "Stanislaus County"
+    ],
+    "tustin": [
+      "Orange County"
+    ],
+    "tuttle": [
+      "Merced County"
+    ],
+    "tuttletown": [
+      "Tuolumne County"
+    ],
+    "twain": [
+      "Plumas County"
+    ],
+    "twain harte": [
+      "Tuolumne County"
+    ],
+    "twentynine palms": [
+      "San Bernardino County"
+    ],
+    "twin lakes": [
+      "Mono County",
+      "Santa Cruz County"
+    ],
+    "ukiah": [
+      "Mendocino County"
+    ],
+    "union city": [
+      "Alameda County"
+    ],
+    "university of california-davis": [
+      "Yolo County"
+    ],
+    "university of california-merced": [
+      "Merced County"
+    ],
+    "university of california-santa barbara": [
+      "Santa Barbara County"
+    ],
+    "upland": [
+      "San Bernardino County"
+    ],
+    "upper lake": [
+      "Lake County"
+    ],
+    "vacaville": [
+      "Solano County"
+    ],
+    "valinda": [
+      "Los Angeles County"
+    ],
+    "vallecito": [
+      "Calaveras County"
+    ],
+    "vallejo": [
+      "Solano County"
+    ],
+    "valle vista": [
+      "Riverside County"
+    ],
+    "valley acres": [
+      "Kern County"
+    ],
+    "valley center": [
+      "San Diego County"
+    ],
+    "valley ford": [
+      "Sonoma County"
+    ],
+    "valley home": [
+      "Stanislaus County"
+    ],
+    "valley ranch": [
+      "Plumas County"
+    ],
+    "valley springs": [
+      "Calaveras County"
+    ],
+    "valley wells": [
+      "Inyo County"
+    ],
+    "val verde": [
+      "Los Angeles County"
+    ],
+    "vandenberg afb": [
+      "Santa Barbara County"
+    ],
+    "vandenberg village": [
+      "Santa Barbara County"
+    ],
+    "verdi": [
+      "Sierra County"
+    ],
+    "vernon": [
+      "Los Angeles County"
+    ],
+    "victor": [
+      "San Joaquin County"
+    ],
+    "victorville": [
+      "San Bernardino County"
+    ],
+    "view park-windsor hills": [
+      "Los Angeles County"
+    ],
+    "villa park": [
+      "Orange County"
+    ],
+    "vina": [
+      "Tehama County"
+    ],
+    "vincent": [
+      "Los Angeles County"
+    ],
+    "vine hill": [
+      "Contra Costa County"
+    ],
+    "vineyard": [
+      "Sacramento County"
+    ],
+    "virginia lakes": [
+      "Mono County"
+    ],
+    "visalia": [
+      "Tulare County"
+    ],
+    "vista": [
+      "San Diego County"
+    ],
+    "vista santa rosa": [
+      "Riverside County"
+    ],
+    "volcano": [
+      "Amador County"
+    ],
+    "volta": [
+      "Merced County"
+    ],
+    "walker": [
+      "Mono County"
+    ],
+    "wallace": [
+      "Calaveras County"
+    ],
+    "walnut": [
+      "Los Angeles County"
+    ],
+    "walnut creek": [
+      "Contra Costa County"
+    ],
+    "walnut grove": [
+      "Sacramento County"
+    ],
+    "walnut park": [
+      "Los Angeles County"
+    ],
+    "warm springs": [
+      "Riverside County"
+    ],
+    "warner valley": [
+      "Plumas County"
+    ],
+    "wasco": [
+      "Kern County"
+    ],
+    "washington": [
+      "Nevada County"
+    ],
+    "waterford": [
+      "Stanislaus County"
+    ],
+    "waterloo": [
+      "San Joaquin County"
+    ],
+    "watsonville": [
+      "Santa Cruz County"
+    ],
+    "waukena": [
+      "Tulare County"
+    ],
+    "wautec": [
+      "Humboldt County"
+    ],
+    "wawona": [
+      "Mariposa County"
+    ],
+    "weaverville": [
+      "Trinity County"
+    ],
+    "weed": [
+      "Siskiyou County"
+    ],
+    "weedpatch": [
+      "Kern County"
+    ],
+    "weitchpec": [
+      "Humboldt County"
+    ],
+    "weldon": [
+      "Kern County"
+    ],
+    "weott": [
+      "Humboldt County"
+    ],
+    "west athens": [
+      "Los Angeles County"
+    ],
+    "west bishop": [
+      "Inyo County"
+    ],
+    "west carson": [
+      "Los Angeles County"
+    ],
+    "west covina": [
+      "Los Angeles County"
+    ],
+    "west goshen": [
+      "Tulare County"
+    ],
+    "westhaven-moonstone": [
+      "Humboldt County"
+    ],
+    "west hollywood": [
+      "Los Angeles County"
+    ],
+    "westlake village": [
+      "Los Angeles County"
+    ],
+    "westley": [
+      "Stanislaus County"
+    ],
+    "west menlo park": [
+      "San Mateo County"
+    ],
+    "westminster": [
+      "Orange County"
+    ],
+    "west modesto": [
+      "Stanislaus County"
+    ],
+    "westmont": [
+      "Los Angeles County"
+    ],
+    "westmorland": [
+      "Imperial County"
+    ],
+    "west park": [
+      "Fresno County"
+    ],
+    "west point": [
+      "Calaveras County"
+    ],
+    "west puente valley": [
+      "Los Angeles County"
+    ],
+    "west rancho dominguez": [
+      "Los Angeles County"
+    ],
+    "west sacramento": [
+      "Yolo County"
+    ],
+    "westside": [
+      "Fresno County"
+    ],
+    "west whittier-los nietos": [
+      "Los Angeles County"
+    ],
+    "westwood": [
+      "Lassen County"
+    ],
+    "wheatland": [
+      "Yuba County"
+    ],
+    "whitehawk": [
+      "Plumas County"
+    ],
+    "whitewater": [
+      "Riverside County"
+    ],
+    "whitley gardens": [
+      "San Luis Obispo County"
+    ],
+    "whitmore": [
+      "Shasta County"
+    ],
+    "whittier": [
+      "Los Angeles County"
+    ],
+    "wildomar": [
+      "Riverside County"
+    ],
+    "wilkerson": [
+      "Inyo County"
+    ],
+    "williams": [
+      "Colusa County"
+    ],
+    "williams canyon": [
+      "Orange County"
+    ],
+    "willits": [
+      "Mendocino County"
+    ],
+    "willowbrook": [
+      "Los Angeles County"
+    ],
+    "willow creek": [
+      "Humboldt County"
+    ],
+    "willows": [
+      "Glenn County"
+    ],
+    "wilsonia": [
+      "Tulare County"
+    ],
+    "wilton": [
+      "Sacramento County"
+    ],
+    "winchester": [
+      "Riverside County"
+    ],
+    "windsor": [
+      "Sonoma County"
+    ],
+    "winter gardens": [
+      "San Diego County"
+    ],
+    "winterhaven": [
+      "Imperial County"
+    ],
+    "winters": [
+      "Yolo County"
+    ],
+    "winton": [
+      "Merced County"
+    ],
+    "wofford heights": [
+      "Kern County"
+    ],
+    "woodacre": [
+      "Marin County"
+    ],
+    "woodbridge": [
+      "San Joaquin County"
+    ],
+    "woodcrest": [
+      "Riverside County"
+    ],
+    "woodlake": [
+      "Tulare County"
+    ],
+    "woodland": [
+      "Yolo County"
+    ],
+    "woodlands": [
+      "San Luis Obispo County"
+    ],
+    "woodside": [
+      "San Mateo County"
+    ],
+    "woodville": [
+      "Tulare County"
+    ],
+    "woodville farm labor camp": [
+      "Tulare County"
+    ],
+    "woody": [
+      "Kern County"
+    ],
+    "wrightwood": [
+      "San Bernardino County"
+    ],
+    "yankee hill": [
+      "Butte County"
+    ],
+    "yermo": [
+      "San Bernardino County"
+    ],
+    "yettem": [
+      "Tulare County"
+    ],
+    "yolo": [
+      "Yolo County"
+    ],
+    "yorba linda": [
+      "Orange County"
+    ],
+    "yosemite lakes": [
+      "Madera County"
+    ],
+    "yosemite valley": [
+      "Mariposa County"
+    ],
+    "yosemite west": [
+      "Mariposa County"
+    ],
+    "yountville": [
+      "Napa County"
+    ],
+    "yreka": [
+      "Siskiyou County"
+    ],
+    "yuba city": [
+      "Sutter County"
+    ],
+    "yucaipa": [
+      "San Bernardino County"
+    ],
+    "yucca valley": [
+      "San Bernardino County"
+    ],
+    "zayante": [
+      "Santa Cruz County"
+    ]
+  },
+  "WI": {
+    "abbotsford": [
+      "Clark County",
+      "Marathon County"
+    ],
+    "abrams": [
+      "Oconto County"
+    ],
+    "adams": [
+      "Adams County"
+    ],
+    "adell": [
+      "Sheboygan County"
+    ],
+    "albany": [
+      "Green County"
+    ],
+    "algoma": [
+      "Kewaunee County"
+    ],
+    "allens grove": [
+      "Walworth County"
+    ],
+    "allenton": [
+      "Washington County"
+    ],
+    "allouez": [
+      "Brown County"
+    ],
+    "alma": [
+      "Buffalo County"
+    ],
+    "alma center": [
+      "Jackson County"
+    ],
+    "almena": [
+      "Barron County"
+    ],
+    "almond": [
+      "Portage County"
+    ],
+    "alto": [
+      "Fond du Lac County"
+    ],
+    "altoona": [
+      "Eau Claire County"
+    ],
+    "amberg": [
+      "Marinette County"
+    ],
+    "amery": [
+      "Polk County"
+    ],
+    "amherst": [
+      "Portage County"
+    ],
+    "amherst junction": [
+      "Portage County"
+    ],
+    "angelica": [
+      "Shawano County"
+    ],
+    "aniwa": [
+      "Shawano County"
+    ],
+    "antigo": [
+      "Langlade County"
+    ],
+    "appleton": [
+      "Calumet County",
+      "Outagamie County",
+      "Winnebago County"
+    ],
+    "arcadia": [
+      "Trempealeau County"
+    ],
+    "arena": [
+      "Iowa County"
+    ],
+    "argonne": [
+      "Forest County"
+    ],
+    "argyle": [
+      "Lafayette County"
+    ],
+    "arkansaw": [
+      "Pepin County"
+    ],
+    "arkdale": [
+      "Adams County"
+    ],
+    "arlington": [
+      "Columbia County"
+    ],
+    "arpin": [
+      "Wood County"
+    ],
+    "ashippun": [
+      "Dodge County"
+    ],
+    "ashland": [
+      "Ashland County",
+      "Bayfield County"
+    ],
+    "ashwaubenon": [
+      "Brown County"
+    ],
+    "athens": [
+      "Marathon County"
+    ],
+    "auburndale": [
+      "Wood County"
+    ],
+    "augusta": [
+      "Eau Claire County"
+    ],
+    "avoca": [
+      "Iowa County"
+    ],
+    "babcock": [
+      "Wood County"
+    ],
+    "bagley": [
+      "Grant County"
+    ],
+    "baileys harbor": [
+      "Door County"
+    ],
+    "baldwin": [
+      "St. Croix County"
+    ],
+    "balsam lake": [
+      "Polk County"
+    ],
+    "bancroft": [
+      "Portage County"
+    ],
+    "bangor": [
+      "La Crosse County"
+    ],
+    "baraboo": [
+      "Sauk County"
+    ],
+    "barneveld": [
+      "Iowa County"
+    ],
+    "barron": [
+      "Barron County"
+    ],
+    "barronett": [
+      "Barron County"
+    ],
+    "batavia": [
+      "Sheboygan County"
+    ],
+    "bay city": [
+      "Pierce County"
+    ],
+    "bayfield": [
+      "Bayfield County"
+    ],
+    "bayfront": [
+      "Ashland County"
+    ],
+    "bayside": [
+      "Milwaukee County",
+      "Ozaukee County"
+    ],
+    "bear creek": [
+      "Outagamie County"
+    ],
+    "beaver dam": [
+      "Dodge County"
+    ],
+    "belgium": [
+      "Ozaukee County"
+    ],
+    "bell center": [
+      "Crawford County"
+    ],
+    "belleville": [
+      "Dane County",
+      "Green County"
+    ],
+    "bellevue": [
+      "Brown County"
+    ],
+    "belmont": [
+      "Lafayette County"
+    ],
+    "beloit": [
+      "Rock County"
+    ],
+    "benton": [
+      "Lafayette County"
+    ],
+    "berlin": [
+      "Green Lake County",
+      "Waushara County"
+    ],
+    "big bend": [
+      "Waukesha County"
+    ],
+    "big falls": [
+      "Waupaca County"
+    ],
+    "big foot prairie": [
+      "Walworth County"
+    ],
+    "birch hill": [
+      "Ashland County"
+    ],
+    "birchwood": [
+      "Washburn County"
+    ],
+    "birnamwood": [
+      "Marathon County",
+      "Shawano County"
+    ],
+    "biron": [
+      "Wood County"
+    ],
+    "black creek": [
+      "Outagamie County"
+    ],
+    "black earth": [
+      "Dane County"
+    ],
+    "black river falls": [
+      "Jackson County"
+    ],
+    "blair": [
+      "Trempealeau County"
+    ],
+    "blanchardville": [
+      "Iowa County",
+      "Lafayette County"
+    ],
+    "bloomer": [
+      "Chippewa County"
+    ],
+    "bloomfield": [
+      "Walworth County"
+    ],
+    "bloomington": [
+      "Grant County"
+    ],
+    "blue mounds": [
+      "Dane County"
+    ],
+    "blue river": [
+      "Grant County"
+    ],
+    "bluffview": [
+      "Sauk County"
+    ],
+    "boaz": [
+      "Richland County"
+    ],
+    "bohners lake": [
+      "Racine County"
+    ],
+    "bonduel": [
+      "Shawano County"
+    ],
+    "boscobel": [
+      "Grant County"
+    ],
+    "boulder junction": [
+      "Vilas County"
+    ],
+    "bowler": [
+      "Shawano County"
+    ],
+    "boyceville": [
+      "Dunn County"
+    ],
+    "boyd": [
+      "Chippewa County"
+    ],
+    "brandon": [
+      "Fond du Lac County"
+    ],
+    "brice prairie": [
+      "La Crosse County"
+    ],
+    "briggsville": [
+      "Marquette County"
+    ],
+    "brillion": [
+      "Calumet County"
+    ],
+    "bristol": [
+      "Kenosha County"
+    ],
+    "brodhead": [
+      "Green County",
+      "Rock County"
+    ],
+    "brookfield": [
+      "Waukesha County"
+    ],
+    "brooklyn": [
+      "Dane County",
+      "Green County"
+    ],
+    "brothertown": [
+      "Calumet County"
+    ],
+    "brown deer": [
+      "Milwaukee County"
+    ],
+    "browns lake": [
+      "Racine County"
+    ],
+    "brownsville": [
+      "Dodge County"
+    ],
+    "browntown": [
+      "Green County"
+    ],
+    "bruce": [
+      "Rusk County"
+    ],
+    "brule": [
+      "Douglas County"
+    ],
+    "buffalo city": [
+      "Buffalo County"
+    ],
+    "burlington": [
+      "Racine County",
+      "Walworth County"
+    ],
+    "burnett": [
+      "Dodge County"
+    ],
+    "butler": [
+      "Waukesha County"
+    ],
+    "butte des morts": [
+      "Winnebago County"
+    ],
+    "butternut": [
+      "Ashland County"
+    ],
+    "cable": [
+      "Bayfield County"
+    ],
+    "cadott": [
+      "Chippewa County"
+    ],
+    "caledonia": [
+      "Racine County"
+    ],
+    "cambria": [
+      "Columbia County"
+    ],
+    "cambridge": [
+      "Dane County",
+      "Jefferson County"
+    ],
+    "cameron": [
+      "Barron County"
+    ],
+    "campbellsport": [
+      "Fond du Lac County"
+    ],
+    "camp douglas": [
+      "Juneau County"
+    ],
+    "caroline": [
+      "Shawano County"
+    ],
+    "cascade": [
+      "Sheboygan County"
+    ],
+    "casco": [
+      "Kewaunee County"
+    ],
+    "cashton": [
+      "Monroe County"
+    ],
+    "cassville": [
+      "Grant County"
+    ],
+    "cataract": [
+      "Monroe County"
+    ],
+    "catawba": [
+      "Price County"
+    ],
+    "cazenovia": [
+      "Richland County",
+      "Sauk County"
+    ],
+    "cecil": [
+      "Shawano County"
+    ],
+    "cedarburg": [
+      "Ozaukee County"
+    ],
+    "cedar grove": [
+      "Sheboygan County"
+    ],
+    "ceex haci": [
+      "Wood County"
+    ],
+    "centuria": [
+      "Polk County"
+    ],
+    "chain o' lakes": [
+      "Waupaca County"
+    ],
+    "chaseburg": [
+      "Vernon County"
+    ],
+    "chelsea": [
+      "Taylor County"
+    ],
+    "chenequa": [
+      "Waukesha County"
+    ],
+    "chetek": [
+      "Barron County"
+    ],
+    "chief lake": [
+      "Sawyer County"
+    ],
+    "chili": [
+      "Clark County"
+    ],
+    "chilton": [
+      "Calumet County"
+    ],
+    "chippewa falls": [
+      "Chippewa County"
+    ],
+    "clam lake": [
+      "Ashland County"
+    ],
+    "clarks mills": [
+      "Manitowoc County"
+    ],
+    "clayton": [
+      "Polk County"
+    ],
+    "clear lake": [
+      "Polk County"
+    ],
+    "cleveland": [
+      "Manitowoc County"
+    ],
+    "clinton": [
+      "Rock County"
+    ],
+    "clintonville": [
+      "Waupaca County"
+    ],
+    "clyman": [
+      "Dodge County"
+    ],
+    "cobb": [
+      "Iowa County"
+    ],
+    "cochrane": [
+      "Buffalo County"
+    ],
+    "colby": [
+      "Clark County",
+      "Marathon County"
+    ],
+    "coleman": [
+      "Marinette County"
+    ],
+    "colfax": [
+      "Dunn County"
+    ],
+    "collins": [
+      "Manitowoc County"
+    ],
+    "coloma": [
+      "Waushara County"
+    ],
+    "columbus": [
+      "Columbia County",
+      "Dodge County"
+    ],
+    "combined locks": [
+      "Outagamie County"
+    ],
+    "como": [
+      "Walworth County"
+    ],
+    "conrath": [
+      "Rusk County"
+    ],
+    "coon valley": [
+      "Vernon County"
+    ],
+    "cornell": [
+      "Chippewa County"
+    ],
+    "cornucopia": [
+      "Bayfield County"
+    ],
+    "cottage grove": [
+      "Dane County"
+    ],
+    "couderay": [
+      "Sawyer County"
+    ],
+    "crandon": [
+      "Forest County"
+    ],
+    "crivitz": [
+      "Marinette County"
+    ],
+    "cross plains": [
+      "Dane County"
+    ],
+    "cuba city": [
+      "Grant County",
+      "Lafayette County"
+    ],
+    "cudahy": [
+      "Milwaukee County"
+    ],
+    "cumberland": [
+      "Barron County"
+    ],
+    "curtiss": [
+      "Clark County"
+    ],
+    "dale": [
+      "Outagamie County"
+    ],
+    "dallas": [
+      "Barron County"
+    ],
+    "dalton": [
+      "Green Lake County"
+    ],
+    "danbury": [
+      "Burnett County"
+    ],
+    "dane": [
+      "Dane County"
+    ],
+    "darien": [
+      "Walworth County"
+    ],
+    "darlington": [
+      "Lafayette County"
+    ],
+    "deerfield": [
+      "Dane County"
+    ],
+    "deer park": [
+      "St. Croix County"
+    ],
+    "deforest": [
+      "Dane County"
+    ],
+    "dekorra": [
+      "Columbia County"
+    ],
+    "delafield": [
+      "Waukesha County"
+    ],
+    "delavan": [
+      "Walworth County"
+    ],
+    "delavan lake": [
+      "Walworth County"
+    ],
+    "dellwood": [
+      "Adams County"
+    ],
+    "denmark": [
+      "Brown County"
+    ],
+    "de pere": [
+      "Brown County"
+    ],
+    "de soto": [
+      "Crawford County",
+      "Vernon County"
+    ],
+    "diamond bluff": [
+      "Pierce County"
+    ],
+    "diaperville": [
+      "Ashland County"
+    ],
+    "dickeyville": [
+      "Grant County"
+    ],
+    "dodge": [
+      "Trempealeau County"
+    ],
+    "dodgeville": [
+      "Iowa County"
+    ],
+    "dorchester": [
+      "Clark County",
+      "Marathon County"
+    ],
+    "dousman": [
+      "Waukesha County"
+    ],
+    "downing": [
+      "Dunn County"
+    ],
+    "downsville": [
+      "Dunn County"
+    ],
+    "doylestown": [
+      "Columbia County"
+    ],
+    "dresser": [
+      "Polk County"
+    ],
+    "drummond": [
+      "Bayfield County"
+    ],
+    "dunbar": [
+      "Marinette County"
+    ],
+    "durand": [
+      "Pepin County"
+    ],
+    "dyckesville": [
+      "Brown County",
+      "Kewaunee County"
+    ],
+    "eagle": [
+      "Waukesha County"
+    ],
+    "eagle lake": [
+      "Racine County"
+    ],
+    "eagle river": [
+      "Vilas County"
+    ],
+    "eastman": [
+      "Crawford County"
+    ],
+    "easton": [
+      "Adams County"
+    ],
+    "east troy": [
+      "Walworth County"
+    ],
+    "eau claire": [
+      "Chippewa County",
+      "Eau Claire County"
+    ],
+    "eden": [
+      "Fond du Lac County"
+    ],
+    "edgar": [
+      "Marathon County"
+    ],
+    "edgerton": [
+      "Dane County",
+      "Rock County"
+    ],
+    "edmund": [
+      "Iowa County"
+    ],
+    "egg harbor": [
+      "Door County"
+    ],
+    "eland": [
+      "Shawano County"
+    ],
+    "elcho": [
+      "Langlade County"
+    ],
+    "elderon": [
+      "Marathon County"
+    ],
+    "eleva": [
+      "Trempealeau County"
+    ],
+    "elkhart lake": [
+      "Sheboygan County"
+    ],
+    "elkhorn": [
+      "Walworth County"
+    ],
+    "elk mound": [
+      "Dunn County"
+    ],
+    "ellison bay": [
+      "Door County"
+    ],
+    "ellsworth": [
+      "Pierce County"
+    ],
+    "elm grove": [
+      "Waukesha County"
+    ],
+    "elmwood": [
+      "Pierce County"
+    ],
+    "elmwood park": [
+      "Racine County"
+    ],
+    "elroy": [
+      "Juneau County"
+    ],
+    "embarrass": [
+      "Waupaca County"
+    ],
+    "emerald": [
+      "St. Croix County"
+    ],
+    "endeavor": [
+      "Marquette County"
+    ],
+    "ephraim": [
+      "Door County"
+    ],
+    "ettrick": [
+      "Trempealeau County"
+    ],
+    "eureka": [
+      "Winnebago County"
+    ],
+    "evansville": [
+      "Rock County"
+    ],
+    "exeland": [
+      "Sawyer County"
+    ],
+    "fairchild": [
+      "Eau Claire County"
+    ],
+    "fairwater": [
+      "Fond du Lac County"
+    ],
+    "fall creek": [
+      "Eau Claire County"
+    ],
+    "fall river": [
+      "Columbia County"
+    ],
+    "fennimore": [
+      "Grant County"
+    ],
+    "fenwood": [
+      "Marathon County"
+    ],
+    "ferryville": [
+      "Crawford County"
+    ],
+    "fitchburg": [
+      "Dane County"
+    ],
+    "florence": [
+      "Florence County"
+    ],
+    "fond du lac": [
+      "Fond du Lac County"
+    ],
+    "fontana-on-geneva lake": [
+      "Walworth County"
+    ],
+    "footville": [
+      "Rock County"
+    ],
+    "forest junction": [
+      "Calumet County"
+    ],
+    "forestville": [
+      "Door County"
+    ],
+    "fort atkinson": [
+      "Jefferson County"
+    ],
+    "fountain city": [
+      "Buffalo County"
+    ],
+    "fox crossing": [
+      "Winnebago County"
+    ],
+    "fox lake": [
+      "Dodge County"
+    ],
+    "fox point": [
+      "Milwaukee County"
+    ],
+    "francis creek": [
+      "Manitowoc County"
+    ],
+    "franklin": [
+      "Milwaukee County"
+    ],
+    "franks field": [
+      "Ashland County"
+    ],
+    "frederic": [
+      "Polk County"
+    ],
+    "fredonia": [
+      "Ozaukee County"
+    ],
+    "fremont": [
+      "Waupaca County"
+    ],
+    "french island": [
+      "La Crosse County"
+    ],
+    "friendship": [
+      "Adams County"
+    ],
+    "friesland": [
+      "Columbia County"
+    ],
+    "fulton": [
+      "Rock County"
+    ],
+    "galesville": [
+      "Trempealeau County"
+    ],
+    "gays mills": [
+      "Crawford County"
+    ],
+    "genoa": [
+      "Vernon County"
+    ],
+    "genoa city": [
+      "Kenosha County",
+      "Walworth County"
+    ],
+    "germantown": [
+      "Washington County"
+    ],
+    "gibbsville": [
+      "Sheboygan County"
+    ],
+    "gillett": [
+      "Oconto County"
+    ],
+    "gilman": [
+      "Taylor County"
+    ],
+    "gilmanton": [
+      "Buffalo County"
+    ],
+    "glenbeulah": [
+      "Sheboygan County"
+    ],
+    "glendale": [
+      "Milwaukee County"
+    ],
+    "glen flora": [
+      "Rusk County"
+    ],
+    "glen haven": [
+      "Grant County"
+    ],
+    "glenwood city": [
+      "St. Croix County"
+    ],
+    "glidden": [
+      "Ashland County"
+    ],
+    "goodman": [
+      "Marinette County"
+    ],
+    "gordon": [
+      "Douglas County"
+    ],
+    "gotham": [
+      "Richland County"
+    ],
+    "grafton": [
+      "Ozaukee County"
+    ],
+    "grand marsh": [
+      "Adams County"
+    ],
+    "grand view": [
+      "Bayfield County"
+    ],
+    "granton": [
+      "Clark County"
+    ],
+    "grantsburg": [
+      "Burnett County"
+    ],
+    "gratiot": [
+      "Lafayette County"
+    ],
+    "green bay": [
+      "Brown County"
+    ],
+    "greenbush": [
+      "Sheboygan County"
+    ],
+    "greendale": [
+      "Milwaukee County"
+    ],
+    "greenfield": [
+      "Milwaukee County"
+    ],
+    "green lake": [
+      "Green Lake County"
+    ],
+    "greenleaf": [
+      "Brown County"
+    ],
+    "green valley": [
+      "Shawano County"
+    ],
+    "greenwood": [
+      "Clark County"
+    ],
+    "gresham": [
+      "Shawano County"
+    ],
+    "hager city": [
+      "Pierce County"
+    ],
+    "hales corners": [
+      "Milwaukee County"
+    ],
+    "hammond": [
+      "St. Croix County"
+    ],
+    "hancock": [
+      "Waushara County"
+    ],
+    "hanover": [
+      "Rock County"
+    ],
+    "harrison": [
+      "Calumet County"
+    ],
+    "harrisville": [
+      "Marquette County"
+    ],
+    "hartford": [
+      "Dodge County",
+      "Washington County"
+    ],
+    "hartland": [
+      "Waukesha County"
+    ],
+    "hatfield": [
+      "Jackson County"
+    ],
+    "hatley": [
+      "Marathon County"
+    ],
+    "haugen": [
+      "Barron County"
+    ],
+    "hawkins": [
+      "Rusk County"
+    ],
+    "hayward": [
+      "Sawyer County"
+    ],
+    "hazel green": [
+      "Grant County",
+      "Lafayette County"
+    ],
+    "hebron": [
+      "Jefferson County"
+    ],
+    "helenville": [
+      "Jefferson County"
+    ],
+    "herbster": [
+      "Bayfield County"
+    ],
+    "hewitt": [
+      "Wood County"
+    ],
+    "highland": [
+      "Iowa County"
+    ],
+    "hilbert": [
+      "Calumet County"
+    ],
+    "hillsboro": [
+      "Vernon County"
+    ],
+    "hingham": [
+      "Sheboygan County"
+    ],
+    "hixton": [
+      "Jackson County"
+    ],
+    "hobart": [
+      "Brown County"
+    ],
+    "holcombe": [
+      "Chippewa County"
+    ],
+    "hollandale": [
+      "Iowa County"
+    ],
+    "holmen": [
+      "La Crosse County"
+    ],
+    "horicon": [
+      "Dodge County"
+    ],
+    "hortonville": [
+      "Outagamie County"
+    ],
+    "houlton": [
+      "St. Croix County"
+    ],
+    "howard": [
+      "Brown County",
+      "Outagamie County"
+    ],
+    "howards grove": [
+      "Sheboygan County"
+    ],
+    "hudson": [
+      "St. Croix County"
+    ],
+    "humbird": [
+      "Clark County"
+    ],
+    "hurley": [
+      "Iron County"
+    ],
+    "hustisford": [
+      "Dodge County"
+    ],
+    "hustler": [
+      "Juneau County"
+    ],
+    "independence": [
+      "Trempealeau County"
+    ],
+    "ingram": [
+      "Rusk County"
+    ],
+    "iola": [
+      "Waupaca County"
+    ],
+    "iron belt": [
+      "Iron County"
+    ],
+    "iron ridge": [
+      "Dodge County"
+    ],
+    "iron river": [
+      "Bayfield County"
+    ],
+    "ironton": [
+      "Sauk County"
+    ],
+    "ixonia": [
+      "Jefferson County"
+    ],
+    "jackson": [
+      "Washington County"
+    ],
+    "janesville": [
+      "Rock County"
+    ],
+    "jefferson": [
+      "Jefferson County"
+    ],
+    "jim falls": [
+      "Chippewa County"
+    ],
+    "johnson creek": [
+      "Jefferson County"
+    ],
+    "jolmaville": [
+      "Ashland County"
+    ],
+    "juda": [
+      "Green County"
+    ],
+    "jump river": [
+      "Taylor County"
+    ],
+    "junction city": [
+      "Portage County"
+    ],
+    "juneau": [
+      "Dodge County"
+    ],
+    "kaukauna": [
+      "Calumet County",
+      "Outagamie County"
+    ],
+    "kekoskee": [
+      "Dodge County"
+    ],
+    "kellnersville": [
+      "Manitowoc County"
+    ],
+    "kendall": [
+      "Monroe County"
+    ],
+    "kennan": [
+      "Price County"
+    ],
+    "kenosha": [
+      "Kenosha County"
+    ],
+    "keshena": [
+      "Menominee County"
+    ],
+    "kewaskum": [
+      "Fond du Lac County",
+      "Washington County"
+    ],
+    "kewaunee": [
+      "Kewaunee County"
+    ],
+    "kiel": [
+      "Calumet County",
+      "Manitowoc County"
+    ],
+    "kieler": [
+      "Grant County"
+    ],
+    "kimberly": [
+      "Outagamie County"
+    ],
+    "king": [
+      "Waupaca County"
+    ],
+    "kingston": [
+      "Green Lake County"
+    ],
+    "knapp": [
+      "Dunn County"
+    ],
+    "knowlton": [
+      "Marathon County"
+    ],
+    "kohler": [
+      "Sheboygan County"
+    ],
+    "krakow": [
+      "Shawano County"
+    ],
+    "kronenwetter": [
+      "Marathon County"
+    ],
+    "lac du flambeau": [
+      "Vilas County"
+    ],
+    "lac la belle": [
+      "Jefferson County",
+      "Waukesha County"
+    ],
+    "la crosse": [
+      "La Crosse County"
+    ],
+    "ladysmith": [
+      "Rusk County"
+    ],
+    "la farge": [
+      "Vernon County"
+    ],
+    "lake arrowhead": [
+      "Adams County"
+    ],
+    "lake camelot": [
+      "Adams County"
+    ],
+    "lake delton": [
+      "Sauk County"
+    ],
+    "lake geneva": [
+      "Walworth County"
+    ],
+    "lake hallie": [
+      "Chippewa County"
+    ],
+    "lake ivanhoe": [
+      "Walworth County"
+    ],
+    "lake koshkonong": [
+      "Jefferson County"
+    ],
+    "lake lorraine": [
+      "Walworth County"
+    ],
+    "lake mills": [
+      "Jefferson County"
+    ],
+    "lake nebagamon": [
+      "Douglas County"
+    ],
+    "lake ripley": [
+      "Jefferson County"
+    ],
+    "lake sherwood": [
+      "Adams County"
+    ],
+    "lake tomahawk": [
+      "Oneida County"
+    ],
+    "lake wazeecha": [
+      "Wood County"
+    ],
+    "lake wisconsin": [
+      "Columbia County",
+      "Sauk County"
+    ],
+    "lake wissota": [
+      "Chippewa County"
+    ],
+    "lakewood": [
+      "Oconto County"
+    ],
+    "lancaster": [
+      "Grant County"
+    ],
+    "lannon": [
+      "Waukesha County"
+    ],
+    "laona": [
+      "Forest County"
+    ],
+    "lauderdale lakes": [
+      "Walworth County"
+    ],
+    "la valle": [
+      "Sauk County"
+    ],
+    "lebanon": [
+      "Dodge County"
+    ],
+    "legend lake": [
+      "Menominee County"
+    ],
+    "lena": [
+      "Oconto County"
+    ],
+    "leopolis": [
+      "Shawano County"
+    ],
+    "lewis": [
+      "Polk County"
+    ],
+    "lily lake": [
+      "Kenosha County"
+    ],
+    "lime ridge": [
+      "Sauk County"
+    ],
+    "linden": [
+      "Iowa County"
+    ],
+    "little chute": [
+      "Outagamie County"
+    ],
+    "little round lake": [
+      "Sawyer County"
+    ],
+    "little sturgeon": [
+      "Door County"
+    ],
+    "livingston": [
+      "Grant County",
+      "Iowa County"
+    ],
+    "lodi": [
+      "Columbia County"
+    ],
+    "loganville": [
+      "Sauk County"
+    ],
+    "lohrville": [
+      "Waushara County"
+    ],
+    "lomira": [
+      "Dodge County"
+    ],
+    "lone rock": [
+      "Richland County"
+    ],
+    "long lake": [
+      "Florence County"
+    ],
+    "lowell": [
+      "Dodge County"
+    ],
+    "loyal": [
+      "Clark County"
+    ],
+    "lublin": [
+      "Taylor County"
+    ],
+    "luck": [
+      "Polk County"
+    ],
+    "luxemburg": [
+      "Kewaunee County"
+    ],
+    "lyndon station": [
+      "Juneau County"
+    ],
+    "lynxville": [
+      "Crawford County"
+    ],
+    "lyons": [
+      "Walworth County"
+    ],
+    "mcfarland": [
+      "Dane County"
+    ],
+    "madison": [
+      "Dane County"
+    ],
+    "maiden rock": [
+      "Pierce County"
+    ],
+    "maine": [
+      "Marathon County"
+    ],
+    "manawa": [
+      "Waupaca County"
+    ],
+    "manitowoc": [
+      "Manitowoc County"
+    ],
+    "maple bluff": [
+      "Dane County"
+    ],
+    "marathon city": [
+      "Marathon County"
+    ],
+    "marengo": [
+      "Ashland County"
+    ],
+    "maribel": [
+      "Manitowoc County"
+    ],
+    "marinette": [
+      "Marinette County"
+    ],
+    "marion": [
+      "Shawano County",
+      "Waupaca County"
+    ],
+    "markesan": [
+      "Green Lake County"
+    ],
+    "marquette": [
+      "Green Lake County"
+    ],
+    "marshall": [
+      "Dane County"
+    ],
+    "marshfield": [
+      "Marathon County",
+      "Wood County"
+    ],
+    "mason": [
+      "Bayfield County"
+    ],
+    "mattoon": [
+      "Shawano County"
+    ],
+    "mauston": [
+      "Juneau County"
+    ],
+    "mayville": [
+      "Dodge County"
+    ],
+    "mazomanie": [
+      "Dane County"
+    ],
+    "medford": [
+      "Taylor County"
+    ],
+    "mellen": [
+      "Ashland County"
+    ],
+    "melrose": [
+      "Jackson County"
+    ],
+    "melvina": [
+      "Monroe County"
+    ],
+    "menasha": [
+      "Calumet County",
+      "Winnebago County"
+    ],
+    "menomonee falls": [
+      "Waukesha County"
+    ],
+    "menomonie": [
+      "Dunn County"
+    ],
+    "mequon": [
+      "Ozaukee County"
+    ],
+    "mercer": [
+      "Iron County"
+    ],
+    "merrill": [
+      "Lincoln County"
+    ],
+    "merrillan": [
+      "Jackson County"
+    ],
+    "merrimac": [
+      "Sauk County"
+    ],
+    "merton": [
+      "Waukesha County"
+    ],
+    "middleton": [
+      "Dane County"
+    ],
+    "middle village": [
+      "Menominee County",
+      "Shawano County"
+    ],
+    "milladore": [
+      "Portage County",
+      "Wood County"
+    ],
+    "millston": [
+      "Jackson County"
+    ],
+    "milltown": [
+      "Polk County"
+    ],
+    "milton": [
+      "Rock County"
+    ],
+    "milwaukee": [
+      "Milwaukee County",
+      "Washington County",
+      "Waukesha County"
+    ],
+    "mindoro": [
+      "La Crosse County"
+    ],
+    "mineral point": [
+      "Iowa County"
+    ],
+    "minocqua": [
+      "Oneida County"
+    ],
+    "minong": [
+      "Washburn County"
+    ],
+    "mishicot": [
+      "Manitowoc County"
+    ],
+    "mission": [
+      "Jackson County"
+    ],
+    "mole lake": [
+      "Forest County"
+    ],
+    "mondovi": [
+      "Buffalo County"
+    ],
+    "monona": [
+      "Dane County"
+    ],
+    "monroe": [
+      "Green County"
+    ],
+    "montello": [
+      "Marquette County"
+    ],
+    "montfort": [
+      "Grant County",
+      "Iowa County"
+    ],
+    "monticello": [
+      "Green County"
+    ],
+    "montreal": [
+      "Iron County"
+    ],
+    "mosinee": [
+      "Marathon County"
+    ],
+    "mountain": [
+      "Oconto County"
+    ],
+    "mount calvary": [
+      "Fond du Lac County"
+    ],
+    "mount hope": [
+      "Grant County"
+    ],
+    "mount horeb": [
+      "Dane County"
+    ],
+    "mount pleasant": [
+      "Racine County"
+    ],
+    "mount sterling": [
+      "Crawford County"
+    ],
+    "mukwonago": [
+      "Walworth County",
+      "Waukesha County"
+    ],
+    "muscoda": [
+      "Grant County",
+      "Iowa County"
+    ],
+    "muskego": [
+      "Waukesha County"
+    ],
+    "nashotah": [
+      "Waukesha County"
+    ],
+    "navarino": [
+      "Shawano County"
+    ],
+    "necedah": [
+      "Juneau County"
+    ],
+    "neenah": [
+      "Winnebago County"
+    ],
+    "neillsville": [
+      "Clark County"
+    ],
+    "nekoosa": [
+      "Wood County"
+    ],
+    "nelson": [
+      "Buffalo County"
+    ],
+    "nelsonville": [
+      "Portage County"
+    ],
+    "neopit": [
+      "Menominee County"
+    ],
+    "neosho": [
+      "Dodge County"
+    ],
+    "neshkoro": [
+      "Marquette County"
+    ],
+    "newald": [
+      "Forest County"
+    ],
+    "new auburn": [
+      "Barron County",
+      "Chippewa County"
+    ],
+    "new berlin": [
+      "Waukesha County"
+    ],
+    "newburg": [
+      "Ozaukee County",
+      "Washington County"
+    ],
+    "new glarus": [
+      "Green County"
+    ],
+    "new holstein": [
+      "Calumet County"
+    ],
+    "new lisbon": [
+      "Juneau County"
+    ],
+    "new london": [
+      "Outagamie County",
+      "Waupaca County"
+    ],
+    "new munster": [
+      "Kenosha County"
+    ],
+    "new odanah": [
+      "Ashland County"
+    ],
+    "new post": [
+      "Sawyer County"
+    ],
+    "new richmond": [
+      "St. Croix County"
+    ],
+    "niagara": [
+      "Marinette County"
+    ],
+    "nichols": [
+      "Outagamie County"
+    ],
+    "north bay": [
+      "Racine County"
+    ],
+    "north fond du lac": [
+      "Fond du Lac County"
+    ],
+    "north freedom": [
+      "Sauk County"
+    ],
+    "north hudson": [
+      "St. Croix County"
+    ],
+    "north lake": [
+      "Waukesha County"
+    ],
+    "northport": [
+      "Waupaca County"
+    ],
+    "north prairie": [
+      "Waukesha County"
+    ],
+    "norwalk": [
+      "Monroe County"
+    ],
+    "oak creek": [
+      "Milwaukee County"
+    ],
+    "oakdale": [
+      "Monroe County"
+    ],
+    "oakfield": [
+      "Fond du Lac County"
+    ],
+    "oconomowoc": [
+      "Waukesha County"
+    ],
+    "oconomowoc lake": [
+      "Waukesha County"
+    ],
+    "oconto": [
+      "Oconto County"
+    ],
+    "oconto falls": [
+      "Oconto County"
+    ],
+    "odanah": [
+      "Ashland County"
+    ],
+    "ogdensburg": [
+      "Waupaca County"
+    ],
+    "ogema": [
+      "Price County"
+    ],
+    "okauchee lake": [
+      "Waukesha County"
+    ],
+    "oliver": [
+      "Douglas County"
+    ],
+    "omro": [
+      "Winnebago County"
+    ],
+    "onalaska": [
+      "La Crosse County"
+    ],
+    "ontario": [
+      "Monroe County",
+      "Vernon County"
+    ],
+    "oostburg": [
+      "Sheboygan County"
+    ],
+    "oregon": [
+      "Dane County"
+    ],
+    "orfordville": [
+      "Rock County"
+    ],
+    "osceola": [
+      "Polk County"
+    ],
+    "oshkosh": [
+      "Winnebago County"
+    ],
+    "osseo": [
+      "Trempealeau County"
+    ],
+    "owen": [
+      "Clark County"
+    ],
+    "oxford": [
+      "Marquette County"
+    ],
+    "paac ciinak": [
+      "Shawano County"
+    ],
+    "packwaukee": [
+      "Marquette County"
+    ],
+    "paddock lake": [
+      "Kenosha County"
+    ],
+    "palmyra": [
+      "Jefferson County"
+    ],
+    "pardeeville": [
+      "Columbia County"
+    ],
+    "park falls": [
+      "Price County"
+    ],
+    "park ridge": [
+      "Portage County"
+    ],
+    "patch grove": [
+      "Grant County"
+    ],
+    "pella": [
+      "Shawano County"
+    ],
+    "pembine": [
+      "Marinette County"
+    ],
+    "pence": [
+      "Iron County"
+    ],
+    "pepin": [
+      "Pepin County"
+    ],
+    "peshtigo": [
+      "Marinette County"
+    ],
+    "pewaukee": [
+      "Waukesha County"
+    ],
+    "phillips": [
+      "Price County"
+    ],
+    "pigeon falls": [
+      "Trempealeau County"
+    ],
+    "pine river": [
+      "Waushara County"
+    ],
+    "pittsville": [
+      "Wood County"
+    ],
+    "plain": [
+      "Sauk County"
+    ],
+    "plainfield": [
+      "Waushara County"
+    ],
+    "platteville": [
+      "Grant County"
+    ],
+    "pleasant prairie": [
+      "Kenosha County"
+    ],
+    "plover": [
+      "Portage County"
+    ],
+    "plum city": [
+      "Pierce County"
+    ],
+    "plymouth": [
+      "Sheboygan County"
+    ],
+    "polonia": [
+      "Portage County"
+    ],
+    "poplar": [
+      "Douglas County"
+    ],
+    "portage": [
+      "Columbia County"
+    ],
+    "port edwards": [
+      "Wood County"
+    ],
+    "port washington": [
+      "Ozaukee County"
+    ],
+    "port wing": [
+      "Bayfield County"
+    ],
+    "post lake": [
+      "Langlade County"
+    ],
+    "potosi": [
+      "Grant County"
+    ],
+    "potter": [
+      "Calumet County"
+    ],
+    "potter lake": [
+      "Walworth County"
+    ],
+    "pound": [
+      "Marinette County"
+    ],
+    "powers lake": [
+      "Kenosha County"
+    ],
+    "poynette": [
+      "Columbia County"
+    ],
+    "poy sippi": [
+      "Waushara County"
+    ],
+    "prairie du chien": [
+      "Crawford County"
+    ],
+    "prairie du sac": [
+      "Sauk County"
+    ],
+    "prairie farm": [
+      "Barron County"
+    ],
+    "prentice": [
+      "Price County"
+    ],
+    "prescott": [
+      "Pierce County"
+    ],
+    "princeton": [
+      "Green Lake County"
+    ],
+    "pulaski": [
+      "Brown County",
+      "Oconto County",
+      "Shawano County"
+    ],
+    "pulcifer": [
+      "Shawano County"
+    ],
+    "racine": [
+      "Racine County"
+    ],
+    "radisson": [
+      "Sawyer County"
+    ],
+    "randolph": [
+      "Columbia County",
+      "Dodge County"
+    ],
+    "random lake": [
+      "Sheboygan County"
+    ],
+    "raymond": [
+      "Racine County"
+    ],
+    "readstown": [
+      "Vernon County"
+    ],
+    "redgranite": [
+      "Waushara County"
+    ],
+    "reedsburg": [
+      "Sauk County"
+    ],
+    "reedsville": [
+      "Manitowoc County"
+    ],
+    "reeseville": [
+      "Dodge County"
+    ],
+    "reserve": [
+      "Sawyer County"
+    ],
+    "rewey": [
+      "Iowa County"
+    ],
+    "rhinelander": [
+      "Oneida County"
+    ],
+    "rib lake": [
+      "Taylor County"
+    ],
+    "rib mountain": [
+      "Marathon County"
+    ],
+    "rice lake": [
+      "Barron County"
+    ],
+    "richfield": [
+      "Washington County"
+    ],
+    "richland center": [
+      "Richland County"
+    ],
+    "ridgeland": [
+      "Dunn County"
+    ],
+    "ridgeway": [
+      "Iowa County"
+    ],
+    "rio": [
+      "Columbia County"
+    ],
+    "ripon": [
+      "Fond du Lac County"
+    ],
+    "river falls": [
+      "Pierce County",
+      "St. Croix County"
+    ],
+    "river hills": [
+      "Milwaukee County"
+    ],
+    "roberts": [
+      "St. Croix County"
+    ],
+    "rochester": [
+      "Racine County"
+    ],
+    "rockdale": [
+      "Dane County"
+    ],
+    "rock falls": [
+      "Dunn County"
+    ],
+    "rockland": [
+      "La Crosse County",
+      "Monroe County"
+    ],
+    "rock springs": [
+      "Sauk County"
+    ],
+    "rome": [
+      "Jefferson County"
+    ],
+    "rosendale": [
+      "Fond du Lac County"
+    ],
+    "rosholt": [
+      "Portage County"
+    ],
+    "rothschild": [
+      "Marathon County"
+    ],
+    "rubicon": [
+      "Dodge County"
+    ],
+    "rudolph": [
+      "Wood County"
+    ],
+    "st. cloud": [
+      "Fond du Lac County"
+    ],
+    "st. croix falls": [
+      "Polk County"
+    ],
+    "st. francis": [
+      "Milwaukee County"
+    ],
+    "st. joseph": [
+      "La Crosse County"
+    ],
+    "st. nazianz": [
+      "Manitowoc County"
+    ],
+    "st. peter": [
+      "Fond du Lac County"
+    ],
+    "salem lakes": [
+      "Kenosha County"
+    ],
+    "sand pillow": [
+      "Jackson County"
+    ],
+    "sandy hook": [
+      "Grant County"
+    ],
+    "sauk city": [
+      "Sauk County"
+    ],
+    "saukville": [
+      "Ozaukee County"
+    ],
+    "saxon": [
+      "Iron County"
+    ],
+    "sayner": [
+      "Vilas County"
+    ],
+    "scandinavia": [
+      "Waupaca County"
+    ],
+    "schofield": [
+      "Marathon County"
+    ],
+    "seneca": [
+      "Crawford County"
+    ],
+    "sextonville": [
+      "Richland County"
+    ],
+    "seymour": [
+      "Eau Claire County",
+      "Outagamie County"
+    ],
+    "sharon": [
+      "Walworth County"
+    ],
+    "shawano": [
+      "Shawano County"
+    ],
+    "sheboygan": [
+      "Sheboygan County"
+    ],
+    "sheboygan falls": [
+      "Sheboygan County"
+    ],
+    "sheldon": [
+      "Rusk County"
+    ],
+    "shell lake": [
+      "Washburn County"
+    ],
+    "sherwood": [
+      "Calumet County"
+    ],
+    "shiocton": [
+      "Outagamie County"
+    ],
+    "shopiere": [
+      "Rock County"
+    ],
+    "shorewood": [
+      "Milwaukee County"
+    ],
+    "shorewood hills": [
+      "Dane County"
+    ],
+    "shullsburg": [
+      "Lafayette County"
+    ],
+    "siren": [
+      "Burnett County"
+    ],
+    "sister bay": [
+      "Door County"
+    ],
+    "slinger": [
+      "Washington County"
+    ],
+    "sobieski": [
+      "Oconto County"
+    ],
+    "soldiers grove": [
+      "Crawford County"
+    ],
+    "solon springs": [
+      "Douglas County"
+    ],
+    "somers": [
+      "Kenosha County"
+    ],
+    "somerset": [
+      "St. Croix County"
+    ],
+    "south milwaukee": [
+      "Milwaukee County"
+    ],
+    "south wayne": [
+      "Lafayette County"
+    ],
+    "sparta": [
+      "Monroe County"
+    ],
+    "spencer": [
+      "Marathon County"
+    ],
+    "spooner": [
+      "Washburn County"
+    ],
+    "springbrook": [
+      "Washburn County"
+    ],
+    "springfield": [
+      "Walworth County"
+    ],
+    "spring green": [
+      "Sauk County"
+    ],
+    "spring valley": [
+      "Pierce County",
+      "St. Croix County"
+    ],
+    "stanley": [
+      "Chippewa County",
+      "Clark County"
+    ],
+    "star prairie": [
+      "St. Croix County"
+    ],
+    "stetsonville": [
+      "Taylor County"
+    ],
+    "steuben": [
+      "Crawford County"
+    ],
+    "stevens point": [
+      "Portage County"
+    ],
+    "stockbridge": [
+      "Calumet County"
+    ],
+    "stockholm": [
+      "Pepin County"
+    ],
+    "stoddard": [
+      "Vernon County"
+    ],
+    "stone lake": [
+      "Sawyer County",
+      "Washburn County"
+    ],
+    "stoughton": [
+      "Dane County"
+    ],
+    "stratford": [
+      "Marathon County"
+    ],
+    "strum": [
+      "Trempealeau County"
+    ],
+    "sturgeon bay": [
+      "Door County"
+    ],
+    "sturtevant": [
+      "Racine County"
+    ],
+    "suamico": [
+      "Brown County"
+    ],
+    "sullivan": [
+      "Jefferson County"
+    ],
+    "summit": [
+      "Waukesha County"
+    ],
+    "summit lake": [
+      "Langlade County"
+    ],
+    "sun prairie": [
+      "Dane County"
+    ],
+    "superior": [
+      "Douglas County"
+    ],
+    "suring": [
+      "Oconto County"
+    ],
+    "sussex": [
+      "Waukesha County"
+    ],
+    "tainter lake": [
+      "Dunn County"
+    ],
+    "taycheedah": [
+      "Fond du Lac County"
+    ],
+    "taylor": [
+      "Jackson County"
+    ],
+    "tennyson": [
+      "Grant County"
+    ],
+    "theresa": [
+      "Dodge County"
+    ],
+    "thiensville": [
+      "Ozaukee County"
+    ],
+    "thornton": [
+      "Shawano County"
+    ],
+    "thorp": [
+      "Clark County"
+    ],
+    "three lakes": [
+      "Oneida County"
+    ],
+    "tichigan": [
+      "Racine County"
+    ],
+    "tigerton": [
+      "Shawano County"
+    ],
+    "tilleda": [
+      "Shawano County"
+    ],
+    "tomah": [
+      "Monroe County"
+    ],
+    "tomahawk": [
+      "Lincoln County"
+    ],
+    "tony": [
+      "Rusk County"
+    ],
+    "townsend": [
+      "Oconto County"
+    ],
+    "trego": [
+      "Washburn County"
+    ],
+    "trempealeau": [
+      "Trempealeau County"
+    ],
+    "tunnel city": [
+      "Monroe County"
+    ],
+    "turtle lake": [
+      "Barron County",
+      "Polk County",
+      "Walworth County"
+    ],
+    "tustin": [
+      "Waushara County"
+    ],
+    "twin lakes": [
+      "Kenosha County"
+    ],
+    "two rivers": [
+      "Manitowoc County"
+    ],
+    "union center": [
+      "Juneau County"
+    ],
+    "union grove": [
+      "Racine County"
+    ],
+    "unity": [
+      "Clark County",
+      "Marathon County"
+    ],
+    "valders": [
+      "Manitowoc County"
+    ],
+    "van dyne": [
+      "Fond du Lac County"
+    ],
+    "verona": [
+      "Dane County"
+    ],
+    "vesper": [
+      "Wood County"
+    ],
+    "viola": [
+      "Richland County",
+      "Vernon County"
+    ],
+    "viroqua": [
+      "Vernon County"
+    ],
+    "wabeno": [
+      "Forest County"
+    ],
+    "waldo": [
+      "Sheboygan County"
+    ],
+    "wales": [
+      "Waukesha County"
+    ],
+    "walworth": [
+      "Walworth County"
+    ],
+    "warrens": [
+      "Monroe County"
+    ],
+    "washburn": [
+      "Bayfield County"
+    ],
+    "waterford": [
+      "Racine County"
+    ],
+    "waterloo": [
+      "Jefferson County"
+    ],
+    "watertown": [
+      "Dodge County",
+      "Jefferson County"
+    ],
+    "waubeka": [
+      "Ozaukee County"
+    ],
+    "waukau": [
+      "Winnebago County"
+    ],
+    "waukesha": [
+      "Waukesha County"
+    ],
+    "waumandee": [
+      "Buffalo County"
+    ],
+    "waunakee": [
+      "Dane County"
+    ],
+    "waupaca": [
+      "Waupaca County"
+    ],
+    "waupun": [
+      "Dodge County",
+      "Fond du Lac County"
+    ],
+    "wausau": [
+      "Marathon County"
+    ],
+    "wausaukee": [
+      "Marinette County"
+    ],
+    "wautoma": [
+      "Waushara County"
+    ],
+    "wauwatosa": [
+      "Milwaukee County"
+    ],
+    "wauzeka": [
+      "Crawford County"
+    ],
+    "webster": [
+      "Burnett County"
+    ],
+    "west allis": [
+      "Milwaukee County"
+    ],
+    "west baraboo": [
+      "Sauk County"
+    ],
+    "west bend": [
+      "Washington County"
+    ],
+    "westboro": [
+      "Taylor County"
+    ],
+    "westby": [
+      "Vernon County"
+    ],
+    "westfield": [
+      "Marquette County"
+    ],
+    "west milwaukee": [
+      "Milwaukee County"
+    ],
+    "weston": [
+      "Marathon County"
+    ],
+    "west salem": [
+      "La Crosse County"
+    ],
+    "weyauwega": [
+      "Waupaca County"
+    ],
+    "weyerhaeuser": [
+      "Rusk County"
+    ],
+    "wheeler": [
+      "Dunn County"
+    ],
+    "whitefish bay": [
+      "Milwaukee County"
+    ],
+    "whitehall": [
+      "Trempealeau County"
+    ],
+    "white lake": [
+      "Langlade County"
+    ],
+    "whitelaw": [
+      "Manitowoc County"
+    ],
+    "whitewater": [
+      "Jefferson County",
+      "Walworth County"
+    ],
+    "whiting": [
+      "Portage County"
+    ],
+    "whittlesey": [
+      "Taylor County"
+    ],
+    "wild rose": [
+      "Waushara County"
+    ],
+    "williams bay": [
+      "Walworth County"
+    ],
+    "wilson": [
+      "St. Croix County"
+    ],
+    "wilton": [
+      "Monroe County"
+    ],
+    "winchester": [
+      "Winnebago County"
+    ],
+    "wind lake": [
+      "Racine County"
+    ],
+    "wind point": [
+      "Racine County"
+    ],
+    "windsor": [
+      "Dane County"
+    ],
+    "winneconne": [
+      "Winnebago County"
+    ],
+    "winter": [
+      "Sawyer County"
+    ],
+    "wiota": [
+      "Lafayette County"
+    ],
+    "wisconsin dells": [
+      "Adams County",
+      "Columbia County",
+      "Juneau County",
+      "Sauk County"
+    ],
+    "wisconsin rapids": [
+      "Wood County"
+    ],
+    "withee": [
+      "Clark County"
+    ],
+    "wittenberg": [
+      "Shawano County"
+    ],
+    "wonewoc": [
+      "Juneau County"
+    ],
+    "woodford": [
+      "Lafayette County"
+    ],
+    "woodman": [
+      "Grant County"
+    ],
+    "woodruff": [
+      "Oneida County"
+    ],
+    "woodville": [
+      "St. Croix County"
+    ],
+    "wrightstown": [
+      "Brown County",
+      "Outagamie County"
+    ],
+    "wyeville": [
+      "Monroe County"
+    ],
+    "wyocena": [
+      "Columbia County"
+    ],
+    "yorkville": [
+      "Racine County"
+    ],
+    "yuba": [
+      "Richland County"
+    ],
+    "zoar": [
+      "Menominee County"
+    ]
+  }
+}

@@ -456,7 +456,7 @@
                 </div>
                 <div class="row">
                     <!-- Store Timeline -->
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="mb-2">
                             <b>Store Timeline</b>
                         </div>
@@ -477,17 +477,94 @@
                             </tbody>
                         </table>
                     </div>
+                    @php
+                        $successOrders = isset($store_orders)
+                            ? $store_orders
+                            : $store->StoreOrders->where('is_payment_success', 1);
+
+                        $totalSuccessOrders = $successOrders->count();
+                        $totalOrderItemsQty = $successOrders->pluck('OrderItems')->flatten()->sum('qty');
+
+                        $totalRefundItemQty = 0;
+                        $totalRefundAmount = 0.0;
+
+                        foreach ($successOrders as $order) {
+                            if ($order->paymentDetails) {
+                                $totalRefundAmount += (float) $order->paymentDetails
+                                    ->where('is_success', 1)
+                                    ->where('is_refund', 1)
+                                    ->sum('payment_amount');
+                            }
+
+                            $allPlayerDetails = $order->OrderItemsWithTrashed
+                                ? $order->OrderItemsWithTrashed->pluck('OrderItemDetails')->flatten()
+                                : collect();
+
+                            $refundedPlayerDetails = $allPlayerDetails->filter(function ($detail) {
+                                return (int) $detail->is_refunded === 1 && !empty($detail->deleted_at);
+                            });
+
+                            if ($refundedPlayerDetails->count() > 0) {
+                                $totalRefundItemQty += (int) $refundedPlayerDetails->sum('qty');
+                            } else {
+                                $sentRemovedQty = 0;
+                                $pendingRemovedQty = 0;
+                                if (!empty($order->OrderReceipts) && $order->OrderReceipts->count() > 0) {
+                                    foreach ($order->OrderReceipts->sortBy('id') as $receipt) {
+                                        $orderDetails = is_string($receipt->order_details)
+                                            ? json_decode($receipt->order_details, true)
+                                            : (array) $receipt->order_details;
+
+                                        $receiptRemovedQty = 0;
+                                        if (!empty($orderDetails['removed_items']) && is_array($orderDetails['removed_items'])) {
+                                            foreach ($orderDetails['removed_items'] as $removedItem) {
+                                                $receiptRemovedQty += (int) ($removedItem['qty'] ?? 0);
+                                            }
+                                        }
+
+                                        if (!empty($orderDetails['refund_details'])) {
+                                            if ($pendingRemovedQty > 0) {
+                                                $sentRemovedQty += $pendingRemovedQty;
+                                                $pendingRemovedQty = 0;
+                                            }
+                                            continue;
+                                        }
+
+                                        if ((int) $receipt->is_sent === 1) {
+                                            $sentRemovedQty += $receiptRemovedQty;
+                                            $pendingRemovedQty = 0;
+                                        } else {
+                                            $pendingRemovedQty = $receiptRemovedQty;
+                                        }
+                                    }
+                                }
+                                $totalRefundItemQty += ($sentRemovedQty + $pendingRemovedQty);
+                            }
+                        }
+                    @endphp
                     <!-- Accounting Summary -->
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="mb-2">
                             <b>Accounting Summary</b>
                         </div>
                         <table class="table table-sm table-borderless" style="margin-bottom: 0;width: 80%;">
                             <tbody>
                                 <tr>
-                                    <td style="width: 65%; font-weight: 500;">Total Collected ($)</td>
+                                    <td style="width: 65%; font-weight: 500;">Total Orders</td>
                                     <td style="text-align: right;">
-                                        {{ number_format($store->StoreOrders->sum('paid_amount'), 2) }}
+                                        {{ $totalSuccessOrders }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 65%; font-weight: 500;">Total Order Items</td>
+                                    <td style="text-align: right;">
+                                        {{ $totalOrderItemsQty }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 500;">Invoice Fees ($)</td>
+                                    <td style="text-align: right;">
+                                        {{ number_format($store->StoreOrders->sum('paid_invoice_amount'), 2) }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -497,16 +574,38 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="font-weight: 500;">Invoice Fees ($)</td>
+                                    <td style="width: 65%; font-weight: 500;">Total Collected ($)</td>
                                     <td style="text-align: right;">
-                                        {{ number_format($store->StoreOrders->sum('paid_invoice_amount'), 2) }}
+                                        {{ number_format($store->StoreOrders->sum('paid_amount'), 2) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Refund Summary -->
+                    <div class="col-lg-3">
+                        <div class="mb-2">
+                            <b>Refund Summary</b>
+                        </div>
+                        <table class="table table-sm table-borderless" style="margin-bottom: 0;width: 80%;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 65%; font-weight: 500;">Total Items</td>
+                                    <td style="text-align: right;">
+                                        {{ $totalRefundItemQty }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 65%; font-weight: 500;">Total Refunded ($)</td>
+                                    <td style="text-align: right;">
+                                        {{ number_format($totalRefundAmount, 2) }}
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <!-- Fundraising Summary -->
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="mb-2">
                             <b>Fundraising Summary</b>
                         </div>

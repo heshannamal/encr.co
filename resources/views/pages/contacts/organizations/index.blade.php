@@ -353,7 +353,7 @@
     }
     .back_home_mobile {
         /* padding-bottom: 20px; */
-        display: block !important;
+        display: block;
     }
     .mobile_display_none {
         display: none;
@@ -522,6 +522,107 @@
     }
 }
 
+
+@media screen and (max-width: 767.98px) {
+
+    /* Main row */
+    .mobile_filter_search_div_1 {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+    }
+
+    /* Rows per page wrapper */
+    .mobile_rows_per_page_2 {
+        display: flex !important;
+        flex: 0 0 auto !important;
+        width: auto !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Hide label only */
+    .mobile_rows_per_page_2 .mobile_per_row {
+        display: none !important;
+    }
+
+    /* Select box */
+    .mobile_rows_per_page_2 .selectbox-div {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        max-width: none !important;
+        padding: 0 4px !important;
+    }
+
+    .mobile_rows_per_page_2 #row_per_page {
+        width: 65px !important;
+        min-width: 65px !important;
+        height: 32px !important;
+        font-size: 12px !important;
+        padding: 4px !important;
+    }
+
+    /* Search area */
+    .mobile_filter_search_div_1 > .mobile_rows_per_page:not(.mobile_rows_per_page_2) {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 10px 0 !important;
+        padding: 0 5px !important;
+    }
+
+    /* Buttons area */
+    .mobile_main_buttons {
+        flex: 1 1 auto !important;
+        width: auto !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 5px !important;
+    }
+
+    .mobile_main_buttons .btn-inside-table {
+        width: 100% !important;
+        table-layout: auto !important;
+    }
+
+    /* Hide Table Layout */
+    .mobile_main_buttons .mobile_table_layout_btn {
+        display: none !important;
+    }
+
+    /* Keep CSV and ADD buttons visible */
+    .mobile_main_buttons .mobile_csv_btn,
+    .mobile_main_buttons td:last-child {
+        display: table-cell !important;
+        white-space: nowrap !important;
+        padding: 0 3px !important;
+    }
+
+    .mobile_main_buttons .mobile_csv,
+    .mobile_main_buttons .btn-green-filled {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+        font-size: 10px !important;
+        padding: 7px 6px !important;
+    }
+
+    /* Position rows-per-page selector on the right of ADD */
+    .mobile_rows_per_page_2 {
+        order: 3 !important;
+    }
+
+    .mobile_main_buttons {
+        order: 2 !important;
+    }
+    .org-card {
+        cursor: pointer;
+    }
+}
+
+
 </style>
 
 <div class="container-fluid mb-5 contect-position">
@@ -535,7 +636,7 @@
     @endsection
 
     @section('back-btn-Mobile')
-        <a href="{{ route('home') }}" class="home-btn-color" title="Back to home">< BACK TO HOME</a>
+        <a href="{{ route('home') }}" class="home-btn-color" title="Back to home">< BACK</a>
     @endsection
 
     <div class="col-md-12 back_home_mobile">
@@ -1000,6 +1101,28 @@
 @include('pages.contacts.organizations.people_create_modal')
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).on('click', '.org-card', function(e) {
+
+        // Website link එක click කළොත් card navigation නවත්වන්න
+        if ($(e.target).closest('.org-info p a').length) {
+            return;
+        }
+
+        // වෙනත් links හෝ buttons වල default actions වලට බාධා නොකරන්න
+        if ($(e.target).closest('a, button, input, select, textarea').length) {
+            return;
+        }
+
+        // Organization name එකේ route එකටම navigate කරන්න
+        let url = $(this).find('.mobile_organizatin_name').attr('href');
+
+        if (url) {
+            window.location.href = url;
+        }
+    });
+</script>
 <script>
     //Alphabet filter
     document.addEventListener('DOMContentLoaded', function() {

@@ -71,14 +71,651 @@
         font-weight: 600;
     }
 
+    /* MOBILE VIEW (max-width: 768px) */
     @media (max-width: 768px) {
-        .card-body {
-            padding: 10px;
+
+        /* ---- Top buttons ---- */
+        .card-body > .d-flex.justify-content-end {
+            flex-direction: column;
+            gap: 12px !important;
+        }
+        .pdt-action-btn {
+            width: 100%;
+            text-align: center;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+        }
+        /* Login button (second) */
+        .card-body > .d-flex a.pdt-action-btn {
+            order: 2;
+            font-weight: 600;
+            font-size: 13px !important;
+            height: 44px;
+        }
+        /* Add product button (first, teal) */
+        .card-body > .d-flex button.pdt-action-btn {
+            order: 1;
+            background: #14b8a6;
+            border-color: #14b8a6;
+            color: #fff;
+            font-weight: 600;
+            font-size: 13px !important;
+            height: 44px;
+        }
+        .card-body > .d-flex button.pdt-action-btn i { color: #fff; }
+
+        /* ---- DataTables: length / search / info / pagination ---- */
+        .dataTables_length { display: none !important; }
+
+        .dataTables_filter {
+            position: relative;
+            width: 100%;
+            text-align: left !important;
+            margin: 12px 0;
+        }
+        .dataTables_filter label {
+            display: block;
+            width: 100%;
+            font-size: 0;            /* hides "Search:" text */
+            margin: 0;
+        }
+        /* Custom placeholder text */
+        .dataTables_filter::before {
+            content: "Search products...";
+            position: absolute;
+            left: 46px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9aa3ad;
+            font-size: 14px;
+            pointer-events: none;
+        }
+        /* Hide custom placeholder when user types */
+        .dataTables_filter:has(input:not(:placeholder-shown))::before { display: none; }
+
+        /* Search input with icon */
+        .dataTables_filter input {
+            width: 100% !important;
+            margin: 0 !important;
+            height: 50px;
+            padding: 0 16px;
+            padding-left: 46px !important;
+            font-size: 15px;
+            border: 1px solid #e3e7ec;
+            border-radius: 14px;
+            background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>") 16px center no-repeat !important;
+        }
+        /* Hide DataTables' own placeholder */
+        .dataTables_filter input::placeholder { color: transparent; }
+
+        .dataTables_info { padding: 0 0 10px !important; font-size: 14px; color: #6b7480; }
+        .dataTables_paginate { text-align: center !important; }
+
+        /* ---- Un-table the products table ---- */
+        .dataTables_scrollHead { display: none !important; }
+        .dataTables_scroll,
+        .dataTables_scrollBody,
+        .dt-scroll,
+        .dt-scroll-body {
+            overflow: visible !important;
+            height: auto !important;
+            max-height: none !important;
+            width: 100% !important;
+        }
+        #pdtTable,
+        #pdtTable tbody {
+            display: block;
+            width: 100% !important;
+            margin: 0 !important;
+            border: 0 !important;
+            background: transparent;
+        }
+        #pdtTable thead { display: none !important; }
+        .content-position .card { background-color: transparent; }
+
+        /* ---- Product card (collapsed layout) ---- */
+        #pdtTable tbody tr {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            grid-template-areas:
+                "name    name    action"
+                "pid     pid     pid"
+                "created status  chev";
+            column-gap: 12px;
+            row-gap: 6px;
+            background: #fff !important;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 10px rgba(20, 30, 50, 0.07);
+            cursor: pointer;
+        }
+        /* Expanded layout: adds DXF / Model / Parts rows */
+        #pdtTable tbody tr.is-open {
+            grid-template-areas:
+                "name    name    action"
+                "pid     pid     pid"
+                "created status  chev"
+                "dxf     dxf     dxf"
+                "model   model   model"
+                "parts   parts   parts";
+        }
+        #pdtTable tbody td {
+            display: block;
+            border: 0 !important;
+            padding: 0 !important;
+            white-space: normal !important;
+            background: transparent !important;
+            min-width: 0;
         }
 
-        .pdt-add-btn {
-            width: 100%;
+        /* ---- Card fields ---- */
+        /* Name */
+        #pdtTable tbody td:nth-child(3) {
+            grid-area: name;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1F2933;
+            line-height: 1.3;
         }
+        /* Edit button */
+        #pdtTable tbody td:nth-child(8) {
+            grid-area: action;
+            align-self: start;
+            justify-self: end;
+        }
+        #pdtTable .editBtn {
+            background: #fff;
+            color: #6B7280;
+            border: 1px solid #d5dbe2;
+            border-radius: 20px;
+            font-size: 12px;
+            box-shadow: none;
+        }
+        /* Product ID */
+        #pdtTable tbody td:nth-child(2) {
+            grid-area: pid;
+            font-size: 12px;
+            font-weight: 700;
+            color: #4b5563;
+        }
+        #pdtTable tbody td:nth-child(2)::before {
+            content: "Product ID: ";
+            font-family: Consolas, Monaco, monospace;
+            font-size: 12px;
+            font-weight: 400;
+            color: #757575;
+        }
+        /* Created */
+        #pdtTable tbody td:nth-child(7) {
+            grid-area: created;
+            align-self: center;
+            margin-top: 8px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 12px;
+            color: #4b5563;
+        }
+        #pdtTable tbody td:nth-child(7)::before {
+            content: "Created: ";
+            font-size: 12px !important;
+            color: #757575;
+        }
+        /* Status badge */
+        #pdtTable tbody td:nth-child(1) {
+            grid-area: status;
+            align-self: center;
+            justify-self: end;
+            margin-top: 8px;
+        }
+        #pdtTable tbody td:nth-child(1) .badge {
+            font-size: 11px;
+            padding: 8px 8px;
+            border-radius: 20px;
+            margin-right: -26px;
+        }
+
+        /* ---- Card details (DXF / Model / Parts) ---- */
+        #pdtTable tbody td:nth-child(4) { grid-area: dxf; }
+        #pdtTable tbody td:nth-child(5) { grid-area: model; }
+        #pdtTable tbody td:nth-child(6) { grid-area: parts; }
+
+        #pdtTable tbody td:nth-child(4),
+        #pdtTable tbody td:nth-child(5),
+        #pdtTable tbody td:nth-child(6) {
+            margin-top: 6px !important;
+        }
+        /* Small grey labels above each box */
+        #pdtTable tbody td:nth-child(4)::before,
+        #pdtTable tbody td:nth-child(5)::before,
+        #pdtTable tbody td:nth-child(6)::before {
+            display: block;
+            font-size: 12px;
+            color: #6B7280;
+            margin-bottom: 6px;
+        }
+        #pdtTable tbody td:nth-child(4)::before { content: "Dxf path"; }
+        #pdtTable tbody td:nth-child(5)::before { content: "Model path"; }
+        #pdtTable tbody td:nth-child(6)::before { content: "Parts"; }
+
+        /* Path boxes */
+        #pdtTable .pdt-path {
+            display: block;
+            max-width: 100%;
+            padding: 11px 11px;
+            border: 1px solid #dde2e8;
+            border-radius: 14px;
+            font-size: 12px;
+            color: #1F2933;
+            background: #fff;
+        }
+        /* Copy button at the end of DXF + Model path boxes */
+        #pdtTable tbody td:nth-child(4) .pdt-path,
+        #pdtTable tbody td:nth-child(5) .pdt-path {
+            position: relative;
+            padding-right: 64px;
+            min-height: 48px;
+            line-height: 26px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        #pdtTable tbody td:nth-child(4) .pdt-path::after,
+        #pdtTable tbody td:nth-child(5) .pdt-path::after {
+            content: "";
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #f1f3f5 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='9' width='13' height='13' rx='2'/><path d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/></svg>") center no-repeat;
+        }
+
+        /* ---- Expand / collapse ---- */
+        /* Arrow */
+        #pdtTable tbody tr::after {
+            content: "";
+            grid-area: chev;
+            align-self: center;
+            justify-self: end;
+            width: 8px;
+            height: 8px;
+            margin: 8px 8px 0 0;
+            border-right: 2px solid #111827;
+            border-bottom: 2px solid #111827;
+            transform: translateY(-3px) rotate(45deg);
+            transition: transform 0.2s ease;
+        }
+        #pdtTable tbody tr.is-open::after {
+            transform: translateY(3px) rotate(-135deg);
+            margin-top: 8px;
+        }
+        /* Hide details until opened */
+        #pdtTable tbody tr:not(.is-open) td:nth-child(4),
+        #pdtTable tbody tr:not(.is-open) td:nth-child(5),
+        #pdtTable tbody tr:not(.is-open) td:nth-child(6) {
+            display: none;
+        }
+        /* Divider line when open */
+        #pdtTable tbody tr.is-open td:nth-child(4) {
+            border-top: 1px solid #e5e9ee !important;
+            padding-top: 14px !important;
+            margin-top: 10px !important;
+        }
+
+        /* ADD MODAL (#addPdtModal) */
+        /* ---- Shell: shrinks to content, with height cap ---- */
+        #addPdtModal .modal-dialog {
+            height: auto !important;
+            min-height: 0 !important;
+            margin: 12px !important;
+            margin-top: 35% !important;
+            display: flex;
+            align-items: center;
+        }
+        #addPdtModal .modal-content {
+            height: auto !important;
+            max-height: calc(100vh - 24px) !important;
+            border: 0;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(20, 30, 50, 0.18);
+        }
+
+        /* ---- Header ---- */
+        #addPdtModal .modal-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid #eef1f4;
+            align-items: center;
+        }
+        #addPdtModal .modal-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* ---- Body + labels ---- */
+        #addPdtModal .modal-body { padding: 14px 18px 4px; }
+        #addPdtModal .form-group { margin-bottom: 12px; }
+        #addPdtModal .form-group > label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7480;
+            margin-bottom: 5px;
+            margin-left: 5px;
+        }
+
+        /* ---- Inputs and select ---- */
+        #addPdtModal .form-control,
+        #addPdtModal .select2-container--default .select2-selection--single {
+            height: 44px;
+            border: 1px solid #e3e7ec;
+            border-radius: 12px;
+            background: #fafbfc;
+            font-size: 14px;
+        }
+        #addPdtModal .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 42px;
+            padding-left: 14px;
+            color: #111827;
+        }
+        #addPdtModal .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 42px;
+        }
+
+        /* ---- File inputs ---- */
+        #addPdtModal input[type="file"].form-control {
+            padding: 6px 10px;
+            line-height: 30px;
+            font-size: 13px;
+            color: #6b7480;
+        }
+        #addPdtModal input[type="file"]::file-selector-button {
+            height: 30px;
+            margin-right: 10px;
+            padding: 0 12px;
+            border: 0;
+            border-radius: 8px;
+            background: #e8ecf0;
+            color: #374151;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ---- Scan status message ---- */
+        #addPdtModal .file-scan-status {
+            margin: 0 0 8px;
+            padding: 10px 12px;
+            border: 0;
+            border-radius: 12px;
+            font-size: 12px;
+            line-height: 1.45;
+            background: #e8f6fb;
+            color: #0b5f77;
+        }
+        #addPdtModal .file-scan-status.alert-success { background: #e6f7ee; color: #166534; }
+        #addPdtModal .file-scan-status.alert-danger  { background: #fdecec; color: #991b1b; }
+
+        /* ---- Parts section ---- */
+        #addPdtModal .parts-table,
+        #addPdtModal .table-responsive {
+            overflow: visible;
+        }
+
+        /* ---- Footer: Cancel left, Add right ---- */
+        #addPdtModal .modal-footer {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 10px;
+            padding: 10px 18px 16px;
+            border-top: 0;
+        }
+        #addPdtModal .modal-footer .btn {
+            flex: 1;
+            margin: 0;
+            height: 44px;
+            padding: 0;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+        #addPdtModal .modal-footer .btn-secondary {
+            order: 1;
+            background: #9ca3af;
+            border-color: #9ca3af;
+            color: #fff;
+        }
+        #addPdtModal .modal-footer .btn-success {
+            order: 2;
+            background: #16a34a;
+            border-color: #16a34a;
+        }
+
+
+        /* EDIT MODAL (#editPdtModal) */
+        /* ---- Shell: 16px side space, rounded ---- */
+        #editPdtModal .modal-dialog {
+            margin: 12px 16px !important;
+            max-width: calc(100% - 32px) !important;
+            width: calc(100% - 32px) !important;
+            height: calc(100vh - 24px) !important;
+        }
+        #editPdtModal .modal-content {
+            width: 100%;
+            border: 0;
+            border-radius: 24px;
+        }
+
+        /* ---- Header ---- */
+        #editPdtModal .modal-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid #e5e9ee;
+        }
+        #editPdtModal .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* ---- Body + labels ---- */
+        #editPdtModal .modal-body { padding: 16px 18px; }
+        #editPdtModal .form-group > label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7480;
+            margin-bottom: 6px;
+        }
+
+        /* ---- Inputs and select ---- */
+        #editPdtModal .form-control,
+        #editPdtModal .select2-container--default .select2-selection--single {
+            height: 48px;
+            border: 1px solid #e3e7ec;
+            border-radius: 14px;
+            background: #fafbfc;
+            font-size: 15px;
+            color: #111827;
+        }
+        #editPdtModal .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 46px;
+            padding-left: 14px;
+            color: #111827;
+        }
+        #editPdtModal .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 46px;
+        }
+
+        /* ---- File inputs ---- */
+        #editPdtModal input[type="file"].form-control {
+            padding: 6px 10px;
+            line-height: 30px;
+            font-size: 13px;
+            color: #6b7480;
+        }
+        #editPdtModal input[type="file"]::file-selector-button {
+            height: 30px;
+            margin-right: 10px;
+            padding: 0 12px;
+            border: 0;
+            border-radius: 8px;
+            background: #e8ecf0;
+            color: #374151;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ---- Parts table turned into cards ---- */
+        #editPdtModal .table-responsive { overflow: visible; }
+        #editLayoutPartsTable,
+        #editLayoutPartsTable tbody {
+            display: block;
+            width: 100% !important;
+            border: 0 !important;
+            background: transparent;
+        }
+        /* Header replaced by per-field labels */
+        #editLayoutPartsTable thead { display: none; }
+
+        /* One row = one card */
+        #editLayoutPartsTable tbody tr {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas:
+                "order  order"
+                "key    label"
+                "mesh   flip"
+                "mirror delete";
+            gap: 10px 12px;
+            margin-bottom: 14px;
+            padding: 14px;
+            background: #fff;
+            border: 1px solid #e3e7ec;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(20, 30, 50, 0.06);
+        }
+        #editLayoutPartsTable tbody td {
+            display: block;
+            min-width: 0;
+            padding: 0 !important;
+            border: 0 !important;
+            background: transparent !important;
+            white-space: normal;
+        }
+
+        /* Field labels */
+        #editLayoutPartsTable tbody td:nth-child(2)::before,
+        #editLayoutPartsTable tbody td:nth-child(3)::before,
+        #editLayoutPartsTable tbody td:nth-child(4)::before,
+        #editLayoutPartsTable tbody td:nth-child(5)::before {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #6b7480;
+        }
+        #editLayoutPartsTable tbody td:nth-child(2)::before { content: "Part Key"; }
+        #editLayoutPartsTable tbody td:nth-child(3)::before { content: "Part Label"; }
+        #editLayoutPartsTable tbody td:nth-child(4)::before { content: "3D Mesh Names"; }
+        #editLayoutPartsTable tbody td:nth-child(5)::before { content: "Flip To"; }
+
+        /* Cancel desktop min-widths so fields fit half-width columns */
+        #editLayoutPartsTable .form-control,
+        #editLayoutPartsTable .parts-select,
+        #editLayoutPartsTable .mesh-select,
+        #editLayoutPartsTable .select2-container,
+        #editLayoutPartsTable .mesh-select + .select2-container {
+            min-width: 0 !important;
+            width: 100% !important;
+        }
+
+        /* Grid placement */
+        #editLayoutPartsTable tbody td:nth-child(1) { grid-area: order; }
+        #editLayoutPartsTable tbody td:nth-child(2) { grid-area: key; }
+        #editLayoutPartsTable tbody td:nth-child(3) { grid-area: label; }
+        #editLayoutPartsTable tbody td:nth-child(4) { grid-area: mesh; }
+        #editLayoutPartsTable tbody td:nth-child(5) { grid-area: flip; }
+        #editLayoutPartsTable tbody td:nth-child(6) { grid-area: mirror; align-self: center; text-align: left !important; }
+        #editLayoutPartsTable tbody td:nth-child(7) { grid-area: delete; justify-self: end; }
+
+        /* Order: small number box + "ORDER" text */
+        #editLayoutPartsTable tbody td:nth-child(1) {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        #editLayoutPartsTable tbody td:nth-child(1) .form-control {
+            width: 48px !important;
+            height: 40px;
+            padding: 0;
+            text-align: center;
+            font-weight: 700;
+            border-radius: 10px;
+            background: #fff;
+        }
+        #editLayoutPartsTable tbody td:nth-child(1)::after {
+            content: "ORDER";
+            font-size: 16px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* Mirror checkbox */
+        #editLayoutPartsTable tbody td:nth-child(6) label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #111827;
+        }
+        #editLayoutPartsTable tbody td:nth-child(6) input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin: 0;
+        }
+
+        /* Delete button: soft red square */
+        #editLayoutPartsTable .remove-edit-layout-part {
+            width: 40px;
+            height: 36px;
+            padding: 0;
+            background: #fee2e2;
+            border: 0;
+            border-radius: 10px;
+            color: #dc2626;
+        }
+
+        /* ---- Add Part button ---- */
+        #editAddLayoutPartBtn {
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        /* ---- Footer: Cancel left, Update right ---- */
+        #editPdtModal .modal-footer {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 12px;
+            padding: 14px 18px 18px;
+            border-top: 0;
+        }
+        #editPdtModal .modal-footer .btn {
+            flex: 1;
+            margin: 0;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        #editPdtModal .modal-footer .btn-secondary { order: 1; background: #9ca3af; border-color: #9ca3af; color: #fff; }
+        #editPdtModal .modal-footer .btn-success   { order: 2; background: #16a34a; border-color: #16a34a; }
     }
 
     .product-used-option {
@@ -1344,6 +1981,45 @@ $(function () {
     });
 
     initProductSelects();
+
+    // The CSS that hides and shows the details sits inside the mobile media query,
+    $('#pdtTable tbody').on('click', 'tr', function (e) {
+        if ($(e.target).closest('.editBtn').length) return; // Edit button keeps working
+        $(this).toggleClass('is-open');
+    });
+
+    $('#pdtTable tbody').on('click', 'td:nth-child(4) .pdt-path, td:nth-child(5) .pdt-path', function (e) {
+    if (window.innerWidth > 768) return;
+
+    // only react to taps on the icon area (right 52px of the box)
+    var fromRight = this.getBoundingClientRect().right - e.clientX;
+    if (fromRight > 52) return;
+
+    e.stopPropagation(); // don't toggle the card
+
+    var text = $(this).attr('title') || $(this).text().trim();
+    if (!text || text === '-') return;
+
+    var done = function () {
+        $('.copy-toast').remove();
+        $('<div class="copy-toast">Copied</div>').css({
+            position: 'fixed', left: '50%', bottom: '90px', transform: 'translateX(-50%)',
+            background: '#1e293b', color: '#fff', padding: '6px 14px', borderRadius: '8px',
+            fontSize: '12px', fontWeight: 600, zIndex: 10000
+        }).appendTo('body').delay(900).fadeOut(300, function () { $(this).remove(); });
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(done);
+    } else {
+        var $t = $('<textarea>').val(text).css({ position: 'fixed', opacity: 0 }).appendTo('body');
+        $t[0].select();
+        document.execCommand('copy');
+        $t.remove();
+        done();
+    }
+});
+
 });
 </script>
 

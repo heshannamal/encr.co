@@ -322,7 +322,7 @@ input:checked + .toggle-container .toggle-circle {
 
     .mobile-card-table thead th:first-child{
         display:block;
-        width:100% !important;
+        width:95% !important;
         text-align:left !important;
         padding:10px !important;
         /* border-radius:10px;
@@ -630,6 +630,210 @@ input:checked + .toggle-container .toggle-circle {
 
 }
 
+@media (max-width: 768px) {
+
+    /* Field labels - black */
+    .mobile-card-table tbody td:before {
+        color: #000000 !important;
+        font-weight: 700 !important;
+    }
+
+    /* Select All checkbox and label */
+    .mobile-card-table thead th:first-child {
+        width: 100% !important;
+        padding: 10px !important;
+        text-align: left !important;
+    }
+
+    .mobile-card-table thead th:first-child .form-check {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin: 0 !important;
+    }
+
+    .mobile-card-table thead th:first-child .form-check label {
+        margin: 0 0 0 5px !important;
+        color: #000000 !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+    }
+
+    /* Individual checkbox + template title */
+    .mobile-card-table tbody td:first-child {
+        position: absolute !important;
+        top: 10px !important;
+        left: 30px !important;
+        width: auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        z-index: 2;
+    }
+
+    .mobile-card-table tbody td:first-child .form-check {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin: 0 !important;
+    }
+
+    .mobile-card-table tbody td:first-child .form-check label {
+        margin: 0 !important;
+    }
+
+    /* Template title beside checkbox */
+    .mobile-card-table tbody td:first-child .mobile-checkbox-title {
+        display: inline-block !important;
+        max-width: calc(100vw - 100px) !important;
+        color: #000000 !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        padding-top: 7px;
+    }
+
+    /* Avoid title appearing twice */
+    .mobile-card-table tbody td:nth-child(2):before {
+        content: "Title" !important;
+        color: #000000 !important;
+    }
+
+    /* Empty data placeholder */
+    .mobile-card-table tbody td.mobile-empty-value {
+        color: #000000 !important;
+    }
+    /* Desktop: hide All Select label */
+    .mobile-card-table thead th:first-child .form-check-label {
+        font-size: 0 !important;
+    }
+
+    /* Mobile: show All Select label */
+    @media (max-width: 768px) {
+        .mobile-card-table thead th:first-child .form-check-label {
+            font-size: 13px !important;
+            color: #000 !important;
+            font-weight: 600 !important;
+            margin-left: 5px !important;
+        }
+
+        #my_list_table thead th:first-child .form-check-label::after,
+        #public_list_table thead th:first-child .form-check-label::after {
+            content: "All Select";
+        }
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    /* =========================================
+       MOBILE CARD - CHECKBOX + TITLE
+       ========================================= */
+
+    .mobile-card-table tbody tr {
+        cursor: pointer;
+    }
+
+    /* Checkbox column */
+    .mobile-card-table tbody td:first-child {
+        position: absolute !important;
+        top: 10px !important;
+        left: 30px !important;
+        width: auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        z-index: 3;
+    }
+
+    .mobile-card-table tbody td:first-child .form-check {
+        display: flex !important;
+        align-items: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Title column: hide its normal position */
+    .mobile-card-table tbody td:nth-child(2) {
+        position: absolute !important;
+        top: 10px !important;
+        left: 42px !important;
+        width: calc(100% - 54px) !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        min-height: 20px;
+        z-index: 2;
+    }
+
+    /* Hide the Title label */
+    .mobile-card-table tbody td:nth-child(2)::before {
+        content: none !important;
+        display: none !important;
+    }
+
+    /* Title link beside checkbox */
+    .mobile-card-table tbody td:nth-child(2) a {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+
+        color: #000 !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        line-height: 22px !important;
+
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        text-align: left !important;
+    }
+
+    /* Leave room for checkbox + title */
+    .mobile-card-table tbody tr {
+        padding-top: 42px !important;
+    }
+
+    /* Don't show the title twice.
+       The title is already beside the checkbox. */
+    .mobile-card-table tbody td:nth-child(2) {
+        height: 0 !important;
+    }
+
+    /* Subject should start below the title */
+    .mobile-card-table tbody td:nth-child(3) {
+        margin-top: 0 !important;
+    }
+
+    /* =========================================
+       EMPTY VALUES: DISPLAY _
+       ========================================= */
+
+    .mobile-card-table tbody td.mobile-empty-value {
+        color: #000 !important;
+    }
+
+    .mobile-card-table tbody td.mobile-empty-value:empty::after {
+        content: "_" !important;
+        display: inline-block !important;
+        color: #000 !important;
+    }
+
+    /* Handle cells that contain only whitespace */
+    .mobile-card-table tbody td:not(:has(*)):not(:has(a)):not(:has(button)):empty::after {
+        content: "_" !important;
+        display: inline-block !important;
+        color: #000 !important;
+    }
+
+}
+
 </style>
 
 
@@ -739,6 +943,27 @@ input:checked + .toggle-container .toggle-circle {
 @include('pages.mail.email_templates.create')
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+// Mobile only: clicking anywhere on a template card opens Edit Template.
+// $(document).on('click', '.mobile-card-table tbody tr', function (e) {
+//     if (window.matchMedia('(max-width: 768px)').matches) {
+
+//         // Allow checkbox, buttons and other controls to work normally.
+//         if ($(e.target).closest('input, button, label, select, .form-check').length) {
+//             return;
+//         }
+
+//         var $editLink = $(this).find('td:nth-child(2) .template_id-edit');
+
+//         if ($editLink.length) {
+//             $editLink.trigger('click');
+//         }
+//     }
+// });
+
+</script>
 <script>
     makeTables();
     function makeTables() {

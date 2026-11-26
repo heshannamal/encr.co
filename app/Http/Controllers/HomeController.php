@@ -2178,7 +2178,7 @@ class HomeController extends Controller
             $TrasnsactionsArray = [];
             foreach ($otherPayments as $otherPayment) {
                 $orderPaymentsArray = [];
-                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id')->where('id', $otherPayment->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
+                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id')->where('id', $otherPayment->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
                 $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
 
 
@@ -2196,7 +2196,7 @@ class HomeController extends Controller
             }
             foreach ($PoReceipts as $PoReceipt) {
                 $orderPaymentsArray = [];
-                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id')->where('id', $PoReceipt->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
+                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id')->where('id', $PoReceipt->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
                 $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
 
                 $order_payment_status = $this->PaymentService->getPaymentStatus($PoReceipt->order_id)['payment_status'];
@@ -2213,7 +2213,7 @@ class HomeController extends Controller
 
             foreach ($onlinePayments as $onlinePayment) {
                 $orderPaymentsArray = [];
-                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id')->where('id', $onlinePayment->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
+                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id')->where('id', $onlinePayment->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
                 $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
 
                 $order_payment_status = $this->PaymentService->getPaymentStatus($onlinePayment->order_id)['payment_status'];
@@ -2229,7 +2229,7 @@ class HomeController extends Controller
 
             foreach ($checkPayments as $checkPayment) {
                 $orderPaymentsArray = [];
-                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id')->where('id', $checkPayment->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
+                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id')->where('id', $checkPayment->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
                 $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
 
                 $order_payment_status = $this->PaymentService->getPaymentStatus($checkPayment->order_id)['payment_status'];
@@ -2246,7 +2246,7 @@ class HomeController extends Controller
 
             foreach ($venmoPayments as $venmoPayment) {
                 $orderPaymentsArray = [];
-                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id')->where('id', $venmoPayment->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
+                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id')->where('id', $venmoPayment->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
                 $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
 
                 $order_payment_status = $this->PaymentService->getPaymentStatus($venmoPayment->order_id)['payment_status'];
@@ -2263,7 +2263,7 @@ class HomeController extends Controller
 
             foreach ($paypalPayments as $paypalPayment) {
                 $orderPaymentsArray = [];
-                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id')->where('id', $paypalPayment->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
+                $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id')->where('id', $paypalPayment->order_id)->with(['organizationDetails:id,organization_name,sales_tax'])->get();
                 $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
 
                 $order_payment_status = $this->PaymentService->getPaymentStatus($paypalPayment->order_id)['payment_status'];

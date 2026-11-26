@@ -50,6 +50,9 @@
                                 <div style="font-size:12px;color:{{ $isRefund ? '#fecaca' : '#e2e8f0' }};margin-top:4px;">
                                     {{ $isRefund ? 'Your refund has been processed' : 'Your Order has been successfully processed' }}
                                 </div>
+                                <div style="font-size:12px;color:{{ $isRefund ? '#fecaca' : '#e2e8f0' }};margin-top:4px;">
+                                    Each item is custom-made, printed, pressed, sewn, and shipped after the store closes. Please allow 4-5 weeks for delivery
+                                </div>
                             </td>
                         </tr>
 

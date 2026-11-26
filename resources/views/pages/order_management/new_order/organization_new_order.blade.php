@@ -10,6 +10,9 @@
     <div class="container-fluid mt-5 maxdivw">
         <form action="{{ route('new_orders.create') }}" method="post">
             @csrf
+            @include('pages.order_management.organization_address_warning', [
+                'addressOrganization' => $organizations->first() && !$organizations->first()->hasShippingAddress() ? $organizations->first()->id : null,
+            ])
             <div class="card mb-3">
                 <div class="card-head">
                     <div class="col-md-12 pt-3 pr-4">

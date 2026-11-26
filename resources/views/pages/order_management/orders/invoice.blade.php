@@ -1382,7 +1382,7 @@
                         <th>
 
                             SALES TAX ($)
-                            {{ $order->organizationDetails['sales_tax'] }}%
+                            {{ $order->sales_tax_rate ?? 0 }}%
                             RATE :
 
                         </th>

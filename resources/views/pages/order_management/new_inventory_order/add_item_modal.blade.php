@@ -67,6 +67,1552 @@
         border: 1px solid #DEDEDE;
         margin-top: 5px;
     }
+
+    .input-container {
+    width: 100% !important;
+    }
+
+    .invoice-inputs.modal-datepicker {
+    padding-right: 30px; /* Adjust the value to set the icon's position */
+    }
+
+    .calendar-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #717070;
+    }
+    .select2-container--default.select2-container--disabled .select2-selection--single {
+    background-color: transparent;
+    }
+
+/* =========================================================
+   ADD ITEM MODAL - MOBILE RESPONSIVE
+   No existing class / id / name changes required
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    /* =========================================================
+       MODAL
+       ========================================================= */
+
+    #add_item_modal .modal-dialog {
+        width: calc(100% - 20px) !important;
+        max-width: none !important;
+        margin: 10px auto !important;
+        min-height: calc(100vh - 20px) !important;
+
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    #add_item_modal .modal-content {
+        width: 100% !important;
+        max-height: calc(100vh - 20px) !important;
+
+        border: none !important;
+        border-radius: 14px !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* =========================================================
+       MODAL HEADER
+       ========================================================= */
+
+    #add_item_modal .modal-header {
+        padding: 15px 16px !important;
+        min-height: 58px !important;
+
+        border-bottom: 1px solid #eeeeee !important;
+        
+    }
+
+    #add_item_modal .modal-title {
+        font-size: 17px !important;
+        line-height: 24px !important;
+        padding-right: 10px !important;
+    }
+
+    #add_item_modal .modal-title span {
+        font-size: 11px !important;
+    }
+
+    #add_item_modal .modal-header .close {
+        font-size: 26px !important;
+        margin: 0 !important;
+        padding: 0 4px !important;
+        outline: none !important;
+    }
+
+
+    /* =========================================================
+       MODAL BODY
+       ========================================================= */
+
+    #add_item_modal .modal-body {
+        padding: 12px !important;
+
+        max-height: calc(100vh - 135px) !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    /* =========================================================
+       REMOVE BOOTSTRAP SIDE SPACING
+       ========================================================= */
+
+    #add_item_modal .modal-body > .col-md-12,
+    #add_item_modal .modal-body .row,
+    #add_item_modal .modal-body .col-md-12,
+    #add_item_modal .modal-body .col-md-8 {
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+
+    /* =========================================================
+       CARD
+       ========================================================= */
+
+    #add_item_modal .card-updated {
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 2px !important;
+
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+
+    /* =========================================================
+       SECTION HEADERS
+       ========================================================= */
+
+    #add_item_modal .sub-header-style {
+        width: 100% !important;
+
+        margin: 18px 0 7px 0 !important;
+        padding: 0 3px !important;
+
+        font-size: 13px !important;
+        font-weight: 700 !important;
+
+        line-height: 20px !important;
+    }
+
+
+    /* =========================================================
+       FILTER BUTTON
+       ========================================================= */
+
+    #add_item_modal #FilterFieldsDiv {
+        width: 100% !important;
+
+        margin: 4px 0 10px 0 !important;
+    }
+
+    #add_item_modal #FilterFieldsDiv tr {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    #add_item_modal #FilterFieldsDiv th,
+    #add_item_modal #FilterFieldsDiv td {
+        display: block !important;
+
+        width: 100% !important;
+
+        padding: 5px 3px !important;
+
+        border: none !important;
+    }
+
+    #add_item_modal #FilterFieldsDiv th {
+        font-size: 11px !important;
+    }
+
+    #add_item_modal #FilterFieldsDiv tr:first-child th {
+        font-size: 14px !important;
+        margin-bottom: 5px !important;
+    }
+
+    #add_item_modal #FilterFieldsDiv td:last-child {
+        text-align: right !important;
+    }
+
+    #add_item_modal #FilterFieldsDiv td:last-child button {
+        margin-right: 0 !important;
+    }
+
+    #add_item_modal > .modal-dialog .col-md-12[style*="text-align: end"] {
+        text-align: right !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+
+    /* =========================================================
+       ALL TABLES
+       ========================================================= */
+
+    #add_item_modal .invoice_details {
+        width: 100% !important;
+
+        margin: 0 0 8px 0 !important;
+
+        table-layout: fixed !important;
+
+        border: none !important;
+    }
+
+    #add_item_modal .invoice_details > tbody {
+        width: 100% !important;
+    }
+
+
+    /* =========================================================
+       HIDE EMPTY SPACING ROW
+       ========================================================= */
+
+    #add_item_modal .invoice_details tr[style*="height:10px"] {
+        display: none !important;
+    }
+
+
+    /* =========================================================
+       IMPORTANT
+
+       Hide original TH labels on mobile.
+       We will create labels using TD::before.
+       ========================================================= */
+
+    #add_item_modal .invoice_details:not(#FilterFieldsDiv) tr:has(th) th {
+        display: none !important;
+    }
+
+
+    /* =========================================================
+       FIELD ROW
+
+       Maximum 2 fields per row.
+       ========================================================= */
+
+    #add_item_modal .invoice_details:not(#FilterFieldsDiv) tr:has(th) + tr {
+
+        /* display: grid !important; */
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        column-gap: 10px !important;
+
+        row-gap: 0 !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+    }
+
+
+    /* =========================================================
+       FIELD TD
+       ========================================================= */
+
+    #add_item_modal .invoice_details:not(#FilterFieldsDiv)
+    tr:has(th) + tr td {
+
+        display: block !important;
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        padding: 2px 3px 10px 3px !important;
+
+        border: none !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =========================================================
+       HIDDEN TD
+
+       If a field is display:none, don't reserve its space.
+       ========================================================= */
+
+    #add_item_modal .invoice_details
+    tr:has(th) + tr td[style*="display: none"] {
+
+        display: none !important;
+    }
+
+
+    /* =========================================================
+       LABEL CREATED BY CSS
+
+       Label appears directly ABOVE its field.
+       ========================================================= */
+
+    #add_item_modal .invoice_details:not(#FilterFieldsDiv)
+    tr:has(th) + tr td::before {
+
+        display: block !important;
+
+        margin: 0 0 4px 0 !important;
+
+        padding: 0 !important;
+
+        font-size: 11px !important;
+
+        line-height: 16px !important;
+
+        color: #555 !important;
+
+        font-weight: 600 !important;
+
+        text-align: left !important;
+    }
+
+
+    /* =========================================================
+       EX-FACTORY ADDRESS
+       ========================================================= */
+
+    #add_item_modal .invoice_details td[style*="display: flex"] {
+        display: block !important;
+
+        width: 100% !important;
+
+        padding: 5px 3px !important;
+    }
+
+    #add_item_modal .invoice_details a.btn {
+        width: 100% !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        margin-top: 5px !important;
+
+        font-size: 11px !important;
+    }
+
+
+    /* =========================================================
+       LABELS
+       ========================================================= */
+
+    #add_item_modal .form-label {
+        font-size: 11px !important;
+
+        color: #555 !important;
+
+        font-weight: 600 !important;
+
+        white-space: normal !important;
+    }
+
+
+    /* =========================================================
+       INPUTS
+
+       IMPORTANT:
+       NO HEIGHT CHANGE HERE.
+       ========================================================= */
+
+    #add_item_modal input.invoice-inputs,
+    #add_item_modal select.invoice-inputs,
+    #add_item_modal textarea.invoice-inputs,
+    #add_item_modal .form-input {
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        /* font-size: 16px !important; */
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =========================================================
+       SELECT CONTAINERS
+       ========================================================= */
+
+    #add_item_modal .select-container,
+    #add_item_modal .styleUnique,
+    #add_item_modal .specialStyles {
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        padding-left: 3px !important;
+        padding-right: 3px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    #add_item_modal .select2-container {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+    }
+
+
+    /* =========================================================
+       SELECT2 SINGLE
+
+       Height is NOT changed.
+       ========================================================= */
+
+    #add_item_modal .select2-container
+    .select2-selection--single {
+
+        border: 1px solid #b3b3b3 !important;
+
+        border-radius: 5px !important;
+        border-radius: 3px !important;
+        height: 32px !important;
+    }
+
+    #add_item_modal .select2-container
+    .select2-selection--single
+    .select2-selection__rendered {
+
+        /* font-size: 16px !important; */
+
+        padding-left: 10px !important;
+
+        overflow: hidden !important;
+
+        text-overflow: ellipsis !important;
+
+        white-space: nowrap !important;
+        height: 31px !important;
+        line-height: 31px !important;
+
+    }
+
+
+    /* =========================================================
+       MULTIPLE SELECT - ATTRIBUTES
+
+       Selected items remain inside the field.
+       Height grows naturally only when necessary.
+       ========================================================= */
+
+    #add_item_modal .specialStyles
+    .select2-container--default
+    .select2-selection--multiple {
+
+        border: 1px solid #b3b3b3 !important;
+
+        border-radius: 5px !important;
+
+        padding: 3px 5px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    #add_item_modal .specialStyles
+    .select2-selection--multiple
+    .select2-selection__rendered {
+
+        display: flex !important;
+
+        flex-wrap: wrap !important;
+
+        align-items: center !important;
+
+        gap: 3px !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    #add_item_modal .specialStyles
+    .select2-selection--multiple
+    .select2-selection__choice {
+
+        float: none !important;
+
+        display: inline-flex !important;
+
+        align-items: center !important;
+
+        max-width: 100% !important;
+
+        margin: 2px 0 !important;
+
+        padding: 3px 7px !important;
+
+        font-size: 13px !important;
+
+        line-height: 20px !important;
+
+        border-radius: 4px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    #add_item_modal .specialStyles
+    .select2-selection__choice__display {
+
+        max-width: calc(100vw - 100px) !important;
+
+        overflow: hidden !important;
+
+        text-overflow: ellipsis !important;
+
+        white-space: nowrap !important;
+    }
+
+    #add_item_modal .specialStyles
+    .select2-selection__choice__remove {
+
+        flex-shrink: 0 !important;
+
+        margin-right: 4px !important;
+    }
+
+    #add_item_modal .specialStyles
+    .select2-search--inline {
+
+        display: inline-flex !important;
+
+        max-width: 100% !important;
+
+        margin: 2px 0 !important;
+    }
+
+    #add_item_modal .specialStyles
+    .select2-search--inline
+    .select2-search__field {
+
+        width: auto !important;
+
+        max-width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 2px !important;
+
+        /* font-size: 16px !important; */
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =========================================================
+       DATE INPUT
+       ========================================================= */
+
+    #add_item_modal .input-container {
+
+        width: 100% !important;
+
+        position: relative !important;
+    }
+
+    #add_item_modal .input-container input {
+
+        width: 100% !important;
+
+        /* font-size: 16px !important; */
+    }
+
+    #add_item_modal .calendar-icon {
+
+        right: 10px !important;
+
+        font-size: 15px !important;
+    }
+
+
+    /* =========================================================
+       PRODUCT SELECT
+       ========================================================= */
+
+    #add_item_modal #item_product {
+        width: 100% !important;
+    }
+
+    #add_item_modal #product_display_name {
+
+        width: 100% !important;
+
+        /* font-size: 16px !important; */
+    }
+
+
+    /* =========================================================
+       EX-FACTORY SELECT
+       ========================================================= */
+
+    #add_item_modal #item_ex_factory_id {
+        width: 100% !important;
+    }
+
+
+    /* =========================================================
+       HIDDEN SETTINGS TABLE
+       ========================================================= */
+
+    #add_item_modal .invoice_details[style*="display: none"] {
+        display: none !important;
+    }
+
+
+    /* =========================================================
+       MODAL FOOTER
+       ========================================================= */
+
+    #add_item_modal .modal-footer {
+
+        padding: 10px 12px !important;
+
+        border-top: 1px solid #eeeeee !important;
+
+        background: #fff !important;
+    }
+
+    #add_item_modal .modal-footer .control-btns {
+
+        width: 100% !important;
+
+        padding: 0 !important;
+
+        display: grid !important;
+
+        grid-template-columns: repeat(3, 1fr) !important;
+
+        gap: 6px !important;
+    }
+
+    #add_item_modal .modal-footer button {
+
+        width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 7px 4px !important;
+
+        font-size: 11px !important;
+
+        white-space: nowrap !important;
+    }
+
+    #add_item_modal .modal-footer button i {
+
+        font-size: 10px !important;
+
+        margin-right: 2px !important;
+    }
+
+
+    /* =========================================================
+       SMALL MOBILE
+       ========================================================= */
+
+    @media (max-width: 380px) {
+
+        #add_item_modal .modal-dialog {
+
+            width: calc(100% - 10px) !important;
+
+            margin: 5px auto !important;
+        }
+
+        #add_item_modal .modal-content {
+
+            max-height: calc(100vh - 10px) !important;
+        }
+
+        #add_item_modal .modal-body {
+
+            max-height: calc(100vh - 125px) !important;
+
+            padding: 9px !important;
+        }
+
+        #add_item_modal .modal-title {
+
+            font-size: 15px !important;
+        }
+
+        #add_item_modal .modal-footer .control-btns {
+
+            gap: 4px !important;
+        }
+
+        #add_item_modal .modal-footer button {
+
+            font-size: 10px !important;
+        }
+    }
+}
+@media (max-width: 767.98px) {
+
+    #add_item_modal .specialStyles .select2-container {
+        width: 100% !important;
+    }
+
+    #add_item_modal .specialStyles
+    .select2-container--default
+    .select2-selection--multiple {
+
+        min-height: 38px !important;
+
+        height: auto !important;
+
+        padding: 3px 5px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    /* Selected items stay INSIDE the field */
+    #add_item_modal .specialStyles
+    .select2-selection--multiple
+    .select2-selection__rendered {
+
+        display: flex !important;
+
+        flex-wrap: wrap !important;
+
+        align-items: center !important;
+
+        gap: 3px !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* Selected item/tag */
+    #add_item_modal .specialStyles
+    .select2-selection--multiple
+    .select2-selection__choice {
+
+        float: none !important;
+
+        display: inline-flex !important;
+
+        align-items: center !important;
+
+        max-width: 100% !important;
+
+        margin: 2px 0 !important;
+
+        padding: 3px 7px !important;
+
+        font-size: 13px !important;
+
+        line-height: 20px !important;
+
+        border-radius: 4px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* Text inside selected item */
+    #add_item_modal .specialStyles
+    .select2-selection__choice__display {
+
+        max-width: calc(100vw - 100px) !important;
+
+        overflow: hidden !important;
+
+        text-overflow: ellipsis !important;
+
+        white-space: nowrap !important;
+    }
+
+    /* Remove button */
+    #add_item_modal .specialStyles
+    .select2-selection__choice__remove {
+
+        flex-shrink: 0 !important;
+
+        margin-right: 4px !important;
+    }
+
+    /* Search input stays inside field */
+    #add_item_modal .specialStyles
+    .select2-search--inline {
+
+        display: inline-flex !important;
+
+        max-width: 100% !important;
+
+        margin: 2px 0 !important;
+    }
+
+    #add_item_modal .specialStyles
+    .select2-search--inline .select2-search__field {
+
+        width: auto !important;
+
+        max-width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 2px !important;
+
+        /* font-size: 16px !important; */
+
+        box-sizing: border-box !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+
+    /* ==========================================
+       HIDE ORIGINAL LABEL ROW
+       ========================================== */
+
+    #add_item_modal .invoice_details:not(#FilterFieldsDiv)
+    tr:has(th) {
+        display: none !important;
+    }
+
+
+    /* ==========================================
+       TWO FIELDS PER ROW
+       ========================================== */
+
+    #add_item_modal .invoice_details:not(#FilterFieldsDiv)
+    tr:has(th) + tr {
+
+        /* display: grid !important; */
+
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+        column-gap: 10px !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+    }
+
+
+    /* ==========================================
+       FIELD
+       ========================================== */
+
+    #add_item_modal .invoice_details:not(#FilterFieldsDiv)
+    tr:has(th) + tr td {
+
+        display: block !important;
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        padding: 2px 3px 10px 3px !important;
+
+        border: none !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* ==========================================
+       MOBILE LABEL
+       ========================================== */
+
+    #add_item_modal .invoice_details
+    tr:has(th) + tr td[data-mobile-label]::before {
+
+        content: attr(data-mobile-label) !important;
+
+        display: block !important;
+
+        width: 100% !important;
+
+        margin: 0 0 4px 0 !important;
+
+        padding: 0 !important;
+
+        font-size: 11px !important;
+
+        line-height: 16px !important;
+
+        color: #555 !important;
+
+        font-weight: 600 !important;
+
+        text-align: left !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* ==========================================
+       HIDDEN FIELDS
+       ========================================== */
+
+    #add_item_modal .invoice_details
+    tr:has(th) + tr td[style*="display: none"] {
+
+        display: none !important;
+    }
+
+
+    /* ==========================================
+       INPUTS
+
+       HEIGHT NOT CHANGED
+       ========================================== */
+
+    #add_item_modal input.invoice-inputs,
+    #add_item_modal select.invoice-inputs,
+    #add_item_modal textarea.invoice-inputs,
+    #add_item_modal .form-input {
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        /* font-size: 16px !important; */
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* ==========================================
+       SELECT2
+       ========================================== */
+
+    #add_item_modal .select-container,
+    #add_item_modal .styleUnique,
+    #add_item_modal .specialStyles {
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        padding-left: 3px !important;
+        padding-right: 3px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    #add_item_modal .select2-container {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+    }
+
+
+    /* ==========================================
+       SELECT2 SINGLE
+
+       DO NOT CHANGE HEIGHT
+       ========================================== */
+
+    #add_item_modal .select2-container
+    .select2-selection--single {
+
+        border: 1px solid #b3b3b3 !important;
+
+        border-radius: 2px !important;
+    }
+
+
+    #add_item_modal .select2-container
+    .select2-selection--single
+    .select2-selection__rendered {
+
+        /* font-size: 16px !important; */
+
+        padding-left: 10px !important;
+
+        overflow: hidden !important;
+
+        text-overflow: ellipsis !important;
+
+        white-space: nowrap !important;
+    }
+
+
+    /* ==========================================
+       MULTIPLE SELECT
+       ========================================== */
+
+    #add_item_modal .specialStyles
+    .select2-container--default
+    .select2-selection--multiple {
+
+        border: 1px solid #b3b3b3 !important;
+
+        border-radius: 5px !important;
+
+        padding: 3px 5px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    #add_item_modal .specialStyles
+    .select2-selection--multiple
+    .select2-selection__rendered {
+
+        display: flex !important;
+
+        flex-wrap: wrap !important;
+
+        align-items: center !important;
+
+        gap: 3px !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    #add_item_modal .specialStyles
+    .select2-selection--multiple
+    .select2-selection__choice {
+
+        float: none !important;
+
+        display: inline-flex !important;
+
+        align-items: center !important;
+
+        max-width: 100% !important;
+
+        margin: 2px 0 !important;
+
+        padding: 3px 7px !important;
+
+        font-size: 13px !important;
+
+        line-height: 20px !important;
+
+        border-radius: 4px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    #add_item_modal .specialStyles
+    .select2-selection__choice__display {
+
+        max-width: calc(100vw - 100px) !important;
+
+        overflow: hidden !important;
+
+        text-overflow: ellipsis !important;
+
+        white-space: nowrap !important;
+    }
+
+
+    /* ==========================================
+       DATE
+       ========================================== */
+
+    #add_item_modal .input-container {
+
+        width: 100% !important;
+
+        position: relative !important;
+    }
+
+    #add_item_modal .input-container input {
+
+        width: 100% !important;
+
+        /* font-size: 16px !important; */
+    }
+
+    #add_item_modal .calendar-icon {
+
+        right: 10px !important;
+
+        font-size: 15px !important;
+    }
+
+
+    /* ==========================================
+       EX-FACTORY
+       ========================================== */
+
+    #add_item_modal .invoice_details td[style*="display: flex"] {
+
+        display: block !important;
+
+        width: 100% !important;
+
+        padding: 5px 3px !important;
+    }
+
+    #add_item_modal .invoice_details a.btn {
+
+        width: 100% !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content: center !important;
+
+        margin-top: 5px !important;
+
+        font-size: 11px !important;
+    }
+
+
+    /* ==========================================
+       HIDDEN SETTINGS TABLE
+       ========================================== */
+
+    #add_item_modal .invoice_details[style*="display: none"] {
+
+        display: none !important;
+    }
+
+
+    /* ==========================================
+       EMPTY ROW
+       ========================================== */
+
+    #add_item_modal .invoice_details
+    tr[style*="height:10px"] {
+
+        display: none !important;
+    }
+
+
+    /* ==========================================
+       FOOTER
+       ========================================== */
+
+    #add_item_modal .modal-footer {
+
+        padding: 10px 12px !important;
+
+        border-top: 1px solid #eeeeee !important;
+
+        background: #fff !important;
+    }
+
+    #add_item_modal .modal-footer .control-btns {
+
+        width: 100% !important;
+
+        padding: 0 !important;
+
+        display: grid !important;
+
+        grid-template-columns: repeat(3, 1fr) !important;
+
+        gap: 6px !important;
+    }
+
+    #add_item_modal .modal-footer button {
+
+        width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 7px 4px !important;
+
+        font-size: 11px !important;
+
+        white-space: nowrap !important;
+    }
+
+
+    /* ==========================================
+       SMALL MOBILE
+       ========================================== */
+
+    @media (max-width: 380px) {
+
+        #add_item_modal .modal-dialog {
+
+            width: calc(100% - 10px) !important;
+
+            margin: 5px auto !important;
+        }
+
+        #add_item_modal .modal-content {
+
+            max-height: calc(100vh - 10px) !important;
+        }
+
+        #add_item_modal .modal-body {
+
+            max-height: calc(100vh - 125px) !important;
+
+            padding: 9px !important;
+        }
+
+        #add_item_modal .modal-title {
+
+            font-size: 15px !important;
+        }
+
+        #add_item_modal .modal-footer .control-btns {
+
+            gap: 4px !important;
+        }
+
+        #add_item_modal .modal-footer button {
+
+            font-size: 10px !important;
+        }
+    }
+}
+
+/* =========================================================
+   ADD ITEM MODAL - MOBILE (continuous 2 fields per row)
+   ========================================================= */
+@media (max-width: 767.98px) {
+
+    /* ---------- Modal shell ---------- */
+    
+    #add_item_modal .modal-dialog {
+        width: calc(100% - 20px) !important;
+        max-width: none !important;
+        margin: 10px auto !important;
+    }
+    #add_item_modal .modal-content {
+        border: none !important;
+        border-radius: 14px !important;
+        max-height: calc(100vh - 20px) !important;
+        overflow: hidden !important;
+    }
+    #add_item_modal .modal-header { padding: 15px 16px !important; }
+    #add_item_modal .modal-title  { font-size: 17px !important; }
+    #add_item_modal .modal-body {
+        padding: 12px !important;
+        max-height: calc(100vh - 135px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    #add_item_modal .modal-body > .col-md-12,
+    #add_item_modal .modal-body .row,
+    #add_item_modal .modal-body .col-md-12,
+    #add_item_modal .modal-body .col-md-8 {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* ---------- THE MAIN GRID ---------- */
+    #add_item_modal .card-updated {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        column-gap: 10px !important;
+        align-items: start !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    /* every direct child is full width by default */
+    #add_item_modal .card-updated > * {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    #add_item_modal .sub-header-style {
+        margin-top: 14px !important;
+        margin-bottom: 4px !important;
+        padding: 0 3px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+    }
+
+    /* full width tables (Select Product / Display name / Address) */
+    #add_item_modal .invoice_details {
+        border: none !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* ---------- Field tables 1, 2, 3 -> their cells join the main grid ---------- */
+    #add_item_modal .mobile-field-table-1,
+    #add_item_modal .mobile-field-table-1 tbody,
+    #add_item_modal .mobile-field-table-1 tr,
+    #add_item_modal .mobile-field-table-2,
+    #add_item_modal .mobile-field-table-2 tbody,
+    #add_item_modal .mobile-field-table-2 tr,
+    #add_item_modal .mobile-field-table-3,
+    #add_item_modal .mobile-field-table-3 tbody,
+    #add_item_modal .mobile-field-table-3 tr {
+        display: contents !important;
+    }
+
+    /* hide original label cells (labels are drawn above each field instead) */
+    #add_item_modal .mobile-field-table-1 th,
+    #add_item_modal .mobile-field-table-2 th,
+    #add_item_modal .mobile-field-table-3 th {
+        display: none !important;
+    }
+
+    /* each field */
+    #add_item_modal .mobile-field-table-1 td,
+    #add_item_modal .mobile-field-table-2 td,
+    #add_item_modal .mobile-field-table-3 td {
+        display: block !important;
+        grid-column: auto !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        border: none !important;
+        padding: 2px 3px 10px 3px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* hidden / empty cells must not take a grid slot */
+    #add_item_modal .mobile-field-table-1 td[style*="display: none"],
+    #add_item_modal .mobile-field-table-2 td[style*="display: none"],
+    #add_item_modal .mobile-field-table-3 td[style*="display: none"],
+    #add_item_modal .mobile-field-table-3 td:empty {
+        display: none !important;
+    }
+
+    /* label above each field */
+    #add_item_modal .mobile-field-table-1 td[data-mobile-label]::before,
+    #add_item_modal .mobile-field-table-2 td[data-mobile-label]::before,
+    #add_item_modal .mobile-field-table-3 td[data-mobile-label]::before {
+        content: attr(data-mobile-label);
+        display: block;
+        margin: 0 0 4px 0;
+        font-size: 11px;
+        line-height: 16px;
+        font-weight: 600;
+        color: #555;
+        text-align: left;
+    }
+
+    /* ---------- Filters table (toggle keeps working) ---------- */
+    #add_item_modal #FilterFieldsDiv[style*="display: block"] {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        column-gap: 10px !important;
+    }
+    #add_item_modal #FilterFieldsDiv tbody,
+    #add_item_modal #FilterFieldsDiv tr { display: contents !important; }
+    /* title "Product Filters" spans both columns */
+    #add_item_modal #FilterFieldsDiv tr:first-child th {
+        grid-column: 1 / -1 !important;
+        height: auto !important;
+        width: auto !important;
+        padding: 2px 3px 6px !important;
+        border: none !important;
+    }
+    /* label row hidden, labels drawn above fields */
+    #add_item_modal #FilterFieldsDiv tr:nth-child(2) th { display: none !important; }
+    #add_item_modal #FilterFieldsDiv td {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        border: none !important;
+        padding: 2px 3px 10px 3px !important;
+    }
+    #add_item_modal #FilterFieldsDiv td[data-mobile-label]::before {
+        content: attr(data-mobile-label);
+        display: block;
+        margin-bottom: 4px;
+        font-size: 11px;
+        line-height: 16px;
+        font-weight: 600;
+        color: #555;
+    }
+    #add_item_modal #FilterFieldsDiv td:last-child { text-align: right !important; }
+
+    /* ---------- Inputs / selects ---------- */
+    #add_item_modal input.invoice-inputs,
+    #add_item_modal select.invoice-inputs,
+    #add_item_modal textarea.invoice-inputs,
+    #add_item_modal .form-input {
+        width: 100% !important;
+        min-width: 0 !important;
+        margin-top: 0 !important;
+        /* font-size: 16px !important;   */
+        box-sizing: border-box !important;
+    }
+    #add_item_modal .input-container {
+        position: relative !important;
+        width: 100% !important;
+        margin-top: 0 !important;
+    }
+    #add_item_modal .select2-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+    #add_item_modal .select2-container .select2-selection--single {
+        height: 32px !important;
+        border: 1px solid #b3b3b3 !important;
+        border-radius: 3px !important;
+    }
+    #add_item_modal .select2-container .select2-selection--single .select2-selection__rendered {
+        font-size: 14px !important;
+        line-height: 30px !important;
+        height: 30px !important;
+        padding-left: 8px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    /* Attributes multi-select: grows only when needed */
+    #add_item_modal .select2-selection--multiple {
+        height: auto !important;
+        min-height: 32px !important;
+        border: 1px solid #b3b3b3 !important;
+        border-radius: 3px !important;
+        padding: 2px 4px !important;
+        box-sizing: border-box !important;
+    }
+    #add_item_modal .select2-selection--multiple .select2-selection__rendered {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 3px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    #add_item_modal .select2-selection--multiple .select2-selection__choice {
+        float: none !important;
+        margin: 2px 0 !important;
+        font-size: 12px !important;
+        max-width: 100% !important;
+    }
+
+    /* ---------- Ex-Factory address (full width) ---------- */
+    #add_item_modal .mobile-field-table-5 th,
+    #add_item_modal .mobile-field-table-5 td {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+        padding: 2px 3px 6px !important;
+    }
+    #add_item_modal .mobile-field-table-5 th {
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        color: #555 !important;
+    }
+    #add_item_modal .mobile-field-table-5 a.btn {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        font-size: 11px !important;
+    }
+
+    /* ---------- Footer ---------- */
+    #add_item_modal .modal-footer { padding: 10px 12px !important; }
+    #add_item_modal .modal-footer .control-btns {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 6px !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+    #add_item_modal .modal-footer button {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 7px 4px !important;
+        font-size: 11px !important;
+        white-space: nowrap !important;
+    }
+    
+    .mobile_padding_bottom_40 {
+        padding: 2px 3px 40px 3px !important;
+    }
+    .top_20 {
+        top: 20%;
+    }
+
+    /* NORMAL */
+    input,
+    textarea,
+    select,
+    .form-control,
+    .invoice-inputs,
+    .select2-selection__rendered,
+    .select2-selection,
+    .select2-container .select2-search__field,
+    .select2-search__field,
+    .select2-container--default .select2-selection--single,
+    .select2-container--default .select2-selection--multiple {
+        font-size: 10px !important;
+    }
+
+    /* FOCUS / TYPING */
+    input:focus,
+    textarea:focus,
+    select:focus,
+    .form-control:focus,
+    .invoice-inputs:focus,
+    .select2-search__field:focus {
+        font-size: 16px !important;
+    }
+
+    /* SELECT2 */
+    .select2-container--focus .select2-selection,
+    .select2-container--open .select2-selection,
+    .select2-container--open .select2-search__field {
+        font-size: 16px !important;
+    }
+
+}
+
 </style>
 <div class="modal fade newOrderStyles" id="add_item_modal" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
     <div class="modal-dialog modal- modal-dialog-centered modal-lg" role="document">

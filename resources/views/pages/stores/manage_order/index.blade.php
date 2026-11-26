@@ -345,13 +345,13 @@
         .mobile-top-btn.grey   { background: #717070; color: #fff; border-color: #717070; }
         .mobile-top-btn.yellow { background: #d6a347; color: #fff; border-color: #d6a347; }
         .mobile-top-btn.olive  { background: #a3a721; color: #fff; border-color: #a3a721; }
-    
+
         .mobile-created-badge {
             background: #e6f9f3;
             color: #17a589;
             border: 1.5px solid #17a589;
         }
-        
+
         /* Row 2 — shipment action buttons, hidden by default */
         .mobile-shipment-actions {
             display: none;
@@ -381,9 +381,9 @@
         }
         .mobile-shipment-btn.green-solid { background: #1f9d55; color: #fff; }
         .mobile-shipment-btn.teal-solid  { background: #17a589; color: #fff; }
-        
+
         .container-fluid.mb-5 { padding-top: 6px !important; }
-        
+
         /* Shipping filter (mobile) */
         .mobile-filter-box {
             background: #fff;
@@ -681,27 +681,46 @@
                 </div>
             </div>
             <div class="shipping-filter-box">
-                <div class="filter-title">Filter By Shipping Method</div>
+                <div class="d-flex flex-wrap align-items-end" style="gap: 40px;">
+                    <div>
+                        <div class="filter-title">Filter By Shipping Method</div>
 
-                <div class="filter-options-row">
-                    <label class="filter-option">
-                        <input type="radio"
-                            class="shipping_method_filter"
-                            data-value="all"
-                            name="shipping_method_filter"
-                            {{  request()->get('shipping_method') == null ? 'checked' : '' }}>
-                        <span>All</span>
-                    </label>
+                        <div class="filter-options-row">
+                            <label class="filter-option" style="margin-bottom: 0;">
+                                <input type="radio"
+                                    class="shipping_method_filter"
+                                    data-value="all"
+                                    name="shipping_method_filter"
+                                    {{ (request()->get('shipping_method') == null || request()->get('shipping_method') == 'all') ? 'checked' : '' }}>
+                                <span>All</span>
+                            </label>
 
-                    @foreach ($store->StoreAddedShippingMethods as $shipping_method)
-                        <label class="filter-option">
-                            <input type="radio"
-                                class="shipping_method_filter"
-                                data-value="{{ $shipping_method->shippingMethod->id }}"
-                                name="shipping_method_filter" {{  request()->get('shipping_method') == $shipping_method->shippingMethod->id ? 'checked' : '' }}>
-                            <span>{{ $shipping_method->shippingMethod->shipping_method_name }}</span>
-                        </label>
-                    @endforeach
+                            @foreach ($store->StoreAddedShippingMethods as $shipping_method)
+                                <label class="filter-option" style="margin-bottom: 0;">
+                                    <input type="radio"
+                                        class="shipping_method_filter"
+                                        data-value="{{ $shipping_method->shippingMethod->id }}"
+                                        name="shipping_method_filter" {{  request()->get('shipping_method') == $shipping_method->shippingMethod->id ? 'checked' : '' }}>
+                                    <span>{{ $shipping_method->shippingMethod->shipping_method_name }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="filter-title">Filter By Refunds</div>
+
+                        <div class="filter-options-row">
+                            <label class="filter-option" style="margin-bottom: 0;">
+                                <input type="checkbox"
+                                    class="refunded_order_filter"
+                                    name="refunded_order_filter"
+                                    value="1"
+                                    {{ request()->get('refunded_order') == 1 ? 'checked' : '' }}>
+                                <span>Refunded Order</span>
+                            </label>
+                        </div>
+                    </div>
 
                     <button class="btn filter-btn" id="filter_shipping_methods">
                         Filter
@@ -778,7 +797,7 @@
                 <div class="mobile-filter-title">Filter By Shipping Method</div>
                 <div class="mobile-filter-options">
                     <label class="mobile-filter-opt">
-                        <input type="radio" class="shipping_method_filter_m" data-value="all" name="shipping_method_filter_m" {{ request()->get('shipping_method') == null ? 'checked' : '' }}>
+                        <input type="radio" class="shipping_method_filter_m" data-value="all" name="shipping_method_filter_m" {{ (request()->get('shipping_method') == null || request()->get('shipping_method') == 'all') ? 'checked' : '' }}>
                         <span>All</span>
                     </label>
                     @foreach ($store->StoreAddedShippingMethods as $sm)
@@ -787,6 +806,13 @@
                             <span>{{ $sm->shippingMethod->shipping_method_name }}</span>
                         </label>
                     @endforeach
+                </div>
+                <div class="mobile-filter-title" style="margin-top: 10px;">Filter By Refunds</div>
+                <div class="mobile-filter-options">
+                    <label class="mobile-filter-opt">
+                        <input type="checkbox" class="refunded_order_filter_m" name="refunded_order_filter_m" value="1" {{ request()->get('refunded_order') == 1 ? 'checked' : '' }}>
+                        <span>Refunded Order</span>
+                    </label>
                 </div>
                 <button class="mobile-filter-btn" id="mobile_filter_shipping">Filter</button>
             </div>
@@ -903,6 +929,9 @@
                     <th scope="col" class="table_header_text text-right">OTHER ($)</th>
                     <th scope="col" class="table_header_text text-right">TOTAL ($)</th>
                     <th scope="col" class="table_header_text text-right">PAID AMOUNT ($)</th>
+                    <th scope="col" class="table_header_text text-center">PAYMENT STATUS</th>
+                    <th scope="col" class="table_header_text text-center">REFUND ITEM QTY</th>
+                    <th scope="col" class="table_header_text text-right">REFUND AMOUNT ($)</th>
                     <th scope="col" class="table_header_text text-center">PAYMENT METHOD</th>
                     <th scope="col" class="table_header_text text-center">SHIPMENT</th>
                 </thead>
@@ -910,6 +939,89 @@
                     @foreach ($orders as $order)
                         @php
                             $hasShipment = !empty($order->ShipmentDetails) && $order->ShipmentDetails->count() > 0;
+
+                            $paidPayments = $order->paymentDetails
+                                ? $order->paymentDetails->where('is_success', 1)->where('is_refund', 0)
+                                : collect();
+                            $refundPayments = $order->paymentDetails
+                                ? $order->paymentDetails->where('is_success', 1)->where('is_refund', 1)
+                                : collect();
+
+                            $paidPaymentAmount = (float) $paidPayments->sum('payment_amount');
+                            $refundAmount = (float) $refundPayments->sum('payment_amount');
+
+                            $allPlayerDetails = $order->OrderItemsWithTrashed
+                                ? $order->OrderItemsWithTrashed->pluck('OrderItemDetails')->flatten()
+                                : collect();
+
+                            $refundedPlayerDetails = $allPlayerDetails->filter(function ($detail) {
+                                return (int) $detail->is_refunded === 1 && !empty($detail->deleted_at);
+                            });
+
+                            $activePlayerDetails = $allPlayerDetails->filter(function ($detail) {
+                                return (int) $detail->is_refunded === 0 && empty($detail->deleted_at);
+                            });
+
+                            // 1st Priority: determine Payment Status from soft-deleted / is_refunded order items
+                            // 2nd Priority: fallback to store_card_payments
+                            $paymentStatus = '';
+                            if ($refundedPlayerDetails->count() > 0) {
+                                if ($activePlayerDetails->count() === 0) {
+                                    $paymentStatus = 'Refunded Order';
+                                } else {
+                                    $paymentStatus = 'Refunded Items';
+                                }
+                            } else {
+                                if ($paidPayments->count() > 0) {
+                                    $paymentStatus = 'Paid';
+                                }
+                                if ($refundPayments->count() > 0) {
+                                    if (bccomp((string) $refundAmount, (string) $paidPaymentAmount, 2) === 0) {
+                                        $paymentStatus = 'Refunded Order';
+                                    } elseif (bccomp((string) $refundAmount, (string) $paidPaymentAmount, 2) === -1) {
+                                        $paymentStatus = 'Refunded Items';
+                                    }
+                                }
+                            }
+
+                            // 1st Priority: determine Refund Item Qty from soft-deleted / is_refunded player details
+                            // 2nd Priority: fallback to store_order_receipts removed_items JSON
+                            if ($refundedPlayerDetails->count() > 0) {
+                                $refundItemQty = (int) $refundedPlayerDetails->sum('qty');
+                            } else {
+                                $sentRemovedQty = 0;
+                                $pendingRemovedQty = 0;
+                                if (!empty($order->OrderReceipts) && $order->OrderReceipts->count() > 0) {
+                                    foreach ($order->OrderReceipts->sortBy('id') as $receipt) {
+                                        $orderDetails = is_string($receipt->order_details)
+                                            ? json_decode($receipt->order_details, true)
+                                            : (array) $receipt->order_details;
+
+                                        $receiptRemovedQty = 0;
+                                        if (!empty($orderDetails['removed_items']) && is_array($orderDetails['removed_items'])) {
+                                            foreach ($orderDetails['removed_items'] as $removedItem) {
+                                                $receiptRemovedQty += (int) ($removedItem['qty'] ?? 0);
+                                            }
+                                        }
+
+                                        if (!empty($orderDetails['refund_details'])) {
+                                            if ($pendingRemovedQty > 0) {
+                                                $sentRemovedQty += $pendingRemovedQty;
+                                                $pendingRemovedQty = 0;
+                                            }
+                                            continue;
+                                        }
+
+                                        if ((int) $receipt->is_sent === 1) {
+                                            $sentRemovedQty += $receiptRemovedQty;
+                                            $pendingRemovedQty = 0;
+                                        } else {
+                                            $pendingRemovedQty = $receiptRemovedQty;
+                                        }
+                                    }
+                                }
+                                $refundItemQty = $sentRemovedQty + $pendingRemovedQty;
+                            }
                         @endphp
                         <tr>
                             <td class="text-center">
@@ -936,6 +1048,9 @@
                             <td class="text-right">{{$order->handling_fee}}</td>
                             <td class="text-right">{{$order->total}}</td>
                             <td class="text-right">{{$order->paid_invoice_amount}}</td>
+                            <td class="text-center">{{ $paymentStatus }}</td>
+                            <td class="text-center">{{ $refundItemQty }}</td>
+                            <td class="text-right">{{ number_format($refundAmount, 2, '.', '') }}</td>
                             <td class="text-center">{{$order->payment_method}}</td>
                             <td class="text-center">
                                 @if($hasShipment)
@@ -1260,23 +1375,32 @@
         });
         $(document).on('click', '#filter_shipping_methods', function () {
 
-            let selectedMethod = $('.shipping_method_filter:checked').data('value');
+            let selectedMethod = $('.shipping_method_filter:checked').data('value') || 'all';
+            let isRefundedOrder = $('.refunded_order_filter').is(':checked') ? 1 : 0;
             let baseUrl = window.location.pathname;
+            let query = null;
 
-            let query = selectedMethod !== 'all'
-                ? '?shipping_method=' + selectedMethod
-                : '';
+            if(selectedMethod == 'all'){
+                query = '?refunded_order=' + isRefundedOrder;
+            } else {
+                query = '?shipping_method=' + selectedMethod + '&refunded_order=' + isRefundedOrder;
+            }
 
             window.location.href = baseUrl + query;
         });
 
         // Mobile filter button
         $(document).on('click', '#mobile_filter_shipping', function () {
-            let selectedMethod = $('.shipping_method_filter_m:checked').data('value');
+            let selectedMethod = $('.shipping_method_filter_m:checked').data('value') || 'all';
+            let isRefundedOrder = $('.refunded_order_filter_m').is(':checked') ? 1 : 0;
             let baseUrl = window.location.pathname;
-            let query = selectedMethod !== 'all'
-                ? '?shipping_method=' + selectedMethod
-                : '';
+            let query = null;
+
+            if(selectedMethod == 'all'){
+                query = '?refunded_order=' + isRefundedOrder;
+            } else {
+                query = '?shipping_method=' + selectedMethod + '&refunded_order=' + isRefundedOrder;
+            }
             window.location.href = baseUrl + query;
         });
 
@@ -1500,11 +1624,9 @@
 
             if (selectedCount > 0) {
                 $('.create_shipment').show();
-                $('.export_shippo_csv').show();
                 $('#mobile_shipment_row').addClass('visible');
             } else {
                 $('.create_shipment').hide();
-                $('.export_shippo_csv').hide();
                 $('#mobile_shipment_row').removeClass('visible');
             }
         }

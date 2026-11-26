@@ -26,8 +26,10 @@ use App\Services\PaymentService;
 use App\Models\BulkOrderEntry;
 use App\Services\NotificationBuilderService;
 use App\Models\DebitEntry;
+use App\Models\EmailNotification;
 use App\Models\OrderItem;
 use App\Services\EmailNotificationBuilderService;
+use Illuminate\Support\Facades\Blade;
 
 class PaymentController extends Controller {
     protected $PaymentService;
@@ -338,7 +340,8 @@ class PaymentController extends Controller {
         $customerAddress = new AnetAPI\CustomerAddressType();
         $customerAddress->setFirstName($input['first_name']);
         $customerAddress->setLastName($input['last_name']);
-        $customerAddress->setCompany($input['company']);
+        // Authorize.Net limits company names to 50 characters.
+        $customerAddress->setCompany(mb_substr($input['company'], 0, 50, 'UTF-8'));
         $customerAddress->setAddress($input['street']);
         $customerAddress->setCity($input['city']);
         $customerAddress->setState($input['state']);
@@ -346,11 +349,13 @@ class PaymentController extends Controller {
         $customerAddress->setCountry($input['country']);
         $customerAddress->setPhoneNumber($input['phone']);
 
+        $strLimitCompanyName = mb_substr($orderDetails->organizationDetails['organization_name'], 0, 50, 'UTF-8');
+
         // Set the customer's Ship To address
         $customerShipping = new AnetAPI\CustomerAddressType();
         $customerShipping->setFirstName($orderDetails->contactDetails['first_name']);
         $customerShipping->setLastName($orderDetails->contactDetails['last_name']);
-        $customerShipping->setCompany($orderDetails->organizationDetails['organization_name']);
+        $customerShipping->setCompany($strLimitCompanyName);
         $customerShipping->setAddress($orderDetails['street']);
         $customerShipping->setCity($orderDetails['city']);
         $customerShipping->setState($orderDetails['state']);
@@ -552,9 +557,79 @@ class PaymentController extends Controller {
             $cardAmount = PaymentLog::where('order_id', $input['order_id'])->sum('amount');*/
 
             $orderPaymentsArray = [];
-            $orders = Order::with('organizationDetails', 'userDetails', 'statusDetails', 'contactDetails', 'orderItems', 'orderItems.productDetails', 'orderItems.statusDetails')
-                    ->where('id', $input['order_id'])
-                    ->get();
+
+            $orders = Order::with(['organizationDetails', 'userDetails', 'statusDetails', 'contactDetails', 'orderItems',
+            'orderItems' => function ($query) {
+                    $query->with(['productDetails', 'statusDetails'])->where('is_studio_item', 0);
+                }
+            ])
+            ->where('id', $input['order_id'])
+            ->get();
+
+            $cardAmount = PaymentLog::where('order_id', $input['order_id'])->where('response_code','1')->sum('amount');
+            $checkAmount = CheckPayment::where('order_id', $input['order_id'])->where('is_approved' , 1)->sum('amount');
+            $venmoAmount = VenmoPayment::where('order_id', $input['order_id'])->where('is_approved' , 1)->sum('amount');
+            $paypalAmount = PaypalPayment::where('order_id', $input['order_id'])->where('is_approved' , 1)->sum('amount');
+
+            $payment = 0;
+            if($cardAmount > 0 && $paypalAmount > 0){
+                $payment = round(((($cardAmount + $paypalAmount) * 100)/103),2) + $checkAmount + $venmoAmount;
+
+            } else if ($cardAmount > 0 && $paypalAmount == 0) {
+                $payment = round(($cardAmount * 100)/103,2) + $checkAmount + $venmoAmount;
+
+            } else if ($cardAmount == 0 && $paypalAmount > 0) {
+                $payment = $checkAmount + round((($paypalAmount * 100)/103),2) + $venmoAmount;
+
+            } else {
+                $payment = $cardAmount + $checkAmount + $paypalAmount + $venmoAmount;
+            }
+
+            $processingFee = round(($cardAmount + $venmoAmount)*3/103 , 2);
+
+            $balnceToBePaid = 0;
+            if ($payment == 0) {
+                $paymentStatus = 'Pending'; // Pending
+                $color ='##d65a47';
+
+            } else if ($payment < $orders[0]->order_total && $payment > 0) {
+                $paymentStatus = 'Partial'; // Partial
+                $balnceToBePaid = $orders[0]->order_total - $payment;
+                $color ='#FFB916';
+
+            } else {
+                $paymentStatus = 'Paid'; // Paid
+                $color ='#2dce89';
+            }
+
+            $pdfdata = [
+                'transaction_id' =>  $paymentLog->transaction_id,
+                'Customer_name' => $paymentLog->name_on_card,
+                'Payment_method' => 'Card',
+                'amount_paid' => $paymentLog->amount,
+                'processingFee' => $processingFee,
+                'Date' =>Carbon::now()->format('m-d-Y'),
+                'status' =>'Success',
+                'order_id' =>$orders[0]->order_no,
+                'title' =>'Payment Receipt',
+                'balnceToBePaid' => $balnceToBePaid,
+                'paymentReceived' => $payment,
+                'orderstatus'=>$paymentStatus,
+                'color'=>$color,
+            ];
+            $billinginfo = [
+                'first_name' => $input['first_name'] ?? '',
+                'last_name'  => $input['last_name'] ?? '',
+                'company'    => $input['company'] ?? '',
+                'street'     => $input['street'] ?? '',
+                'city'       => $input['city'] ?? '',
+                'state'      => $input['state'] ?? '',
+                'zip_code'   => $input['zip_code'] ?? '',
+                'country'    => $input['country'] ?? '',
+                'phone'      => $input['phone'] ?? '',
+                'email'      => $input['email'] ?? '',
+            ];
+            $this->sendPaymentMailCustomer($orders[0], $pdfdata, $input['email'], $billinginfo);
 
             $cardPaymentRecords = PaymentLog::where('order_id', $input['order_id'])->where('response_code','1')->get();
             $checkPaymentRecords = CheckPayment::where('order_id', $input['order_id'])->where('is_approved','1')->get();
@@ -624,7 +699,8 @@ class PaymentController extends Controller {
         $customerAddress = new AnetAPI\CustomerAddressType();
         $customerAddress->setFirstName($input['first_name']);
         $customerAddress->setLastName($input['last_name']);
-        $customerAddress->setCompany($input['company']);
+        // Authorize.Net limits company names to 50 characters.
+        $customerAddress->setCompany(mb_substr($input['company'], 0, 50, 'UTF-8'));
         $customerAddress->setAddress($input['street']);
         $customerAddress->setCity($input['city']);
         $customerAddress->setState($input['state']);
@@ -632,11 +708,13 @@ class PaymentController extends Controller {
         $customerAddress->setCountry($input['country']);
         $customerAddress->setPhoneNumber($input['phone']);
 
+        $strLimitCompanyName = mb_substr($orderDetails->organizationDetails['organization_name'], 0, 50, 'UTF-8');
+
         // Set the customer's Ship To address
         $customerShipping = new AnetAPI\CustomerAddressType();
         $customerShipping->setFirstName($orderDetails->contactDetails['first_name']);
         $customerShipping->setLastName($orderDetails->contactDetails['last_name']);
-        $customerShipping->setCompany($orderDetails->organizationDetails['organization_name']);
+        $customerShipping->setCompany($strLimitCompanyName);
         $customerShipping->setAddress($orderDetails['street']);
         $customerShipping->setCity($orderDetails['city']);
         $customerShipping->setState($orderDetails['state']);
@@ -943,7 +1021,22 @@ class PaymentController extends Controller {
             //return view('pages.order_management.orders.invoicepayments2', ['orders'=>$orders, 'orderPaymentsArray'=>$orderPaymentsArray]);
 
             //return view('pages.order_management.orders.invoicepayments', ['orders'=>$orders, 'cardPayments'=>$cardPayments, 'cardAmount'=>$cardAmount,'msg_type'=>$msg_type,'message_text'=>$message_text]);
-            return view('pages.order_management.orders.invoicepayments', ['orders'=>$orders, 'orderPaymentsArray'=>$orderPaymentsArray,'msg_type'=>$msg_type,'message_text'=>$message_text,'pdfdata' => $pdfdata,]);//
+            // return view('pages.order_management.orders.invoicepayments', ['orders'=>$orders, 'orderPaymentsArray'=>$orderPaymentsArray,'msg_type'=>$msg_type,'message_text'=>$message_text,'pdfdata' => $pdfdata,]);//
+            return $this->downloadSingleCardReceiptPdf(
+                $orders[0],
+                $pdfdata,
+                $input['email'] ?? null,
+                $billinginfo,
+                $orderPaymentsArray,
+                // old view data → used only if the new PDF fails (old flow)
+                [
+                    'orders'             => $orders,
+                    'orderPaymentsArray' => $orderPaymentsArray,
+                    'msg_type'           => $msg_type,
+                    'message_text'       => $message_text,
+                    'pdfdata'            => $pdfdata,
+                ]
+            );
         }
 
         return redirect()->back()->with($msg_type, $message_text);
@@ -996,7 +1089,7 @@ class PaymentController extends Controller {
     }
     public function sendPaymentMailCustomer($order, $pdfdata, $mail, $billinginfo)
     {
-        
+
         $orderModel = $order instanceof Order
             ? $order
             : Order::with([
@@ -1076,13 +1169,21 @@ class PaymentController extends Controller {
             'total_paid'         => number_format((float) ($pdfdata['paymentReceived'] ?? 0), 2),
             'order_total'        => number_format((float) ($orderModel->order_total ?? 0), 2),
             'balance_remaining'  => number_format((float) ($pdfdata['balnceToBePaid'] ?? 0), 2),
+            'sub_total'          => number_format((float) ($orderModel->sub_total ?? 0), 2),
+            'discountType'       => $orderModel->discountType ?? '',
+            'discount'           => $orderModel->discount ?? '',
+            'artwork'            => number_format((float) ($orderModel->artwork ?? 0), 2),
+            'sales_tax_rate'     => $orderModel->sales_tax_rate ?? '',
+            'discount_hidation'  => $orderModel->discount_hidation ?? '',
+            'sale_tax'           => number_format((float) ($orderModel->sales_tax ?? 0), 2),
+            'shipping_fee'       => number_format((float) ($orderModel->shipping ?? 0), 2),
             'payment_status'     => $pdfdata['orderstatus'] ?? 'Paid',
             'status_color'       => $pdfdata['color'] ?? '#2dce89',
             'paid_date'          => $pdfdata['Date'] ?? now()->format('m-d-Y'),
         ]);
 
         return true;
-       
+
     }
 
     public function printPaymentRecept($id)
@@ -1474,4 +1575,918 @@ class PaymentController extends Controller {
         }
     }
 
+    /**
+     * SINGLE CARD PAYMENT
+     */
+    private function downloadSingleCardReceiptPdf($order, array $pdfdata, $mail, array $billinginfo, array $orderPaymentsArray, array $oldViewData)
+    {
+        try {
+            // 1) Same data as sendPaymentMailCustomer()
+            $templateData = $this->buildSingleCardReceiptData($order, $pdfdata, $mail, $billinginfo);
+
+            // 2) Render the same email template
+            $template = EmailNotification::where('template_key', 'key_email_customer_payment_receipt_card')->first();
+            if (!$template || empty($template->body)) {
+                throw new \Exception('Template key_email_customer_payment_receipt_card not found.');
+            }
+
+            $html = Blade::render($template->body, array_merge(['order_items_Array' => ''], $templateData));
+
+            // 3) Prepare the full email for PDF
+            $html = $this->prepareSingleReceiptHtmlForPdf($html);
+
+            // 4) Footer → only at the bottom of the receipt page (page 1), rounded corners kept
+            $html = $this->movePdfFooterToFirstPageBottom($html);
+
+            // 5) Add "Payment Details" on a new page (no footer there)
+            $html = $this->addPaymentDetailsToReceiptHtml($html, $orderPaymentsArray);
+
+            // 6) Make the PDF
+            $pdfContent = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)
+                ->setPaper('a4', 'portrait')
+                ->setOptions([
+                    'isRemoteEnabled' => true,
+                    'defaultFont'     => 'Arial',
+                ])
+                ->output();
+
+            // 7) Download with a single-payment file name, then redirect
+            $orderNo     = $templateData['order_number'] ?? ($order->order_no ?? $order->id);
+            $fileName    = 'Payment_Receipt_' . $orderNo . '_' . now()->format('Ymd_His') . '.pdf';
+            $redirectUrl = url("customer_portal/individual_payment/payments");
+
+            return view('pages.customer_portal.single_payment_redirect', [
+                'pdfBase64'   => base64_encode($pdfContent),
+                'fileName'    => $fileName,
+                'redirectUrl' => $redirectUrl,
+            ]);
+
+        } catch (\Throwable $e) {
+            logger()->error('downloadSingleCardReceiptPdf failed: ' . $e->getMessage());
+
+            // Safety: old flow
+            return view('pages.order_management.orders.invoicepayments', $oldViewData);
+        }
+    }
+
+    /**
+     * Same data as sendPaymentMailCustomer() sends to the email template.
+     */
+    private function buildSingleCardReceiptData($order, array $pdfdata, $mail, array $billinginfo): array
+    {
+        $orderModel = $order instanceof Order
+            ? $order
+            : Order::with([
+                'organizationDetails',
+                'contactDetails',
+                'orderItems' => function ($query) {
+                    $query->with(['productDetails', 'statusDetails'])->where('is_studio_item', 0);
+                },
+            ])->find($order);
+
+        if (!$orderModel) {
+            throw new \Exception('buildSingleCardReceiptData: order not found');
+        }
+
+        if (!$orderModel->relationLoaded('orderItems')) {
+            $orderModel->load([
+                'orderItems' => function ($query) {
+                    $query->with(['productDetails', 'statusDetails'])->where('is_studio_item', 0);
+                },
+            ]);
+        }
+
+        $paymentCard = PaymentLog::where('order_id', $orderModel->id)
+            ->where('response_code', '1')
+            ->latest('created_at')
+            ->first();
+
+        $organizationName = optional($orderModel->organizationDetails)->organization_name ?? '';
+        $customerName     = trim(optional($orderModel->contactDetails)->first_name . ' ' . optional($orderModel->contactDetails)->last_name);
+
+        $orderItemsList = [];
+        foreach ($orderModel->orderItems as $item) {
+            $qty   = $item->quantity ?? $item->qty ?? 1;
+            $price = $item->price ?? $item->unit_price ?? 0;
+            $orderItemsList[] = [
+                'product_name' => optional($item->productDetails)->product_name ?? ($item->product_name ?? 'Item'),
+                'size'         => $item->size ?? '',
+                'qty'          => $qty,
+                'price'        => $price,
+                'total'        => $item->total_price ?? $item->total ?? ($qty * $price),
+            ];
+        }
+
+        $paymentMethodLabel = $pdfdata['Payment_method'] ?? 'Card';
+        if (!empty($pdfdata['card_last_digits'])) {
+            $paymentMethodLabel .= ' ending in ' . $pdfdata['card_last_digits'];
+        }
+
+        return [
+            'custom_email'       => $mail,
+            'order_number'       => $pdfdata['order_id'] ?? $orderModel->order_no,
+            'order_link'         => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
+            'organization_name'  => $organizationName,
+            'customer_name'      => $customerName,
+            'customer_email'     => $orderModel->email ?? optional($orderModel->contactDetails)->email ?? '',
+            'customer_phone'     => $orderModel->phone_no ?? '',
+            'customer_street'    => $orderModel->street ?? '',
+            'customer_city'      => $orderModel->city ?? '',
+            'customer_state'     => $orderModel->state ?? '',
+            'customer_postal'    => $orderModel->postal_code ?? '',
+            'customer_country'   => $orderModel->country ?? '',
+            'billing_first_name' => $billinginfo['first_name'] ?? '',
+            'billing_last_name'  => $billinginfo['last_name'] ?? '',
+            'billing_email'      => $billinginfo['email'] ?? '',
+            'billing_phone'      => $billinginfo['phone'] ?? '',
+            'billing_street'     => $billinginfo['street'] ?? '',
+            'billing_city'       => $billinginfo['city'] ?? '',
+            'billing_state'      => $billinginfo['state'] ?? '',
+            'billing_postal'     => $billinginfo['zip_code'] ?? '',
+            'billing_country'    => $billinginfo['country'] ?? '',
+            'paymentCard'        => $paymentCard,
+            'order_items'        => $orderItemsList,
+            'transaction_id'     => $pdfdata['transaction_id'] ?? '',
+            'payment_method'     => $paymentMethodLabel,
+            'paid_amount'        => number_format((float) ($pdfdata['amount_paid'] ?? 0), 2),
+            'processing_fee'     => number_format((float) ($pdfdata['processingFee'] ?? 0), 2),
+            'total_paid'         => number_format((float) ($pdfdata['paymentReceived'] ?? 0), 2),
+            'order_total'        => number_format((float) ($orderModel->order_total ?? 0), 2),
+            'balance_remaining'  => number_format((float) ($pdfdata['balnceToBePaid'] ?? 0), 2),
+            'sub_total'          => number_format((float) ($orderModel->sub_total ?? 0), 2),
+            'discountType'       => $orderModel->discountType ?? '',
+            'discount'           => $orderModel->discount ?? '',
+            'artwork'            => number_format((float) ($orderModel->artwork ?? 0), 2),
+            'sales_tax_rate'     => $orderModel->sales_tax_rate ?? '',
+            'discount_hidation'  => $orderModel->discount_hidation ?? '',
+            'sale_tax'           => number_format((float) ($orderModel->sales_tax ?? 0), 2),
+            'shipping_fee'       => number_format((float) ($orderModel->shipping ?? 0), 2),
+            'payment_status'     => $pdfdata['orderstatus'] ?? 'Paid',
+            'status_color'       => $pdfdata['color'] ?? '#2dce89',
+            'paid_date'          => $pdfdata['Date'] ?? now()->format('m-d-Y'),
+        ];
+    }
+
+    /**
+     * "Payment Details" list
+     * Added at the very end, after the full email.
+     */
+    private function addPaymentDetailsToReceiptHtml(string $html, array $orderPaymentsArray): string
+    {
+        $rowsHtml    = '';
+        $row         = 0;
+        $totalAmount = 0;
+
+        foreach ($orderPaymentsArray as $payment) {
+            $row++;
+            $amount = (float) ($payment['Amount'] ?? 0);
+            $totalAmount += $amount;
+
+            $date = $payment['PaymentDate'] ?? null;
+            $dateText = $date instanceof \DateTimeInterface ? $date->format('m-d-Y H:i:s') : (string) $date;
+
+            $rowsHtml .= '
+                <tr>
+                    <td style="padding:6px 10px;font-size:12px;color:#111827;border-bottom:1px solid #f3f4f6;">' . $row . '</td>
+                    <td style="padding:6px 10px;font-size:12px;color:#111827;border-bottom:1px solid #f3f4f6;">' . e($payment['Method'] ?? '') . '</td>
+                    <td style="padding:6px 10px;font-size:12px;color:#111827;border-bottom:1px solid #f3f4f6;">' . e($payment['NameonCard'] ?? '') . '</td>
+                    <td style="padding:6px 10px;font-size:12px;color:#111827;border-bottom:1px solid #f3f4f6;">' . e($payment['TransactionId'] ?? '') . '</td>
+                    <td style="padding:6px 10px;font-size:12px;color:#111827;border-bottom:1px solid #f3f4f6;">' . e($dateText) . '</td>
+                    <td align="right" style="padding:6px 10px;font-size:12px;color:#111827;border-bottom:1px solid #f3f4f6;">$' . number_format($amount, 2) . '</td>
+                </tr>';
+        }
+
+        if ($rowsHtml === '') {
+            $rowsHtml = '<tr><td colspan="6" style="padding:8px 10px;font-size:12px;color:#6b7280;">No payments found.</td></tr>';
+        }
+
+        $section = '
+            <!-- PAYMENT DETAILS (PDF only, new page) -->
+            <div style="page-break-before:always;padding:0 48px;">
+                <div style="font-size:15px;font-weight:700;color:#111827;margin-bottom:8px;">Payment Details</div>
+                <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                    style="border-collapse:collapse;border:1px solid #e5e7eb;font-family:Arial, Helvetica, sans-serif;">
+                    <thead>
+                        <tr style="background:#f9fafb;" bgcolor="#f9fafb">
+                            <th align="left" style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;border-bottom:1px solid #e5e7eb;width:30px;">#</th>
+                            <th align="left" style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;border-bottom:1px solid #e5e7eb;">METHOD</th>
+                            <th align="left" style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;border-bottom:1px solid #e5e7eb;">NAME</th>
+                            <th align="left" style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;border-bottom:1px solid #e5e7eb;">TRANSACTION ID</th>
+                            <th align="left" style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;border-bottom:1px solid #e5e7eb;">DATE / TIME</th>
+                            <th align="right" style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;border-bottom:1px solid #e5e7eb;">AMOUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ' . $rowsHtml . '
+                        <tr>
+                            <td colspan="5" style="padding:8px 10px;font-size:13px;font-weight:700;color:#111827;">Total Amount</td>
+                            <td align="right" style="padding:8px 10px;font-size:13px;font-weight:700;color:#111827;">$' . number_format($totalAmount, 2) . '</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>';
+
+        if (stripos($html, '</body>') !== false) {
+            return str_ireplace('</body>', $section . '</body>', $html);
+        }
+
+        return $html . $section;
+    }
+
+    /**
+     * Prepare the email HTML for DomPDF:
+     */
+    private function prepareSingleReceiptHtmlForPdf(string $html): string
+    {
+        // 1) Remove outer wrapper: <body><table width="100%"><tr><td align="center"> ... </td></tr></table></body>
+        $html = preg_replace(
+            '/(<body[^>]*>)\s*<table[^>]*width="100%"[^>]*>\s*<tr>\s*<td[^>]*align="center"[^>]*>/is',
+            '$1',
+            $html,
+            1
+        );
+        $html = preg_replace(
+            '/<\/td>\s*<\/tr>\s*<\/table>\s*(<\/body>)/is',
+            '$1',
+            $html,
+            1
+        );
+
+        // 2) width="880" → 100%. Small widths like the logos stay the same.
+        $html = preg_replace_callback('/width="(\d+)"/', function ($m) {
+            return ((int) $m[1] > 600) ? 'width="100%"' : $m[0];
+        }, $html);
+
+        $pdfCss = '<style>
+            @page { margin: 20px; }
+            body { background: #ffffff !important; margin: 0; padding: 0; }
+            tr { page-break-inside: avoid; }
+        </style>';
+
+        if (stripos($html, '</head>') !== false) {
+            return str_ireplace('</head>', $pdfCss . '</head>', $html);
+        }
+
+        return $pdfCss . $html;
+    }
+
+    /**
+     * PDF only: take the email footer out of the content and show it ONCE,
+     */
+    private function movePdfFooterToFirstPageBottom(string $html): string
+    {
+        $footerHeight = 105;   // height of the footer area (px)
+
+        // Find the footer row: <!-- FOOTER --> <tr>...</tr> right before </table></body>
+        if (!preg_match('/<!--\s*FOOTER\s*-->\s*(<tr>.*?<\/tr>)\s*(<\/table>\s*<\/body>)/is', $html, $match)) {
+            return $html;
+        }
+
+        $footerRow = $match[1];
+
+        // 1) Remove the footer from the main content
+        $html = str_replace($match[0], $match[2], $html);
+
+        // 2) Footer drawn ONCE (absolute = only on page 1), rounded bottom corners like the email
+        $firstPageFooter = '
+            <div class="pdf-first-page-footer">
+                <div style="background:#ECEBE5;border-radius:0 0 12px 12px;overflow:hidden;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                        style="border-collapse:collapse;">' . $footerRow . '</table>
+                </div>
+            </div>';
+
+        $html = preg_replace('/(<body[^>]*>)/i', '$1' . $firstPageFooter, $html, 1);
+
+        // 3) Reserve space at the bottom of PAGE 1 ONLY
+        $footerCss = '<style>
+            @page { margin: 20px; }
+            @page :first { margin-bottom: ' . ($footerHeight + 25) . 'px; }
+            .pdf-first-page-footer {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -' . ($footerHeight + 5) . 'px;
+                height: ' . $footerHeight . 'px;
+            }
+        </style>';
+
+        if (stripos($html, '</head>') !== false) {
+            return str_ireplace('</head>', $footerCss . '</head>', $html);
+        }
+
+        return $footerCss . $html;
+    }
+    public function downloadPaymentReceiptPdf($type, $id)
+    {
+        $type = strtolower(trim((string) $type));
+        $id   = (int) $id;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Payment Model
+        |--------------------------------------------------------------------------
+        */
+        $paymentModels = [
+            'card'   => PaymentLog::class,
+            'check'  => CheckPayment::class,
+            'other'  => OtherPayment::class,
+            'venmo'  => VenmoPayment::class,
+            'paypal' => PaypalPayment::class,
+        ];
+
+        abort_unless(
+            isset($paymentModels[$type]),
+            404,
+            'Payment type not found.'
+        );
+
+        $payment = $paymentModels[$type]::findOrFail($id);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Order
+        |--------------------------------------------------------------------------
+        */
+        $order = Order::with([
+            'organizationDetails',
+            'contactDetails',
+            'orderItems' => function ($query) {
+                $query->with([
+                    'productDetails',
+                    'statusDetails',
+                ])->where('is_studio_item', 0);
+            },
+        ])->findOrFail($payment->order_id);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Transaction ID / Payment Method
+        |--------------------------------------------------------------------------
+        */
+        switch ($type) {
+            case 'card':
+                $transactionId = (string) ($payment->transaction_id ?? ('CARD' . $payment->id));
+                $paymentMethod = 'Card';
+                break;
+
+            case 'check':
+                $transactionId = 'CHECK' . $payment->id;
+                $paymentMethod = 'Check';
+                break;
+
+            case 'other':
+                $transactionId = 'OTHER' . $payment->id;
+                $paymentMethod = 'Other';
+                break;
+
+            case 'venmo':
+                $transactionId = 'VENMO' . $payment->id;
+                $paymentMethod = 'Venmo';
+                break;
+
+            case 'paypal':
+                $transactionId = 'PAYPAL' . $payment->id;
+                $paymentMethod = 'PayPal';
+                break;
+
+            default:
+                abort(404, 'Payment type not found.');
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Individual Payment Status
+        |--------------------------------------------------------------------------
+        */
+        if ($type === 'card') {
+
+            $paymentStatus = ((string) ($payment->response_code ?? '') === '1')
+                ? 'Completed'
+                : 'Failed';
+
+        } elseif (in_array($type, ['check', 'venmo', 'paypal'])) {
+
+            $approvalStatus = (int) ($payment->is_approved ?? 0);
+
+            if ($approvalStatus === 1) {
+                $paymentStatus = 'Completed';
+            } elseif ($approvalStatus === 0) {
+                $paymentStatus = 'Pending';
+            } else {
+                $paymentStatus = 'Rejected';
+            }
+
+        } else {
+
+            $paymentStatus = ((int) ($payment->is_approved ?? 1) === 1)
+                ? 'Completed'
+                : 'Rejected';
+        }
+
+        switch ($paymentStatus) {
+            case 'Completed':
+                $paymentStatusColor = '#16a34a';
+                break;
+
+            case 'Pending':
+                $paymentStatusColor = '#f59e0b';
+                break;
+
+            case 'Rejected':
+            case 'Failed':
+                $paymentStatusColor = '#dc2626';
+                break;
+
+            default:
+                $paymentStatusColor = '#64748b';
+                break;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Payment Amount / Processing Fee
+        |--------------------------------------------------------------------------
+        |
+        | Card and PayPal store the amount including the 3% processing fee.
+        |
+        */
+        $rawPaymentAmount = (float) ($payment->amount ?? 0);
+
+        if ($type === 'card' || $type === 'paypal') {
+
+            $paymentAmount = round(
+                ($rawPaymentAmount * 100) / 103,
+                2
+            );
+
+            $processingFee = round(
+                ($rawPaymentAmount * 3) / 103,
+                2
+            );
+
+        } else {
+
+            $paymentAmount = $rawPaymentAmount;
+            $processingFee = 0.00;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Customer / Organization
+        |--------------------------------------------------------------------------
+        */
+        $organizationName =
+            optional($order->organizationDetails)->organization_name ?? '';
+
+        $customerName = trim(
+            (string) optional($order->contactDetails)->first_name
+            . ' '
+            . (string) optional($order->contactDetails)->last_name
+        );
+
+        if ($customerName === '') {
+            $customerName = trim(
+                (string) ($order->first_name ?? '')
+                . ' '
+                . (string) ($order->last_name ?? '')
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Order Items
+        |--------------------------------------------------------------------------
+        */
+        $orderItems = [];
+
+        foreach ($order->orderItems as $item) {
+
+            $qty = (float) (
+                $item->quantity
+                ?? $item->qty
+                ?? 1
+            );
+
+            $price = (float) (
+                $item->price
+                ?? $item->unit_price
+                ?? 0
+            );
+
+            $total = (float) (
+                $item->total_price
+                ?? $item->total
+                ?? ($qty * $price)
+            );
+
+            $orderItems[] = [
+                'product_name' =>
+                    optional($item->productDetails)->product_name
+                    ?? ($item->product_name ?? 'Item'),
+
+                'size'  => $item->size ?? '',
+                'qty'   => $qty,
+                'price' => $price,
+                'total' => $total,
+            ];
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Invoice Amounts
+        |--------------------------------------------------------------------------
+        */
+        $subTotal = (float) ($order->sub_total ?? 0);
+        $artwork  = (float) ($order->artwork ?? 0);
+        $discount = (float) ($order->discount ?? 0);
+
+        $discountAmount       = 0.00;
+        $invoiceBeforeDiscount = $subTotal + $artwork;
+
+        if ((int) ($order->discount_hidation ?? 0) === 1) {
+
+            if ((int) ($order->discountType ?? 0) === 1) {
+
+                // Percentage discount
+                $discountAmount =
+                    ($invoiceBeforeDiscount / 100) * $discount;
+
+            } elseif ((int) ($order->discountType ?? 0) === 2) {
+
+                // Fixed discount
+                $discountAmount = $discount;
+            }
+        }
+
+        $totalInvoiceAmount = max(0,$invoiceBeforeDiscount - $discountAmount);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Calculate Payments Up To This Receipt
+        |--------------------------------------------------------------------------
+        |
+        | This keeps historical receipts accurate by excluding payments made
+        | after the selected payment.
+        |
+        */
+        $cutoff = $payment->created_at ?? now();
+
+        $cardAmount = (float) PaymentLog::where('order_id', $order->id)
+            ->where('response_code', '1')
+            ->where('created_at', '<=', $cutoff)
+            ->sum('amount');
+
+        $checkAmount = (float) CheckPayment::where('order_id', $order->id)
+            ->where('is_approved', 1)
+            ->where('created_at', '<=', $cutoff)
+            ->sum('amount');
+
+        $otherAmount = (float) OtherPayment::where('order_id', $order->id)
+            ->where('is_approved', 1)
+            ->where('created_at', '<=', $cutoff)
+            ->sum('amount');
+
+        $venmoAmount = (float) VenmoPayment::where('order_id', $order->id)
+            ->where('is_approved', 1)
+            ->where('created_at', '<=', $cutoff)
+            ->sum('amount');
+
+        $paypalAmount = (float) PaypalPayment::where('order_id', $order->id)
+            ->where('is_approved', 1)
+            ->where('created_at', '<=', $cutoff)
+            ->sum('amount');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Total Paid
+        |--------------------------------------------------------------------------
+        */
+        $cardNetAmount = $cardAmount > 0
+            ? round(($cardAmount * 100) / 103, 2)
+            : 0.00;
+
+        $paypalNetAmount = $paypalAmount > 0
+            ? round(($paypalAmount * 100) / 103, 2)
+            : 0.00;
+
+        $totalPaid =
+            $cardNetAmount
+            + $paypalNetAmount
+            + $checkAmount
+            + $venmoAmount
+            + $otherAmount;
+
+        $totalPaid = round($totalPaid, 2);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Order Payment Status
+        |--------------------------------------------------------------------------
+        */
+        $orderTotal = (float) ($order->order_total ?? 0);
+
+        $balanceRemaining = max(
+            0,
+            round($orderTotal - $totalPaid, 2)
+        );
+
+        if ($totalPaid <= 0 && $orderTotal > 0) {
+
+            $orderPaymentStatus      = 'Pending';
+            $orderPaymentStatusColor = '#64748b';
+
+        } elseif ($totalPaid < $orderTotal) {
+
+            $orderPaymentStatus      = 'Partial';
+            $orderPaymentStatusColor = '#f59e0b';
+
+        } else {
+
+            $orderPaymentStatus      = 'Paid';
+            $orderPaymentStatusColor = '#16a34a';
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Convert Images To PDF-Friendly Sources
+        |--------------------------------------------------------------------------
+        */
+        $imageSource = function ($value) {
+
+            $value = trim((string) $value);
+
+            if ($value === '') {
+                return null;
+            }
+
+            /*
+            * Already a base64 data image.
+            */
+            if (strpos($value, 'data:') === 0) {
+                return $value;
+            }
+
+            $pathOnly = parse_url($value, PHP_URL_PATH);
+
+            $relative = ltrim(
+                (string) ($pathOnly ?: $value),
+                '/'
+            );
+
+            $localPath = public_path($relative);
+
+            /*
+            * Local file → Base64.
+            * Most reliable option for DomPDF.
+            */
+            if (is_file($localPath)) {
+
+                $mime = mime_content_type($localPath)
+                    ?: 'image/jpeg';
+
+                return 'data:'
+                    . $mime
+                    . ';base64,'
+                    . base64_encode(
+                        file_get_contents($localPath)
+                    );
+            }
+
+            /*
+            * Existing external URL.
+            */
+            if (
+                strpos($value, 'http://') === 0
+                || strpos($value, 'https://') === 0
+            ) {
+                return $value;
+            }
+
+            /*
+            * Relative public URL.
+            */
+            return url($relative);
+        };
+
+        /*
+        |--------------------------------------------------------------------------
+        | Logos
+        |--------------------------------------------------------------------------
+        */
+        $logo = $imageSource(
+            'argon/img/encore/logo.png'
+        );
+
+        $footerLogo = $imageSource(
+            'argon/img/encore/logo_dark.png'
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Check Images
+        |--------------------------------------------------------------------------
+        */
+        $checkFront = null;
+        $checkBack  = null;
+
+        if ($type === 'check') {
+
+            $checkFront = $imageSource(
+                $payment->check_front ?? null
+            );
+
+            $checkBack = $imageSource(
+                $payment->check_back ?? null
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Other Payment Receipt / Proof Images
+        |--------------------------------------------------------------------------
+        */
+        $paymentReceiptImage = null;
+        $paymentReceiptImageBack = null;
+
+        if ($type === 'venmo') {
+
+            $paymentReceiptImage = $imageSource(
+                $payment->venmo_receipt ?? null
+            );
+
+        } elseif ($type === 'paypal') {
+
+            $paymentReceiptImage = $imageSource(
+                $payment->paypal_receipt ?? null
+            );
+
+        } elseif ($type === 'other') {
+
+            $paymentReceiptImage = $imageSource(
+                $payment->document_url
+                ?? $payment->receipt
+                ?? $payment->other_receipt
+                ?? $payment->file
+                ?? null
+            );
+
+            $paymentReceiptImageBack = $imageSource(
+                $payment->document_url_back ?? null
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | PDF Data
+        |--------------------------------------------------------------------------
+        */
+        $data = [
+            'logo'        => $logo,
+            'footer_logo' => $footerLogo,
+
+            'order'             => $order,
+            'order_number'      => $order->order_no,
+            'organization_name' => $organizationName,
+            'customer_name'     => $customerName,
+
+            'customer_email' =>
+                $order->email
+                ?? optional($order->contactDetails)->email
+                ?? '',
+
+            'customer_phone' =>
+                $order->phone_no
+                ?? optional($order->contactDetails)->phone_no
+                ?? '',
+
+            'customer_street'  => $order->street ?? '',
+            'customer_city'    => $order->city ?? '',
+            'customer_state'   => $order->state ?? '',
+            'customer_postal'  => $order->postal_code ?? '',
+            'customer_country' => $order->country ?? '',
+
+            'order_items' => $orderItems,
+
+            /*
+            * Selected payment
+            */
+            'payment_method'       => $paymentMethod,
+            'transaction_id'       => $transactionId,
+            'payment_status'       => $paymentStatus,
+            'payment_status_color' => $paymentStatusColor,
+
+            'payment_date' =>
+                optional($payment->created_at)->format('m/d/Y')
+                ?? now()->format('m/d/Y'),
+
+            'payment_time' =>
+                optional($payment->created_at)->format('H:i:s')
+                ?? now()->format('H:i:s'),
+
+            'paid_amount'    => $paymentAmount,
+            'processing_fee' => $processingFee,
+
+            /*
+            * Invoice
+            */
+            'sub_total'            => $subTotal,
+            'artwork'              => $artwork,
+            'discount_type'        => (int) ($order->discountType ?? 0),
+            'discount'             => $discount,
+            'discount_amount'      => $discountAmount,
+            'total_invoice_amount' => $totalInvoiceAmount,
+
+            'sales_tax_rate' =>
+                $order->sales_tax_rate ?? null,
+
+            'sales_tax' =>
+                (float) ($order->sales_tax ?? 0),
+
+            'shipping_fee' =>
+                (float) ($order->shipping ?? 0),
+
+            'order_total' => $orderTotal,
+
+            /*
+            * Payment summary as of this transaction
+            */
+            'total_paid'                 => $totalPaid,
+            'balance_remaining'          => $balanceRemaining,
+            'order_payment_status'       => $orderPaymentStatus,
+            'order_payment_status_color' => $orderPaymentStatusColor,
+
+            /*
+            * Card
+            */
+            'card_last_digits' =>
+                $type === 'card'
+                    ? ($payment->card_last_digits ?? null)
+                    : null,
+
+            'card_owner' =>
+                $type === 'card'
+                    ? ($payment->name_on_card ?? null)
+                    : null,
+
+            /*
+            * Receipt images
+            */
+            'check_front' => $checkFront,
+            'check_back'  => $checkBack,
+
+            'payment_receipt_image' =>
+                $paymentReceiptImage,
+
+            'payment_receipt_image_back' =>
+                $paymentReceiptImageBack,
+        ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | Generate PDF
+        |--------------------------------------------------------------------------
+        */
+        $pdf = Pdf::loadView(
+            'pages.order_management.payment.payment_receipt_pdf',
+            $data
+        )->setOptions([
+            'isRemoteEnabled'      => true,
+            'isHtml5ParserEnabled' => true,
+            'defaultFont'          => 'Arial',
+        ]);
+
+        $pdf->setPaper('A4', 'portrait');
+
+        /*
+        |--------------------------------------------------------------------------
+        | File Name
+        |--------------------------------------------------------------------------
+        */
+        $safeOrderNo = preg_replace(
+            '/[^A-Za-z0-9\-_]/',
+            '_',
+            (string) $order->order_no
+        );
+
+        $safeTransactionId = preg_replace(
+            '/[^A-Za-z0-9\-_]/',
+            '_',
+            (string) $transactionId
+        );
+
+        $fileName =
+            'Payment_Receipt_'
+            . $safeOrderNo
+            . '_'
+            . $safeTransactionId
+            . '.pdf';
+
+        /*
+        |--------------------------------------------------------------------------
+        | Download
+        |--------------------------------------------------------------------------
+        */
+        return $pdf->download($fileName);
+    }
 }

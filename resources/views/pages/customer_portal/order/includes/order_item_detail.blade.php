@@ -746,7 +746,9 @@
                                                     @endphp
 
                                                     <table class="no-border-table player-number-table"
-                                                        data-item-id="{{ $order->orderItems->first()->id }}">
+                                                        data-item-id="{{ $order->orderItems->first()->id }}"
+                                                        data-order-detail-id="{{ $ProductItemDetail->id }}"
+                                                        data-locked="{{ $order->orderItems->first()->order_status_id == 1 ? '0' : '1' }}">
 
                                                         @foreach ($allNumberRows as $rowIndex => $numberRow)
                                                             @php
@@ -760,7 +762,8 @@
                                                                     <td>
                                                                         <input
                                                                             oninput="limitDigits(this, 6); NumberQtyCountUpdate({{ $ProductItemDetail->id }}, {{ $order->orderItems->first()->id }});"
-                                                                            class="form-control boxed-input no-spinner num-input-count-{{ $ProductItemDetail->id }}"
+                                                                            class="form-control boxed-input no-spinner numseq-input num-input-count-{{ $ProductItemDetail->id }}"
+                                                                            data-order-detail-id="{{ $ProductItemDetail->id }}"
                                                                             value="{{ $ProductItemDetail->{'numseq_'.$item} }}"
                                                                             name="order[{{ $order->id }}][{{ $order->orderItems->first()->id }}][{{ $ProductItemDetail->id }}][numseq_{{ $item }}]"
                                                                             type="number"

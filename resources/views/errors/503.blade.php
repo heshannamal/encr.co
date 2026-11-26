@@ -151,9 +151,9 @@
         <span>✨ Launching soon</span>
 
         <!-- Right Side -->
-        <a href="https://wa.me/94778816299" target="_blank" style="color: #25D366; text-decoration: none;">
+        {{-- <a href="https://wa.me/94778816299" target="_blank" style="color: #25D366; text-decoration: none;">
             <i class="fab fa-whatsapp"></i> Contact Admin
-        </a>
+        </a> --}}
     </div>
 
       {{-- <div class="socials">

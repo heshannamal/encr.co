@@ -28,7 +28,9 @@ class PmSectionSubDiscussion extends Model implements Auditable
         'user_id',
         'sort_index',
         'email_sent',
-        'email_sent_at'
+        'email_sent_at',
+        'studio_status',
+        'order_item_id',
     ];
 
     protected $appends = ['discussion_type'];

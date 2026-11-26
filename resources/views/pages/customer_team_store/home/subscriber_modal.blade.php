@@ -4,6 +4,20 @@
     font-size: 1.5rem;
     opacity: 1;
     background-color: transparent;
+    background-image: none;
+    line-height: 1;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+#modalForm.was-validated .form-control:not([required]):valid {
+    border-color: #dee2e6;
+    background-image: none;
+    padding-right: .75rem;
+}
+#modalForm.was-validated .form-control:not([required]):valid:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
 }
 </style>
 <!-- Modal -->
@@ -19,46 +33,52 @@
                         Fill out the form below and our team will reach out shortly.
                     </p>
                 </div>
-                <button type="button" class="btn-close" aria-hidden="true" data-bs-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" id="newsletterModalClose" aria-label="Close">&times;</button>
             </div>
 
             <!-- Body -->
             <div class="modal-body">
 
-                <form id="modalForm">
+                <form id="modalForm" novalidate>
 
                     <!-- Parent Information -->
                     <div class="mb-4">
                         <h6 class="text-uppercase text-muted mb-3">Parent Information</h6>
 
                         <div class="mb-3">
-                            <label for="parent_name" class="form-label">Parent Name</label>
+                            <label for="parent_name" class="form-label">Parent Name <span class="text-danger">*</span></label>
                             <input
                                 id="parent_name"
                                 type="text"
                                 class="form-control form-control-lg"
                                 placeholder="John Doe"
+                                required
                             >
+                            <div class="invalid-feedback">Please enter the parent name.</div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="parent_email" class="form-label">Email Address</label>
+                            <label for="parent_email" class="form-label">Email Address <span class="text-danger">*</span></label>
                             <input
                                 id="parent_email"
                                 type="email"
                                 class="form-control form-control-lg"
                                 placeholder="john@example.com"
+                                required
                             >
+                            <div class="invalid-feedback">Please enter a valid email address.</div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="parent_cell" class="form-label">Cell Phone</label>
+                            <label for="parent_cell" class="form-label">Cell Phone <span class="text-danger">*</span></label>
                             <input
                                 id="parent_cell"
                                 type="text"
                                 class="form-control form-control-lg"
                                 placeholder="(555) 123-4567"
+                                required
                             >
+                            <div class="invalid-feedback">Please enter a cell phone number.</div>
                         </div>
                     </div>
 
@@ -139,6 +159,12 @@ $(document).ready(function () {
     const API_TYPE = "{{ env('API_TYPE') }}";
 
     const modal = new bootstrap.Modal(document.getElementById('newsletterModal'));
+    const form = document.getElementById('modalForm');
+
+    $('#newsletterModalClose').on('click', function () {
+        form.classList.remove('was-validated');
+        modal.hide();
+    });
 
     /* ----------------------------------------
        Open modal & prefill email
@@ -161,6 +187,7 @@ $(document).ready(function () {
         }
 
         $('#parent_email').val(email);
+        form.classList.remove('was-validated');
         modal.show();
     });
 
@@ -168,6 +195,16 @@ $(document).ready(function () {
        Submit modal form
     ----------------------------------------- */
     $('#submitButton').on('click', function () {
+
+        $('#modalForm input[required]').each(function () {
+            this.value = this.value.trim();
+        });
+
+        form.classList.add('was-validated');
+        if (!form.checkValidity()) {
+            $('#modalForm :invalid').first().focus();
+            return;
+        }
 
         const $btn = $(this);
         $btn.prop('disabled', true).text('Sending...');
@@ -181,7 +218,6 @@ $(document).ready(function () {
             player_rec: $('#player_rec').val(),
             other_comments: $('#other_comments').val(),
             platform: '{{ $store->store_name }}',
-            team_store_id: '{{ $store->id }}',
             note: 'Submitted via Team Store contact modal',
             type: 1,
             team_store_id: {{ $store->id }}
@@ -210,7 +246,8 @@ $(document).ready(function () {
                     });
 
                     $('#modalForm').find('input, textarea').val('');
-                    $('#newsletter-email').val('');
+                    $('#team-store-subscriber').val('');
+                    form.classList.remove('was-validated');
 
                     modal.hide();
                 } else {
@@ -228,7 +265,10 @@ $(document).ready(function () {
             error: function (xhr) {
                 let message = 'API not reachable or configuration invalid.';
 
-                if (xhr.responseJSON && xhr.responseJSON.message) {
+                if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                    const firstError = Object.values(xhr.responseJSON.errors)[0];
+                    message = Array.isArray(firstError) ? firstError[0] : firstError;
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
                     message = xhr.responseJSON.message;
                 }
 

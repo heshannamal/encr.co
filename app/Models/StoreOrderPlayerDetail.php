@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 
@@ -11,6 +12,9 @@ class StoreOrderPlayerDetail extends Model implements Auditable
 {
     use HasFactory;
     use AuditableTrait;
+    use SoftDeletes;
+
+    protected $fillable = ['is_refunded'];
 
     public function setPlayerNumberAttribute($value)
     {
@@ -118,9 +122,9 @@ class StoreOrderPlayerDetail extends Model implements Auditable
 
         $store = $this->storeDetails;
         $product = $this->productDetails;
-        $orderItem = $this->orderItemDetails;
+        $orderItem = $this->orderItemDetails()->withTrashed()->first();
         if ($store) {
-            $auditData['source'] = json_encode(['Store' => $store->id, 'Order Item' => $orderItem->id, 'Product' => $product->id]);
+            $auditData['source'] = json_encode(['Store' => $store->id, 'Order Item' => $orderItem?->id, 'Product' => $product?->id]);
         }
 
         return $auditData;

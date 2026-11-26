@@ -636,6 +636,39 @@ class USPSController extends Controller
         return is_array($decoded) ? $decoded : [];
     }
 
+
+    /**
+     * Resolve the original USPS label request UUID for a transaction whose
+     * result is uncertain.
+     *
+     * Prefer the UUID saved on usps_shipment_profiles. Fall back to the latest
+     * review/submitting attempt so older uncertain records can still be recovered.
+     */
+    private function reviewRequiredRequestUuid($profile, $shipmentId)
+    {
+        $profileUuid = trim((string) ($profile->usps_label_request_uuid ?? ''));
+
+        if ($profileUuid !== '') {
+            return $profileUuid;
+        }
+
+        $attempt = UspsLabelAttempt::query()
+            ->where('store_shipment_id', (int) $shipmentId)
+            ->whereIn('state', ['review_required', 'submitting'])
+            ->whereNotNull('request_uuid')
+            ->orderByDesc('id')
+            ->first();
+
+        if (!$attempt) {
+            return null;
+        }
+
+        $uuid = trim((string) $attempt->request_uuid);
+
+        return $uuid !== '' ? $uuid : null;
+    }
+
+
     private function profileContainers($profile)
     {
         $metadata = $this->profileMetadata($profile);
@@ -1263,6 +1296,32 @@ $metadata = $profile->label_metadata;
             'min_mailing_date' => $today,
             'legacy_label_url' => $legacyLabelUrl,
             'tracking_url' => $trackingUrl,
+            'review_request_uuid' => $this->reviewRequiredRequestUuid(
+                $profile,
+                $shipment->id
+            ),
+            'can_review_recover' => in_array(
+                    $profile->status,
+                    ['review_required', 'creating'],
+                    true
+                ) &&
+                !empty(
+                    $this->reviewRequiredRequestUuid(
+                        $profile,
+                        $shipment->id
+                    )
+                ),
+            'can_review_cancel_refund' => in_array(
+                    $profile->status,
+                    ['review_required', 'creating'],
+                    true
+                ) &&
+                !empty(
+                    $this->reviewRequiredRequestUuid(
+                        $profile,
+                        $shipment->id
+                    )
+                ),
             'can_edit_recipient' => $profile->status === 'draft' &&
                 empty($shipment->tracking_number) &&
                 empty($shipment->label_url),
@@ -1349,14 +1408,58 @@ $metadata = $profile->label_metadata;
     {
         $this->authorizeUspsLabelManagement($request);
 
-        $data = $request->validate([
-            'shipment_ids' => 'required|array|min:1|max:25',
-            'shipment_ids.*' => 'required|integer|distinct|exists:store_shipments,id',
-        ]);
+        $shipmentIds = collect(
+            explode(',', (string) $request->query('ids', ''))
+        )
+            ->map(function ($id) {
+                return (int) trim($id);
+            })
+            ->filter(function ($id) {
+                return $id > 0;
+            })
+            ->unique()
+            ->take(25)
+            ->values()
+            ->all();
+
+        if (empty($shipmentIds)) {
+            return back()->with(
+                'error',
+                'Please select at least one shipment.'
+            );
+        }
+
+        $existingIds = StoreShipment::query()
+            ->whereIn('id', $shipmentIds)
+            ->pluck('id')
+            ->map(function ($id) {
+                return (int) $id;
+            })
+            ->all();
+
+        $shipmentIds = array_values(
+            array_filter(
+                $shipmentIds,
+                function ($id) use ($existingIds) {
+                    return in_array(
+                        (int) $id,
+                        $existingIds,
+                        true
+                    );
+                }
+            )
+        );
+
+        if (empty($shipmentIds)) {
+            return back()->with(
+                'error',
+                'No selected shipment records were found.'
+            );
+        }
 
         return $this->renderUspsLabelManagerPage(
             $request,
-            $data['shipment_ids'],
+            $shipmentIds,
             true
         );
     }
@@ -1418,6 +1521,32 @@ $metadata = $profile->label_metadata;
             'refund_status' => $profile->refund_status,
             'refund_dispute_id' => $profile->refund_dispute_id,
             'has_saved_pdf' => !empty($profile->label_path),
+            'review_request_uuid' => $this->reviewRequiredRequestUuid(
+                $profile,
+                $shipment->id
+            ),
+            'can_review_recover' => in_array(
+                    $profile->status,
+                    ['review_required', 'creating'],
+                    true
+                ) &&
+                !empty(
+                    $this->reviewRequiredRequestUuid(
+                        $profile,
+                        $shipment->id
+                    )
+                ),
+            'can_review_cancel_refund' => in_array(
+                    $profile->status,
+                    ['review_required', 'creating'],
+                    true
+                ) &&
+                !empty(
+                    $this->reviewRequiredRequestUuid(
+                        $profile,
+                        $shipment->id
+                    )
+                ),
             'legacy_label_url' => $legacyLabelUrl,
             'can_edit_recipient' => $profile->status === 'draft' && empty($shipment->tracking_number) && empty($shipment->label_url),
             'can_edit_package' => $profile->status === 'created' && !empty($shipment->tracking_number) && (int) $profile->suppress_postage === 1,
@@ -1434,6 +1563,14 @@ $metadata = $profile->label_metadata;
                 'reprint' => route('usps.label.reprint', ['id' => $shipment->id]),
                 'cancel_refund' => route('usps.label.cancel-refund', ['id' => $shipment->id]),
                 'replace' => route('usps.label.replace', ['id' => $shipment->id]),
+                'review_recover' => route(
+                    'usps.label.review-recover',
+                    ['id' => $shipment->id]
+                ),
+                'review_cancel_refund' => route(
+                    'usps.label.review-cancel-refund',
+                    ['id' => $shipment->id]
+                ),
             ],
         ]);
     }
@@ -1604,6 +1741,316 @@ $metadata = $profile->label_metadata;
             return back()->with('error', 'USPS label edit could not be confirmed: ' . $e->getMessage());
         }
     }
+
+
+    /**
+     * REVIEW REQUIRED:
+     * Ask USPS for the original label by the X-Idempotency-Key used on the
+     * uncertain create request. This does NOT purchase a second label.
+     */
+    public function recoverReviewRequiredLabel(Request $request, $id)
+    {
+        $this->authorizeUspsLabelManagement($request);
+
+        $shipment = StoreShipment::findOrFail((int) $id);
+        $profile = $this->ensureUspsLabelProfile($shipment);
+
+        if (!in_array($profile->status, ['review_required', 'creating'], true)) {
+            return back()->with(
+                'warning',
+                'This shipment is not currently waiting for USPS transaction review.'
+            );
+        }
+
+        if (
+            !empty($shipment->tracking_number) ||
+            !empty($profile->label_path)
+        ) {
+            return back()->with(
+                'warning',
+                'A tracking number or saved label already exists for this shipment.'
+            );
+        }
+
+        $requestUuid = $this->reviewRequiredRequestUuid(
+            $profile,
+            $shipment->id
+        );
+
+        if (empty($requestUuid)) {
+            return back()->with(
+                'error',
+                'The original USPS request UUID is missing. The transaction cannot be recovered automatically.'
+            );
+        }
+
+        try {
+            $result = $this->uspsService
+                ->reprintDomesticLabelByIdempotencyKey(
+                    $requestUuid,
+                    true
+                );
+
+            if (
+                empty($result['trackingNumber']) ||
+                empty($result['labelPath'])
+            ) {
+                throw new \RuntimeException(
+                    'USPS responded to the recovery request but did not return a complete tracking number and PDF.'
+                );
+            }
+
+            DB::transaction(function () use (
+                $shipment,
+                $requestUuid,
+                $result
+            ) {
+                $freshShipment = StoreShipment::query()
+                    ->whereKey($shipment->id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                $profile = UspsShipmentProfile::query()
+                    ->where('store_shipment_id', $shipment->id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                /*
+                 * Never overwrite a label that another request may have
+                 * successfully reconciled while this recovery request was running.
+                 */
+                if (
+                    !empty($freshShipment->tracking_number) ||
+                    !empty($profile->label_path)
+                ) {
+                    throw new \RuntimeException(
+                        'This label was already recovered or created by another request.'
+                    );
+                }
+
+                $freshShipment->tracking_object_id =
+                    $result['trackingNumber'];
+
+                $freshShipment->tracking_number =
+                    $result['trackingNumber'];
+
+                $freshShipment->tracking_url = null;
+
+                $freshShipment->label_url = route(
+                    'usps.label.view',
+                    ['id' => $shipment->id]
+                );
+
+                $freshShipment->save();
+
+                $metadata = $this->mergeLocalContainersIntoMetadata(
+                    $profile,
+                    $this->profileContainers($profile),
+                    isset($result['labelMetadata'])
+                        && is_array($result['labelMetadata'])
+                            ? $result['labelMetadata']
+                            : []
+                );
+
+                $profile->fill([
+                    'status' => 'created',
+                    'usps_label_request_uuid' => $requestUuid,
+                    'label_path' => $result['labelPath'],
+                    'actual_postage' => isset($result['postage'])
+                        && is_numeric($result['postage'])
+                            ? $result['postage']
+                            : $profile->actual_postage,
+                    'label_metadata' => $metadata,
+                    'label_created_at' => $profile->label_created_at ?: now(),
+
+                    /*
+                     * USPS considers the UUID recovery call a reprint request,
+                     * so count it against the documented maximum of 3.
+                     */
+                    'reprint_count' => ((int) $profile->reprint_count) + 1,
+                ]);
+
+                $profile->save();
+
+                $attempt = UspsLabelAttempt::query()
+                    ->where('store_shipment_id', $shipment->id)
+                    ->where('request_uuid', $requestUuid)
+                    ->lockForUpdate()
+                    ->orderByDesc('id')
+                    ->first();
+
+                if ($attempt) {
+                    $attempt->fill([
+                        'state' => 'succeeded',
+                        'tracking_number' => $result['trackingNumber'],
+                        'error_code' => null,
+                        'error_message' => null,
+                    ]);
+                    $attempt->save();
+                }
+            });
+
+            return back()->with(
+                'success',
+                'USPS transaction verified. The existing USPS label was recovered successfully; no second label was purchased.'
+            );
+
+        } catch (\Throwable $e) {
+            $profile = UspsShipmentProfile::query()
+                ->where('store_shipment_id', $shipment->id)
+                ->first();
+
+            if ($profile) {
+                $profile->status = 'review_required';
+                $profile->save();
+            }
+
+            $attempt = UspsLabelAttempt::query()
+                ->where('store_shipment_id', $shipment->id)
+                ->where('request_uuid', $requestUuid)
+                ->orderByDesc('id')
+                ->first();
+
+            if ($attempt) {
+                $attempt->error_message = mb_substr(
+                    $e->getMessage(),
+                    0,
+                    400
+                );
+                $attempt->save();
+            }
+
+            Log::warning('USPS review-required recovery failed', [
+                'store_shipment_id' => $shipment->id,
+                'request_uuid' => $requestUuid,
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()->with(
+                'error',
+                'USPS could not recover the original label. The shipment remains REVIEW REQUIRED and was not recreated. ' .
+                $e->getMessage()
+            );
+        }
+    }
+
+
+    /**
+     * REVIEW REQUIRED:
+     * Cancel/refund the uncertain original USPS request by its original UUID.
+     *
+     * After USPS accepts this action the existing Prepare Replacement action
+     * can be used to return the shipment to a fresh draft and buy a new label.
+     */
+    public function cancelReviewRequiredLabel(Request $request, $id)
+    {
+        $this->authorizeUspsLabelManagement($request);
+
+        $shipment = StoreShipment::findOrFail((int) $id);
+        $profile = $this->ensureUspsLabelProfile($shipment);
+
+        if (!in_array($profile->status, ['review_required', 'creating'], true)) {
+            return back()->with(
+                'warning',
+                'This shipment is not currently waiting for USPS transaction review.'
+            );
+        }
+
+        if (!empty($shipment->tracking_number)) {
+            return back()->with(
+                'warning',
+                'A tracking number already exists. Use the normal Cancel / Refund action instead.'
+            );
+        }
+
+        $requestUuid = $this->reviewRequiredRequestUuid(
+            $profile,
+            $shipment->id
+        );
+
+        if (empty($requestUuid)) {
+            return back()->with(
+                'error',
+                'The original USPS request UUID is missing. USPS cancellation/refund cannot be submitted automatically.'
+            );
+        }
+
+        try {
+            $reply = $this->uspsService
+                ->cancelOrRefundLabelByIdempotencyKey(
+                    $requestUuid
+                );
+
+            $uspsStatus = strtoupper(
+                (string) ($reply['status'] ?? '')
+            );
+
+            $disputeId = isset($reply['disputeId'])
+                ? (string) $reply['disputeId']
+                : null;
+
+            $isCanceled = $uspsStatus === 'CANCELED';
+
+            /*
+             * If USPS accepted the request but returned a different success
+             * status, preserve it as a refund request rather than assuming
+             * that the original postage never existed.
+             */
+            $profile->fill([
+                'status' => $isCanceled
+                    ? 'canceled'
+                    : 'refund_requested',
+
+                'refund_status' => $uspsStatus !== ''
+                    ? $uspsStatus
+                    : (
+                        $disputeId
+                            ? 'REFUND_REQUESTED'
+                            : 'USPS_ACKNOWLEDGED'
+                    ),
+
+                'refund_dispute_id' => $disputeId,
+            ]);
+
+            $profile->save();
+
+            Log::info('USPS review-required UUID cancellation/refund accepted', [
+                'store_shipment_id' => $shipment->id,
+                'request_uuid' => $requestUuid,
+                'status' => $uspsStatus,
+                'dispute_id' => $disputeId,
+            ]);
+
+            return back()->with(
+                'success',
+                $isCanceled
+                    ? 'USPS confirmed the uncertain original label was canceled. You can now Prepare Replacement and create a new label safely.'
+                    : 'USPS accepted the cancellation/refund request for the uncertain original label. Dispute ID: ' .
+                        ($disputeId ?: 'not returned') .
+                        '. You can use Prepare Replacement when appropriate.'
+            );
+
+        } catch (\Throwable $e) {
+            $profile->status = 'review_required';
+            $profile->save();
+
+            Log::warning(
+                'USPS review-required UUID cancellation/refund failed',
+                [
+                    'store_shipment_id' => $shipment->id,
+                    'request_uuid' => $requestUuid,
+                    'message' => $e->getMessage(),
+                ]
+            );
+
+            return back()->with(
+                'error',
+                'USPS did not confirm cancellation/refund of the uncertain original request. The shipment remains REVIEW REQUIRED. ' .
+                $e->getMessage()
+            );
+        }
+    }
+
 
     public function reprintLabel(Request $request, $id)
     {
@@ -2201,243 +2648,606 @@ $metadata = $profile->label_metadata;
     }
 
     public function showImportForm()
-
     {
+        return view('pages.stores.usps_labels.import', [
+            'previewRows' => null,
+            'detectedHeaders' => [],
+            'sourceFileName' => null,
+        ]);
+    }
 
-        return view('pages.stores.usps_labels.import');
+    private function normalizeUspsImportHeader($value)
+    {
+        $value = preg_replace('/^\xEF\xBB\xBF/', '', (string) $value);
+        $value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $value = strtolower(trim($value));
+        $value = str_replace(['#', '/', '\\', '-', '_', '.'], ' ', $value);
+        $value = preg_replace('/[^a-z0-9 ]+/', ' ', $value);
+        return trim(preg_replace('/\s+/', ' ', $value));
+    }
 
+    private function findUspsImportColumn(array $normalizedMap, array $aliases)
+    {
+        foreach ($aliases as $alias) {
+            $key = $this->normalizeUspsImportHeader($alias);
+            if (isset($normalizedMap[$key])) {
+                return $normalizedMap[$key];
+            }
+        }
+
+        return null;
+    }
+
+    private function cleanUspsImportCost($value)
+    {
+        $value = trim((string) $value);
+        if ($value === '') {
+            return 0.00;
+        }
+
+        $clean = preg_replace('/[^0-9.\-]/', '', $value);
+        return is_numeric($clean) ? round((float) $clean, 2) : 0.00;
+    }
+
+    private function importedUspsEstimatedDays($serviceType, $existing = null)
+    {
+        $service = strtoupper(trim((string) $serviceType));
+
+        if (strpos($service, 'EXPRESS') !== false) {
+            return '1-2 Days';
+        }
+
+        if (strpos($service, 'PRIORITY') !== false) {
+            return '1-3 Days';
+        }
+
+        if (strpos($service, 'GROUND') !== false) {
+            return '2-5 Days';
+        }
+
+        return $existing ?: '1-3 Days';
     }
 
     public function import(Request $request)
-
     {
-
         $request->validate([
-
-            'xlsx_file' => ['required'],
-
+            'xlsx_file' => ['required', 'file', 'mimes:xlsx,xls,csv,txt', 'max:20480'],
         ]);
 
-        $errors = [];
-
-        $successCount = 0;
-
-        $skippedCount = 0;
-
-        $updatedCount = 0;
-
         try {
-
-            $spreadsheet = IOFactory::load($request->file('xlsx_file')->getRealPath());
+            $spreadsheet = IOFactory::load(
+                $request->file('xlsx_file')->getRealPath()
+            );
 
             $sheet = $spreadsheet->getActiveSheet();
-
             $rows = $sheet->toArray(null, true, true, true);
 
-            if (count($rows) < 2) {
-
-                return back()->with('error', 'Excel file is empty.');
-
+            if (empty($rows)) {
+                return back()->with('error', 'The uploaded file is empty.');
             }
 
-            $headerRow = array_shift($rows);
+            $headerRowKey = null;
+            $headerRow = null;
 
-            $map = [];
+            foreach ($rows as $rowKey => $candidateRow) {
+                $candidateHeaders = [];
+
+                foreach ($candidateRow as $column => $heading) {
+                    $normalized = $this->normalizeUspsImportHeader($heading);
+
+                    if ($normalized !== '') {
+                        $candidateHeaders[$normalized] = $column;
+                    }
+                }
+
+                if (
+                    $this->findUspsImportColumn(
+                        $candidateHeaders,
+                        ['Reference Number', 'Reference #', 'Customer Reference Number']
+                    ) !== null
+                ) {
+                    $headerRowKey = $rowKey;
+                    $headerRow = $candidateRow;
+                    break;
+                }
+            }
+
+            if ($headerRowKey === null || !$headerRow) {
+                return back()->with(
+                    'error',
+                    'Could not find the USPS header row. A Reference Number column is required.'
+                );
+            }
+
+            $normalizedMap = [];
+            $detectedHeaders = [];
 
             foreach ($headerRow as $column => $heading) {
-
                 $heading = trim((string) $heading);
 
-                if ($heading !== '') {
-
-                    $map[$heading] = $column;
-
+                if ($heading === '') {
+                    continue;
                 }
 
+                $detectedHeaders[] = $heading;
+                $normalizedMap[
+                    $this->normalizeUspsImportHeader($heading)
+                ] = $column;
             }
 
-            $requiredColumns = [
-
-                'Reference Number',
-
-                'Tracking Number',
-
-                'Service Type',
-
-                'Cost',
-
-                'Date',
-
+            $columns = [
+                'reference_number' => $this->findUspsImportColumn(
+                    $normalizedMap,
+                    [
+                        'Reference Number',
+                        'Reference #',
+                        'Customer Reference Number',
+                        'Customer Reference',
+                    ]
+                ),
+                'tracking_number' => $this->findUspsImportColumn(
+                    $normalizedMap,
+                    [
+                        'Tracking Number',
+                        'Tracking No',
+                        'Tracking #',
+                        'Label / Tracking Number',
+                        'Label Tracking Number',
+                        'Label Number',
+                    ]
+                ),
+                'service_type' => $this->findUspsImportColumn(
+                    $normalizedMap,
+                    ['Service Type', 'Service', 'Mail Class']
+                ),
+                'cost' => $this->findUspsImportColumn(
+                    $normalizedMap,
+                    ['Cost', 'Postage', 'Amount', 'Label Cost']
+                ),
+                'date' => $this->findUspsImportColumn(
+                    $normalizedMap,
+                    ['Date', 'Ship Date', 'Shipping Date', 'Label Date']
+                ),
             ];
 
-            foreach ($requiredColumns as $columnName) {
+            if ($columns['reference_number'] === null) {
+                return back()->with(
+                    'error',
+                    'Missing Reference Number column.'
+                );
+            }
 
-                if (!isset($map[$columnName])) {
+            $previewRows = [];
+            $previewIndex = 0;
 
-                    return back()->with('error', "Missing required column: {$columnName}");
-
+            foreach ($rows as $rowKey => $row) {
+                if ($rowKey == $headerRowKey) {
+                    continue;
                 }
 
+                $referenceNumber = trim((string) (
+                    $row[$columns['reference_number']] ?? ''
+                ));
+
+                $trackingNumber = $columns['tracking_number'] !== null
+                    ? trim((string) ($row[$columns['tracking_number']] ?? ''))
+                    : '';
+
+                $serviceType = $columns['service_type'] !== null
+                    ? trim((string) ($row[$columns['service_type']] ?? ''))
+                    : '';
+
+                $cost = $columns['cost'] !== null
+                    ? $this->cleanUspsImportCost(
+                        $row[$columns['cost']] ?? ''
+                    )
+                    : 0.00;
+
+                $date = $columns['date'] !== null
+                    ? $this->parseUspsDate(
+                        $row[$columns['date']] ?? null
+                    )
+                    : null;
+
+                if (
+                    $referenceNumber === '' &&
+                    $trackingNumber === '' &&
+                    $serviceType === '' &&
+                    (float) $cost == 0.0 &&
+                    empty($date)
+                ) {
+                    continue;
+                }
+
+                $storeOrder = $referenceNumber !== ''
+                    ? StoreOrder::where('order_no', $referenceNumber)->first()
+                    : null;
+
+                $shipment = $storeOrder
+                    ? StoreShipment::where(
+                        'store_order_no',
+                        $storeOrder->order_no
+                    )->first()
+                    : null;
+
+                $profile = null;
+
+                if (
+                    $shipment &&
+                    Schema::hasTable('usps_shipment_profiles')
+                ) {
+                    $profile = UspsShipmentProfile::where(
+                        'store_shipment_id',
+                        $shipment->id
+                    )->first();
+                }
+
+                if ($trackingNumber === '' && $shipment) {
+                    $trackingNumber = (string) $shipment->tracking_number;
+                }
+
+                if ($serviceType === '' && $shipment) {
+                    $serviceType = (string) (
+                        $shipment->selected_rate ?: $shipment->service
+                    );
+                }
+
+                if ((float) $cost == 0.0 && $shipment) {
+                    $cost = (float) $shipment->rate;
+                }
+
+                $previewRows[] = [
+                    'index' => $previewIndex,
+                    'source_row' => (int) $rowKey,
+                    'reference_number' => $referenceNumber,
+                    'tracking_number' => $trackingNumber,
+                    'service_type' => $serviceType,
+                    'cost' => number_format((float) $cost, 2, '.', ''),
+                    'date' => $date,
+                    'order_exists' => (bool) $storeOrder,
+                    'shipment_exists' => (bool) $shipment,
+                    'existing_shipment_id' => $shipment ? (int) $shipment->id : null,
+                    'existing_label' => $profile && !empty($profile->label_path),
+                    'current_status' => $profile ? $profile->status : null,
+                ];
+
+                $previewIndex++;
             }
+
+            if (empty($previewRows)) {
+                return back()->with(
+                    'error',
+                    'No importable USPS rows were found in the uploaded file.'
+                );
+            }
+
+            return view('pages.stores.usps_labels.import', [
+                'previewRows' => $previewRows,
+                'detectedHeaders' => $detectedHeaders,
+                'sourceFileName' => $request->file('xlsx_file')->getClientOriginalName(),
+            ]);
+
+        } catch (\Throwable $e) {
+            return back()->with(
+                'error',
+                'Unable to read the import file: ' . $e->getMessage()
+            );
+        }
+    }
+
+    public function saveImportedLabels(Request $request)
+    {
+        $request->validate([
+            'rows' => ['required', 'array', 'min:1'],
+            'rows.*.include' => ['nullable'],
+            'rows.*.reference_number' => ['nullable', 'string', 'max:100'],
+            'rows.*.tracking_number' => ['nullable', 'string', 'max:100'],
+            'rows.*.service_type' => ['nullable', 'string', 'max:190'],
+            'rows.*.cost' => ['nullable', 'numeric', 'min:0'],
+            'rows.*.date' => ['nullable', 'date_format:Y-m-d'],
+            'label_files' => ['nullable', 'array'],
+            'label_files.*' => ['nullable', 'file', 'mimes:pdf', 'max:20480'],
+        ]);
+
+        $this->ensureUspsLabelTables();
+
+        $createdCount = 0;
+        $updatedCount = 0;
+        $labelCount = 0;
+        $skippedCount = 0;
+        $errors = [];
+
+        foreach ($request->input('rows', []) as $index => $row) {
+            if (empty($row['include'])) {
+                $skippedCount++;
+                continue;
+            }
+
+            $referenceNumber = trim((string) (
+                $row['reference_number'] ?? ''
+            ));
+
+            $trackingNumber = trim((string) (
+                $row['tracking_number'] ?? ''
+            ));
+
+            $serviceType = trim((string) (
+                $row['service_type'] ?? ''
+            ));
+
+            $cost = $this->cleanUspsImportCost(
+                $row['cost'] ?? 0
+            );
+
+            $date = $this->parseUspsDate(
+                $row['date'] ?? null
+            );
+
+            if ($referenceNumber === '') {
+                $errors[] = 'Row ' . ((int) $index + 1) . ': Reference Number is required.';
+                continue;
+            }
+
+            if ($trackingNumber === '') {
+                $errors[] = 'Order ' . $referenceNumber . ': Tracking Number is required.';
+                continue;
+            }
+
+            $storeOrder = StoreOrder::with(
+                'storeDetails',
+                'storeCustomer',
+                'OrderItems'
+            )
+                ->where('order_no', $referenceNumber)
+                ->first();
+
+            if (!$storeOrder) {
+                $errors[] = 'Order ' . $referenceNumber . ': Store order was not found.';
+                continue;
+            }
+
+            $labelFile = $request->file(
+                'label_files.' . $index
+            );
+
+            $newStoredPath = null;
+            $oldStoredPath = null;
 
             DB::beginTransaction();
 
-            foreach ($rows as $excelRowNumber => $row) {
+            try {
+                $shipment = StoreShipment::where(
+                    'store_order_no',
+                    $storeOrder->order_no
+                )->lockForUpdate()->first();
 
-                $rowNumber = $excelRowNumber + 1;
+                $isNew = !$shipment;
 
-                $referenceNumber = trim((string) ($row[$map['Reference Number']] ?? ''));
-
-                // Import only rows where Reference Number is not empty
-
-                if ($referenceNumber == '') {
-
-                    $skippedCount++;
-
-                    continue;
-
+                if (!$shipment) {
+                    $shipment = new StoreShipment();
+                    $shipment->store_order_no = $storeOrder->order_no;
+                    $shipment->store_id = $storeOrder->store_id;
+                    $shipment->shipping_name = trim(
+                        $storeOrder->first_name . ' ' .
+                        $storeOrder->last_name
+                    );
+                    $shipment->shipment_id =
+                        'USPS-IMPORT-' .
+                        preg_replace(
+                            '/[^A-Za-z0-9_-]/',
+                            '',
+                            $referenceNumber
+                        ) . '-' .
+                        uniqid();
                 }
 
-                $trackingNumber = trim((string) ($row[$map['Tracking Number']] ?? ''));
+                $trackingUrl =
+                    'https://tools.usps.com/go/TrackConfirmAction?tLabels=' .
+                    urlencode($trackingNumber);
 
-                $serviceType = trim((string) ($row[$map['Service Type']] ?? ''));
+                $shipment->carrier = 'USPS';
 
-                $cost = trim((string) ($row[$map['Cost']] ?? ''));
-
-                $shipmentID = 'USPS-' . $referenceNumber . '-' . time();
-
-                if ($trackingNumber == '') {
-
-                    $errors[] = "Row {$rowNumber}: Tracking Number is empty for order {$referenceNumber}.";
-
-                    continue;
-
+                if (empty($shipment->shipment_id)) {
+                    $shipment->shipment_id =
+                        'USPS-IMPORT-' .
+                        preg_replace(
+                            '/[^A-Za-z0-9_-]/',
+                            '',
+                            $referenceNumber
+                        ) . '-' .
+                        uniqid();
                 }
 
-                $trackingUrl = 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' . urlencode($trackingNumber);
+                $shipment->estimated_days =
+                    $this->importedUspsEstimatedDays(
+                        $serviceType,
+                        $shipment->estimated_days
+                    );
 
-                $storeOrder = StoreOrder::with('storeDetails','storeCustomer')->where('order_no', $referenceNumber)->first();
+                $shipment->selected_rate = $serviceType;
+                $shipment->service = $serviceType;
+                $shipment->rate = $cost;
+                $shipment->tracking_object_id = $trackingNumber;
+                $shipment->tracking_number = $trackingNumber;
+                $shipment->tracking_url = $trackingUrl;
+                $shipment->save();
 
-                if (!$storeOrder) {
+                $profile = $this->ensureUspsLabelProfile(
+                    $shipment,
+                    true
+                );
 
-                    $errors[] = "Row {$rowNumber}: Order with Reference Number {$referenceNumber} not found.";
+                $oldStoredPath = $profile->label_path;
 
-                    continue;
+                if ($labelFile) {
+                    $safeReference = preg_replace(
+                        '/[^A-Za-z0-9_-]/',
+                        '',
+                        $referenceNumber
+                    );
 
-                }
+                    $safeTracking = preg_replace(
+                        '/[^A-Za-z0-9_-]/',
+                        '',
+                        $trackingNumber
+                    );
 
-                $shipment = StoreShipment::where('store_order_no', $storeOrder->order_no)->first();
+                    $filename =
+                        'USPS-' .
+                        $safeReference . '-' .
+                        $safeTracking . '-' .
+                        date('YmdHis') .
+                        '.pdf';
 
-                if ($shipment) {
+                    $newStoredPath = $labelFile->storeAs(
+                        'usps-labels/imported',
+                        $filename,
+                        'local'
+                    );
 
-                    $shipment->carrier = 'USPS';
-
-                    $shipment->shipment_id = $shipmentID;
-
-                    $shipment->estimated_days = '1-3 Days';
-
-                    $shipment->selected_rate = $serviceType;
-
-                    $shipment->service = $serviceType;
-
-                    $shipment->rate = is_numeric($cost) ? $cost : 0;
-
-                    $shipment->tracking_number = $trackingNumber;
-
-                    $shipment->tracking_url = $trackingUrl;
-
-                    if(empty($shipment->label_url)) {
-
-                        $shipment->label_url = $trackingUrl;
-
+                    if (!$newStoredPath) {
+                        throw new \RuntimeException(
+                            'Unable to save the uploaded PDF label.'
+                        );
                     }
 
+                    $shipment->label_url = route(
+                        'usps.label.view',
+                        ['id' => $shipment->id]
+                    );
                     $shipment->save();
 
-                    $updatedCount++;
+                    $profile->status = 'created';
+                    $profile->label_path = $newStoredPath;
+                    $profile->label_created_at = $date
+                        ? \Carbon\Carbon::parse($date)->startOfDay()
+                        : now();
+                    $profile->suppress_postage = 0;
+                    $profile->reprint_count = 0;
 
+                    $labelCount++;
+                } elseif (!empty($profile->label_path)) {
+                    $shipment->label_url = route(
+                        'usps.label.view',
+                        ['id' => $shipment->id]
+                    );
+                    $shipment->save();
+
+                    if (in_array(
+                        $profile->status,
+                        ['draft', 'legacy', 'created'],
+                        true
+                    )) {
+                        $profile->status = 'created';
+                    }
                 } else {
+                    if (empty($shipment->label_url)) {
+                        $shipment->label_url = $trackingUrl;
+                        $shipment->save();
+                    }
 
-                    $newShipment = new StoreShipment();
+                    if (in_array(
+                        $profile->status,
+                        ['draft', 'legacy', 'created'],
+                        true
+                    )) {
+                        $profile->status = 'legacy';
+                    }
 
-                    $newShipment->store_order_no = $storeOrder->order_no;
-
-                    $newShipment->store_id = $storeOrder->store_id;
-
-                    $newShipment->shipping_name = $storeOrder->first_name . ' ' . $storeOrder->last_name;
-
-                    $newShipment->carrier = 'USPS';
-
-                    $newShipment->shipment_id = $shipmentID;
-
-                    $newShipment->estimated_days = '1-3 Days';
-
-                    $newShipment->selected_rate = $serviceType;
-
-                    $newShipment->service = $serviceType;
-
-                    $newShipment->rate = is_numeric($cost) ? $cost : 0;
-
-                    $newShipment->tracking_number = $trackingNumber;
-
-                    $newShipment->tracking_url = $trackingUrl;
-
-                    $newShipment->label_url = $trackingUrl; // because USPS old label PDF URL is unavailable
-
-                    $newShipment->save();
-
-                    $successCount++;
-
+                    $profile->suppress_postage = 0;
                 }
 
+                $profile->actual_postage = $cost;
+
+                if ($date) {
+                    $profile->mailing_date = $date;
+                }
+
+                $metadata = $this->profileMetadata($profile);
+
+                if (!isset($metadata['_local']) || !is_array($metadata['_local'])) {
+                    $metadata['_local'] = [];
+                }
+
+                $metadata['_local']['imported'] = true;
+                $metadata['_local']['imported_at'] = now()->toDateTimeString();
+                $metadata['_local']['import_source'] = 'USPS Shipping History';
+                $profile->label_metadata = $metadata;
+                $profile->save();
+
+                DB::commit();
+
+                if (
+                    $newStoredPath &&
+                    $oldStoredPath &&
+                    $oldStoredPath !== $newStoredPath &&
+                    strpos((string) $oldStoredPath, 'usps-labels/') === 0 &&
+                    Storage::disk('local')->exists($oldStoredPath)
+                ) {
+                    Storage::disk('local')->delete($oldStoredPath);
+                }
+
+                if ($isNew) {
+                    $createdCount++;
+                } else {
+                    $updatedCount++;
+                }
+
+            } catch (\Throwable $e) {
+                DB::rollBack();
+
+                if (
+                    $newStoredPath &&
+                    Storage::disk('local')->exists($newStoredPath)
+                ) {
+                    Storage::disk('local')->delete($newStoredPath);
+                }
+
+                $errors[] =
+                    'Order ' . $referenceNumber . ': ' . $e->getMessage();
             }
-
-            DB::commit();
-
-            $message = "{$successCount} created, {$updatedCount} updated, {$skippedCount} skipped because Reference Number was empty.";
-
-            if (!empty($errors)) {
-
-                return back()
-
-                    ->with('warning', $message)
-
-                    ->with('import_errors', $errors);
-
-            }
-
-            return back()->with('success', $message);
-
-        } catch (\Throwable $e) {
-
-            DB::rollBack();
-
-            return back()->with('error', 'Import failed: ' . $e->getMessage());
-
         }
 
+        $message =
+            $createdCount . ' created, ' .
+            $updatedCount . ' updated, ' .
+            $labelCount . ' PDF label(s) uploaded, ' .
+            $skippedCount . ' skipped.';
+
+        if (!empty($errors)) {
+            return redirect()
+                ->route('admin.usps-labels.import')
+                ->with('warning', $message)
+                ->with('import_errors', $errors);
+        }
+
+        return redirect()
+            ->route('admin.usps-labels.import')
+            ->with('success', $message);
     }
 
-    private function parseUspsDate(?string $date): ?string
-
+    private function parseUspsDate($date)
     {
-
-        if (!$date) {
-
+        if ($date === null || trim((string) $date) === '') {
             return null;
-
         }
 
         try {
+            if (is_numeric($date) && (float) $date > 20000) {
+                return \Carbon\Carbon::instance(
+                    \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject(
+                        (float) $date
+                    )
+                )->format('Y-m-d');
+            }
 
-            return \Carbon\Carbon::parse($date)->format('Y-m-d');
+            return \Carbon\Carbon::parse(
+                trim((string) $date)
+            )->format('Y-m-d');
 
         } catch (\Throwable $e) {
-
             return null;
-
         }
-
     }
 
 }

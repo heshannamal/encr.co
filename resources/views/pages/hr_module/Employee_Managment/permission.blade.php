@@ -488,7 +488,67 @@
             }
         }
 
-        
+        /* Mobile permission grid fix */
+@media (max-width: 767.98px) {
+
+    /* Permissions Granted tab */
+    #permsGrantedGrid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        gap: 8px !important;
+    }
+
+    #permsGrantedGrid .perm-cell {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+
+        white-space: normal !important;
+        overflow: visible !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+        line-height: 1.5 !important;
+    }
+
+    #permsGrantedGrid .perm-cell .num {
+        display: inline !important;
+        white-space: nowrap !important;
+        margin-right: 4px !important;
+    }
+
+    /* All tab - selected group's permissions */
+    #allPermsGrid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        gap: 5px !important;
+    }
+
+    #allPermsGrid .all-perm-cell {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+
+        white-space: normal !important;
+        overflow: visible !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+        line-height: 1.5 !important;
+    }
+
+    #allPermsGrid .all-perm-cell .num {
+        display: inline !important;
+        white-space: nowrap !important;
+        margin-right: 4px !important;
+    }
+}
     </style>
 
     <input type="hidden" id="permUserId" value="{{ $user->id }}">

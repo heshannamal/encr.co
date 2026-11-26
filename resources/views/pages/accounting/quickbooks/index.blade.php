@@ -570,6 +570,7 @@
             color: #b42318;
         }
 
+
         @media (max-width: 991px) {
             .qb-shell {
                 width: calc(100% - 16px);
@@ -634,6 +635,511 @@
                 flex: 1;
             }
         }
+        /* =================================================================
+           SALES RECEIPTS — MOBILE LAYOUT
+           ================================================================= */
+        .qb-m-only { display: none; }
+
+        @media (max-width: 767px) {
+            body { background: #f6f7f8; }
+
+            /* ---------- Top bar: < BACK ........ [Save all] [Export all to QuickBooks] ---------- */
+            .qb-topbar {
+                flex-wrap: wrap;
+                gap: 10px;
+                min-height: 0;
+                padding: 14px 16px 8px;
+                background: #f6f7f8;
+                border-bottom: none;
+                box-shadow: none;
+            }
+            .qb-topbar-right { gap: 8px; margin-left: auto; }
+            .qb-topbar-left > .qb-btn {                     /* Back */
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                min-height: 0;
+                padding: 4px 0;
+                border: none;
+                background: transparent;
+                color: #4b5563;
+                font-size: 14px;
+                font-weight: 500;
+                letter-spacing: 1.4px;
+                text-transform: uppercase;
+            }
+            .qb-topbar-left > .qb-btn:hover { background: transparent; }
+            .qb-topbar-left > .qb-btn .bi-arrow-left::before { content: "\f284"; font-size: 12px; }   /* chevron-left */
+            .qb-topbar-right .save-all-records { display: inline-flex; }   /* hidden below 640px before; the design shows it */
+            .qb-topbar-right .qb-btn {
+                display: inline-flex;
+                align-items: center;
+                min-height: 40px;
+                padding: 0 12px;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+            .qb-topbar-right .save-all-records {
+                border: 1.5px solid var(--qb-green);
+                background: #fff;
+                color: var(--qb-green);
+            }
+            .qb-topbar-right .export-all-records { box-shadow: 0 4px 12px rgba(44, 160, 28, 0.3); }
+
+            .qb-shell { width: calc(100% - 32px); margin: 4px auto 32px; }
+            .qb-m-page-title {
+                display: block;
+                margin: 4px 0 16px;
+                font-size: 20px;
+                font-weight: 700;
+                line-height: 1.25;
+                color: #111827;
+            }
+
+            /* ---------- Each receipt: ONE card (green top line) that holds the
+               header and all the section cards. Tap the header to open / close. ---------- */
+            .qb-receipt,
+            .qb-receipt:not(.is-refund),
+            .qb-receipt.is-refund {
+                margin-bottom: 20px;
+                background: #fff;
+                border: 1px solid #e5e7eb;
+                border-top: 4px solid var(--qb-green);
+                border-radius: 14px;
+                box-shadow: 0 2px 12px rgba(17, 24, 39, 0.07);
+                overflow: visible;
+            }
+            .qb-receipt.is-refund { border-top-color: var(--qb-blue); }
+            .qb-receipt-header {
+                flex-direction: row;                            /* was a column below 640px */
+                align-items: flex-start;
+                gap: 8px;
+                padding: 12px 12px 12px;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .qb-m-receipt-toggle {
+                display: inline-flex;
+                flex: 0 0 auto;
+                align-items: center;
+                justify-content: center;
+                width: 22px;
+                height: 22px;
+                margin: 0 -4px 0 0;
+                padding: 0;
+                border: none;
+                background: transparent;
+                color: #111827;
+                font-size: 16px;
+            }
+            .qb-m-receipt-toggle i { transition: transform .2s ease; }
+            .qb-receipt.qb-m-closed .qb-m-receipt-toggle i { transform: rotate(-90deg); }   /* points right: ">" */
+            .qb-receipt.qb-m-closed .qb-receipt-body { display: none; }
+            .qb-title-wrap { flex: 1 1 auto; min-width: 0; gap: 10px; }
+            .qb-doc-icon { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 6px; font-size: 20px; }
+            .qb-document-title { font-size: 20px; font-weight: 500; color: #111827; }
+            .qb-document-subtitle { margin-top: 3px; font-size: 12px; line-height: 1.35; }
+            .qb-status-chip { margin-top: 6px; font-weight: 600; }
+            .qb-total-head { flex: 0 0 auto; min-width: 0; text-align: right; }   /* was left below 640px */
+            .qb-total-head .label { font-size: 11px; }
+            .qb-total-head .amount { font-size: 26px; color: #111827; }
+            .qb-total-head .linked { font-size: 12px; color: var(--qb-green); }
+
+            .qb-receipt-body { padding: 0 10px 12px; }
+            .qb-receipt-body > .qb-section,
+            .qb-receipt-body > .qb-section:first-child {
+                margin-bottom: 12px;
+                padding: 12px;
+                background: #fff;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(17, 24, 39, 0.07);
+            }
+
+            /* Collapsible section heads (mobile only markup) */
+            .qb-m-sec-head {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                border: none;
+                background: transparent;
+                color: #111827;
+                font-size: 17px;
+                font-weight: 600;
+                text-align: left;
+            }
+            .qb-m-sec-head i { font-size: 15px; transition: transform .2s ease; }
+            .qb-m-collapsed > .qb-m-sec-head i { transform: rotate(-90deg); }
+            .qb-m-collapsed > :not(.qb-m-sec-head) { display: none !important; }
+
+            /* Fields */
+            .qb-label {
+                margin-bottom: 6px;
+                color: #6b7280;
+                font-size: 14px;
+                font-weight: 400;
+            }
+            .qb-input,
+            .qb-select,
+            .qb-textarea {
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                color: #111827;
+                font-size: 15px;
+            }
+            .qb-input,
+            .qb-select { height: 44px; padding: 0 12px; }
+            .qb-textarea { min-height: 96px; padding: 8px 10px; }
+            .qb-input[readonly] { background: #fff; }
+            .qb-receipt .ts-wrapper.single .ts-control {
+                min-height: 44px;
+                padding: 10px 34px 10px 12px !important;   /* Tom Select theme rules are more specific */
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                font-size: 15px;
+            }
+            .ts-wrapper.single .ts-control { flex-wrap: nowrap; overflow: hidden; }
+            .ts-wrapper.single .ts-control > .item {
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .ts-wrapper .ts-dropdown { font-size: 15px; }
+            .qb-field-note { font-size: 12px; }
+            .form-check-input { width: 20px; height: 20px; margin-top: 0; }
+
+            /* --- Customer Details: Customer, payment note, email, Send later --- */
+            .qb-sec-customer {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            .qb-sec-customer > .row { display: contents; }
+            .qb-sec-customer > .row > [class*="col"] { width: 100%; margin: 0; padding: 0; }
+            .qb-sec-customer > .row > :nth-child(1) { order: 1; }
+            .qb-sec-customer > .qb-field-note        { order: 2; margin-top: -6px; }
+            .qb-sec-customer > .row > :nth-child(2) { order: 3; }
+            .qb-sec-customer > .row > :nth-child(3) { order: 4; }
+            .qb-sec-customer .form-check {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                min-height: 0;
+                margin: 0;
+                padding: 0 !important;                          /* pb-2 */
+            }
+            .qb-sec-customer .form-check .form-check-input { float: none; margin: 0; }
+            .qb-sec-customer .form-check-label { font-size: 15px; color: #111827; }
+
+            /* --- Billing & Shipping Address card + Receipt Details card --- */
+            .qb-receipt-body > .qb-sec-details,
+            .qb-receipt-body > .qb-sec-details:first-child {
+                padding: 0;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+            }
+            .qb-sec-details > .row {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                margin: 0;
+            }
+            .qb-sec-details > .row > [class*="col"] {
+                width: 100%;
+                margin: 0;
+                padding: 12px;
+                background: #fff;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(17, 24, 39, 0.07);
+            }
+            .qb-sec-details > .row > [class*="col"] > .qb-m-sec-head { margin-bottom: 4px; }
+            .qb-sec-details .qb-label.mt-3 { margin-top: 12px !important; }
+            /* Receipt Details: two columns for the short fields, full width for the rest */
+            .qb-sec-details .col-lg-8 > .row { --bs-gutter-x: 12px; --bs-gutter-y: 12px; }
+            .qb-sec-details .col-lg-8 > .row > * { flex: 0 0 100%; max-width: 100%; }
+            .qb-sec-details .col-lg-8 > .row > :nth-child(1),
+            .qb-sec-details .col-lg-8 > .row > :nth-child(2),
+            .qb-sec-details .col-lg-8 > .row > :nth-child(4),
+            .qb-sec-details .col-lg-8 > .row > :nth-child(5) { flex: 0 0 50%; max-width: 50%; }
+            /* Not in the mobile design: Ship via, Shipping date, Tracking no., Sales rep,
+               Class / location, Shipping from. Only hidden - their values are still
+               in the form and are still saved / exported exactly as before. */
+            .qb-sec-details .col-lg-8 > .row > :nth-child(n+7) { display: none; }
+            /* Design wording: "Billing Address", "Sales Receipt Date", "Deposit To" ... */
+            .qb-sec-details .qb-label { text-transform: capitalize; }
+            .qb-sec-details .col-lg-8 > .row > :nth-child(2) .qb-label::after { content: " *"; color: #b42318; }
+            .qb-sec-details .col-lg-4 > .qb-label.mt-3 { font-size: 0; }              /* "Shipping to" */
+            .qb-sec-details .col-lg-4 > .qb-label.mt-3::after { content: "Shipping Address"; font-size: 14px; }
+            .qb-sec-details .qb-input::placeholder { color: #9ca3af; }
+
+            /* --- Product/Service Details: one card, each line as an inner card --- */
+            .qb-receipt-body > .qb-sec-lines,
+            .qb-receipt-body > .qb-sec-lines:first-child {
+                padding: 0;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+            }
+            .qb-sec-lines > .qb-divider-title {                 /* card top */
+                margin: 0;
+                padding: 12px 12px 10px;
+                background: #fff;
+                border: 1px solid #e5e7eb;
+                border-bottom: none;
+                border-radius: 12px 12px 0 0;
+                color: #111827;
+                font-size: 0;                                   /* "Product / service details" */
+                font-weight: 600;
+            }
+            .qb-sec-lines > .qb-divider-title::after { content: "Product/Service Details"; font-size: 17px; }
+            .qb-sec-lines > .qb-grid-table-wrap {               /* card middle */
+                overflow: visible;
+                padding: 0 12px;
+                background: #fff;
+                border: 1px solid #e5e7eb;
+                border-top: none;
+                border-bottom: none;
+            }
+            .qb-sec-lines > .qb-add-line {                      /* card bottom */
+                display: block;
+                width: 100%;
+                margin: 0;
+                padding: 2px 12px 14px;
+                background: #fff;
+                border: 1px solid #e5e7eb;
+                border-top: none;
+                border-radius: 0 0 12px 12px;
+                color: #2d6fdb;
+                font-size: 14px;
+                font-weight: 600;
+                text-align: left;
+            }
+            .qb-sec-lines > .qb-add-line i { font-size: 16px; }
+
+            .qb-grid { display: block; min-width: 0; }
+            .qb-grid thead { display: none; }
+            .qb-grid tbody { display: block; }
+            .qb-grid tbody tr {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                grid-template-areas:
+                    "idx  idx  del"
+                    "prod prod prod"
+                    "desc desc desc"
+                    "sku  sku  sku"
+                    "qty  rate amt"
+                    "cls  cls  cls"
+                    "tax  tax  tax";
+                column-gap: 10px;
+                row-gap: 10px;
+                margin-bottom: 12px;
+                padding: 12px;
+                border: 1px solid #e5e7eb;
+                border-radius: 10px;
+                background: #fff;
+            }
+            .qb-grid tbody td,
+            .qb-grid tbody tr:hover td {
+                display: block;
+                height: auto;
+                min-width: 0;
+                padding: 0;
+                border: none;
+                background: transparent;
+            }
+            .qb-grid tbody td:nth-child(1)  { grid-area: idx; align-self: center; width: auto; text-align: left; color: #111827; font-size: 15px; font-weight: 600; }
+            .qb-grid tbody td:nth-child(1)::before { content: "#"; }
+            .qb-grid tbody td:nth-child(2)  { grid-area: prod; }
+            .qb-grid tbody td:nth-child(3)  { grid-area: sku; }
+            .qb-grid tbody td:nth-child(4)  { grid-area: desc; }
+            .qb-grid tbody td:nth-child(5)  { grid-area: qty; }
+            .qb-grid tbody td:nth-child(6)  { grid-area: rate; }
+            .qb-grid tbody td:nth-child(7)  { grid-area: amt; }
+            .qb-grid tbody td:nth-child(8)  { grid-area: tax; display: flex; align-items: center; gap: 10px; text-align: left; }
+            .qb-grid tbody td:nth-child(9)  { grid-area: cls; }
+            .qb-grid tbody td:nth-child(10) { grid-area: del; justify-self: end; align-self: center; }
+            .qb-grid tbody td:nth-child(2)::before,
+            .qb-grid tbody td:nth-child(3)::before,
+            .qb-grid tbody td:nth-child(4)::before,
+            .qb-grid tbody td:nth-child(5)::before,
+            .qb-grid tbody td:nth-child(6)::before,
+            .qb-grid tbody td:nth-child(7)::before,
+            .qb-grid tbody td:nth-child(9)::before {
+                display: block;
+                margin-bottom: 4px;
+                color: #6b7280;
+                font-size: 13px;
+                white-space: nowrap;
+            }
+            .qb-grid tbody td:nth-child(2)::before { content: "Product/Service"; }
+            .qb-grid tbody td:nth-child(3)::before { content: "SKU"; }
+            .qb-grid tbody td:nth-child(4)::before { content: "Description"; }
+            .qb-grid tbody td:nth-child(5)::before { content: "QTY"; }
+            .qb-grid tbody td:nth-child(6)::before { content: "Rate"; }
+            .qb-grid tbody td:nth-child(7)::before { content: "Amount ($)"; }
+            .qb-grid tbody td:nth-child(9)::before { content: "Class"; }
+            .qb-grid tbody td:nth-child(8)::after  { content: "Tax"; color: #111827; font-size: 15px; }
+            .qb-grid tbody td:nth-child(8) .form-check-input { margin: 0; }
+            .qb-grid-input,
+            .qb-grid-select {
+                height: 44px;
+                padding: 0 12px;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                background-color: #fff;
+                color: #111827;
+                font-size: 15px;
+            }
+            .qb-grid .text-money,
+            .qb-grid .qb-grid-input.text-center { text-align: left; }
+            .qb-grid-select {
+                padding-right: 32px;
+                background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%236b7280' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center / 12px 12px;
+                -webkit-appearance: none;
+                appearance: none;
+            }
+            .qb-delete-line {                                   /* trash in a light red square */
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 32px;
+                height: 32px;
+                border-radius: 6px;
+                background: #fde8e8;
+                color: #d0021b;
+                font-size: 16px;
+            }
+
+            /* --- Memo / Private Note card + Payment Info card --- */
+            .qb-lower { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 14px; }
+            .qb-notes-box,
+            .qb-summary {
+                padding: 12px;
+                background: #fff;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(17, 24, 39, 0.07);
+            }
+            .qb-notes-box .qb-label { margin-bottom: 4px; color: #111827; font-size: 0; font-weight: 600; }
+            .qb-notes-box .qb-label::after { content: "Memo/ Private Note"; font-size: 17px; }
+            .qb-notes-box .qb-field-note { font-size: 13px; line-height: 1.5; }
+            .qb-summary::before {
+                content: "Payment Info";
+                display: block;
+                margin-bottom: 4px;
+                color: #111827;
+                font-size: 17px;
+                font-weight: 600;
+            }
+            .qb-summary-row { gap: 10px; padding: 7px 0; font-size: 14px; }
+            .qb-summary-row:first-child { font-weight: 600; }
+            .qb-summary-row:first-child .name { color: #111827; }
+            .qb-summary-row .name { color: #6b7280; }
+            .qb-summary-row { align-items: center; }
+            .qb-discount-editor {
+                grid-template-columns: 88px 84px;
+                gap: 10px;
+            }
+            .qb-discount-editor select,
+            .qb-discount-editor input {
+                height: 38px;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                font-size: 14px;
+            }
+            .qb-discount-editor select {
+                padding-right: 26px;
+                background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%236b7280' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 9px center / 12px 12px;
+                -webkit-appearance: none;
+                appearance: none;
+                text-overflow: ellipsis;
+            }
+            .qb-discount-result { display: none; }                  /* not in the design; the Total still includes the discount */
+            /* "Sales Tax (9.25%)" ........ [ 5.55 ] - the live rate note sits beside the name */
+            .qb-summary-row:has(.qb-tax-editor) { justify-content: flex-start; gap: 4px; }
+            .qb-summary-row:has(.qb-tax-editor) > .name { text-transform: capitalize; }
+            .qb-tax-editor { display: contents; }
+            .qb-tax-rate-note { order: 1; min-width: 0; color: #6b7280; font-size: 14px; text-align: left; }
+            .qb-tax-rate-note::before { content: "("; }
+            .qb-tax-rate-note::after { content: ")"; }
+            .qb-tax-editor input {
+                order: 2;
+                margin-left: auto;
+                width: 84px;
+                height: 38px;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                font-size: 14px;
+            }
+            .qb-summary-row.total {
+                align-items: baseline;
+                margin-top: 8px;
+                padding-top: 12px;
+                border-top: 1px solid #e5e7eb;
+                font-size: 15px;
+            }
+            .qb-summary-row.total .name { color: #111827; font-weight: 500; }
+            .qb-summary-row.total .value { font-size: 24px; }
+
+            /* --- Per-receipt actions: status + Save + Export ---
+               A card at the end of each receipt. Not sticky on phones: it would
+               cover ~110px of the small screen all the time (the top bar keeps
+               Save all / Export all always reachable). */
+            .qb-actions {
+                position: static;
+                margin: 14px 0 0;
+                padding: 12px;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(17, 24, 39, 0.07);
+            }
+            /* Save and Export to QuickBooks: same width, same height, one line */
+            .qb-actions-right { gap: 10px; }
+            .qb-actions-right .qb-btn {
+                display: inline-flex;
+                flex: 1 1 0;                                    /* equal share, not text width */
+                align-items: center;
+                justify-content: center;
+                min-width: 0;
+                height: 44px;
+                min-height: 44px;
+                padding: 0 10px;
+                border-radius: 8px;
+                font-size: 14px;
+                line-height: 1;
+                white-space: nowrap;
+            }
+        }
+
+        /* Narrow phones: "Export to QuickBooks" does not fit in half the width,
+           so the two buttons stack - still exactly the same size. */
+        @media (max-width: 374px) {
+            .qb-actions-right { flex-direction: column; }
+            .qb-actions-right .qb-btn { flex: 0 0 auto; width: 100%; }
+        }
+
+        /* Very small phones (320px - 359px) */
+        @media (max-width: 359px) {
+            .qb-topbar { padding-left: 12px; padding-right: 12px; }
+            .qb-topbar-right .qb-btn { padding: 0 9px; font-size: 13px; }
+            .qb-shell { width: calc(100% - 24px); }
+            .qb-receipt-header { padding: 10px; }
+            .qb-receipt-body { padding: 0 8px 10px; }
+            .qb-doc-icon { display: none; }
+            .qb-total-head .amount { font-size: 22px; }
+            .qb-grid tbody tr { column-gap: 8px; padding: 10px; }
+            .qb-grid-input { padding: 0 8px; }
+            .qb-discount-editor { grid-template-columns: 80px 70px; gap: 8px; }
+            .qb-summary-row.discount { gap: 6px; }
+        }
     </style>
 </head>
 
@@ -681,6 +1187,9 @@
 </div>
 
 <div class="qb-shell">
+
+    {{-- Mobile only: page title (desktop shows it in the top bar) --}}
+    <h1 class="qb-m-only qb-m-page-title">QuickBooks Sales Receipts</h1>
 
     @if(($alreadySyncedCount ?? 0) > 0)
         <div class="qb-notice">
@@ -905,11 +1414,20 @@
                             {{ $isRefund ? '1 linked refund' : '1 linked deposit' }}
                         </div>
                     </div>
+
+                    {{-- Mobile only: open / close this receipt --}}
+                    <button type="button" class="qb-m-only qb-m-receipt-toggle" aria-expanded="false" aria-label="Show receipt details">
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
                 </div>
 
                 <div class="qb-receipt-body">
 
-                    <div class="qb-section">
+                    <div class="qb-section qb-sec-customer">
+                        <button type="button" class="qb-m-only qb-m-sec-head" data-qb-collapse aria-expanded="true">
+                            Customer Details <i class="bi bi-chevron-down"></i>
+                        </button>
+
                         <div class="row g-3 align-items-end">
 
                             <div class="col-lg-4 col-md-6">
@@ -975,10 +1493,14 @@
                         </div>
                     </div>
 
-                    <div class="qb-section">
+                    <div class="qb-section qb-sec-details">
                         <div class="row g-3">
 
                             <div class="col-lg-4">
+                                <button type="button" class="qb-m-only qb-m-sec-head" data-qb-collapse aria-expanded="true">
+                                    Billing &amp; Shipping Address <i class="bi bi-chevron-down"></i>
+                                </button>
+
                                 <label class="qb-label">Billing address</label>
 
                                 <textarea
@@ -995,6 +1517,10 @@
                             </div>
 
                             <div class="col-lg-8">
+                                <button type="button" class="qb-m-only qb-m-sec-head" data-qb-collapse aria-expanded="true">
+                                    Receipt Details <i class="bi bi-chevron-down"></i>
+                                </button>
+
                                 <div class="row g-3">
 
                                     <div class="col-lg-4 col-md-6">
@@ -1187,7 +1713,7 @@
                         </div>
                     </div>
 
-                    <div class="qb-section">
+                    <div class="qb-section qb-sec-lines">
                         <div class="qb-divider-title">
                             Product / service details
                         </div>
@@ -2421,6 +2947,85 @@
             refreshTotals(form);
         });
 })();
+</script>
+
+<script>
+    // Mobile only: open / close a section card from its heading (display only).
+    document.addEventListener('click', function (event) {
+        var head = event.target.closest('[data-qb-collapse]');
+
+        if (!head) {
+            return;
+        }
+
+        var box = head.parentElement;
+        var collapsed = box.classList.toggle('qb-m-collapsed');
+
+        head.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    });
+
+    (function () {
+        var mobileQuery = window.matchMedia('(max-width: 767px)');
+
+        // Mobile only: tap a receipt header to open / close the receipt (display only).
+        // Receipts start closed, like the design; the closed state has no effect on desktop.
+        document.querySelectorAll('.qb-receipt').forEach(function (receipt) {
+            receipt.classList.add('qb-m-closed');
+        });
+
+        document.addEventListener('click', function (event) {
+            var header = event.target.closest('.qb-receipt-header');
+
+            if (!header || !mobileQuery.matches) {
+                return;
+            }
+
+            var receipt = header.closest('.qb-receipt');
+            var closed = receipt.classList.toggle('qb-m-closed');
+            var toggle = header.querySelector('.qb-m-receipt-toggle');
+
+            if (toggle) {
+                toggle.setAttribute('aria-expanded', closed ? 'false' : 'true');
+            }
+        });
+
+        // Mobile wording from the design. Only the visible text changes - option
+        // values and field names stay the same, and desktop gets the original text back.
+        var mobileText = [
+            ['.discount-type-select option[value="percent"]', 'Percent'],
+            ['.discount-type-select option[value="amount"]', 'Value']
+        ];
+
+        function applyMobileText() {
+            var mobile = mobileQuery.matches;
+
+            mobileText.forEach(function (pair) {
+                document.querySelectorAll(pair[0]).forEach(function (option) {
+                    if (option.dataset.qbDesktopText === undefined) {
+                        option.dataset.qbDesktopText = option.textContent;
+                    }
+
+                    option.textContent = mobile ? pair[1] : option.dataset.qbDesktopText;
+                });
+            });
+
+            document.querySelectorAll('.qb-receipt-form [name="po_number"]').forEach(function (input) {
+                if (mobile) {
+                    input.setAttribute('placeholder', 'Enter PO Number');
+                } else {
+                    input.removeAttribute('placeholder');
+                }
+            });
+        }
+
+        applyMobileText();
+
+        if (mobileQuery.addEventListener) {
+            mobileQuery.addEventListener('change', applyMobileText);
+        } else if (mobileQuery.addListener) {
+            mobileQuery.addListener(applyMobileText);
+        }
+    })();
 </script>
 
 </body>

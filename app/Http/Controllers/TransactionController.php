@@ -218,7 +218,7 @@ class TransactionController extends Controller
             $orderPaymentsArray[] = array('Method'=>'PO', 'id'=>$PoPaymentRecord->id, 'NameonCard'=>'N/A', 'paymentStatus'=>$paymentStatus, 'is_approve'=>$PoPaymentRecord->is_approved, 'TransactionId'=>$poPaymentId, 'Amount'=>$PoPaymentRecord->amount, 'ProcessingFee'=>$ProcessingFee, 'total_payment'=>$total_payment, 'balance_to_be_paid'=>$balance_to_be_paid, 'PaymentDate'=>$PoPaymentRecord->created_at);
         }
 
-        $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$request->orderID)->with(['organizationDetails:id,organization_name,sales_tax'])->first();
+        $orderDetails = Order::select('order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$request->orderID)->with(['organizationDetails:id,organization_name,sales_tax'])->first();
 
         return response()->json([
             'payment_receipt' => $orderPaymentsArray,
@@ -307,639 +307,1383 @@ class TransactionController extends Controller
     }
 
     public function allTransactionPayments(Request $request){
+
         if(auth()->user()->can('manage transaction')){
+
             $onlinePayments = PaymentLog::where('response_code','1')->orderBy('created_at', 'DESC')->get();
+
+
 
             $checkPayments = CheckPayment::orderBy('created_at', 'DESC')->get();
 
+
+
             $venmoPayments = VenmoPayment::orderBy('created_at', 'DESC')->get();
+
+
 
             $paypalPayments = PaypalPayment::orderBy('created_at', 'DESC')->get();
 
+
+
             $PoReceipts = PurchaseorderReceipt::orderBy('created_at', 'DESC')->get();
+
+
 
             $otherPayments = OtherPayment::orderBy('created_at', 'DESC')->get();
 
+
+
             $TrasnsactionsArray = [];
 
+
+
             // QuickBooks state maps.
+
             //
+
             // One PAYMENT may have only one QuickBooks identity:
+
             // order_id + record_id + payment_type + module + refund flag.
+
             //
+
             // UI states:
+
             //   export_status = 0 => saved locally, not yet synced
+
             //   export_status = 1 => synced to QuickBooks
+
             //   export_status = 2 => previous sync attempt failed
+
             //
+
             // IMPORTANT:
+
             // Order and StoreOrder remain separate through from_tsr_module.
+
             $normalQuickBooksStatusMap = [];
+
             $storeQuickBooksStatusMap = [];
 
+
+
             $quickBooksRecords = \App\Models\QuickbookRecord::select(
+
                     'order_id',
+
                     'record_id',
+
                     'payment_type',
+
                     'from_tsr_module',
+
                     'is_refund',
+
                     'export_status'
+
                 )
+
                 ->whereIn('export_status', [0, 1, 2])
+
                 ->get();
 
+
+
             $qbStatusFromExportStatus = function ($exportStatus) {
+
                 $exportStatus = (int) $exportStatus;
 
+
+
                 if ($exportStatus === 1) {
+
                     return 'synced';
+
                 }
+
+
 
                 if ($exportStatus === 0) {
+
                     return 'saved';
+
                 }
+
+
 
                 if ($exportStatus === 2) {
+
                     return 'failed';
+
                 }
+
+
 
                 return null;
+
             };
+
+
 
             // If historical duplicate rows exist, never downgrade a successfully
+
             // synced payment to saved/failed in the UI.
+
             $mergeQuickBooksStatus = function ($current, $incoming) {
+
                 $priority = [
+
                     null     => 0,
+
                     'failed' => 1,
+
                     'saved'  => 2,
+
                     'synced' => 3,
+
                 ];
 
+
+
                 return ($priority[$incoming] ?? 0) > ($priority[$current] ?? 0)
+
                     ? $incoming
+
                     : $current;
+
             };
 
+
+
             foreach ($quickBooksRecords as $qbRecord) {
+
                 $status = $qbStatusFromExportStatus($qbRecord->export_status);
 
+
+
                 if (!$status) {
+
                     continue;
+
                 }
 
+
+
                 // StoreOrder module.
+
                 if ((int) $qbRecord->from_tsr_module === 1) {
+
                     if (strcasecmp((string) $qbRecord->payment_type, 'Card') !== 0) {
+
                         continue;
+
                     }
+
+
 
                     // StoreCardPayment.id is globally unique in its own table.
+
                     // Keep refund/non-refund states separate.
+
                     $recordId = (string) $qbRecord->record_id;
+
                     $refundKey = (string) ((int) $qbRecord->is_refund);
 
+
+
                     if (!isset($storeQuickBooksStatusMap[$recordId])) {
+
                         $storeQuickBooksStatusMap[$recordId] = [];
+
                     }
+
+
 
                     $current = $storeQuickBooksStatusMap[$recordId][$refundKey] ?? null;
 
+
+
                     $storeQuickBooksStatusMap[$recordId][$refundKey] =
+
                         $mergeQuickBooksStatus($current, $status);
 
+
+
                     continue;
+
                 }
 
+
+
                 // Normal Order module.
+
                 $key = implode('|', [
+
                     (string) $qbRecord->order_id,
+
                     (string) $qbRecord->record_id,
+
                     strtolower(trim((string) $qbRecord->payment_type)),
+
                     (string) ((int) $qbRecord->is_refund),
+
                 ]);
+
+
 
                 $current = $normalQuickBooksStatusMap[$key] ?? null;
 
+
+
                 $normalQuickBooksStatusMap[$key] =
+
                     $mergeQuickBooksStatus($current, $status);
+
             }
 
+
+
             $getNormalQuickBooksStatus = function (
+
                 $orderId,
+
                 $recordId,
+
                 $paymentType
+
             ) use ($normalQuickBooksStatusMap) {
+
                 $key = implode('|', [
+
                     (string) $orderId,
+
                     (string) $recordId,
+
                     strtolower(trim((string) $paymentType)),
+
                     '0',
+
                 ]);
 
+
+
                 return $normalQuickBooksStatusMap[$key] ?? null;
+
             };
 
+
+
             /*
+
             |--------------------------------------------------------------------------
+
             | Auto-generated parent QuickBooks status
+
             |--------------------------------------------------------------------------
+
             |
+
             | An auto-generated PaymentLog is only a collapsed/grouping row for
+
             | StoreCardPayment records. Show the green synced icon on that parent
+
             | only when EVERY successful StoreCardPayment under the same store has
+
             | its exact QuickBooks record marked export_status = 1.
+
             |
+
             | This is calculated in one batch query, so the parent icon is correct
+
             | immediately on page load while the child rows are still collapsed.
+
             */
+
             $fullySyncedStoreIds = [];
 
+
+
             /*
+
              * Customer names for the collapsed StoreCardPayment table.
+
              *
+
              * StoreCardPayment does not carry the customer's first/last name.
+
              * Its store_order_no points to StoreOrder.order_no, so build one
+
              * lookup here and pass it to the Blade:
+
              *
+
              *   StoreCardPayment.id => StoreOrder.first_name + last_name
+
              */
+
             $storeCustomerNameMap = [];
+
             $storeCustomerSearchIndex = [];
 
+
+
             $autoGeneratedStoreIds = $onlinePayments
+
                 ->filter(function ($paymentLog) {
+
                     return (int) ($paymentLog->auto_generated ?? 0) === 1
+
                         && !empty($paymentLog->store_id);
+
                 })
+
                 ->pluck('store_id')
+
+                ->filter()
+
+                ->unique()
+
+                ->values();
+
+
+
+            if ($autoGeneratedStoreIds->isNotEmpty()) {
+
+                $storeCardPaymentsByStore = \App\Models\StoreCardPayment::select(
+
+                        'id',
+
+                        'store_id',
+
+                        'store_order_no',
+
+                        'is_refund'
+
+                    )
+
+                    ->whereIn('store_id', $autoGeneratedStoreIds->all())
+
+                    ->where('is_success', 1)
+
+                    ->get()
+
+                    ->groupBy('store_id');
+
+
+
+                $storeOrderNumbers = $storeCardPaymentsByStore
+
+                    ->flatten(1)
+
+                    ->pluck('store_order_no')
+
+                    ->filter()
+
+                    ->unique()
+
+                    ->values();
+
+
+
+                $storeOrdersByOrderNo = $storeOrderNumbers->isNotEmpty()
+
+                    ? \App\Models\StoreOrder::select(
+
+                            'order_no',
+
+                            'first_name',
+
+                            'last_name'
+
+                        )
+
+                        ->whereIn(
+
+                            'order_no',
+
+                            $storeOrderNumbers->all()
+
+                        )
+
+                        ->get()
+
+                        ->keyBy('order_no')
+
+                    : collect();
+
+
+
+                /*
+
+                 * Used only so DataTables search can find a Customer Name even
+
+                 * before the collapsed StoreCardPayment rows are opened.
+
+                 */
+
+                $parentPaymentLogIdsByStore = $onlinePayments
+
+                    ->filter(function ($paymentLog) {
+
+                        return (int) ($paymentLog->auto_generated ?? 0) === 1
+
+                            && !empty($paymentLog->store_id);
+
+                    })
+
+                    ->groupBy(function ($paymentLog) {
+
+                        return (string) $paymentLog->store_id;
+
+                    })
+
+                    ->map(function ($paymentLogs) {
+
+                        return $paymentLogs
+
+                            ->pluck('id')
+
+                            ->map(function ($id) {
+
+                                return (int) $id;
+
+                            })
+
+                            ->values()
+
+                            ->all();
+
+                    });
+
+
+
+                foreach ($autoGeneratedStoreIds as $storeId) {
+
+                    $eligibleStorePayments =
+
+                        $storeCardPaymentsByStore->get($storeId, collect());
+
+
+
+                    if ($eligibleStorePayments->isEmpty()) {
+
+                        $fullySyncedStoreIds[(string) $storeId] = false;
+
+                        continue;
+
+                    }
+
+
+
+                    $allSynced = $eligibleStorePayments->every(
+
+                        function ($storePayment) use ($storeQuickBooksStatusMap) {
+
+                            $recordId = (string) $storePayment->id;
+
+                            $refundKey = (string) ((int) ($storePayment->is_refund ?? 0));
+
+
+
+                            return (
+
+                                $storeQuickBooksStatusMap[$recordId][$refundKey]
+
+                                ?? null
+
+                            ) === 'synced';
+
+                        }
+
+                    );
+
+
+
+                    $fullySyncedStoreIds[(string) $storeId] = $allSynced;
+
+
+
+                    foreach ($eligibleStorePayments as $storePayment) {
+
+                        $storeOrder = $storeOrdersByOrderNo->get(
+
+                            $storePayment->store_order_no
+
+                        );
+
+
+
+                        $customerName = '';
+
+
+
+                        if ($storeOrder) {
+
+                            $customerName = trim(
+
+                                (string) ($storeOrder->first_name ?? '')
+
+                                . ' '
+
+                                . (string) ($storeOrder->last_name ?? '')
+
+                            );
+
+                        }
+
+
+
+                        $storeCustomerNameMap[
+
+                            (string) $storePayment->id
+
+                        ] = $customerName;
+
+
+
+                        foreach (
+
+                            $parentPaymentLogIdsByStore[
+
+                                (string) $storeId
+
+                            ] ?? []
+
+                            as $parentPaymentLogId
+
+                        ) {
+
+                            $storeCustomerSearchIndex[] = [
+
+                                'payment_id' =>
+
+                                    (int) $storePayment->id,
+
+
+
+                                'parent_id' =>
+
+                                    (int) $parentPaymentLogId,
+
+
+
+                                'customer_name' =>
+
+                                    $customerName,
+
+                            ];
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+
+
+            /*
+             * Normal Order card refund records.
+             *
+             * CardRefundLog.transaction_id stores the ORIGINAL Authorize.Net
+             * transaction ID. Match the refund back to the normal PaymentLog by:
+             *
+             *     order_id + transaction_id
+             *
+             * Failed refund attempts are included for display, while the Blade
+             * disables QuickBooks selection for failed records.
+             */
+            $cardRefundRecordsMap = [];
+
+            $normalCardPaymentLogIdByKey = [];
+
+            foreach ($onlinePayments as $paymentLog) {
+                if (
+                    (int) ($paymentLog->auto_generated ?? 0) === 1
+                    || empty($paymentLog->order_id)
+                    || empty($paymentLog->transaction_id)
+                ) {
+                    continue;
+                }
+
+                $refundParentKey = implode('|', [
+                    (string) $paymentLog->order_id,
+                    (string) $paymentLog->transaction_id,
+                ]);
+
+                $normalCardPaymentLogIdByKey[$refundParentKey] =
+                    (int) $paymentLog->id;
+            }
+
+            $refundOrderIds = $onlinePayments
+                ->filter(function ($paymentLog) {
+                    return (int) ($paymentLog->auto_generated ?? 0) !== 1
+                        && !empty($paymentLog->order_id);
+                })
+                ->pluck('order_id')
                 ->filter()
                 ->unique()
                 ->values();
 
-            if ($autoGeneratedStoreIds->isNotEmpty()) {
-                $storeCardPaymentsByStore = \App\Models\StoreCardPayment::select(
-                        'id',
-                        'store_id',
-                        'store_order_no',
-                        'is_refund'
-                    )
-                    ->whereIn('store_id', $autoGeneratedStoreIds->all())
-                    ->where('is_success', 1)
+            $cardRefundLogs = $refundOrderIds->isNotEmpty()
+                ? \App\Models\CardRefundLog::whereIn(
+                    'order_id',
+                    $refundOrderIds->all()
+                )
+                    ->orderBy('created_at', 'ASC')
                     ->get()
-                    ->groupBy('store_id');
+                : collect();
 
-                $storeOrderNumbers = $storeCardPaymentsByStore
-                    ->flatten(1)
-                    ->pluck('store_order_no')
-                    ->filter()
-                    ->unique()
-                    ->values();
+            foreach ($cardRefundLogs as $refundLog) {
+                $refundParentKey = implode('|', [
+                    (string) $refundLog->order_id,
+                    (string) $refundLog->transaction_id,
+                ]);
 
-                $storeOrdersByOrderNo = $storeOrderNumbers->isNotEmpty()
-                    ? \App\Models\StoreOrder::select(
-                            'order_no',
-                            'first_name',
-                            'last_name'
-                        )
-                        ->whereIn(
-                            'order_no',
-                            $storeOrderNumbers->all()
-                        )
-                        ->get()
-                        ->keyBy('order_no')
-                    : collect();
+                $parentPaymentLogId =
+                    $normalCardPaymentLogIdByKey[$refundParentKey] ?? null;
 
-                /*
-                 * Used only so DataTables search can find a Customer Name even
-                 * before the collapsed StoreCardPayment rows are opened.
-                 */
-                $parentPaymentLogIdsByStore = $onlinePayments
-                    ->filter(function ($paymentLog) {
-                        return (int) ($paymentLog->auto_generated ?? 0) === 1
-                            && !empty($paymentLog->store_id);
-                    })
-                    ->groupBy(function ($paymentLog) {
-                        return (string) $paymentLog->store_id;
-                    })
-                    ->map(function ($paymentLogs) {
-                        return $paymentLogs
-                            ->pluck('id')
-                            ->map(function ($id) {
-                                return (int) $id;
-                            })
-                            ->values()
-                            ->all();
-                    });
-
-                foreach ($autoGeneratedStoreIds as $storeId) {
-                    $eligibleStorePayments =
-                        $storeCardPaymentsByStore->get($storeId, collect());
-
-                    if ($eligibleStorePayments->isEmpty()) {
-                        $fullySyncedStoreIds[(string) $storeId] = false;
-                        continue;
-                    }
-
-                    $allSynced = $eligibleStorePayments->every(
-                        function ($storePayment) use ($storeQuickBooksStatusMap) {
-                            $recordId = (string) $storePayment->id;
-                            $refundKey = (string) ((int) ($storePayment->is_refund ?? 0));
-
-                            return (
-                                $storeQuickBooksStatusMap[$recordId][$refundKey]
-                                ?? null
-                            ) === 'synced';
-                        }
-                    );
-
-                    $fullySyncedStoreIds[(string) $storeId] = $allSynced;
-
-                    foreach ($eligibleStorePayments as $storePayment) {
-                        $storeOrder = $storeOrdersByOrderNo->get(
-                            $storePayment->store_order_no
-                        );
-
-                        $customerName = '';
-
-                        if ($storeOrder) {
-                            $customerName = trim(
-                                (string) ($storeOrder->first_name ?? '')
-                                . ' '
-                                . (string) ($storeOrder->last_name ?? '')
-                            );
-                        }
-
-                        $storeCustomerNameMap[
-                            (string) $storePayment->id
-                        ] = $customerName;
-
-                        foreach (
-                            $parentPaymentLogIdsByStore[
-                                (string) $storeId
-                            ] ?? []
-                            as $parentPaymentLogId
-                        ) {
-                            $storeCustomerSearchIndex[] = [
-                                'payment_id' =>
-                                    (int) $storePayment->id,
-
-                                'parent_id' =>
-                                    (int) $parentPaymentLogId,
-
-                                'customer_name' =>
-                                    $customerName,
-                            ];
-                        }
-                    }
+                if (!$parentPaymentLogId) {
+                    continue;
                 }
-            }
 
-            foreach($otherPayments as $otherPayment)
-            {
-                $orderPaymentsArray = [];
-                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$otherPayment->order_id)->with([
-                    'organizationDetails:id,organization_name,sales_tax',
-                    'contactDetails'
-                ])->get();
-                $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
-
-                $customer_name = trim(
-                    (string) ($orderDetails[0]->contactDetails->first_name ?? '')
-                    . ' '
-                    . (string) ($orderDetails[0]->contactDetails->last_name ?? '')
+                $grossRefundAmount = round(
+                    (float) $refundLog->amount,
+                    2
                 );
 
-                // if($orderDetails[0]->organizationDetails['id'] == 2890){
-                //     continue;
-                // }
+                $baseRefundAmount = round(
+                    $grossRefundAmount * 100 / 103,
+                    2
+                );
+
+                $refundQuickBooksKey = implode('|', [
+                    (string) $refundLog->order_id,
+                    (string) $refundLog->id,
+                    'card',
+                    '1',
+                ]);
+
+                $cardRefundRecordsMap[
+                    (string) $parentPaymentLogId
+                ][] = [
+                    'id' => (int) $refundLog->id,
+                    'order_id' => (int) $refundLog->order_id,
+                    'transaction_id' =>
+                        (string) $refundLog->transaction_id,
+                    'amount' => $grossRefundAmount,
+                    'refund_amount' => $baseRefundAmount,
+                    'processing_fee' => round(
+                        $grossRefundAmount - $baseRefundAmount,
+                        2
+                    ),
+                    'user_id' => $refundLog->user_id,
+                    'is_success' => (int) $refundLog->is_success,
+                    'created_at' => $refundLog->created_at
+                        ? $refundLog->created_at->toIso8601String()
+                        : null,
+                    'qb_status' =>
+                        $normalQuickBooksStatusMap[
+                            $refundQuickBooksKey
+                        ] ?? null,
+                ];
+            }
+
+
+            foreach($otherPayments as $otherPayment)
+
+            {
+
+                $orderPaymentsArray = [];
+
+                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$otherPayment->order_id)->with([
+
+                    'organizationDetails:id,organization_name,sales_tax',
+
+                    'contactDetails'
+
+                ])->get();
+
+                $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
+
+
+
+                $customer_name = trim(
+
+                    (string) ($orderDetails[0]->contactDetails->first_name ?? '')
+
+                    . ' '
+
+                    . (string) ($orderDetails[0]->contactDetails->last_name ?? '')
+
+                );
+
+
+
+                if($orderDetails[0]->organizationDetails['id'] == 2890){
+
+                    continue;
+
+                }
+
+
 
                 $order_payment_status = $this->PaymentService->getPaymentStatus($otherPayment->order_id)['payment_status'];
+
                 $approval = $otherPayment->is_approved == 1 ? 'Approved' : 'Not Approved';
+
                 $PaymentIdUnique = 'OTH'.str_pad(($otherPayment->id), 6, "0", STR_PAD_LEFT);
+
+
 
                 $orderPaymentsArray = $this->getAllPaymentsByOrderId($otherPayment->order_id);
 
 
+
+
+
                 $PaidDate  = array_column($orderPaymentsArray, 'PaymentDate');
+
                 array_multisort($PaidDate, SORT_ASC,  $orderPaymentsArray);
+
+
 
                 $TrasnsactionsArray[] = array('ID'=>$otherPayment->id, 'Order'=> $otherPayment->order_id, 'OrderNo'=>$orderDetails[0]->order_no,'PaymentType'=>'Other', 'TeamName'=> $organization_name, 'NameonCard'=> 'N/A', 'CustomerName'=> $customer_name, 'checkStatus'=> $approval, 'Amount'=> $otherPayment->amount, 'ProcessingFee'=> 0, 'OrderStatus'=> $order_payment_status, 'TransactionID'=> $PaymentIdUnique, 'PaymentDate'=> $otherPayment->created_at, 'checkFImage'=>$otherPayment->document_url, 'checkBImage'=>$otherPayment->document_url_back, 'OrderPayments'=>json_encode($orderPaymentsArray) ,'auto_generated'=>false, 'QBStatus'=>$getNormalQuickBooksStatus($otherPayment->order_id, $otherPayment->id, 'Other'));
 
+
+
             }
+
             foreach($PoReceipts as $PoReceipt)
+
             {
+
                 $orderPaymentsArray = [];
-                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$PoReceipt->order_id)->with([
+
+                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$PoReceipt->order_id)->with([
+
                     'organizationDetails:id,organization_name,sales_tax',
+
                     'contactDetails'
+
                 ])->get();
+
                 $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
 
+
+
                 $customer_name = trim(
+
                     (string) ($orderDetails[0]->contactDetails->first_name ?? '')
+
                     . ' '
+
                     . (string) ($orderDetails[0]->contactDetails->last_name ?? '')
+
                 );
 
-                // if($orderDetails[0]->organizationDetails['id'] == 2890){
-                //     continue;
-                // }
+
+
+                if($orderDetails[0]->organizationDetails['id'] == 2890){
+
+                    continue;
+
+                }
+
+
 
                 $order_payment_status = $this->PaymentService->getPaymentStatus($PoReceipt->order_id)['payment_status'];
+
                 $approval = $PoReceipt->is_approved == 1 ? 'Approved' : 'Not Approved';
+
                 $PaymentIdUnique = 'PO'.str_pad(($PoReceipt->id), 6, "0", STR_PAD_LEFT);
+
+
 
                 $orderPaymentsArray = $this->getAllPaymentsByOrderId($PoReceipt->order_id);
 
+
+
                 $PaidDate  = array_column($orderPaymentsArray, 'PaymentDate');
+
                 array_multisort($PaidDate, SORT_ASC,  $orderPaymentsArray);
+
+
 
                 $TrasnsactionsArray[] = array('ID'=>$PoReceipt->id, 'Order'=> $PoReceipt->order_id, 'OrderNo'=>$orderDetails[0]->order_no, 'PaymentType'=>'PO', 'TeamName'=> $organization_name, 'NameonCard'=> 'N/A', 'CustomerName'=> $customer_name, 'checkStatus'=> $approval, 'Amount'=> $PoReceipt->amount, 'ProcessingFee'=> 0, 'OrderStatus'=> $order_payment_status, 'TransactionID'=> $PaymentIdUnique, 'PaymentDate'=> $PoReceipt->created_at,'checkFImage'=>$PoReceipt->receipt, 'OrderPayments'=>json_encode($orderPaymentsArray) ,'auto_generated'=>false, 'QBStatus'=>$getNormalQuickBooksStatus($PoReceipt->order_id, $PoReceipt->id, 'PO'));
 
+
+
             }
 
+
+
             foreach($onlinePayments as $onlinePayment)
+
             {
+
                 $orderPaymentsArray = [];
-                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$onlinePayment->order_id)->with([
+
+                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$onlinePayment->order_id)->with([
+
                     'organizationDetails:id,organization_name,sales_tax',
+
                     'contactDetails'
+
                 ])->get();
+
                 $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
 
+
+
                 $customer_name = trim(
+
                     (string) ($orderDetails[0]->contactDetails->first_name ?? '')
+
                     . ' '
+
                     . (string) ($orderDetails[0]->contactDetails->last_name ?? '')
+
                 );
 
-                // if($orderDetails[0]->organizationDetails['id'] == 2890){
-                //     continue;
-                // }
+
+
+                if($orderDetails[0]->organizationDetails['id'] == 2890){
+
+                    continue;
+
+                }
+
+
 
                 $order_payment_status = $this->PaymentService->getPaymentStatus($onlinePayment->order_id)['payment_status'];
 
+
+
                 $orderPaymentsArray = $this->getAllPaymentsByOrderId($onlinePayment->order_id);
 
+
+
                 $PaidDate  = array_column($orderPaymentsArray, 'PaymentDate');
+
                 array_multisort($PaidDate, SORT_ASC,  $orderPaymentsArray);
+
                 $ProcessingFee = $onlinePayment->amount * 100 / 103;
 
+
+
                 $TrasnsactionsArray[] = array('ID'=>$onlinePayment->id, 'Order'=> $onlinePayment->order_id,'OrderNo'=>$orderDetails[0]->order_no,'PaymentType'=>'Card','TeamName'=> $organization_name,'NameonCard'=> $onlinePayment->name_on_card,'CustomerName'=> ($onlinePayment->auto_generated == 1 ? '' : $customer_name),'checkStatus'=> 'Approved','Amount'=> $onlinePayment->amount,'ProcessingFee'=> $ProcessingFee,'OrderStatus'=> $order_payment_status,'TransactionID'=> $onlinePayment->transaction_id,'PaymentDate'=> $onlinePayment->created_at,'OrderPayments'=>json_encode($orderPaymentsArray),'auto_generated'=>$onlinePayment->auto_generated == 1 ? true : false, 'QBStatus'=>$onlinePayment->auto_generated == 1
+
                     ? (
+
                         ($fullySyncedStoreIds[(string) ($onlinePayment->store_id ?? '')] ?? false)
+
                             ? 'synced'
+
                             : null
+
                     )
+
                     : $getNormalQuickBooksStatus($onlinePayment->order_id, $onlinePayment->id, 'Card'));
+
+
 
             }
 
+
+
             foreach($checkPayments as $checkPayment)
+
             {
+
                 $orderPaymentsArray = [];
-                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$checkPayment->order_id)->with([
+
+                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$checkPayment->order_id)->with([
+
                     'organizationDetails:id,organization_name,sales_tax',
+
                     'contactDetails'
+
                 ])->get();
+
                 $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
 
+
+
                 $customer_name = trim(
+
                     (string) ($orderDetails[0]->contactDetails->first_name ?? '')
+
                     . ' '
+
                     . (string) ($orderDetails[0]->contactDetails->last_name ?? '')
+
                 );
 
-                // if($orderDetails[0]->organizationDetails['id'] == 2890){
-                //     continue;
-                // }
+
+
+                if($orderDetails[0]->organizationDetails['id'] == 2890){
+
+                    continue;
+
+                }
+
+
 
                 $order_payment_status = $this->PaymentService->getPaymentStatus($checkPayment->order_id)['payment_status'];
+
                 // $approval = $checkPayment->is_approved == 1 ? 'Approved' : 'Not Approved';
+
                 if (!$checkPayment) {
+
                     $approval = 'Not Approved';
+
                 } elseif ($checkPayment->is_approved == 1) {
+
                     $approval = 'Approved';
+
                 } elseif ($checkPayment->is_approved == 3) {
+
                     $approval = 'Rejected';
+
                 } elseif ($checkPayment->is_approved == 0) {
+
                     $approval = 'Pending Approval';
+
                 } else {
+
                     $approval = 'Not Approved';
+
                 }
+
                 $PaymentIdUnique = 'CHQ'.str_pad(($checkPayment->id), 6, "0", STR_PAD_LEFT);
+
+
 
                 $orderPaymentsArray = $this->getAllPaymentsByOrderId($checkPayment->order_id);
 
+
+
                 $PaidDate  = array_column($orderPaymentsArray, 'PaymentDate');
+
                 array_multisort($PaidDate, SORT_ASC,  $orderPaymentsArray);
+
+
 
                 $TrasnsactionsArray[] = array('ID'=>$checkPayment->id, 'Order'=> $checkPayment->order_id, 'OrderNo'=>$orderDetails[0]->order_no,'PaymentType'=>'Check', 'TeamName'=> $organization_name, 'NameonCard'=> 'N/A', 'CustomerName'=> $customer_name, 'checkStatus'=> $approval, 'Amount'=> $checkPayment->amount, 'ProcessingFee'=> 0, 'OrderStatus'=> $order_payment_status, 'TransactionID'=> $PaymentIdUnique, 'PaymentDate'=> $checkPayment->created_at, 'checkFImage'=>$checkPayment->check_front, 'checkBImage'=>$checkPayment->check_back, 'OrderPayments'=>json_encode($orderPaymentsArray) ,'auto_generated'=>false, 'QBStatus'=>$getNormalQuickBooksStatus($checkPayment->order_id, $checkPayment->id, 'Check'));
 
+
+
             }
 
+
+
             foreach($venmoPayments as $venmoPayment)
+
             {
+
                 $orderPaymentsArray = [];
-                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$venmoPayment->order_id)->with([
+
+                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$venmoPayment->order_id)->with([
+
                     'organizationDetails:id,organization_name,sales_tax',
+
                     'contactDetails'
+
                 ])->get();
+
                 $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
 
+
+
                 $customer_name = trim(
+
                     (string) ($orderDetails[0]->contactDetails->first_name ?? '')
+
                     . ' '
+
                     . (string) ($orderDetails[0]->contactDetails->last_name ?? '')
+
                 );
 
-                // if($orderDetails[0]->organizationDetails['id'] == 2890){
-                //     continue;
-                // }
+
+
+                if($orderDetails[0]->organizationDetails['id'] == 2890){
+
+                    continue;
+
+                }
+
+
 
                 $order_payment_status = $this->PaymentService->getPaymentStatus($venmoPayment->order_id)['payment_status'];
+
                 $approval = $venmoPayment->is_approved == 1 ? 'Approved' : 'Not Approved';
+
                 $PaymentIdUnique = 'VNM'.str_pad(($venmoPayment->id), 6, "0", STR_PAD_LEFT);
+
+
 
                 $orderPaymentsArray = $this->getAllPaymentsByOrderId($venmoPayment->order_id);
 
+
+
                 $PaidDate  = array_column($orderPaymentsArray, 'PaymentDate');
+
                 array_multisort($PaidDate, SORT_ASC,  $orderPaymentsArray);
+
+
 
                 $TrasnsactionsArray[] = array('ID'=>$venmoPayment->id, 'Order'=> $venmoPayment->order_id, 'OrderNo'=>$orderDetails[0]->order_no,'PaymentType'=>'Venmo', 'TeamName'=> $organization_name, 'NameonCard'=> 'N/A', 'CustomerName'=> $customer_name, 'checkStatus'=> $approval, 'Amount'=> $venmoPayment->amount, 'ProcessingFee'=> 0, 'OrderStatus'=> $order_payment_status, 'TransactionID'=> $PaymentIdUnique, 'PaymentDate'=> $venmoPayment->created_at, 'checkFImage'=>$venmoPayment->venmo_receipt, 'OrderPayments'=>json_encode($orderPaymentsArray) ,'auto_generated'=>false, 'QBStatus'=>$getNormalQuickBooksStatus($venmoPayment->order_id, $venmoPayment->id, 'Venmo'));
 
+
+
             }
 
+
+
             foreach($paypalPayments as $paypalPayment)
+
             {
+
                 $orderPaymentsArray = [];
-                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$paypalPayment->order_id)->with([
+
+                $orderDetails = Order::select('id', 'order_no', 'sub_total', 'artwork', 'discount_hidation', 'discountType', 'discount', 'sales_tax', 'sales_tax_rate', 'shipping', 'order_total', 'organization_id', 'contact_id')->where('id',$paypalPayment->order_id)->with([
+
                     'organizationDetails:id,organization_name,sales_tax',
+
                     'contactDetails'
+
                 ])->get();
+
                 $organization_name =  $orderDetails[0]->organizationDetails['organization_name'];
 
+
+
                 $customer_name = trim(
+
                     (string) ($orderDetails[0]->contactDetails->first_name ?? '')
+
                     . ' '
+
                     . (string) ($orderDetails[0]->contactDetails->last_name ?? '')
+
                 );
 
-                // if($orderDetails[0]->organizationDetails['id'] == 2890){
-                //     continue;
-                // }
+
+
+                if($orderDetails[0]->organizationDetails['id'] == 2890){
+
+                    continue;
+
+                }
+
+
 
                 $order_payment_status = $this->PaymentService->getPaymentStatus($paypalPayment->order_id)['payment_status'];
+
                 $approval = $paypalPayment->is_approved == 1 ? 'Approved' : 'Not Approved';
+
                 $PaymentIdUnique = 'PAYPAL'.str_pad(($paypalPayment->id), 6, "0", STR_PAD_LEFT);
+
+
 
                 $orderPaymentsArray = $this->getAllPaymentsByOrderId($paypalPayment->order_id);
 
+
+
                 $PaidDate  = array_column($orderPaymentsArray, 'PaymentDate');
+
                 array_multisort($PaidDate, SORT_ASC,  $orderPaymentsArray);
+
                 $ProcessingFee = $paypalPayment->amount * 100 / 103;
+
+
 
                 $TrasnsactionsArray[] = array('ID'=>$paypalPayment->id, 'Order'=> $paypalPayment->order_id, 'OrderNo'=>$orderDetails[0]->order_no, 'PaymentType'=>'Paypal', 'TeamName'=> $organization_name, 'NameonCard'=> 'N/A', 'CustomerName'=> $customer_name, 'checkStatus'=> $approval, 'Amount'=> $paypalPayment->amount, 'ProcessingFee'=> $ProcessingFee, 'OrderStatus'=> $order_payment_status, 'TransactionID'=> $PaymentIdUnique, 'PaymentDate'=> $paypalPayment->created_at, 'checkFImage'=>$paypalPayment->paypal_receipt, 'OrderPayments'=>json_encode($orderPaymentsArray) ,'auto_generated'=>false, 'QBStatus'=>$getNormalQuickBooksStatus($paypalPayment->order_id, $paypalPayment->id, 'Paypal'));
 
+
+
             }
+
+
+
 
 
             $filtered = collect($TrasnsactionsArray);
 
+
+
             // -----------------------------------------------------------
+
             // 1. FILTER BY DATE RANGE (support missing start or end)
+
             // -----------------------------------------------------------
+
+
 
             if ($request->start_date || $request->end_date) {
 
+
+
                 // Start date (Y-m-d)
+
                 $start = $request->start_date
+
                     ? Carbon::parse($request->start_date)->toDateString()
+
                     : null;
 
+
+
                 // End date (Y-m-d)
+
                 $end = $request->end_date
+
                     ? Carbon::parse($request->end_date)->toDateString()
+
                     : null;
+
+
 
                 $filtered = $filtered->filter(function ($item) use ($start, $end) {
 
+
+
                     // PaymentDate from array
+
                     $paymentDate = $item['PaymentDate'] instanceof \Carbon\Carbon
+
                         ? $item['PaymentDate']->toDateString()
+
                         : Carbon::parse($item['PaymentDate'])->toDateString();
 
+
+
                     // Only start_date
+
                     if ($start && !$end) {
+
                         return $paymentDate >= $start;
+
                     }
+
+
 
                     // Only end_date
+
                     if (!$start && $end) {
+
                         return $paymentDate <= $end;
+
                     }
+
+
 
                     // Both
+
                     if ($start && $end) {
+
                         return ($paymentDate >= $start && $paymentDate <= $end);
+
                     }
 
+
+
                     return true;
+
                 });
+
             }
 
 
 
+
+
+
+
             // -----------------------------------------------------------
+
             // 2. FILTER BY PAYMENT TYPE
+
             // -----------------------------------------------------------
+
+
 
             if ($request->payment_type && $request->payment_type !== 'all') {
+
                 $filtered = $filtered->filter(function ($item) use ($request) {
+
                     return trim($item['PaymentType']) === trim($request->payment_type);
+
                 });
+
             }
 
+
+
             // -----------------------------------------------------------
+
             // 3. FILTER BY PAYMENT STATUS
+
             // -----------------------------------------------------------
+
+
 
             if ($request->payment_status && $request->payment_status !== 'all') {
 
+
+
                 $status = (int) $request->payment_status;
+
+
 
                 $filtered = $filtered->filter(function ($item) use ($status) {
 
+
+
                     $orderStatus = isset($item['OrderStatus']) ? (int) $item['OrderStatus'] : null;
 
+
+
                     if ($status === 1) {
+
                         return $orderStatus === 1;
+
                     }
+
                     else if ($status === 2) {
+
                         return $orderStatus === 2;
+
                     }
+
                     else {
+
                         return ($orderStatus !== 1 && $orderStatus !== 2);
+
                     }
+
                 });
+
             }
 
 
+
+
+
             // -----------------------------------------------------------
+
             // 4. SORT FINAL RESULTS BY PaymentDate DESC
+
             // -----------------------------------------------------------
+
+
 
             $TransactionsArray = $filtered->values()->toArray();
 
+
+
             usort($TransactionsArray, function ($a, $b) {
+
                 return strtotime($b['PaymentDate']) <=> strtotime($a['PaymentDate']);
+
             });
 
+
+
             if ($request->order_type && $request->order_type != 'all') {
+
                 $type = $request->order_type;
 
+
+
                 $TransactionsArray = array_filter($TransactionsArray, function ($order) use ($type) {
+
                     if ($type == 'TSR' && strpos($order['OrderNo'], 'TSR') !== false) {
+
                         return true;
+
                     }
+
                     if ($type == 'WL' && strpos($order['OrderNo'], 'WL') !== false) {
+
                         return true;
+
                     }
+
                     return false;
+
                 });
+
             }
 
+
+
             /*
+
             |--------------------------------------------------------------------------
+
             | Collapsed StoreCardPayment search support
+
             |--------------------------------------------------------------------------
+
             |
+
             | DataTables only knows about the parent <tr> rows that exist when the
+
             | table is initialized. StoreCardPayment rows are loaded later by AJAX,
+
             | so the Blade needs to know whether this result set contains any
+
             | expandable/auto-generated parent rows.
+
             |
+
             | Do NOT decide this from order_type (TSR/TSRM/etc.). Search support
+
             | should work whenever expandable rows are actually present.
+
             */
+
             $TransactionsArray = array_values($TransactionsArray);
 
+
+
             $hasStorePaymentParents = collect($TransactionsArray)
+
                 ->contains(function ($transaction) {
+
                     return !empty($transaction['auto_generated']);
+
                 });
 
+
+
             return view('transactions.all-transactions', [
+
                 'TrasnsactionsArray' => $TransactionsArray,
+
                 'storeQuickBooksStatusMap' => $storeQuickBooksStatusMap,
+
                 'storeCustomerNameMap' => $storeCustomerNameMap,
+
                 'storeCustomerSearchIndex' => $storeCustomerSearchIndex,
+
                 'hasStorePaymentParents' => $hasStorePaymentParents,
+
+                'cardRefundRecordsMap' => $cardRefundRecordsMap,
+
             ]);
+
         } else {
+
             return redirect()->back()->withError('Permission Not Granted!');
+
         }
+
     }
     public function tax_report(Request $request)
     {
@@ -1030,7 +1774,7 @@ class TransactionController extends Controller
 
         foreach ($orders as $order) {
             $orderTotal = $order->sub_total;
-            $taxRate = $order->organizationDetails->sales_tax ?? 0;
+            $taxRate = $order->sales_tax_rate ?? 0;
             $salesTax = $order->sales_tax;
 
             $sheet->setCellValue("A{$row}", $order->order_no);

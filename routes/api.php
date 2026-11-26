@@ -54,3 +54,6 @@ Route::middleware('api.token.auth:BMS_API')->group(function () {
             ->name('session.details');
     });
 });
+
+// PDT saved-design enquiries use Encore System APIs token management.
+Route::post('/pdt/design-enquiries', [\App\Http\Controllers\Api\PdtDesignEnquiryController::class, 'store'])->middleware(['api.token.auth:PDT_ENQUIRY', 'throttle:20,1']);

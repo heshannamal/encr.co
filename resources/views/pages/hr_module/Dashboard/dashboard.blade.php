@@ -1230,217 +1230,1232 @@
 
         /* ── Step 4: Open leave modal (shared by pending table + today list) ─── */
         function openLeaveModal(leaveId, rowType, rowDayType, viewOnly) {
+
             $('#leaveScheduleBody').empty();
+
             $('#adminLeaveConflictMessage').html('');
+
             $('#conflictMessageSection').hide();
+
             $('#reqname').text('-');
+
             $('#modalAvatar').text('??');
-            $('#leaveBalancePills').html('<span style="font-size:12px;color:#94a3b8;padding:6px 0;"><i class="fa fa-spinner fa-spin"></i> Loading...</span>');
+
+            $('#leaveBalancePills').html(
+                '<span style="font-size:12px;color:#94a3b8;padding:6px 0;">' +
+                    '<i class="fa fa-spinner fa-spin"></i> Loading...' +
+                '</span>'
+            );
+
 
             $.get("{{ url('/leave-Manage/getLeaveRequestDetails') }}", {
+
                 leave_id: leaveId
+
             }, function(r) {
 
+
                 if (!r.success) {
+
                     alert(r.message);
+
                     return;
+
                 }
 
-                $('#modalAvatar').text(getInitials(r.leave.employee_name || '-'));
-                $('#reqname').text(r.leave.employee_name || '-');
-                $('#modalSubtitle').text('Leave Request #' + (r.leave.id || ''));
-                $('#employee_name').text(r.leave.employee_name || '-');
+
+                $('#modalAvatar').text(
+                    getInitials(r.leave.employee_name || '-')
+                );
+
+                $('#reqname').text(
+                    r.leave.employee_name || '-'
+                );
+
+                $('#modalSubtitle').text(
+                    'Leave Request #' + (r.leave.id || '')
+                );
+
+                $('#employee_name').text(
+                    r.leave.employee_name || '-'
+                );
+
                 $('#requestTitle').text(
+
                     r.leave.request_title ?
-                    r.leave.request_title.charAt(0).toUpperCase() + r.leave.request_title.slice(1).toLowerCase() :
-                    '-'
+
+                        r.leave.request_title.charAt(0).toUpperCase()
+                        + r.leave.request_title.slice(1).toLowerCase()
+
+                        : '-'
+
                 );
+
                 $('#leaveCategory').text(
+
                     r.leave.leave_category ?
-                    r.leave.leave_category.charAt(0).toUpperCase() + r.leave.leave_category.slice(1).toLowerCase() :
-                    '-'
+
+                        r.leave.leave_category.charAt(0).toUpperCase()
+                        + r.leave.leave_category.slice(1).toLowerCase()
+
+                        : '-'
+
                 );
-                $('#leaveTypeLabel').text(r.leave.leave_type || '-');
-                $('#dayTypeLabel').text(r.leave.day_type_label || '-');
-                $('#total_leave_days').text(r.leave.total_leave_days || '-');
 
-                var empStatus = r.leave.employee_status || '-';
-                $('#employee_status').css('color', empStatus == 'Active' ? '#059669' : '#dc2626').text(empStatus);
+                $('#leaveTypeLabel').text(
+                    r.leave.leave_type || '-'
+                );
 
-                // Status mapping
+                $('#dayTypeLabel').text(
+                    r.leave.day_type_label || '-'
+                );
+
+                $('#total_leave_days').text(
+                    r.leave.total_leave_days || '-'
+                );
+
+
+                var empStatus =
+                    r.leave.employee_status || '-';
+
+                $('#employee_status')
+                    .css(
+                        'color',
+                        empStatus == 'Active'
+                            ? '#059669'
+                            : '#dc2626'
+                    )
+                    .text(empStatus);
+
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Status mapping
+                |--------------------------------------------------------------------------
+                */
+
                 var statusMap = {
+
                     0: {
                         text: 'Pending review',
                         color: '#d97706'
                     },
+
                     1: {
                         text: 'Approved',
                         color: '#059669'
                     },
+
                     2: {
                         text: 'Rejected',
                         color: '#dc2626'
                     }
-                };
-                var leaveStatus = r.leave.status;
-                var statusInfo = statusMap[leaveStatus] || statusMap[0];
-                $('#requestStatusDisplay')
-                    .css('color', statusInfo.color)
-                    .text(statusInfo.text);
 
-                var DOT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316'];
-                $.get("{{ url('/leave-Manage/getLeaveBalance') }}/" + r.leave.user_id, function(bal) {
-                    if (bal && bal.success && bal.balances && bal.balances.length > 0) {
-                        var pillsHtml = '';
-                        for (var i = 0; i < bal.balances.length; i++) {
-                            var it = bal.balances[i];
-                            var dotColor = DOT_COLORS[i % DOT_COLORS.length];
-                            pillsHtml += '<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid #e2e8f0;background:#f8fafc;">';
-                            pillsHtml += '<div style="width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;"></div>';
-                            pillsHtml += '<span style="font-size:11px;color:#64748b;">' + (it.leave_type_name || 'Leave') + '</span>';
-                            pillsHtml += '<span style="font-size:12px;font-weight:600;color:#1e293b;">' + it.remaining + ' / ' + it.allocated + '</span>';
-                            pillsHtml += '</div>';
+                };
+
+
+                var leaveStatus =
+                    r.leave.status;
+
+                var statusInfo =
+                    statusMap[leaveStatus]
+                    || statusMap[0];
+
+
+                $('#requestStatusDisplay')
+                    .css(
+                        'color',
+                        statusInfo.color
+                    )
+                    .text(
+                        statusInfo.text
+                    );
+
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Remaining Leave
+                |--------------------------------------------------------------------------
+                */
+
+                $.get(
+                    "{{ url('/leave-Manage/getLeaveBalance') }}/"
+                    + r.leave.user_id,
+
+                    function(bal) {
+
+                        if (
+                            bal
+                            && bal.success
+                            && bal.balances
+                            && bal.balances.length > 0
+                        ) {
+
+                            var pillsHtml = '';
+
+
+                            /*
+                            * Same heading style as Employee details
+                            */
+                            pillsHtml +=
+                                '<div style="' +
+                                    'font-size:11px;' +
+                                    'font-weight:600;' +
+                                    'color:#94a3b8;' +
+                                    'letter-spacing:.06em;' +
+                                    'text-transform:uppercase;' +
+                                    'margin-bottom:10px;' +
+                                '">' +
+                                    'Remaining Leave' +
+                                '</div>';
+
+
+                            /*
+                            * Cards wrapper
+                            */
+                            pillsHtml +=
+                                '<div style="' +
+                                    'display:grid;' +
+                                    'grid-template-columns:repeat(3,minmax(0,1fr));' +
+                                    'gap:8px;' +
+                                    'width:100%;' +
+                                '">';
+
+
+                            for (
+                                var i = 0;
+                                i < bal.balances.length;
+                                i++
+                            ) {
+
+                                var it =
+                                    bal.balances[i];
+
+
+                                var leaveName =
+                                    it.leave_type_name
+                                    || 'Leave';
+
+
+                                /*
+                                * Card colours
+                                */
+                                var leaveColor =
+                                    '#8b5cf6';
+
+                                var leaveBackground =
+                                    '#faf7ff';
+
+                                var leaveBorder =
+                                    '#ede9fe';
+
+
+                                var normalizedName =
+                                    String(leaveName)
+                                    .toLowerCase();
+
+
+                                if (
+                                    normalizedName.indexOf(
+                                        'annual'
+                                    ) !== -1
+                                ) {
+
+                                    leaveColor =
+                                        '#1677ff';
+
+                                    leaveBackground =
+                                        '#f5f9ff';
+
+                                    leaveBorder =
+                                        '#dbeafe';
+
+                                } else if (
+                                    normalizedName.indexOf(
+                                        'casual'
+                                    ) !== -1
+                                ) {
+
+                                    leaveColor =
+                                        '#0ca765';
+
+                                    leaveBackground =
+                                        '#f3fbf7';
+
+                                    leaveBorder =
+                                        '#d8f0e3';
+
+                                } else if (
+                                    normalizedName.indexOf(
+                                        'sick'
+                                    ) !== -1
+                                ) {
+
+                                    leaveColor =
+                                        '#ff8a00';
+
+                                    leaveBackground =
+                                        '#fff9f0';
+
+                                    leaveBorder =
+                                        '#fde7bf';
+
+                                } else {
+
+                                    var fallbackColors = [
+                                        {
+                                            color: '#8b5cf6',
+                                            background: '#faf7ff',
+                                            border: '#ede9fe'
+                                        },
+                                        {
+                                            color: '#ec4899',
+                                            background: '#fff7fb',
+                                            border: '#fce7f3'
+                                        },
+                                        {
+                                            color: '#06b6d4',
+                                            background: '#f3fcfd',
+                                            border: '#cffafe'
+                                        },
+                                        {
+                                            color: '#f97316',
+                                            background: '#fff8f3',
+                                            border: '#ffedd5'
+                                        }
+                                    ];
+
+
+                                    var fallback =
+                                        fallbackColors[
+                                            i
+                                            % fallbackColors.length
+                                        ];
+
+
+                                    leaveColor =
+                                        fallback.color;
+
+                                    leaveBackground =
+                                        fallback.background;
+
+                                    leaveBorder =
+                                        fallback.border;
+                                }
+
+
+                                /*
+                                * Format values
+                                */
+                                var used =
+                                    parseFloat(it.used);
+
+                                var allocated =
+                                    parseFloat(it.allocated);
+
+                                var remaining =
+                                    parseFloat(it.remaining);
+
+
+                                used =
+                                    isNaN(used)
+                                        ? 0
+                                        : used;
+
+                                allocated =
+                                    isNaN(allocated)
+                                        ? 0
+                                        : allocated;
+
+                                remaining =
+                                    isNaN(remaining)
+                                        ? 0
+                                        : remaining;
+
+
+                                used =
+                                    Number.isInteger(used)
+                                        ? used
+                                        : parseFloat(
+                                            used.toFixed(2)
+                                        );
+
+                                allocated =
+                                    Number.isInteger(allocated)
+                                        ? allocated
+                                        : parseFloat(
+                                            allocated.toFixed(2)
+                                        );
+
+                                remaining =
+                                    Number.isInteger(remaining)
+                                        ? remaining
+                                        : parseFloat(
+                                            remaining.toFixed(2)
+                                        );
+
+
+                                /*
+                                * Escape leave name
+                                */
+                                var safeLeaveName =
+                                    $('<div>')
+                                        .text(leaveName)
+                                        .html();
+
+
+                                /*
+                                * Leave card
+                                */
+                                pillsHtml +=
+                                    '<div style="' +
+
+                                        'display:flex;' +
+
+                                        'align-items:center;' +
+
+                                        'min-width:0;' +
+
+                                        'height:62px;' +
+
+                                        'padding:8px 10px;' +
+
+                                        'border:1px solid '
+                                        + leaveBorder + ';' +
+
+                                        'border-radius:8px;' +
+
+                                        'background:'
+                                        + leaveBackground + ';' +
+
+                                    '">';
+
+
+                                /*
+                                * Leave name + remaining
+                                */
+                                pillsHtml +=
+                                    '<div style="' +
+
+                                        'flex:1 1 auto;' +
+
+                                        'min-width:0;' +
+
+                                        'padding-right:8px;' +
+
+                                    '">';
+
+
+                                /*
+                                * Leave name
+                                */
+                                pillsHtml +=
+                                    '<div style="' +
+
+                                        'font-size:11px;' +
+
+                                        'font-weight:700;' +
+
+                                        'line-height:1.2;' +
+
+                                        'color:#172033;' +
+
+                                        'white-space:nowrap;' +
+
+                                        'overflow:hidden;' +
+
+                                        'text-overflow:ellipsis;' +
+
+                                    '">' +
+
+                                        safeLeaveName +
+
+                                    '</div>';
+
+
+                                /*
+                                * Remaining amount
+                                */
+                                pillsHtml +=
+                                    '<div style="' +
+
+                                        'display:flex;' +
+
+                                        'align-items:baseline;' +
+
+                                        'gap:4px;' +
+
+                                        'margin-top:5px;' +
+
+                                        'white-space:nowrap;' +
+
+                                    '">';
+
+
+                                pillsHtml +=
+                                    '<span style="' +
+
+                                        'font-size:23px;' +
+
+                                        'font-weight:700;' +
+
+                                        'line-height:1;' +
+
+                                        'color:'
+                                        + leaveColor + ';' +
+
+                                    '">' +
+
+                                        remaining +
+
+                                    '</span>';
+
+
+                                pillsHtml +=
+                                    '<span style="' +
+
+                                        'font-size:10px;' +
+
+                                        'font-weight:500;' +
+
+                                        'color:#64748b;' +
+
+                                    '">' +
+
+                                        'days left' +
+
+                                    '</span>';
+
+
+                                pillsHtml +=
+                                    '</div>';
+
+
+                                pillsHtml +=
+                                    '</div>';
+
+
+                                /*
+                                * Separator
+                                */
+                                pillsHtml +=
+                                    '<div style="' +
+
+                                        'width:1px;' +
+
+                                        'height:38px;' +
+
+                                        'background:#d8dee8;' +
+
+                                        'margin-right:9px;' +
+
+                                        'flex-shrink:0;' +
+
+                                    '"></div>';
+
+
+                                /*
+                                * Used / allocated
+                                */
+                                pillsHtml +=
+                                    '<div style="' +
+
+                                        'flex:0 0 auto;' +
+
+                                        'min-width:42px;' +
+
+                                        'white-space:nowrap;' +
+
+                                    '">';
+
+
+                                pillsHtml +=
+                                    '<div style="' +
+
+                                        'font-size:11px;' +
+
+                                        'font-weight:700;' +
+
+                                        'line-height:1.2;' +
+
+                                        'color:#172033;' +
+
+                                    '">' +
+
+                                        used
+                                        + ' / '
+                                        + allocated +
+
+                                    '</div>';
+
+
+                                pillsHtml +=
+                                    '<div style="' +
+
+                                        'font-size:10px;' +
+
+                                        'font-weight:500;' +
+
+                                        'color:#64748b;' +
+
+                                        'margin-top:5px;' +
+
+                                    '">' +
+
+                                        'used' +
+
+                                    '</div>';
+
+
+                                pillsHtml +=
+                                    '</div>';
+
+
+                                pillsHtml +=
+                                    '</div>';
+
+                            }
+
+
+                            pillsHtml +=
+                                '</div>';
+
+
+                            $('#leaveBalancePills')
+                                .html(
+                                    pillsHtml
+                                );
+
+                        } else {
+
+                            $('#leaveBalancePills')
+                                .html(
+
+                                    '<div style="' +
+
+                                        'font-size:12px;' +
+
+                                        'color:#94a3b8;' +
+
+                                        'padding:6px 0;' +
+
+                                    '">' +
+
+                                        'No balance data' +
+
+                                    '</div>'
+
+                                );
+
                         }
-                        $('#leaveBalancePills').html(pillsHtml);
-                    } else {
-                        $('#leaveBalancePills').html('<span style="font-size:12px;color:#94a3b8;padding:6px 0;">No balance data</span>');
+
                     }
-                }).fail(function() {
-                    $('#leaveBalancePills').html('<span style="font-size:12px;color:#94a3b8;padding:6px 0;">Could not load balances</span>');
+
+                ).fail(function() {
+
+                    $('#leaveBalancePills')
+                        .html(
+
+                            '<div style="' +
+
+                                'font-size:12px;' +
+
+                                'color:#94a3b8;' +
+
+                                'padding:6px 0;' +
+
+                            '">' +
+
+                                'Could not load balances' +
+
+                            '</div>'
+
+                        );
+
                 });
 
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Day type mapping
+                |--------------------------------------------------------------------------
+                */
+
                 var DAY_TYPE_MAP = {
+
                     0: {
                         label: 'Half Day',
-                        style: 'background:#f3f4f6;color:#374151;'
+                        style:
+                            'background:#f3f4f6;' +
+                            'color:#374151;'
                     },
+
                     1: {
                         label: 'One Day',
-                        style: 'background:#d1fae5;color:#065f46;'
+                        style:
+                            'background:#d1fae5;' +
+                            'color:#065f46;'
                     },
+
                     2: {
                         label: 'Multiple Days',
-                        style: 'background:#dbeafe;color:#1e40af;'
+                        style:
+                            'background:#dbeafe;' +
+                            'color:#1e40af;'
                     },
+
                     3: {
                         label: 'Short Leave',
-                        style: 'background:#f3e8ff;color:#6b21a8;'
+                        style:
+                            'background:#f3e8ff;' +
+                            'color:#6b21a8;'
                     },
+
                     4: {
                         label: 'Covering Day',
-                        style: 'background:#fde68a;color:#92400e;'
+                        style:
+                            'background:#fde68a;' +
+                            'color:#92400e;'
                     }
+
                 };
 
-                var days = r.leave.leave_days || [];
-                var modalLeaveType = parseInt(r.leave.type != null ? r.leave.type : rowType, 10);
-                var modalDayType = parseInt(r.leave.day_type != null ? r.leave.day_type : rowDayType, 10);
 
-                // ── Build dayTypeMeta ──────────────────────────────────────────────────
-                var dayTypeMeta = DAY_TYPE_MAP[modalLeaveType] || {
-                    label: '-',
-                    style: 'background:#f3f4f6;color:#374151;'
-                };
-                if (modalLeaveType === 0) {
-                    dayTypeMeta = {
-                        label: 'Half Day (' + (modalDayType === 0 ? 'Morning' : 'Evening') + ')',
-                        style: 'background:#f3f4f6;color:#374151;'
+                var days =
+                    r.leave.leave_days || [];
+
+
+                var modalLeaveType =
+                    parseInt(
+                        r.leave.type != null
+                            ? r.leave.type
+                            : rowType,
+                        10
+                    );
+
+
+                var modalDayType =
+                    parseInt(
+                        r.leave.day_type != null
+                            ? r.leave.day_type
+                            : rowDayType,
+                        10
+                    );
+
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Build dayTypeMeta
+                |--------------------------------------------------------------------------
+                */
+
+                var dayTypeMeta =
+                    DAY_TYPE_MAP[
+                        modalLeaveType
+                    ] || {
+
+                        label: '-',
+
+                        style:
+                            'background:#f3f4f6;' +
+                            'color:#374151;'
+
                     };
+
+
+                if (
+                    modalLeaveType === 0
+                ) {
+
+                    dayTypeMeta = {
+
+                        label:
+                            'Half Day ('
+                            + (
+                                modalDayType === 0
+                                    ? 'Morning'
+                                    : 'Evening'
+                            )
+                            + ')',
+
+                        style:
+                            'background:#f3f4f6;' +
+                            'color:#374151;'
+
+                    };
+
                 }
 
-                if (days.length > 0) {
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Leave schedule
+                |--------------------------------------------------------------------------
+                */
+
+                if (
+                    days.length > 0
+                ) {
+
                     var schedHtml = '';
 
-                    if (modalLeaveType === 2 && days.length >= 2) {
-                        // ── Multiple Days: show as a single range row ──
-                        schedHtml += '<tr style="border-bottom:1px solid #f1f5f9;">';
-                        schedHtml += '<td style="padding:9px 12px;color:#1e293b;">' +
-                            days[0] + ' &mdash; ' + days[days.length - 1] +
+
+                    if (
+                        modalLeaveType === 2
+                        && days.length >= 2
+                    ) {
+
+                        /*
+                        * Multiple Days:
+                        * show as single range row
+                        */
+                        schedHtml +=
+                            '<tr style="border-bottom:1px solid #f1f5f9;">';
+
+
+                        schedHtml +=
+                            '<td style="padding:9px 12px;color:#1e293b;">'
+                            + days[0]
+                            + ' &mdash; '
+                            + days[
+                                days.length - 1
+                            ]
+                            + '</td>';
+
+
+                        schedHtml +=
+                            '<td style="padding:9px 12px;">' +
+
+                                '<span style="' +
+
+                                    'font-size:11px;' +
+
+                                    'font-weight:600;' +
+
+                                    'padding:2px 9px;' +
+
+                                    'border-radius:20px;'
+
+                                    + dayTypeMeta.style +
+
+                                '">' +
+
+                                    dayTypeMeta.label +
+
+                                '</span>' +
+
                             '</td>';
-                        schedHtml += '<td style="padding:9px 12px;"><span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;' +
-                            dayTypeMeta.style + '">' + dayTypeMeta.label + '</span></td>';
-                        schedHtml += '</tr>';
+
+
+                        schedHtml +=
+                            '</tr>';
+
                     } else {
-                        // ── Half Day / One Day / Short Leave: one row per date ──
-                        for (var d = 0; d < days.length; d++) {
-                            schedHtml += '<tr style="border-bottom:1px solid #f1f5f9;">';
-                            schedHtml += '<td style="padding:9px 12px;color:#1e293b;">' + (days[d] || '-') + '</td>';
-                            schedHtml += '<td style="padding:9px 12px;"><span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;' +
-                                dayTypeMeta.style + '">' + dayTypeMeta.label + '</span></td>';
-                            schedHtml += '</tr>';
+
+                        /*
+                        * Half Day / One Day /
+                        * Short Leave
+                        */
+                        for (
+                            var d = 0;
+                            d < days.length;
+                            d++
+                        ) {
+
+                            schedHtml +=
+                                '<tr style="border-bottom:1px solid #f1f5f9;">';
+
+
+                            schedHtml +=
+                                '<td style="padding:9px 12px;color:#1e293b;">'
+                                + (
+                                    days[d]
+                                    || '-'
+                                )
+                                + '</td>';
+
+
+                            schedHtml +=
+                                '<td style="padding:9px 12px;">' +
+
+                                    '<span style="' +
+
+                                        'font-size:11px;' +
+
+                                        'font-weight:600;' +
+
+                                        'padding:2px 9px;' +
+
+                                        'border-radius:20px;'
+
+                                        + dayTypeMeta.style +
+
+                                    '">' +
+
+                                        dayTypeMeta.label +
+
+                                    '</span>' +
+
+                                '</td>';
+
+
+                            schedHtml +=
+                                '</tr>';
+
                         }
+
                     }
 
-                    $('#leaveScheduleBody').html(schedHtml);
+
+                    $('#leaveScheduleBody')
+                        .html(
+                            schedHtml
+                        );
+
                 } else {
-                    $('#leaveScheduleBody').html('<tr><td colspan="2" style="padding:9px 12px;color:#94a3b8;">No schedule data</td></tr>');
+
+                    $('#leaveScheduleBody')
+                        .html(
+
+                            '<tr>' +
+
+                                '<td ' +
+                                    'colspan="2" ' +
+                                    'style="' +
+                                        'padding:9px 12px;' +
+                                        'color:#94a3b8;' +
+                                    '"' +
+                                '>' +
+
+                                    'No schedule data' +
+
+                                '</td>' +
+
+                            '</tr>'
+
+                        );
+
                 }
 
-                $('#leaveReason').text(r.leave.leave_reason || '-');
 
-                // Conflict check — only for pending (not view-only)
+
+                $('#leaveReason')
+                    .text(
+                        r.leave.leave_reason
+                        || '-'
+                    );
+
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Conflict check — only pending / not view-only
+                |--------------------------------------------------------------------------
+                */
+
                 if (!viewOnly) {
+
                     function toMDY(s) {
-                        if (!s) return null;
+
+                        if (!s) {
+                            return null;
+                        }
+
+
                         var p;
-                        if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
-                            p = s.split('-');
-                            return p[1] + '/' + p[2] + '/' + p[0];
-                        }
-                        if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) {
-                            p = s.split('/');
-                            return p[1] + '/' + p[0] + '/' + p[2];
-                        }
-                        return s;
-                    }
-                    var typeMap = {
-                        'Half Day': 0,
-                        'One Day': 1,
-                        'Multiple Days': 2,
-                        'Short Leave': 3
-                    };
-                    var fromDate = toMDY(days[0]);
-                    var toDate = toMDY(days[days.length - 1]);
-                    var leaveTypeNum = (typeMap[r.leave.leave_type] != null) ? typeMap[r.leave.leave_type] : (r.leave.type != null ? parseInt(r.leave.type, 10) : 1);
-                    if (fromDate) {
-                        $.get("{{ url('/check-leave-conflict') }}", {
-                            from: fromDate,
-                            to: toDate,
-                            type: leaveTypeNum
-                        }, function(cr) {
-                            var ok = cr.success;
-                            var bgStyle = ok ? 'background:#f0fdf4;border:1px solid #bbf7d0;' : 'background:#fff7ed;border:1px solid #fed7aa;';
-                            var icon = ok ? '&#10003;' : '&#9888;';
-                            var titClr = ok ? '#15803d' : '#c2410c';
-                            var titTxt = ok ? 'No conflicts found' : 'Leave conflict detected';
-                            var bodyClr = ok ? '#166534' : '#9a3412';
-                            var bodyTxt = ok ? 'No other approved leaves overlap with this period.' : cr.message;
-                            $('#adminLeaveConflictMessage').html(
-                                '<div style="border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;' + bgStyle + '">' +
-                                '<div style="font-size:16px;">' + icon + '</div>' +
-                                '<div style="font-size:12px;line-height:1.5;">' +
-                                '<div style="font-weight:600;color:' + titClr + ';">' + titTxt + '</div>' +
-                                '<span style="color:' + bodyClr + ';">' + bodyTxt + '</span>' +
-                                '</div></div>'
+
+
+                        if (
+                            /^\d{4}-\d{2}-\d{2}$/
+                                .test(s)
+                        ) {
+
+                            p =
+                                s.split('-');
+
+
+                            return (
+                                p[1]
+                                + '/'
+                                + p[2]
+                                + '/'
+                                + p[0]
                             );
-                            $('#conflictMessageSection').show();
-                        });
+
+                        }
+
+
+                        if (
+                            /^\d{2}\/\d{2}\/\d{4}$/
+                                .test(s)
+                        ) {
+
+                            p =
+                                s.split('/');
+
+
+                            return (
+                                p[1]
+                                + '/'
+                                + p[0]
+                                + '/'
+                                + p[2]
+                            );
+
+                        }
+
+
+                        return s;
+
                     }
+
+
+                    var typeMap = {
+
+                        'Half Day': 0,
+
+                        'One Day': 1,
+
+                        'Multiple Days': 2,
+
+                        'Short Leave': 3
+
+                    };
+
+
+                    var fromDate =
+                        toMDY(
+                            days[0]
+                        );
+
+
+                    var toDate =
+                        toMDY(
+                            days[
+                                days.length - 1
+                            ]
+                        );
+
+
+                    var leaveTypeNum =
+                        (
+                            typeMap[
+                                r.leave.leave_type
+                            ] != null
+                        )
+
+                            ? typeMap[
+                                r.leave.leave_type
+                            ]
+
+                            : (
+                                r.leave.type != null
+
+                                    ? parseInt(
+                                        r.leave.type,
+                                        10
+                                    )
+
+                                    : 1
+                            );
+
+
+                    if (fromDate) {
+
+                        $.get(
+                            "{{ url('/check-leave-conflict') }}",
+                            {
+
+                                from: fromDate,
+
+                                to: toDate,
+
+                                type: leaveTypeNum
+
+                            },
+                            function(cr) {
+
+                                var ok =
+                                    cr.success;
+
+
+                                var bgStyle =
+                                    ok
+
+                                        ? 'background:#f0fdf4;border:1px solid #bbf7d0;'
+
+                                        : 'background:#fff7ed;border:1px solid #fed7aa;';
+
+
+                                var icon =
+                                    ok
+                                        ? '&#10003;'
+                                        : '&#9888;';
+
+
+                                var titClr =
+                                    ok
+                                        ? '#15803d'
+                                        : '#c2410c';
+
+
+                                var titTxt =
+                                    ok
+                                        ? 'No conflicts found'
+                                        : 'Leave conflict detected';
+
+
+                                var bodyClr =
+                                    ok
+                                        ? '#166534'
+                                        : '#9a3412';
+
+
+                                var bodyTxt =
+                                    ok
+
+                                        ? 'No other approved leaves overlap with this period.'
+
+                                        : cr.message;
+
+
+                                $('#adminLeaveConflictMessage')
+                                    .html(
+
+                                        '<div style="' +
+
+                                            'border-radius:10px;' +
+
+                                            'padding:12px 14px;' +
+
+                                            'display:flex;' +
+
+                                            'gap:10px;' +
+
+                                            'align-items:flex-start;'
+
+                                            + bgStyle +
+
+                                        '">' +
+
+
+                                            '<div style="font-size:16px;">' +
+
+                                                icon +
+
+                                            '</div>' +
+
+
+                                            '<div style="' +
+
+                                                'font-size:12px;' +
+
+                                                'line-height:1.5;' +
+
+                                            '">' +
+
+
+                                                '<div style="' +
+
+                                                    'font-weight:600;' +
+
+                                                    'color:'
+                                                    + titClr
+                                                    + ';' +
+
+                                                '">' +
+
+                                                    titTxt +
+
+                                                '</div>' +
+
+
+                                                '<span style="' +
+
+                                                    'color:'
+                                                    + bodyClr
+                                                    + ';' +
+
+                                                '">' +
+
+                                                    bodyTxt +
+
+                                                '</span>' +
+
+
+                                            '</div>' +
+
+                                        '</div>'
+
+                                    );
+
+
+                                $('#conflictMessageSection')
+                                    .show();
+
+                            }
+
+                        );
+
+                    }
+
                 }
 
-                // Approve/Reject buttons — hide entirely in view-only mode
-                if (viewOnly || r.leave.status != 0) {
-                    $('#approveBtn, #rejectBtn').addClass('d-none');
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Approve / Reject buttons
+                |--------------------------------------------------------------------------
+                */
+
+                if (
+                    viewOnly
+                    || r.leave.status != 0
+                ) {
+
+                    $('#approveBtn, #rejectBtn')
+                        .addClass(
+                            'd-none'
+                        );
+
                 } else {
-                    // $('#approveBtn, #rejectBtn').removeClass('d-none').attr('data-leave-id', r.leave.id);
-                    $('#approveBtn, #rejectBtn').removeClass('d-none').attr('data-leave-id', r.leave.id).removeData('leave-id');
+
+                    $('#approveBtn, #rejectBtn')
+                        .removeClass(
+                            'd-none'
+                        )
+                        .attr(
+                            'data-leave-id',
+                            r.leave.id
+                        )
+                        .removeData(
+                            'leave-id'
+                        );
+
                 }
 
-                $('#leave_Approve_modal').modal('show');
+
+
+                $('#leave_Approve_modal')
+                    .modal(
+                        'show'
+                    );
+
 
             }).fail(function() {
-                alert('Error fetching leave request details.');
+
+                alert(
+                    'Error fetching leave request details.'
+                );
+
             });
+
         }
 
         // Pending table row → full modal with conflict + approve/reject

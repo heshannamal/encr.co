@@ -138,13 +138,8 @@ class RosterController extends Controller
         }
 
         $order = Order::find($request->order_id);
-        $organization = Organization::find($order->organization_id);
         $orderSubTotal = OrderItem::where('order_id', $request->order_id)->sum('total');
-        if ($organization->sales_tax_active == 1) {
-            $salesTax = $organization->sales_tax;
-        } else {
-            $salesTax = 0;
-        }
+        $salesTax = $order->sales_tax_rate ?? 0;
         $orderSalesTax = ($orderSubTotal / 100) * $salesTax;
         $orderShipping = $order->shipping ?? '';
         $orderArtwork = $order->artwork ?? '';
@@ -1078,13 +1073,8 @@ class RosterController extends Controller
             $orderItem->update();
 
             $order = Order::find($request->order_id);
-            $organization = Organization::find($order->organization_id);
             $orderSubTotal = OrderItem::where('order_id', $request->order_id)->sum('total');
-            if ($organization->sales_tax_active == 1) {
-                $salesTax = $organization->sales_tax;
-            } else {
-                $salesTax = 0;
-            }
+            $salesTax = $order->sales_tax_rate ?? 0;
             $orderSalesTax = ($orderSubTotal / 100) * $salesTax;
             $orderShipping = $order->shipping ?? '';
             $orderArtwork = $order->artwork ?? '';

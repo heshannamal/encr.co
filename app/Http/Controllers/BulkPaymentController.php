@@ -20,12 +20,14 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Services\PaymentService;
 use App\Models\AccountsLog;
+use App\Models\EmailNotification;
 use App\Services\EmailNotificationBuilderService;
 use Illuminate\Support\Facades\Crypt;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Blade;
+
 
 
 
@@ -106,7 +108,9 @@ class BulkPaymentController extends Controller
             ]);
     }
 
-    return $this->downloadBulkInvoicePdf(array_keys($ordersInput), $currentPayments);
+    
+
+        return $this->downloadBulkInvoicePdf(array_keys($ordersInput), $currentPayments);
     }
 
 
@@ -138,7 +142,8 @@ class BulkPaymentController extends Controller
         $customerAddress = new AnetAPI\CustomerAddressType();
         $customerAddress->setFirstName($input['first_name']);
         $customerAddress->setLastName($input['last_name']);
-        $customerAddress->setCompany($orderDetails->organizationDetails->organization_name);
+        // Authorize.Net limits company names to 50 characters.
+        $customerAddress->setCompany(mb_substr($orderDetails->organizationDetails->organization_name, 0, 50, 'UTF-8'));
         $customerAddress->setAddress($input['street']);
         $customerAddress->setCity($input['city']);
         $customerAddress->setState($input['state']);
@@ -150,7 +155,7 @@ class BulkPaymentController extends Controller
         $customerShipping = new AnetAPI\CustomerAddressType();
         $customerShipping->setFirstName($orderDetails->contactDetails['first_name']);
         $customerShipping->setLastName($orderDetails->contactDetails['last_name']);
-        $customerShipping->setCompany($orderDetails->organizationDetails['organization_name']);
+        $customerShipping->setCompany(mb_substr($orderDetails->organizationDetails['organization_name'], 0, 50, 'UTF-8'));
         $customerShipping->setAddress($orderDetails['street']);
         $customerShipping->setCity($orderDetails['city']);
         $customerShipping->setState($orderDetails['state']);
@@ -402,6 +407,8 @@ class BulkPaymentController extends Controller
         return redirect()->back()->with($msg_type, $message_text);
 
     }
+
+    
     private function customer_paypal_payment(Request $request){
 
         $orders = $request->input('orders');
@@ -1010,39 +1017,6 @@ class BulkPaymentController extends Controller
         ]);
         return "ok";
     }
-    public function downloadBulkInvoicePdf(array $orderIds, array $currentPayments)
-    {
-        $orders = Order::with([
-            'organizationDetails',
-            'contactDetails',
-            'userDetails',
-            'statusDetails',
-            'orderItems.productDetails',
-            'orderItems.statusDetails'
-        ])->whereIn('id', $orderIds)->get()
-        ->transform(function ($order) {
-                $order->payment_status = app(\App\Services\PaymentService::class)->getPaymentStatus($order->id);
-                return $order;
-            });
-
-        $pdf = pdf::loadView('pages.customer_portal.payments.bulk_invoice', [
-            'orders'   => $orders,
-            'payments' => $currentPayments,
-        ])->setPaper('a4', 'portrait');
-
-        // return $pdf->download(
-        //     'Bulk_Invoice_' . now()->format('Ymd_His') . '.pdf'
-        // );
-        // Store PDF temporarily
-        // Encode PDF as base64 for inline download
-    $pdfBase64 = base64_encode($pdf->output());
-
-    // Redirect URL after download
-    $redirectUrl = route('customer_portal.payments');
-
-    return view('pages.customer_portal.bulk_payment_redirect', compact('pdfBase64', 'redirectUrl'));
-
-    }
 
     public function sendBulkCardPaymentMail($allOrderIds, $orderIdPills, $transactionId, $paymentMadeBy, $totalAmountPaid, $paymentUrl)
     {
@@ -1158,16 +1132,15 @@ class BulkPaymentController extends Controller
             $firstOrder = $orders->first();
             $organizationName = optional(optional($firstOrder)->organizationDetails)->organization_name ?? '';
 
-            // Card details for this bulk transaction (same charge covers every order in $allOrderIds)
             $paymentCard = PaymentLog::where('transaction_id', $transactionId)
                 ->where('response_code', '1')
                 ->latest('created_at')
                 ->first();
 
             $orderRows        = [];
-            $orderTotalSum     = 0;
-            $processingFeeSum  = 0;
-            $balanceSum        = 0;
+            $orderTotalSum    = 0;
+            $processingFeeSum = 0;
+            $balanceSum       = 0;
 
             foreach ($currentPayments as $payment) {
                 $orderModel = $orders->get($payment['order_id']);
@@ -1178,21 +1151,40 @@ class BulkPaymentController extends Controller
                 $paymentStatus = $this->PaymentService->getPaymentStatus($payment['order_id']);
                 $balance = (float) str_replace(',', '', $paymentStatus['balance_to_be_paid'] ?? 0);
 
-                // finalAmount was base + 3% fee, so back out the fee for display
                 $finalAmount = (float) $payment['amount'];
                 $baseAmount  = round($finalAmount / 1.03, 2);
                 $feeAmount   = round($finalAmount - $baseAmount, 2);
+
+                $subTotal = (float) str_replace(',', '', $orderModel->sub_total ?? 0);
+                $artwork  = (float) str_replace(',', '', $orderModel->artwork ?? 0);
+                $discount = (float) str_replace(',', '', $orderModel->discount ?? 0);
+
+                $invoiceAmount  = $subTotal + $artwork;
+                $discountAmount = 0;
+
+                if ($orderModel->discount_hidation == 1) {
+                    if ($orderModel->discountType == 1) {         
+                        $discountAmount = ($invoiceAmount / 100) * $discount;
+                    } elseif ($orderModel->discountType == 2) {  
+                        $discountAmount = $discount;
+                    }
+                }
+
+                $totalInvoiceAmount = $invoiceAmount - $discountAmount;
 
                 $orderTotalSum    += (float) $orderModel->order_total;
                 $processingFeeSum += $feeAmount;
                 $balanceSum       += $balance;
 
                 $orderRows[] = [
-                    'order_no'    => $payment['order_no'] ?? $orderModel->order_no,
-                    'order_link'  => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
-                    'order_total' => number_format((float) $orderModel->order_total, 2),
-                    'paid_amount' => number_format($finalAmount, 2),
-                    'balance'     => number_format($balance, 2),
+                    'order_no'     => $payment['order_no'] ?? $orderModel->order_no,
+                    'order_link'   => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
+                    'sub_total'    => number_format($totalInvoiceAmount, 2),
+                    'sales_tax'    => number_format((float) str_replace(',', '', $orderModel->sales_tax ?? 0), 2),
+                    'shipping_fee' => number_format((float) str_replace(',', '', $orderModel->shipping ?? 0), 2),
+                    'order_total'  => number_format((float) $orderModel->order_total, 2),
+                    'paid_amount'  => number_format($finalAmount, 2),
+                    'balance'      => number_format($balance, 2),
                 ];
             }
 
@@ -1200,9 +1192,6 @@ class BulkPaymentController extends Controller
             if ($paymentCard && !empty($paymentCard->card_last_digits)) {
                 $paymentMethodLabel .= ' ending in ' . $paymentCard->card_last_digits;
             }
-
-            $paymentStatusLabel = $balanceSum > 0 ? 'Partial' : 'Paid';
-            $statusColor        = $balanceSum > 0 ? '#FFB916' : '#2dce89';
 
             app(EmailNotificationBuilderService::class)->sendEmailFromTemplate('key_email_customer_bulk_payment_receipt_card', [
                 'custom_email'       => $mail,
@@ -1226,8 +1215,8 @@ class BulkPaymentController extends Controller
                 'paid_amount'        => number_format((float) $totalAmountPaid, 2),
                 'total_paid'         => number_format((float) $totalAmountPaid, 2),
                 'balance_remaining'  => number_format($balanceSum, 2),
-                'payment_status'     => $paymentStatusLabel,
-                'status_color'       => $statusColor,
+                'payment_status'     => $balanceSum > 0 ? 'Partial' : 'Paid',
+                'status_color'       => $balanceSum > 0 ? '#FFB916' : '#2dce89',
                 'paid_date'          => now()->format('m-d-Y'),
             ]);
 
@@ -1258,7 +1247,10 @@ class BulkPaymentController extends Controller
             }
 
             $organizationName = optional($firstOrder->organizationDetails)->organization_name ?? '';
-            $customerName = trim(optional($firstOrder->contactDetails)->first_name . ' ' . optional($firstOrder->contactDetails)->last_name);
+            $customerName = trim(
+                (optional($firstOrder->contactDetails)->first_name ?? '') . ' ' .
+                (optional($firstOrder->contactDetails)->last_name ?? '')
+            );
 
             $orderRows     = [];
             $orderTotalSum = 0;
@@ -1270,18 +1262,40 @@ class BulkPaymentController extends Controller
                     continue;
                 }
 
+                // Balance Invoice amount (same as the order page)
                 $paymentStatus = $this->PaymentService->getPaymentStatus($payment['order_id']);
                 $balance = (float) str_replace(',', '', $paymentStatus['balance_to_be_paid'] ?? 0);
+
+                // Sub Total = Total invoice amount = (sub_total + artwork) - discount
+                $subTotal = (float) str_replace(',', '', $orderModel->sub_total ?? 0);
+                $artwork  = (float) str_replace(',', '', $orderModel->artwork ?? 0);
+                $discount = (float) str_replace(',', '', $orderModel->discount ?? 0);
+
+                $invoiceAmount  = $subTotal + $artwork;
+                $discountAmount = 0;
+
+                if ($orderModel->discount_hidation == 1) {
+                    if ($orderModel->discountType == 1) {         
+                        $discountAmount = ($invoiceAmount / 100) * $discount;
+                    } elseif ($orderModel->discountType == 2) {   
+                        $discountAmount = $discount;
+                    }
+                }
+
+                $totalInvoiceAmount = $invoiceAmount - $discountAmount;
 
                 $orderTotalSum += (float) $orderModel->order_total;
                 $balanceSum    += $balance;
 
                 $orderRows[] = [
-                    'order_no'    => $payment['order_no'] ?? $orderModel->order_no,
-                    'order_link'  => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
-                    'order_total' => number_format((float) $orderModel->order_total, 2),
-                    'paid_amount' => number_format((float) $payment['amount'], 2),
-                    'balance'     => number_format($balance, 2),
+                    'order_no'     => $payment['order_no'] ?? $orderModel->order_no,
+                    'order_link'   => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
+                    'sub_total'    => number_format($totalInvoiceAmount, 2),
+                    'sales_tax'    => number_format((float) str_replace(',', '', $orderModel->sales_tax ?? 0), 2),
+                    'shipping_fee' => number_format((float) str_replace(',', '', $orderModel->shipping ?? 0), 2),
+                    'order_total'  => number_format((float) $orderModel->order_total, 2),
+                    'paid_amount'  => number_format((float) $payment['amount'], 2),   
+                    'balance'      => number_format($balance, 2),
                 ];
             }
 
@@ -1298,8 +1312,8 @@ class BulkPaymentController extends Controller
                 'customer_country'  => $firstOrder->country ?? '',
                 'order_rows'        => $orderRows,
                 'order_count'       => count($orderRows),
-                'check_front_url'   => url($checkFront),
-                'check_back_url'    => url($checkBack),
+                'check_front_url'   => $checkFront ? url($checkFront) : '',
+                'check_back_url'    => $checkBack ? url($checkBack) : '',
                 'order_total'       => number_format($orderTotalSum, 2),
                 'paid_amount'       => number_format((float) $totalAmountPaid, 2),
                 'balance_remaining' => number_format($balanceSum, 2),
@@ -1334,7 +1348,10 @@ class BulkPaymentController extends Controller
             }
 
             $organizationName = optional($firstOrder->organizationDetails)->organization_name ?? '';
-            $customerName = trim(optional($firstOrder->contactDetails)->first_name . ' ' . optional($firstOrder->contactDetails)->last_name);
+            $customerName = trim(
+                (optional($firstOrder->contactDetails)->first_name ?? '') . ' ' .
+                (optional($firstOrder->contactDetails)->last_name ?? '')
+            );
 
             $orderRows     = [];
             $orderTotalSum = 0;
@@ -1346,22 +1363,43 @@ class BulkPaymentController extends Controller
                     continue;
                 }
 
+                // Balance Invoice amount (same as the order page)
                 $paymentStatus = $this->PaymentService->getPaymentStatus($payment['order_id']);
                 $balance = (float) str_replace(',', '', $paymentStatus['balance_to_be_paid'] ?? 0);
+
+                // Sub Total = Total invoice amount = (sub_total + artwork) - discount
+                $subTotal = (float) str_replace(',', '', $orderModel->sub_total ?? 0);
+                $artwork  = (float) str_replace(',', '', $orderModel->artwork ?? 0);
+                $discount = (float) str_replace(',', '', $orderModel->discount ?? 0);
+
+                $invoiceAmount  = $subTotal + $artwork;
+                $discountAmount = 0;
+
+                if ($orderModel->discount_hidation == 1) {
+                    if ($orderModel->discountType == 1) {          
+                        $discountAmount = ($invoiceAmount / 100) * $discount;
+                    } elseif ($orderModel->discountType == 2) {    
+                        $discountAmount = $discount;
+                    }
+                }
+
+                $totalInvoiceAmount = $invoiceAmount - $discountAmount;
 
                 $orderTotalSum += (float) $orderModel->order_total;
                 $balanceSum    += $balance;
 
                 $orderRows[] = [
-                    'order_no'    => $payment['order_no'] ?? $orderModel->order_no,
-                    'order_link'  => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
-                    'order_total' => number_format((float) $orderModel->order_total, 2),
-                    'paid_amount' => number_format((float) $payment['amount'], 2),
-                    'balance'     => number_format($balance, 2),
+                    'order_no'     => $payment['order_no'] ?? $orderModel->order_no,
+                    'order_link'   => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
+                    'sub_total'    => number_format($totalInvoiceAmount, 2),
+                    'sales_tax'    => number_format((float) str_replace(',', '', $orderModel->sales_tax ?? 0), 2),
+                    'shipping_fee' => number_format((float) str_replace(',', '', $orderModel->shipping ?? 0), 2),
+                    'order_total'  => number_format((float) $orderModel->order_total, 2),
+                    'paid_amount'  => number_format((float) $payment['amount'], 2),   // Venmo = no fee
+                    'balance'      => number_format($balance, 2),
                 ];
             }
 
-            // NOTE: intentionally not passing reject_reason anywhere in this email.
             app(EmailNotificationBuilderService::class)->sendEmailFromTemplate('key_email_customer_bulk_payment_receipt_venmo', [
                 'custom_email'      => $mail,
                 'organization_name' => $organizationName,
@@ -1375,7 +1413,7 @@ class BulkPaymentController extends Controller
                 'customer_country'  => $firstOrder->country ?? '',
                 'order_rows'        => $orderRows,
                 'order_count'       => count($orderRows),
-                'venmo_receipt_url' => url($venmoReceipt),
+                'venmo_receipt_url' => $venmoReceipt ? url($venmoReceipt) : '',
                 'order_total'       => number_format($orderTotalSum, 2),
                 'paid_amount'       => number_format((float) $totalAmountPaid, 2),
                 'balance_remaining' => number_format($balanceSum, 2),
@@ -1410,12 +1448,16 @@ class BulkPaymentController extends Controller
             }
 
             $organizationName = optional($firstOrder->organizationDetails)->organization_name ?? '';
-            $customerName = trim(optional($firstOrder->contactDetails)->first_name . ' ' . optional($firstOrder->contactDetails)->last_name);
+            $customerName = trim(
+                (optional($firstOrder->contactDetails)->first_name ?? '') . ' ' .
+                (optional($firstOrder->contactDetails)->last_name ?? '')
+            );
 
             $orderRows        = [];
-            $orderTotalSum     = 0;
-            $processingFeeSum  = 0;
-            $balanceSum        = 0;
+            $orderTotalSum    = 0;
+            $processingFeeSum = 0;
+            $submittedSum     = 0; 
+            $balanceSum       = 0;
 
             foreach ($currentPayments as $payment) {
                 $orderModel = $orders->get($payment['order_id']);
@@ -1426,21 +1468,41 @@ class BulkPaymentController extends Controller
                 $paymentStatus = $this->PaymentService->getPaymentStatus($payment['order_id']);
                 $balance = (float) str_replace(',', '', $paymentStatus['balance_to_be_paid'] ?? 0);
 
-                // finalAmount was base + 3% fee, so back out the fee for display
                 $finalAmount = (float) $payment['amount'];
                 $baseAmount  = round($finalAmount / 1.03, 2);
                 $feeAmount   = round($finalAmount - $baseAmount, 2);
 
+                $subTotal = (float) str_replace(',', '', $orderModel->sub_total ?? 0);
+                $artwork  = (float) str_replace(',', '', $orderModel->artwork ?? 0);
+                $discount = (float) str_replace(',', '', $orderModel->discount ?? 0);
+
+                $invoiceAmount  = $subTotal + $artwork;
+                $discountAmount = 0;
+
+                if ($orderModel->discount_hidation == 1) {
+                    if ($orderModel->discountType == 1) {         
+                        $discountAmount = ($invoiceAmount / 100) * $discount;
+                    } elseif ($orderModel->discountType == 2) {    
+                        $discountAmount = $discount;
+                    }
+                }
+
+                $totalInvoiceAmount = $invoiceAmount - $discountAmount;
+
                 $orderTotalSum    += (float) $orderModel->order_total;
                 $processingFeeSum += $feeAmount;
+                $submittedSum     += $finalAmount;
                 $balanceSum       += $balance;
 
                 $orderRows[] = [
-                    'order_no'    => $payment['order_no'] ?? $orderModel->order_no,
-                    'order_link'  => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
-                    'order_total' => number_format((float) $orderModel->order_total, 2),
-                    'paid_amount' => number_format($finalAmount, 2),
-                    'balance'     => number_format($balance, 2),
+                    'order_no'     => $payment['order_no'] ?? $orderModel->order_no,
+                    'order_link'   => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
+                    'sub_total'    => number_format($totalInvoiceAmount, 2),
+                    'sales_tax'    => number_format((float) str_replace(',', '', $orderModel->sales_tax ?? 0), 2),
+                    'shipping_fee' => number_format((float) str_replace(',', '', $orderModel->shipping ?? 0), 2),
+                    'order_total'  => number_format((float) $orderModel->order_total, 2),
+                    'paid_amount'  => number_format($finalAmount, 2),   
+                    'balance'      => number_format($balance, 2),
                 ];
             }
 
@@ -1457,10 +1519,11 @@ class BulkPaymentController extends Controller
                 'customer_country'   => $firstOrder->country ?? '',
                 'order_rows'         => $orderRows,
                 'order_count'        => count($orderRows),
-                'paypal_receipt_url' => asset($paypalReceipt),
+                'paypal_receipt_url' => $paypalReceipt ? asset($paypalReceipt) : '',
                 'order_total'        => number_format($orderTotalSum, 2),
                 'processing_fee'     => number_format($processingFeeSum, 2),
-                'paid_amount'        => number_format((float) $totalAmountPaid, 2),
+                'paid_amount'        => number_format($submittedSum, 2),
+                'total_paid'         => number_format($submittedSum, 2),
                 'balance_remaining'  => number_format($balanceSum, 2),
                 'paid_date'          => now()->format('m-d-Y'),
             ]);
@@ -1471,5 +1534,671 @@ class BulkPaymentController extends Controller
             return false;
         }
     }
+
+    public function downloadBulkInvoicePdf(array $orderIds, array $currentPayments)
+    {
+        $pdfContent = null;
+
+        // NEW: same template + same data as the customer email, chosen by payment method
+        try {
+            $method = $currentPayments[0]['method'] ?? null;
+
+            $templateKey  = null;
+            $templateData = [];
+            $imageSrcMap  = [];   // NEW: image URL → base64 image (PDF only)
+
+            switch ($method) {
+                case 'Card':
+                    $templateKey  = 'key_email_customer_bulk_payment_receipt_card';
+                    $templateData = $this->buildCardReceiptData($orderIds, $currentPayments);
+                    break;
+
+                case 'Check':
+                    $templateKey  = 'key_email_customer_bulk_payment_receipt_check';
+                    $templateData = $this->buildCheckReceiptData($orderIds, $currentPayments);
+
+                    // NEW: embed the check images from disk so DomPDF does not need to download them
+                    foreach (['front', 'back'] as $side) {
+                        $url  = $templateData["check_{$side}_url"] ?? '';
+                        $path = $templateData["check_{$side}_path"] ?? '';
+                        $dataUri = $this->imageFileToDataUri($path);
+
+                        if ($url && $dataUri) {
+                            $imageSrcMap[$url] = $dataUri;
+                        }
+                    }
+                    break;
+
+                case 'PayPal':
+                    $templateKey  = 'key_email_customer_bulk_payment_receipt_paypal';
+                    $templateData = $this->buildPaypalReceiptData($orderIds, $currentPayments);
+
+                    // Embed the PayPal receipt image from disk so DomPDF does not download it
+                    $url     = $templateData['paypal_receipt_url'] ?? '';
+                    $dataUri = $this->imageFileToDataUri($templateData['paypal_receipt_path'] ?? '');
+
+                    if ($url && $dataUri) {
+                        $imageSrcMap[$url] = $dataUri;
+                    }
+                    break;
+                    
+                case 'Venmo':
+                    $templateKey  = 'key_email_customer_bulk_payment_receipt_venmo';
+                    $templateData = $this->buildVenmoReceiptData($orderIds, $currentPayments);
+
+                    // Embed the Venmo receipt image from disk so DomPDF does not download it
+                    $url     = $templateData['venmo_receipt_url'] ?? '';
+                    $dataUri = $this->imageFileToDataUri($templateData['venmo_receipt_path'] ?? '');
+
+                    if ($url && $dataUri) {
+                        $imageSrcMap[$url] = $dataUri;
+                    }
+                    break;
+            }
+
+            if ($templateKey) {
+                $pdfContent = $this->renderReceiptTemplateToPdf($templateKey, $templateData, $imageSrcMap);
+            }
+        } catch (\Throwable $e) {
+            logger()->error('downloadBulkInvoicePdf template PDF failed: ' . $e->getMessage());
+        }
+
+        // OLD: method not added yet OR any error → old bulk_invoice PDF
+        if (empty($pdfContent)) {
+            $orders = Order::with([
+                'organizationDetails',
+                'contactDetails',
+                'userDetails',
+                'statusDetails',
+                'orderItems.productDetails',
+                'orderItems.statusDetails'
+            ])->whereIn('id', $orderIds)->get()
+            ->transform(function ($order) {
+                $order->payment_status = app(\App\Services\PaymentService::class)->getPaymentStatus($order->id);
+                return $order;
+            });
+
+            $pdfContent = pdf::loadView('pages.customer_portal.payments.bulk_invoice', [
+                'orders'   => $orders,
+                'payments' => $currentPayments,
+            ])->setPaper('a4', 'portrait')->output();
+        }
+
+        $pdfBase64   = base64_encode($pdfContent);
+        $redirectUrl = route('customer_portal.payments');
+
+        return view('pages.customer_portal.bulk_payment_redirect', compact('pdfBase64', 'redirectUrl'));
+    }
+
+    /**
+     * Render an email template with data and return the PDF bytes.
+     */
+    private function renderReceiptTemplateToPdf(string $templateKey, array $templateData, array $imageSrcMap = []): ?string
+    {
+        $template = EmailNotification::where('template_key', $templateKey)->first();
+        if (!$template || empty($template->body)) {
+            throw new \Exception("Template {$templateKey} not found.");
+        }
+
+        $html = Blade::render($template->body, array_merge(['order_items_Array' => ''], $templateData));
+
+        // Swap image URLs for embedded images (links/href stay as real URLs)
+        foreach ($imageSrcMap as $url => $dataUri) {
+            $html = str_replace('src="' . e($url) . '"', 'src="' . $dataUri . '"', $html);
+            $html = str_replace('src="' . $url . '"', 'src="' . $dataUri . '"', $html);
+        }
+
+        // Prepare for PDF (remove outer wrapper + A4 width)
+        $html = $this->prepareReceiptHtmlForPdf($html);
+
+        // NEW: footer → at the bottom of the page, rounded corners kept
+        $html = $this->movePdfFooterToFirstPageBottom($html);
+
+        return pdf::loadHTML($html)
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'isRemoteEnabled' => true,   // still needed for the https:// logo images
+                'defaultFont'     => 'Arial',
+            ])
+            ->output();
+    }
+
+    /**
+     * CARD data, same as sendBulkCardPaymentMailCustomer().
+     */
+    private function buildCardReceiptData(array $orderIds, array $currentPayments): array
+    {
+        $request = request();
+
+        $transactionId   = $currentPayments[0]['transaction_id'] ?? null;
+        $paymentMadeBy   = $request->owner;
+        $totalAmountPaid = array_sum(array_column($currentPayments, 'amount'));
+
+        $billinginfo = [
+            'first_name' => $request->input('first_name', ''),
+            'last_name'  => $request->input('last_name', ''),
+            'street'     => $request->input('street', ''),
+            'city'       => $request->input('city', ''),
+            'state'      => $request->input('state', ''),
+            'zip_code'   => $request->input('zip_code', ''),
+            'country'    => $request->input('country', ''),
+            'phone'      => $request->input('phone', ''),
+            'email'      => $request->input('email', ''),
+        ];
+
+        $orders = Order::with('organizationDetails')->whereIn('id', $orderIds)->get()->keyBy('id');
+        $firstOrder = $orders->first();
+        $organizationName = optional(optional($firstOrder)->organizationDetails)->organization_name ?? '';
+
+        $paymentCard = PaymentLog::where('transaction_id', $transactionId)
+            ->where('response_code', '1')
+            ->latest('created_at')
+            ->first();
+
+        $orderRows        = [];
+        $orderTotalSum    = 0;
+        $processingFeeSum = 0;
+        $balanceSum       = 0;
+
+        foreach ($currentPayments as $payment) {
+            $orderModel = $orders->get($payment['order_id']);
+            if (!$orderModel) {
+                continue;
+            }
+
+            // Balance Invoice amount (same as the order page)
+            $paymentStatus = $this->PaymentService->getPaymentStatus($payment['order_id']);
+            $balance = (float) str_replace(',', '', $paymentStatus['balance_to_be_paid'] ?? 0);
+
+            // finalAmount = base + 3% fee → take the fee out for the summary
+            $finalAmount = (float) $payment['amount'];
+            $baseAmount  = round($finalAmount / 1.03, 2);
+            $feeAmount   = round($finalAmount - $baseAmount, 2);
+
+            // Sub Total = Total invoice amount = (sub_total + artwork) - discount
+            $subTotal = (float) str_replace(',', '', $orderModel->sub_total ?? 0);
+            $artwork  = (float) str_replace(',', '', $orderModel->artwork ?? 0);
+            $discount = (float) str_replace(',', '', $orderModel->discount ?? 0);
+
+            $invoiceAmount  = $subTotal + $artwork;
+            $discountAmount = 0;
+
+            if ($orderModel->discount_hidation == 1) {
+                if ($orderModel->discountType == 1) {          // percentage
+                    $discountAmount = ($invoiceAmount / 100) * $discount;
+                } elseif ($orderModel->discountType == 2) {    // fixed
+                    $discountAmount = $discount;
+                }
+            }
+
+            $totalInvoiceAmount = $invoiceAmount - $discountAmount;
+
+            $orderTotalSum    += (float) $orderModel->order_total;
+            $processingFeeSum += $feeAmount;
+            $balanceSum       += $balance;
+
+            $orderRows[] = [
+                'order_no'     => $payment['order_no'] ?? $orderModel->order_no,
+                'order_link'   => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
+                'sub_total'    => number_format($totalInvoiceAmount, 2),
+                'sales_tax'    => number_format((float) str_replace(',', '', $orderModel->sales_tax ?? 0), 2),
+                'shipping_fee' => number_format((float) str_replace(',', '', $orderModel->shipping ?? 0), 2),
+                'order_total'  => number_format((float) $orderModel->order_total, 2),
+                'paid_amount'  => number_format($finalAmount, 2),  
+                'balance'      => number_format($balance, 2),
+            ];
+        }
+
+        $paymentMethodLabel = 'Card';
+        if ($paymentCard && !empty($paymentCard->card_last_digits)) {
+            $paymentMethodLabel .= ' ending in ' . $paymentCard->card_last_digits;
+        }
+
+        return [
+            'organization_name'  => $organizationName,
+            'order_rows'         => $orderRows,
+            'order_count'        => count($orderRows),
+            'billing_first_name' => $billinginfo['first_name'] ?: ($paymentMadeBy ?? ''),
+            'billing_last_name'  => $billinginfo['last_name'],
+            'billing_email'      => $billinginfo['email'],
+            'billing_phone'      => $billinginfo['phone'],
+            'billing_street'     => $billinginfo['street'],
+            'billing_city'       => $billinginfo['city'],
+            'billing_state'      => $billinginfo['state'],
+            'billing_postal'     => $billinginfo['zip_code'],
+            'billing_country'    => $billinginfo['country'],
+            'paymentCard'        => $paymentCard,
+            'transaction_id'     => $transactionId ?? '',
+            'payment_method'     => $paymentMethodLabel,
+            'order_total'        => number_format($orderTotalSum, 2),
+            'processing_fee'     => number_format($processingFeeSum, 2),
+            'paid_amount'        => number_format((float) $totalAmountPaid, 2),
+            'total_paid'         => number_format((float) $totalAmountPaid, 2),
+            'balance_remaining'  => number_format($balanceSum, 2),
+            'payment_status'     => $balanceSum > 0 ? 'Partial' : 'Paid',
+            'status_color'       => $balanceSum > 0 ? '#FFB916' : '#2dce89',
+            'paid_date'          => now()->format('m-d-Y'),
+        ];
+    }
+
+    /**
+     * CHECK data, same as sendBulkCheckPaymentMailCustomer().
+     */
+    private function buildCheckReceiptData(array $orderIds, array $currentPayments): array
+    {
+        $totalAmountPaid = array_sum(array_column($currentPayments, 'amount'));
+
+        // transaction_id is "CHK{checkPaymentId}" → get the saved check images
+        $checkFront = '';
+        $checkBack  = '';
+        $transactionId = (string) ($currentPayments[0]['transaction_id'] ?? '');
+        if (str_starts_with($transactionId, 'CHK')) {
+            $checkPayment = CheckPayment::find((int) substr($transactionId, 3));
+            $checkFront   = $checkPayment->check_front ?? '';
+            $checkBack    = $checkPayment->check_back ?? '';
+        }
+
+        $orders = Order::with(['organizationDetails', 'contactDetails'])->whereIn('id', $orderIds)->get()->keyBy('id');
+        $firstOrder = $orders->first();
+        if (!$firstOrder) {
+            throw new \Exception('buildCheckReceiptData: no orders found.');
+        }
+
+        $mail = $firstOrder->email ?? optional($firstOrder->contactDetails)->email;
+        $organizationName = optional($firstOrder->organizationDetails)->organization_name ?? '';
+        $customerName = trim(
+            (optional($firstOrder->contactDetails)->first_name ?? '') . ' ' .
+            (optional($firstOrder->contactDetails)->last_name ?? '')
+        );
+
+        $orderRows     = [];
+        $orderTotalSum = 0;
+        $balanceSum    = 0;
+
+        foreach ($currentPayments as $payment) {
+            $orderModel = $orders->get($payment['order_id']);
+            if (!$orderModel) {
+                continue;
+            }
+
+            // Balance Invoice amount (same as the order page)
+            $paymentStatus = $this->PaymentService->getPaymentStatus($payment['order_id']);
+            $balance = (float) str_replace(',', '', $paymentStatus['balance_to_be_paid'] ?? 0);
+
+            // Sub Total = Total invoice amount = (sub_total + artwork) - discount
+            $subTotal = (float) str_replace(',', '', $orderModel->sub_total ?? 0);
+            $artwork  = (float) str_replace(',', '', $orderModel->artwork ?? 0);
+            $discount = (float) str_replace(',', '', $orderModel->discount ?? 0);
+
+            $invoiceAmount  = $subTotal + $artwork;
+            $discountAmount = 0;
+
+            if ($orderModel->discount_hidation == 1) {
+                if ($orderModel->discountType == 1) {          // percentage
+                    $discountAmount = ($invoiceAmount / 100) * $discount;
+                } elseif ($orderModel->discountType == 2) {    // fixed
+                    $discountAmount = $discount;
+                }
+            }
+
+            $totalInvoiceAmount = $invoiceAmount - $discountAmount;
+
+            $orderTotalSum += (float) $orderModel->order_total;
+            $balanceSum    += $balance;
+
+            $orderRows[] = [
+                'order_no'     => $payment['order_no'] ?? $orderModel->order_no,
+                'order_link'   => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
+                'sub_total'    => number_format($totalInvoiceAmount, 2),
+                'sales_tax'    => number_format((float) str_replace(',', '', $orderModel->sales_tax ?? 0), 2),
+                'shipping_fee' => number_format((float) str_replace(',', '', $orderModel->shipping ?? 0), 2),
+                'order_total'  => number_format((float) $orderModel->order_total, 2),
+                'paid_amount'  => number_format((float) $payment['amount'], 2),
+                'balance'      => number_format($balance, 2),
+            ];
+        }
+
+        return [
+            'organization_name' => $organizationName,
+            'customer_name'     => $customerName,
+            'customer_email'    => $mail ?? '',
+            'customer_phone'    => $firstOrder->phone_no ?? '',
+            'customer_street'   => $firstOrder->street ?? '',
+            'customer_city'     => $firstOrder->city ?? '',
+            'customer_state'    => $firstOrder->state ?? '',
+            'customer_postal'   => $firstOrder->postal_code ?? '',
+            'customer_country'  => $firstOrder->country ?? '',
+            'order_rows'        => $orderRows,
+            'order_count'       => count($orderRows),
+            'check_front_url'   => $checkFront ? url($checkFront) : '',
+            'check_back_url'    => $checkBack ? url($checkBack) : '',
+            'check_front_path'  => $checkFront,   
+            'check_back_path'   => $checkBack,   
+            'order_total'       => number_format($orderTotalSum, 2),
+            'paid_amount'       => number_format((float) $totalAmountPaid, 2),
+            'balance_remaining' => number_format($balanceSum, 2),
+            'paid_date'         => now()->format('m-d-Y'),
+        ];
+    }
+
+    /**
+     * PAYPAL data, same as sendBulkPaypalPaymentMailCustomer().
+     */
+    private function buildPaypalReceiptData(array $orderIds, array $currentPayments): array
+    {
+        $paypalReceipt = '';
+        $transactionId = (string) ($currentPayments[0]['transaction_id'] ?? '');
+        if (strpos($transactionId, 'PAYPAL') === 0) {
+            $paypalPayment = PaypalPayment::find((int) substr($transactionId, 6));
+            $paypalReceipt = $paypalPayment->paypal_receipt ?? '';
+        }
+
+        $orders = Order::with(['organizationDetails', 'contactDetails'])->whereIn('id', $orderIds)->get()->keyBy('id');
+        $firstOrder = $orders->first();
+        if (!$firstOrder) {
+            throw new \Exception('buildPaypalReceiptData: no orders found.');
+        }
+
+        $mail = $firstOrder->email ?? optional($firstOrder->contactDetails)->email;
+        $organizationName = optional($firstOrder->organizationDetails)->organization_name ?? '';
+        $customerName = trim(
+            (optional($firstOrder->contactDetails)->first_name ?? '') . ' ' .
+            (optional($firstOrder->contactDetails)->last_name ?? '')
+        );
+
+        $orderRows        = [];
+        $orderTotalSum    = 0;
+        $processingFeeSum = 0;
+        $submittedSum     = 0;   
+        $balanceSum       = 0;
+
+        foreach ($currentPayments as $payment) {
+            $orderModel = $orders->get($payment['order_id']);
+            if (!$orderModel) {
+                continue;
+            }
+
+            // Balance Invoice amount (same as the order page)
+            $paymentStatus = $this->PaymentService->getPaymentStatus($payment['order_id']);
+            $balance = (float) str_replace(',', '', $paymentStatus['balance_to_be_paid'] ?? 0);
+
+            $finalAmount = (float) $payment['amount'];
+            $baseAmount  = round($finalAmount / 1.03, 2);
+            $feeAmount   = round($finalAmount - $baseAmount, 2);
+
+            $subTotal = (float) str_replace(',', '', $orderModel->sub_total ?? 0);
+            $artwork  = (float) str_replace(',', '', $orderModel->artwork ?? 0);
+            $discount = (float) str_replace(',', '', $orderModel->discount ?? 0);
+
+            $invoiceAmount  = $subTotal + $artwork;
+            $discountAmount = 0;
+
+            if ($orderModel->discount_hidation == 1) {
+                if ($orderModel->discountType == 1) {         
+                    $discountAmount = ($invoiceAmount / 100) * $discount;
+                } elseif ($orderModel->discountType == 2) {   
+                    $discountAmount = $discount;
+                }
+            }
+
+            $totalInvoiceAmount = $invoiceAmount - $discountAmount;
+
+            $orderTotalSum    += (float) $orderModel->order_total;
+            $processingFeeSum += $feeAmount;
+            $submittedSum     += $finalAmount;
+            $balanceSum       += $balance;
+
+            $orderRows[] = [
+                'order_no'     => $payment['order_no'] ?? $orderModel->order_no,
+                'order_link'   => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
+                'sub_total'    => number_format($totalInvoiceAmount, 2),
+                'sales_tax'    => number_format((float) str_replace(',', '', $orderModel->sales_tax ?? 0), 2),
+                'shipping_fee' => number_format((float) str_replace(',', '', $orderModel->shipping ?? 0), 2),
+                'order_total'  => number_format((float) $orderModel->order_total, 2),
+                'paid_amount'  => number_format($finalAmount, 2),  
+                'balance'      => number_format($balance, 2),
+            ];
+        }
+
+        return [
+            'organization_name'   => $organizationName,
+            'customer_name'       => $customerName,
+            'customer_email'      => $mail ?? '',
+            'customer_phone'      => $firstOrder->phone_no ?? '',
+            'customer_street'     => $firstOrder->street ?? '',
+            'customer_city'       => $firstOrder->city ?? '',
+            'customer_state'      => $firstOrder->state ?? '',
+            'customer_postal'     => $firstOrder->postal_code ?? '',
+            'customer_country'    => $firstOrder->country ?? '',
+            'order_rows'          => $orderRows,
+            'order_count'         => count($orderRows),
+            'paypal_receipt_url'  => $paypalReceipt ? asset($paypalReceipt) : '',
+            'paypal_receipt_path' => $paypalReceipt,   // file path, used only for the PDF
+            'order_total'         => number_format($orderTotalSum, 2),
+            'processing_fee'      => number_format($processingFeeSum, 2),
+            'paid_amount'         => number_format($submittedSum, 2),
+            'total_paid'          => number_format($submittedSum, 2),
+            'balance_remaining'   => number_format($balanceSum, 2),
+            'paid_date'           => now()->format('m-d-Y'),
+        ];
+    }
+
+    /**
+     * VENMO data, same as sendBulkVenmoPaymentMailCustomer().
+     */
+    private function buildVenmoReceiptData(array $orderIds, array $currentPayments): array
+    {
+        // Same total as customer_venmo_payment(): sum of amounts (Venmo has no fee)
+        $totalAmountPaid = array_sum(array_column($currentPayments, 'amount'));
+
+        // transaction_id is "Venmo{venmoPaymentId}" → get the saved receipt file
+        $venmoReceipt  = '';
+        $transactionId = (string) ($currentPayments[0]['transaction_id'] ?? '');
+        if (strpos($transactionId, 'Venmo') === 0) {
+            $venmoPayment = VenmoPayment::find((int) substr($transactionId, 5));
+            $venmoReceipt = $venmoPayment->venmo_receipt ?? '';
+        }
+
+        $orders = Order::with(['organizationDetails', 'contactDetails'])->whereIn('id', $orderIds)->get()->keyBy('id');
+        $firstOrder = $orders->first();
+        if (!$firstOrder) {
+            throw new \Exception('buildVenmoReceiptData: no orders found.');
+        }
+
+        $mail = $firstOrder->email ?? optional($firstOrder->contactDetails)->email;
+        $organizationName = optional($firstOrder->organizationDetails)->organization_name ?? '';
+        $customerName = trim(
+            (optional($firstOrder->contactDetails)->first_name ?? '') . ' ' .
+            (optional($firstOrder->contactDetails)->last_name ?? '')
+        );
+
+        $orderRows     = [];
+        $orderTotalSum = 0;
+        $balanceSum    = 0;
+
+        foreach ($currentPayments as $payment) {
+            $orderModel = $orders->get($payment['order_id']);
+            if (!$orderModel) {
+                continue;
+            }
+
+            $paymentStatus = $this->PaymentService->getPaymentStatus($payment['order_id']);
+            $balance = (float) str_replace(',', '', $paymentStatus['balance_to_be_paid'] ?? 0);
+
+            // Sub Total = Total invoice amount = (sub_total + artwork) - discount
+            $subTotal = (float) str_replace(',', '', $orderModel->sub_total ?? 0);
+            $artwork  = (float) str_replace(',', '', $orderModel->artwork ?? 0);
+            $discount = (float) str_replace(',', '', $orderModel->discount ?? 0);
+
+            $invoiceAmount  = $subTotal + $artwork;
+            $discountAmount = 0;
+
+            if ($orderModel->discount_hidation == 1) {
+                if ($orderModel->discountType == 1) {          // percentage
+                    $discountAmount = ($invoiceAmount / 100) * $discount;
+                } elseif ($orderModel->discountType == 2) {    // fixed
+                    $discountAmount = $discount;
+                }
+            }
+
+            $totalInvoiceAmount = $invoiceAmount - $discountAmount;
+
+            $orderTotalSum += (float) $orderModel->order_total;
+            $balanceSum    += $balance;
+
+            $orderRows[] = [
+                'order_no'     => $payment['order_no'] ?? $orderModel->order_no,
+                'order_link'   => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
+                'sub_total'    => number_format($totalInvoiceAmount, 2),
+                'sales_tax'    => number_format((float) str_replace(',', '', $orderModel->sales_tax ?? 0), 2),
+                'shipping_fee' => number_format((float) str_replace(',', '', $orderModel->shipping ?? 0), 2),
+                'order_total'  => number_format((float) $orderModel->order_total, 2),
+                'paid_amount'  => number_format((float) $payment['amount'], 2),   // Venmo = no fee
+                'balance'      => number_format($balance, 2),
+            ];
+        }
+
+        return [
+            'organization_name'  => $organizationName,
+            'customer_name'      => $customerName,
+            'customer_email'     => $mail ?? '',
+            'customer_phone'     => $firstOrder->phone_no ?? '',
+            'customer_street'    => $firstOrder->street ?? '',
+            'customer_city'      => $firstOrder->city ?? '',
+            'customer_state'     => $firstOrder->state ?? '',
+            'customer_postal'    => $firstOrder->postal_code ?? '',
+            'customer_country'   => $firstOrder->country ?? '',
+            'order_rows'         => $orderRows,
+            'order_count'        => count($orderRows),
+            'venmo_receipt_url'  => $venmoReceipt ? url($venmoReceipt) : '',
+            'venmo_receipt_path' => $venmoReceipt,   // file path, used only for the PDF
+            'order_total'        => number_format($orderTotalSum, 2),
+            'paid_amount'        => number_format((float) $totalAmountPaid, 2),
+            'balance_remaining'  => number_format($balanceSum, 2),
+            'paid_date'          => now()->format('m-d-Y'),
+        ];
+    }
+
+
+    /**
+     * Make the email HTML fit an A4 PDF page (templates are 880px, A4 portrait is ~794px).
+     */
+    private function prepareReceiptHtmlForPdf(string $html): string
+    {
+        // 1) Remove outer wrapper
+        $html = preg_replace(
+            '/(<body[^>]*>)\s*<table[^>]*width="100%"[^>]*>\s*<tr>\s*<td[^>]*align="center"[^>]*>/is',
+            '$1',
+            $html,
+            1
+        );
+        $html = preg_replace(
+            '/<\/td>\s*<\/tr>\s*<\/table>\s*(<\/body>)/is',
+            '$1',
+            $html,
+            1
+        );
+
+        // 2) width="880" → 100%. Small widths like the logos (240, 200) stay the same.
+        $html = preg_replace_callback('/width="(\d+)"/', function ($m) {
+            return ((int) $m[1] > 600) ? 'width="100%"' : $m[0];
+        }, $html);
+
+        $pdfCss = '<style>
+            @page { margin: 20px; }
+            body { background: #ffffff !important; margin: 0; padding: 0; }
+            tr { page-break-inside: avoid; }
+        </style>';
+
+        if (stripos($html, '</head>') !== false) {
+            return str_ireplace('</head>', $pdfCss . '</head>', $html);
+        }
+
+        return $pdfCss . $html;
+    }
+
+
+     private function imageFileToDataUri(?string $path): ?string
+    {
+        if (empty($path)) {
+            return null;
+        }
+
+        $clean = ltrim($path, '/');
+
+        // Possible places where the uploaded file can be
+        $candidates = [
+            public_path($clean),                                                  // public/uploads/...
+            storage_path('app/public/' . preg_replace('#^storage/#', '', $clean)), // storage/app/public/...
+            base_path($clean),
+            $path,                                                                // already an absolute path
+        ];
+
+        foreach ($candidates as $file) {
+            if (is_file($file) && is_readable($file)) {
+                $mime = mime_content_type($file) ?: '';
+
+                // DomPDF supports jpg, png, gif (and webp on newer versions). Not HEIC or PDF.
+                if (!str_starts_with($mime, 'image/')) {
+                    logger()->warning("Check image is not an image file: {$file} ({$mime})");
+                    return null;
+                }
+
+                return 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($file));
+            }
+        }
+
+        logger()->warning("Check image file not found for PDF: {$path}");
+        return null;
+    }
+
+    /**
+     * PDF only: take the email footer out of the content and show it ONCE,
+     */
+    private function movePdfFooterToFirstPageBottom(string $html): string
+    {
+        $footerHeight = 105;   // height of the footer area (px)
+
+        // Find the footer row: <!-- FOOTER --> <tr>...</tr> right before </table></body>
+        if (!preg_match('/<!--\s*FOOTER\s*-->\s*(<tr>.*?<\/tr>)\s*(<\/table>\s*<\/body>)/is', $html, $match)) {
+            return $html;
+        }
+
+        $footerRow = $match[1];
+
+        // 1) Remove the footer from the main content
+        $html = str_replace($match[0], $match[2], $html);
+
+        // 2) Footer drawn ONCE (absolute = only on page 1), rounded bottom corners like the email
+        $firstPageFooter = '
+            <div class="pdf-first-page-footer">
+                <div style="background:#ECEBE5;border-radius:0 0 12px 12px;overflow:hidden;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                        style="border-collapse:collapse;">' . $footerRow . '</table>
+                </div>
+            </div>';
+
+        $html = preg_replace('/(<body[^>]*>)/i', '$1' . $firstPageFooter, $html, 1);
+
+        // 3) Reserve space at the bottom of PAGE 1 for the footer
+        $footerCss = '<style>
+            @page { margin: 20px; }
+            @page :first { margin-bottom: ' . ($footerHeight + 25) . 'px; }
+            .pdf-first-page-footer {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -' . ($footerHeight + 5) . 'px;
+                height: ' . $footerHeight . 'px;
+            }
+        </style>';
+
+        if (stripos($html, '</head>') !== false) {
+            return str_ireplace('</head>', $footerCss . '</head>', $html);
+        }
+
+        return $footerCss . $html;
+    }
+
 
 }

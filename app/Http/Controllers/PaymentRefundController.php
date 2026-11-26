@@ -31,6 +31,7 @@ class PaymentRefundController extends Controller
         if (!$paymentLog) {
             return response()->json([
                 'success' => false,
+                'status' => 'error',
                 'message' => 'Successful card payment record not found.',
             ], 404);
         }
@@ -40,15 +41,23 @@ class PaymentRefundController extends Controller
         if (!$order) {
             return response()->json([
                 'success' => false,
+                'status' => 'error',
                 'message' => 'Order not found.',
             ], 404);
         }
 
         /*
-         * Existing Encore card payments store the gross charged amount in
-         * PaymentLog.amount. The order/customer amount is gross * 100 / 103.
+         * Normal Encore PaymentLog.amount is the gross amount charged to the
+         * card, including the existing 3% fee.
+         *
+         * The refund modal amount is the order/customer amount, therefore a
+         * settled refund sends amount * 103 / 100 back to Authorize.Net.
          */
-        $refundAmount = round((float) $request->amount, 2);
+        $refundAmount = round(
+            (float) $request->amount,
+            2
+        );
+
         $gatewayRefundAmount = round(
             $refundAmount * 103 / 100,
             2
@@ -59,11 +68,19 @@ class PaymentRefundController extends Controller
             2
         );
 
-        if ($gatewayRefundAmount > ($remainingGrossAmount + 0.01)) {
+        $maxRefundAmount = round(
+            $remainingGrossAmount * 100 / 103,
+            2
+        );
+
+        if ($refundAmount > ($maxRefundAmount + 0.001)) {
             return response()->json([
                 'success' => false,
+                'status' => 'error',
                 'message' =>
-                    'Refund amount exceeds the remaining refundable card amount.',
+                    'Refund amount cannot exceed $'
+                    . number_format($maxRefundAmount, 2)
+                    . '.',
             ], 422);
         }
 
@@ -76,6 +93,7 @@ class PaymentRefundController extends Controller
         ) {
             return response()->json([
                 'success' => false,
+                'status' => 'error',
                 'message' =>
                     'Authorize.Net gateway configuration is incomplete.',
             ], 500);
@@ -92,31 +110,34 @@ class PaymentRefundController extends Controller
             $gateway['transaction_key']
         );
 
-        $detailsRequest =
+        /*
+         * Step 1: Read the original Authorize.Net transaction.
+         */
+        $transDetailsRequest =
             new AnetAPI\GetTransactionDetailsRequest();
 
-        $detailsRequest->setMerchantAuthentication(
+        $transDetailsRequest->setMerchantAuthentication(
             $merchantAuthentication
         );
 
-        $detailsRequest->setTransId(
+        $transDetailsRequest->setTransId(
             $request->transaction_id
         );
 
-        $detailsController =
+        $transDetailsController =
             new AnetController\GetTransactionDetailsController(
-                $detailsRequest
+                $transDetailsRequest
             );
 
-        $detailsResponse =
-            $detailsController->executeWithApiResponse(
+        $transDetailsResponse =
+            $transDetailsController->executeWithApiResponse(
                 $gateway['environment']
             );
 
         if (
-            !$detailsResponse ||
-            !$detailsResponse->getMessages() ||
-            $detailsResponse->getMessages()->getResultCode() !== 'Ok'
+            !$transDetailsResponse ||
+            !$transDetailsResponse->getMessages() ||
+            $transDetailsResponse->getMessages()->getResultCode() !== 'Ok'
         ) {
             $this->saveRefundLog(
                 $request->order_id,
@@ -127,12 +148,14 @@ class PaymentRefundController extends Controller
 
             return response()->json([
                 'success' => false,
+                'status' => 'error',
                 'message' =>
-                    'Failed to retrieve the Authorize.Net transaction details.',
+                    'Failed to retrieve transaction status from Authorize.Net.',
             ], 400);
         }
 
-        $transaction = $detailsResponse->getTransaction();
+        $transaction =
+            $transDetailsResponse->getTransaction();
 
         if (!$transaction) {
             $this->saveRefundLog(
@@ -144,6 +167,7 @@ class PaymentRefundController extends Controller
 
             return response()->json([
                 'success' => false,
+                'status' => 'error',
                 'message' =>
                     'Authorize.Net transaction details were empty.',
             ], 400);
@@ -153,104 +177,125 @@ class PaymentRefundController extends Controller
             (string) $transaction->getTransactionStatus();
 
         /*
-         * Do not turn a partial refund request into a full void.
-         * Wait for settlement before allowing a partial refund.
+         * Same behavior as the StoreCardPayment refund flow:
+         *
+         * - settledSuccessfully => partial refund
+         * - anything else        => void original transaction
+         *
+         * Important: a void cancels the WHOLE unsettled transaction.
          */
-        if ($transactionStatus !== 'settledSuccessfully') {
-            $this->saveRefundLog(
-                $request->order_id,
-                $request->transaction_id,
-                $gatewayRefundAmount,
-                0
-            );
-
-            return response()->json([
-                'success' => false,
-                'message' =>
-                    'This card transaction is not settled yet. '
-                    . 'Partial refund is available after Authorize.Net settlement. '
-                    . 'Current status: '
-                    . $transactionStatus,
-            ], 422);
-        }
-
-        $cardNumber = '';
-
-        if (
-            $transaction->getPayment() &&
-            $transaction->getPayment()->getCreditCard()
-        ) {
-            $cardNumber = (string) $transaction
-                ->getPayment()
-                ->getCreditCard()
-                ->getCardNumber();
-        }
-
-        $digits = preg_replace('/\D+/', '', $cardNumber);
-
-        $last4 = strlen($digits) >= 4
-            ? substr($digits, -4)
-            : '';
-
-        if ($last4 === '') {
-            $this->saveRefundLog(
-                $request->order_id,
-                $request->transaction_id,
-                $gatewayRefundAmount,
-                0
-            );
-
-            return response()->json([
-                'success' => false,
-                'message' =>
-                    'Unable to determine the original card last four digits.',
-            ], 422);
-        }
-
-        $creditCard = new AnetAPI\CreditCardType();
-        $creditCard->setCardNumber($last4);
-        $creditCard->setExpirationDate('XXXX');
-
-        $paymentType = new AnetAPI\PaymentType();
-        $paymentType->setCreditCard($creditCard);
+        $isVoid =
+            $transactionStatus !== 'settledSuccessfully';
 
         $transactionRequest =
             new AnetAPI\TransactionRequestType();
-
-        $transactionRequest->setTransactionType(
-            'refundTransaction'
-        );
-
-        $transactionRequest->setAmount(
-            $gatewayRefundAmount
-        );
 
         $transactionRequest->setRefTransId(
             $request->transaction_id
         );
 
-        $transactionRequest->setPayment(
-            $paymentType
-        );
+        if (!$isVoid) {
+            /*
+             * Settled payment: create a normal partial refund.
+             */
+            $cardNumber = '';
 
-        $createRequest =
+            if (
+                $transaction->getPayment() &&
+                $transaction->getPayment()->getCreditCard()
+            ) {
+                $cardNumber = (string) $transaction
+                    ->getPayment()
+                    ->getCreditCard()
+                    ->getCardNumber();
+            }
+
+            $digits = preg_replace(
+                '/\D+/',
+                '',
+                $cardNumber
+            );
+
+            $last4 = strlen($digits) >= 4
+                ? substr($digits, -4)
+                : '';
+
+            if ($last4 === '') {
+                $this->saveRefundLog(
+                    $request->order_id,
+                    $request->transaction_id,
+                    $gatewayRefundAmount,
+                    0
+                );
+
+                return response()->json([
+                    'success' => false,
+                    'status' => 'error',
+                    'message' =>
+                        'Unable to determine the original card last four digits.',
+                ], 422);
+            }
+
+            $creditCard =
+                new AnetAPI\CreditCardType();
+
+            $creditCard->setCardNumber(
+                $last4
+            );
+
+            $creditCard->setExpirationDate(
+                'XXXX'
+            );
+
+            $paymentType =
+                new AnetAPI\PaymentType();
+
+            $paymentType->setCreditCard(
+                $creditCard
+            );
+
+            $transactionRequest->setTransactionType(
+                'refundTransaction'
+            );
+
+            $transactionRequest->setAmount(
+                $gatewayRefundAmount
+            );
+
+            $transactionRequest->setPayment(
+                $paymentType
+            );
+        } else {
+            /*
+             * Unsettled payment: void the complete original transaction.
+             * Authorize.Net voidTransaction does not accept a partial amount.
+             */
+            $transactionRequest->setTransactionType(
+                'voidTransaction'
+            );
+        }
+
+        /*
+         * Step 2: Execute refund or void.
+         */
+        $requestObj =
             new AnetAPI\CreateTransactionRequest();
 
-        $createRequest->setMerchantAuthentication(
+        $requestObj->setMerchantAuthentication(
             $merchantAuthentication
         );
 
-        $createRequest->setRefId(
-            'refund-' . time()
+        $requestObj->setRefId(
+            'ref' . time()
         );
 
-        $createRequest->setTransactionRequest(
+        $requestObj->setTransactionRequest(
             $transactionRequest
         );
 
         $controller =
             new AnetController\CreateTransactionController(
-                $createRequest
+                $requestObj
             );
 
         $response =
@@ -259,117 +304,197 @@ class PaymentRefundController extends Controller
             );
 
         if (
-            !$response ||
-            !$response->getMessages() ||
-            $response->getMessages()->getResultCode() !== 'Ok'
+            $response &&
+            $response->getMessages() &&
+            $response->getMessages()->getResultCode() === 'Ok'
         ) {
-            $this->saveRefundLog(
-                $request->order_id,
-                $request->transaction_id,
-                $gatewayRefundAmount,
-                0
-            );
-
-            $message = 'Authorize.Net refund failed.';
+            $transactionResponse =
+                $response->getTransactionResponse();
 
             if (
-                $response &&
-                $response->getMessages() &&
-                $response->getMessages()->getMessage()
+                $transactionResponse &&
+                (string) $transactionResponse->getResponseCode() === '1'
             ) {
-                $messages =
-                    $response->getMessages()->getMessage();
+                /*
+                 * Authorize.Net can return transaction ID "0" for a void.
+                 * Keep the original transaction ID as the resolved reference,
+                 * matching the working StoreCardPayment refund implementation.
+                 */
+                $resolvedTransactionId =
+                    $transactionResponse->getTransId();
 
-                if (!empty($messages[0])) {
-                    $message .=
-                        ' ' .
-                        $messages[0]->getText();
+                if (
+                    $isVoid ||
+                    (int) $resolvedTransactionId === 0
+                ) {
+                    $resolvedTransactionId =
+                        $request->transaction_id;
                 }
+
+                if ($isVoid) {
+                    /*
+                     * A void cancels the full remaining unsettled charge.
+                     * Do not record only the amount typed into the modal.
+                     */
+                    $processedGrossAmount =
+                        $remainingGrossAmount;
+
+                    $processedBaseAmount = round(
+                        $remainingGrossAmount * 100 / 103,
+                        2
+                    );
+
+                    $paymentLog->amount = 0;
+                } else {
+                    $processedGrossAmount =
+                        $gatewayRefundAmount;
+
+                    $processedBaseAmount =
+                        $refundAmount;
+
+                    $paymentLog->amount = max(
+                        0,
+                        round(
+                            $remainingGrossAmount -
+                            $gatewayRefundAmount,
+                            2
+                        )
+                    );
+                }
+
+                $paymentLog->save();
+
+                /*
+                 * Keep transaction_id as the ORIGINAL gateway transaction ID.
+                 * refund_details() uses this value to retrieve this payment's
+                 * full refund/void history.
+                 */
+                $this->saveRefundLog(
+                    $request->order_id,
+                    $request->transaction_id,
+                    $processedGrossAmount,
+                    1
+                );
+
+                $actionLabel =
+                    $isVoid
+                        ? 'Void'
+                        : 'Refund';
+
+                $message =
+                    $actionLabel
+                    . ' successful. Transaction ID: '
+                    . $resolvedTransactionId;
+
+                if ($isVoid) {
+                    $message .=
+                        '. The complete unsettled card transaction was voided.';
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'status' => 'success',
+                    'action' =>
+                        $isVoid
+                            ? 'void'
+                            : 'refund',
+                    'message' =>
+                        $message,
+                    'transaction_id' =>
+                        $resolvedTransactionId,
+                    'original_transaction_id' =>
+                        $request->transaction_id,
+                    'refund_amount' =>
+                        $processedBaseAmount,
+                    'gateway_refund_amount' =>
+                        $processedGrossAmount,
+                    'remaining_gross_amount' =>
+                        (float) $paymentLog->amount,
+                    'remaining_refund_amount' =>
+                        round(
+                            ((float) $paymentLog->amount)
+                            * 100
+                            / 103,
+                            2
+                        ),
+                ]);
             }
 
-            return response()->json([
-                'success' => false,
-                'message' => $message,
-            ], 400);
-        }
-
-        $transactionResponse =
-            $response->getTransactionResponse();
-
-        if (
-            !$transactionResponse ||
-            (string) $transactionResponse->getResponseCode() !== '1'
-        ) {
-            $this->saveRefundLog(
-                $request->order_id,
-                $request->transaction_id,
-                $gatewayRefundAmount,
-                0
-            );
-
-            $message = 'Refund failed.';
+            /*
+             * Authorize.Net transaction-level error.
+             */
+            $error =
+                'Unknown transaction error.';
 
             if (
                 $transactionResponse &&
                 $transactionResponse->getErrors()
             ) {
-                $errors =
-                    $transactionResponse->getErrors();
-
-                if (!empty($errors[0])) {
-                    $message .=
-                        ' ' .
-                        $errors[0]->getErrorText();
+                foreach (
+                    $transactionResponse->getErrors()
+                    as $transactionError
+                ) {
+                    $error =
+                        $transactionError->getErrorText();
                 }
             }
 
+            $attemptedAmount =
+                $isVoid
+                    ? $remainingGrossAmount
+                    : $gatewayRefundAmount;
+
+            $this->saveRefundLog(
+                $request->order_id,
+                $request->transaction_id,
+                $attemptedAmount,
+                0
+            );
+
             return response()->json([
                 'success' => false,
-                'message' => $message,
+                'status' => 'error',
+                'message' => $error,
             ], 400);
         }
 
         /*
-         * Preserve the current Encore accounting behavior:
-         * PaymentLog.amount becomes the remaining gross card amount.
+         * General Authorize.Net failure.
          */
-        $paymentLog->amount = max(
-            0,
-            round(
-                $remainingGrossAmount -
-                $gatewayRefundAmount,
-                2
-            )
-        );
+        $message =
+            'Transaction failed.';
 
-        $paymentLog->save();
+        if (
+            $response &&
+            $response->getMessages() &&
+            $response->getMessages()->getMessage()
+        ) {
+            foreach (
+                $response->getMessages()->getMessage()
+                as $gatewayMessage
+            ) {
+                $message =
+                    $gatewayMessage->getText();
+            }
+        }
+
+        $attemptedAmount =
+            $isVoid
+                ? $remainingGrossAmount
+                : $gatewayRefundAmount;
 
         $this->saveRefundLog(
             $request->order_id,
             $request->transaction_id,
-            $gatewayRefundAmount,
-            1
+            $attemptedAmount,
+            0
         );
 
         return response()->json([
-            'success' => true,
-            'message' => 'Card refund processed successfully.',
-            'refund_transaction_id' =>
-                $transactionResponse->getTransId(),
-            'refund_amount' =>
-                $refundAmount,
-            'gateway_refund_amount' =>
-                $gatewayRefundAmount,
-            'remaining_gross_amount' =>
-                (float) $paymentLog->amount,
-            'remaining_refund_amount' =>
-                round(
-                    ((float) $paymentLog->amount) *
-                    100 /
-                    103,
-                    2
-                ),
-        ]);
+            'success' => false,
+            'status' => 'error',
+            'message' => $message,
+        ], 400);
     }
 
     private function saveRefundLog(
@@ -387,11 +512,10 @@ class PaymentRefundController extends Controller
         $refundLog->transaction_id =
             $transactionId;
 
-        $refundLog->amount =
-            round(
-                (float) $gatewayAmount,
-                2
-            );
+        $refundLog->amount = round(
+            (float) $gatewayAmount,
+            2
+        );
 
         $refundLog->user_id =
             Auth::id();

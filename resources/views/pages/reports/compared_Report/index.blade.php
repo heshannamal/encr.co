@@ -163,6 +163,308 @@
     .select-width-style .select2-container{
         width: 10rem !important;
     }
+
+    /* Mobile Responsive CSS matching Figma design */
+    @media (max-width: 767.98px) {
+        .card{
+            background-color: transparent !important;
+        }
+        .content-position {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+            margin-top: 80px !important;
+            background-color: #f8fafc !important;
+        }
+
+        /* Order Header & Export PDF button header alignment */
+        .content-position {
+            position: relative;
+        }
+
+        /* Stop horizontal overflow / page shifting */
+        html, body {
+            overflow-x: hidden !important;
+        }
+        #scrollTable,
+        #summary_filter_form,
+        #summary_filter_form .row {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Fix 1: Select2 dropdown must stay inside the card */
+        .select2-container--open .select2-dropdown {
+            width: 200px !important;
+            /* width: auto !important; */
+            /* min-width: 0 !important; */
+            /* max-width: calc(100vw - 50px) !important; */
+            left: 0 !important;
+            box-sizing: border-box !important;
+        }
+        .select2-container--open {
+            max-width: calc(100vw - 50px) !important;
+        }
+        .select2-search--dropdown .select2-search__field {
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Fix 2: Report title input - kill the 400px width and black border */
+        #summary_filter_form .select-width-style-item {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        #summary_filter_form input#title,
+        #summary_filter_form input#title:focus {
+            width: 100% !important;
+            max-width: 100% !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background-color: transparent !important;
+            box-sizing: border-box !important;
+        }
+        #scrollTable {
+            margin-top: 5px !important;
+            margin-bottom: 15px !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        /* Filter Form inside single white card */
+        #summary_filter_form {
+            background: #ffffff !important;
+            border-radius: 16px !important;
+            padding: 16px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+            border: 1px solid #f1f5f9 !important;
+        }
+
+        #summary_filter_form .row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        /* Stack each filter item 100% width line-by-line so titles and values fit without truncation */
+        #summary_filter_form .row:first-child {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+
+        #summary_filter_form .row:first-child .filter_row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            margin-bottom: 0 !important;
+            width: 100% !important;
+        }
+
+        #summary_filter_form .filter_row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            margin-bottom: 12px !important;
+            background-color: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            padding: 6px 12px !important;
+            box-shadow: none !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            height: 46px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Enable title labels inside filter rows */
+        #summary_filter_form .filter_row .date_p {
+            display: inline-block !important;
+            font-size: 13px !important;
+            color: #334155 !important;
+            font-weight: 600 !important;
+            white-space: nowrap !important;
+            margin-bottom: 0 !important;
+            margin-right: 8px !important;
+            flex-shrink: 0 !important;
+        }
+
+        #summary_filter_form .paymen_type_div {
+            flex: 1 !important;
+            width: auto !important;
+            min-width: 0 !important;
+            padding-left: 0 !important;
+        }
+
+        #summary_filter_form .select-width-style,
+        #summary_filter_form .select-width-style-item {
+            width: 100% !important;
+            flex: 1 !important;
+            min-width: 0 !important;
+        }
+
+        #summary_filter_form .select2-container {
+            width: 100% !important;
+            min-width: 0 !important;
+        }
+
+        #summary_filter_form .select2-container--default .select2-selection--single {
+            background-color: transparent !important;
+            border: none !important;
+            height: 34px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        #summary_filter_form .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #64748b !important;
+            padding-left: 4px !important;
+            font-size: 13px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+        }
+
+        #summary_filter_form .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 34px !important;
+            right: 0 !important;
+        }
+
+        #summary_filter_form input#title {
+            width: 100% !important;
+            border: none !important;
+            background-color: transparent !important;
+            height: 34px !important;
+            font-size: 13px !important;
+            color: #334155 !important;
+            padding: 0 4px !important;
+        }
+
+        #summary_filter_form input#title::placeholder {
+            color: #94a3b8 !important;
+        }
+
+        #summary_filter_form .row.mt-2 {
+            /* margin-top: 12px !important; */
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        #summary_filter_form .row.mt-2 .filter_row {
+            margin-bottom: 12px !important;
+        }
+
+        #summary_filter_form div[style*="margin-left: 45px"] {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        /* Dark compare button styled exact as Figma */
+        #pin-compare {
+            width: 100% !important;
+            height: 46px !important;
+            margin-top: 4px !important;
+            background-color: #0d1527 !important;
+            color: #ffffff !important;
+            border-radius: 10px !important;
+            font-weight: 500 !important;
+            font-size: 14px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border: none !important;
+            text-transform: capitalize !important;
+            box-shadow: 0 4px 12px rgba(13, 21, 39, 0.15) !important;
+        }
+
+        /* Floating Export PDF button top right */
+        #summary_filter_form .col {
+            position: absolute !important;
+            top: -55px !important;
+            right: 15px !important;
+            width: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        #exportPDF_report {
+            background-color: #46e3b7 !important;
+            color: #ffffff !important;
+            border-radius: 20px !important;
+            padding: 6px 18px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            height: 36px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border: none !important;
+            box-shadow: 0 4px 10px rgba(70, 227, 183, 0.3) !important;
+        }
+
+        /* Chart container styling into clean white cards */
+        #report_area1, #report_area2 {
+            margin-left: 0 !important;
+            padding: 0 !important;
+        }
+
+        #compared-chart-Label {
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            margin-top: 25px !important;
+            margin-bottom: 20px !important;
+            text-align: center !important;
+            line-height: 1.4 !important;
+        }
+
+        #report_area1 .row, #report_area2 .row {
+            display: flex !important;
+            flex-direction: column !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            gap: 15px !important;
+        }
+
+        #report_area1 .col-5, #report_area2 .col-5 {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: 0 0 100% !important;
+            background: #ffffff !important;
+            border-radius: 16px !important;
+            padding: 15px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+            border: 1px solid #f1f5f9 !important;
+            box-sizing: border-box !important;
+        }
+
+        #report_area1 canvas, #report_area2 canvas {
+            max-width: 100% !important;
+            height: 260px !important;
+        }
+
+        #report-text, #report-text2, #report-text3 {
+            padding: 10px 5px !important;
+            color: #334155 !important;
+            font-size: 14px !important;
+            line-height: 1.6 !important;
+        }
+
+        #report-text h3, #report-text2 h3, #report-text3 h3 {
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            margin-top: 15px !important;
+            margin-bottom: 10px !important;
+        }
+
+        #report-text2 ul {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            padding-left: 15px !important;
+        }
+    }
 </style>
 
 
@@ -385,25 +687,27 @@ var comparedChart = null;
         });
         let hoverTimeout;
 
-        if ($('#minimize_icon').css('display') != 'none') {
-            $('#minimize_icon')[0].click();
-        }
-
-        $('#sidenav-main').hover(
-            function() {
-                hoverTimeout = setTimeout(function() {
-                    if ($('#maximize_icon').css('display') != 'none') {
-                        $('#maximize_icon').click();
-                    }
-                }, 500);
-            },
-            function() {
-                clearTimeout(hoverTimeout);
-                if ($('#minimize_icon').css('display') != 'none') {
-                    $('#minimize_icon')[0].click();
-                }
+        if ($(window).width() > 767) {
+            if ($('#minimize_icon').length && $('#minimize_icon').css('display') != 'none') {
+                $('#minimize_icon')[0].click();
             }
-        );
+
+            $('#sidenav-main').hover(
+                function() {
+                    hoverTimeout = setTimeout(function() {
+                        if ($('#maximize_icon').length && $('#maximize_icon').css('display') != 'none') {
+                            $('#maximize_icon').click();
+                        }
+                    }, 500);
+                },
+                function() {
+                    clearTimeout(hoverTimeout);
+                    if ($('#minimize_icon').length && $('#minimize_icon').css('display') != 'none') {
+                        $('#minimize_icon')[0].click();
+                    }
+                }
+            );
+        }
 
 
 

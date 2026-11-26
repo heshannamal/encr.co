@@ -33,7 +33,20 @@ class StoreProduct extends Model implements Auditable
     }
     public function sizes()
     {
-        return $this->hasMany(StoreProductSize::class, 'store_product_id')->with('size');
+        $sizeOrder = [31, 1, 2, 3, 4, 5, 6, 7, 8, 9, 26];
+
+        $order = implode(',', $sizeOrder);
+
+        return $this->hasMany(StoreProductSize::class, 'store_product_id')
+            ->with('size')
+            ->orderByRaw("
+                CASE
+                    WHEN size_id IN ($order) THEN 0
+                    ELSE 1
+                END
+            ")
+            ->orderByRaw("FIELD(size_id, $order)")
+            ->orderBy('id');
     }
     public function StoreProductAddedVariant()
     {
@@ -144,7 +157,7 @@ class StoreProduct extends Model implements Auditable
                     if (array_key_exists($originalKey, $auditData[$valueKey])) {
                         $value = $auditData[$valueKey][$originalKey];
                         $resolvedValue = ($value !== null && $value !== '') ? $mapping['resolve']($value) : null;
-                        
+
                         $auditData[$valueKey][$mapping['new_key']] = $resolvedValue;
                         unset($auditData[$valueKey][$originalKey]);
                     }

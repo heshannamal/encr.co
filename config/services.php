@@ -77,4 +77,10 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
+    'ecommerce' => [
+        'api_url' => env('ECOM_API_URL'),
+        'api_key' => env('ECOM_API_KEY', 'admin_data_api'),
+        'api_token' => env('ECOM_API_TOKEN'),
+        'timeout' => env('ECOM_API_TIMEOUT', 15),
+    ],
 ];

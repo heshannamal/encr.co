@@ -463,6 +463,7 @@ class OrganizationController extends Controller
     }
 
     public function update(Request $request){
+        $request->validate(['shipping_county' => 'nullable|string|max:255']);
         $validator = \Validator::make(
             $request->all(), [
                 'organization_name' => 'required',
@@ -533,6 +534,12 @@ class OrganizationController extends Controller
         $organization->shipping_country = $request->shipping_country;
 
         $organization->same_as_shipping_address = $request->has('same_as_shipping_address') ? 1 : 0;
+        if ($request->has('shipping_county')) {
+            $organization->shipping_county = trim((string) $request->shipping_county) ?: null;
+            if ($organization->isDirty('shipping_county')) {
+                $organization->shipping_county_checked_at = $organization->shipping_county ? now() : null;
+            }
+        }
         if(!$request->has('same_as_shipping_address')){
             $organization->billing_street = $request->billing_street ?? null;
             $organization->billing_city = $request->billing_city ?? null;
@@ -563,11 +570,7 @@ class OrganizationController extends Controller
             $orderSubTotal = OrderItem::where('order_id', $order->id)->sum('total');
 
             $orderDetails = Order::find($order->id);
-            if ($request->sales_tax_active == "1") {
-                $salesTax = $request->sales_tax;
-            } else {
-                $salesTax = 0;
-            }
+            $salesTax = $orderDetails->sales_tax_rate ?? 0;
             $orderSalesTax = ($orderSubTotal / 100) * $salesTax;
             $orderShipping = $orderDetails->shipping ?? '';
             $orderArtwork = $orderDetails->artwork ?? '';
@@ -751,7 +754,6 @@ class OrganizationController extends Controller
             ], 422);
         }
 
-        $existingShipment = OrganizationSampleShipment::where('organization_id', $id)->first();
         $receivedDate = Carbon::createFromFormat('m/d/Y', trim($request->received_date))->format('Y-m-d');
 
         // The sample shipment keeps its own shipping-address snapshot.
@@ -772,10 +774,10 @@ class OrganizationController extends Controller
             ? $request->input('shipping_country')
             : $organization->shipping_country;
 
-        $shipment = OrganizationSampleShipment::updateOrCreate(
-            ['organization_id' => $id],
+        $shipment = OrganizationSampleShipment::create(
             [
-                'status' => $existingShipment && $existingShipment->status === 'delivered' ? 'delivered' : 'requested',
+                'organization_id' => $id,
+                'status' => 'requested',
                 'received_date' => $receivedDate,
                 // 'delivered_date' => $existingShipment ? $existingShipment->delivered_date : null,
                 'products' => $products->all(),
@@ -789,9 +791,7 @@ class OrganizationController extends Controller
                 // 'tracking_link' => $request->input('tracking_link'),
                 // 'tracking_number' => $request->input('tracking_number'),
                 'note' => $request->input('note'),
-                'created_by' => $existingShipment && $existingShipment->created_by
-                    ? $existingShipment->created_by
-                    : Auth::id(),
+                'created_by' => Auth::id(),
             ]
         );
 
@@ -930,7 +930,8 @@ class OrganizationController extends Controller
         }
 
         $organization = Organization::findOrFail($id);
-        $shipment = OrganizationSampleShipment::where('organization_id', $id)->first();
+        $shipment = OrganizationSampleShipment::where('organization_id', $id)
+            ->where('id', $request->input('shipment_id'))->first();
 
         if (!$shipment) {
             return response()->json([
@@ -962,12 +963,36 @@ class OrganizationController extends Controller
             'tracking_link' => 'required|string|max:255',
             'tracking_number' => 'required|string|max:255',
             'note' => 'nullable|string|max:65000',
+        ], [
+            'required' => 'Please enter :attribute.',
+            'date_format' => 'Please enter :attribute in MM/DD/YYYY format.',
+            'array' => 'Please select valid :attribute.',
+            'integer' => 'Please select a valid :attribute.',
+            'exists' => 'The selected :attribute is invalid or unavailable.',
+            'string' => 'The :attribute must be text.',
+            'max.string' => 'The :attribute must not exceed :max characters.',
+        ], [
+            'delivered_date' => 'delivery date',
+            'received_date' => 'received date',
+            'products' => 'product samples',
+            'products.*.product_id' => 'product',
+            'products.*.size_id' => 'size',
+            'fabric_swatches' => 'fabric swatches',
+            'fabric_swatches.*' => 'fabric swatch',
+            'shipping_street' => 'shipping street',
+            'shipping_city' => 'shipping city',
+            'shipping_state' => 'shipping state',
+            'shipping_postal_code' => 'shipping postal code',
+            'shipping_country' => 'shipping country',
+            'tracking_link' => 'tracking link',
+            'tracking_number' => 'tracking number',
+            'note' => 'note',
         ]);
-
+        
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()->first(),
+                'message' => implode("\n", $validator->errors()->all()),
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -1407,11 +1432,12 @@ class OrganizationController extends Controller
                 ->get(['id', 'size_name']);
             $fabrics = Fabric::orderBy('fabric_name')->get(['id', 'fabric_name']);
 
-            $sampleShipment = OrganizationSampleShipment::where('organization_id', $id)->first();
+            $sampleShipments = OrganizationSampleShipment::where('organization_id', $id)->orderByDesc('id')->get();
+            $sampleShipment = null;
 
             // Keep the historical "Received Sample" data visible in the new tab
             // until the record is saved in the new sample shipment table.
-            if (!$sampleShipment && (!empty($organization->received_sample) || $organization->receivedSamplesOrganizations->isNotEmpty())) {
+            if ($sampleShipments->isEmpty() && (!empty($organization->received_sample) || $organization->receivedSamplesOrganizations->isNotEmpty())) {
                 $sampleShipment = new OrganizationSampleShipment();
                 $sampleShipment->organization_id = $id;
                 // $sampleShipment->status = 'requested';
@@ -1501,7 +1527,7 @@ class OrganizationController extends Controller
                 'statementLayout'=>$statementLayout,'organizations'=>$organizations, 'peoples'=>$peoples,'user_timezone'=>$user_timezone, 'contacts'=>$contacts, 'orders'=>$orders, 'users'=>$users,'Sales_rep_users'=>$Sales_rep_users, 'allusers'=>$allusers,'userGroups'=>$userGroups, 'contactCount'=>$contactCount,
                 'orderCount'=>$orderCount, 'activities'=>$activities, 'activityCount'=>$activityCount, 'fileCount'=>$fileCount, 'sports'=>$sports,
                 'orgnizationEmailCount'=>$orgnizationEmailCount, 'orgnizationEmails'=>$orgnizationEmails, 'contact_ids'=>$contact_ids, 'colorMasters'=>$colorMasters, 'organization_status'=>$organization_status,
-                'organizationColors'=>$organizationColors, 'organization_email'=>$organization_email, 'lead_sources'=>$lead_sources, 'sub_products'=>$sub_products, 'sizes'=>$sizes, 'fabrics'=>$fabrics, 'sampleShipment'=>$sampleShipment, 'AddedEmailTemplates'=>$AddedEmailTemplates, 'emailTemplates'=>$emailTemplates, 'azure_logged_email'=>$azure_logged_email,'activity_users'=>$activity_users,'payments'=>$payments
+                'organizationColors'=>$organizationColors, 'organization_email'=>$organization_email, 'lead_sources'=>$lead_sources, 'sub_products'=>$sub_products, 'sizes'=>$sizes, 'fabrics'=>$fabrics, 'sampleShipment'=>$sampleShipment, 'sampleShipments'=>$sampleShipments, 'AddedEmailTemplates'=>$AddedEmailTemplates, 'emailTemplates'=>$emailTemplates, 'azure_logged_email'=>$azure_logged_email,'activity_users'=>$activity_users,'payments'=>$payments
             ]);
         } else {
             return redirect()->back()->withError('Permission Not Granted!');

@@ -1032,6 +1032,7 @@
                                     <option value="{{$organization->id}}" data-plstatus="{{$organization->pl_status}}" >{{$organization->organization_name}}</option>
                                     @endforeach
                                 </select>
+                                @include('pages.order_management.organization_address_warning')
                             </div>
                             <div class="col-md-12 mobile_text_align_r">
                                 <button type="button" id="btn_organization_create_modal" class="add-text-button" data-toggle="modal" data-target="#organization_create_modal">
@@ -1727,6 +1728,10 @@
         });
 
         function organizationChange(organizationId){
+            showOrderOrganizationAddressWarning(null, true);
+            if (!organizationId) {
+                return;
+            }
             var selectedOption = $('#organization_id option:selected');
             var plstatus = selectedOption.data('plstatus'); // Retrieve the plstatus attribute
             // Toggle the checkbox based on plstatus
@@ -1739,6 +1744,10 @@
                 method:'GET',
                 dataType:'json',
                 success: function (data, textStatus, jqXHR){
+                    if (!data || String($('#organization_id').val()) !== String(organizationId)) {
+                        return;
+                    }
+                    showOrderOrganizationAddressWarning(organizationId, data.has_shipping_address);
 
                     var contactList = data.contact_organizations;
 

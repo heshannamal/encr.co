@@ -14,6 +14,7 @@ class SystemAPIs extends Model implements Auditable
     use SoftDeletes;
     use AuditableTrait;
 
+
     protected $fillable = [
         'name',
         'api_type_key',

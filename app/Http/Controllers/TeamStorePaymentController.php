@@ -1152,6 +1152,7 @@ class TeamStorePaymentController extends Controller
                         'qty' => $record->qty,
                     ];
 
+                    $record->update(['is_refunded' => 1]);
                     $record->delete();
                 }
             }

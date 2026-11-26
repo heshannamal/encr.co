@@ -702,9 +702,9 @@
                                                             </tr>
                                                             <tr>
                                                                 @foreach ($orderDetails as $orderDetail)
-                                                                    <th>SALES TAX ($) <span id="sales_tax_display">{{$orderDetail->organizationDetails['sales_tax']}}</span>% RATE :</th>
+                                                                    <th>SALES TAX ($) <span id="sales_tax_display">{{ $orderDetail->sales_tax_rate ?? 0 }}</span>% RATE :</th>
                                                                     <td>
-                                                                        <input type="hidden" value="{{$orderDetail->organizationDetails['sales_tax']}}" />
+                                                                        <input type="hidden" value="{{ $orderDetail->sales_tax_rate ?? 0 }}" />
                                                                         <input class="invoice-inputs text-right" type='text' value='{{number_format($orderDetail->sales_tax, 2)}}' readonly/>
                                                                     </td>
                                                                 @endforeach

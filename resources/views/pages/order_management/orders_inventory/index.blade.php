@@ -857,13 +857,13 @@
             background-color: #ffc1076d !important;
             color: #ffc107 !important;
             font-weight: 600;
-            width: 90%;
+            /* width: 90%; */
         }
         .paid_badge {
             background-color: #6de7b295 !important;
             color: #2dce89 !important;
             font-weight: 600;
-            width: 90%;
+            /* width: 90%; */
         }
         .pending_badge {
             background-color: #f5365c54 !important;
@@ -874,22 +874,22 @@
         .production_badge_card {
             color: #16A34A;
             background-color: #F0FDF4;
-            width: 90%;
+            /* width: 90%; */
         }
         .quote_badge_card {
             background-color: rgba(30, 58, 96, 0.18);
-            width: 90%;
+            /* width: 90%; */
             color: #1E3A5F;
         }
         .fullfilled_badge_card {
             background-color: #EEF2FF;
             color: #4338CA;
-            width: 90%;
+            /* width: 90%; */
         }
         .cancelled_badge_card {
             color: #E02020;
             background-color: #FEF2F2;
-            width: 90%;
+            /* width: 90%; */
         }
         .order_name_section {
             border-bottom: 0.5px solid rgba(128, 128, 128, 0.26);
@@ -944,6 +944,19 @@
             font-size: 10px;
             background-color: #11cdef;
         }
+        .mobile_filter_item select,
+        .mobile_filter_item input {
+            width: 100% !important;
+            height: 23px !important;
+            font-size: 11px !important;
+            border: 0.5px solid gray;
+            border-radius: 4px;
+        }
+
+        .mobile_filter_item input:focus,
+        .mobile_filter_item select:focus {
+            font-size: 16px !important;
+        }
     }
 
     @media (max-width: 400px){
@@ -958,6 +971,230 @@
         }
      }
 
+
+@media (max-width: 767.98px) {
+
+    .mobile_badge > .row {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        gap: 8px;
+        margin: 0 !important;
+        padding-bottom: 15px !important;
+    }
+
+    .mobile_badge > .row > .col-6 {
+        flex: 1 1 0 !important;
+        width: 0 !important;
+        max-width: none !important;
+        padding: 0 !important;
+        min-width: 0 !important;
+    }
+
+    .mobile_badge .csv_btn,
+    .mobile_badge .add_ts_order_btn,
+    .mobile_badge .add_order_btn {
+        width: 100% !important;
+        height: 42px !important;
+        padding: 0 4px !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        font-size: 12px;
+        box-sizing: border-box;
+    }
+
+    /* Empty second column hide කරන්න */
+    .mobile_badge > .row:first-child > .col-6:last-child {
+        display: none !important;
+    }
+
+    /* Buttons තුනම එක row එකකට ගන්න */
+    .mobile_badge > .row {
+        display: flex !important;
+    }
+
+    .mobile_badge > .row:nth-child(2) {
+        display: contents !important;
+    }
+
+    .mobile_badge > .row:nth-child(2) > .col-6 {
+        display: contents !important;
+    }
+
+    .mobile_badge {
+        display: flex !important;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    .mobile_badge > .row:first-child {
+        display: contents !important;
+    }
+}
+
+/* Desktop - existing layout එකට බලපෑමක් නැහැ */
+@media (max-width: 767.98px) {
+
+    .order-action-buttons {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        gap: 8px;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 0 15px 0 !important;
+        box-sizing: border-box;
+    }
+
+    .order-action-buttons .order-action-item {
+        flex: 1 1 0 !important;
+        width: 0;
+        min-width: 0;
+        display: flex;
+    }
+
+    .order-action-buttons .order-action-item button {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 42px !important;
+        padding: 0 3px !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        font-size: 11px !important;
+        box-sizing: border-box;
+    }
+
+    .order-action-buttons .order-action-item button i {
+        font-size: 12px !important;
+        flex-shrink: 0;
+    }
+    .order-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+}
+
+.order-id-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.order-id-section .edit-order {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.order-flag {
+    display: flex;
+    align-items: center;
+}
+
+.status-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.status-name,
+.payment-status {
+    display: flex;
+    align-items: center;
+}
+
+.organization-name {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    overflow-wrap: anywhere;
+}
+
+.organization-name a {
+    display: block;
+    width: 100%;
+}
+.fa-star {
+color: #ededed !important;
+}
+}
+
+@media (max-width: 768px) {
+
+    .organization-name {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .organization-name a {
+        display: block !important;
+        width: 100% !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    /* Header topic එක සහ Back button එක එකම row එකක */
+    .header1 {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px;
+        width: 100% !important;
+    }
+
+    /* Back button එක වම් පැත්තට ගන්න */
+    .back_home_mobile {
+        display: none !important;
+        order: -1;
+        flex-shrink: 0;
+        padding-bottom: 0 !important;
+        margin-right: 5px;
+    }
+
+    .back_home_mobile strong {
+        display: block;
+        white-space: nowrap;
+    }
+
+    .home-btn-color-mobile {
+        display: inline-block;
+        white-space: nowrap;
+        text-decoration: none !important;
+    }
+
+    /* Header topic එකට ඉතිරි ඉඩ ලබා දෙන්න */
+    .header1 > strong {
+        min-width: 0;
+        flex: 1;
+    }
+
+    #header {
+        display: block;
+    }
+}
+
 </style>
 
 <div class="container-fluid mb-5">
@@ -969,7 +1206,7 @@
     @endsection
 
     @section('back-btn-Mobile')
-        <a href="{{ route('home') }}" class="home-btn-color-mobile" title="Back to home">< BACK TO HOME</a>
+        <a href="{{ route('home') }}" class="home-btn-color-mobile" title="Back to home">< BACK</a>
     @endsection
 
     <div class="mb-5">
@@ -1143,7 +1380,7 @@
             </table>
         </div>
 
-        <div class="mobile_badge" style="padding-bottom: unset;">
+        {{-- <div class="mobile_badge" style="padding-bottom: unset;">
             <div class="row" style="margin: unset; padding-bottom: 15px;">
                 <div class="col-6" style="padding-left: unset;">
                     @can('add orders')
@@ -1174,7 +1411,44 @@
                 </div>
 
             </div>
+        </div> --}}
+        <div class="mobile_badge order-action-buttons" style="padding-bottom: unset;">
+
+            @can('view team store orders')
+                <div class="order-action-item">
+                    <button class="btn-green-outlined add_ts_order_btn"
+                            data-toggle="modal"
+                            data-target="#import_modal"
+                            title="Import Team Store Orders">
+                        <i class="fa fa-plus"></i>&nbsp;&nbsp; TS ORDER
+                    </button>
+                </div>
+            @endcan
+
+            @can('create order')
+                <div class="order-action-item">
+                    <button class="btn-green-filled add_order_btn"
+                            onclick="addNewOrder()"
+                            title="Add New Orders">
+                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp; ORDER
+                    </button>
+                </div>
+            @endcan
+
+            @can('add orders')
+                <div class="order-action-item">
+                    <button class="btn-grey-text csv_btn"
+                            id="export_csv"
+                            data-href="{{ route('orders.export_csv') }}"
+                            onclick="exportTasks(event.target);"
+                            title="Export CSV">
+                        <i class="fa-solid fa-download"></i>&nbsp;&nbsp;CSV
+                    </button>
+                </div>
+            @endcan
+            
         </div>
+
 
         <div class="mobile_filters row  mt-2 mb-2 align-items-center filter-row-mobile">
 
@@ -1198,7 +1472,7 @@
                 </select>
             </div>
 
-            <div class="mobile_filter_item">
+            {{-- <div class="mobile_filter_item">
                 <label>Sales Rep</label>
                 <select class="form-control dropdown-style-grey left-border" id="sales_rep_id_mobile">
                     <option value="all" selected>all</option>
@@ -1221,7 +1495,7 @@
                 <input type="text"
                     id="picked_date_mobile"
                     class="summary-datepicker invoice-inputs left-border dropdown-style-grey">
-            </div>
+            </div> --}}
 
 
             <div class="mobile_filter_item buttons">
@@ -1960,7 +2234,13 @@
 
         $('#factory_id').val(factoryId);
         $('#status_id').val(statusId);
+
+        // Set the same values for mobile filters
+        $('#factory_id_mobile').val(factoryId);
+        $('#status_id_mobile').val(statusId);
+
         $('#searchbox').val(orgTxt);
+        $('#searchbox-mobile').val(orgTxt);
 
         // Order Table Layout
         filterTable(factoryId, statusId, orgTxt, paginateNo);
@@ -2110,12 +2390,22 @@
             // orderTable.search(this.value).draw();
             // displayTable();
         });
+        $('#searchbox-mobile').on('focusout', function() {
+            setFilterValues();
+        });
 
         $("#searchbox").on('keypress', function(event) {
 		    if (event.keyCode == 13) {
                 setFilterValues();
             }
         });
+
+        $('#searchbox-mobile').on('keypress', function(event) {
+            if (event.which == 13) {
+                setFilterValues();
+            }
+        });
+
 
         // Edit Order
         $("body").on("click", ".edit-order", function(){
@@ -2154,17 +2444,42 @@
             setFilterValues();
         });
 
-        $('#filter_save_option').on('click', function(){
-            var factoryId = $('#factory_id').val();
-            var statusId = $('#status_id').val();
-            var filterObj = {};
-                filterObj['factory_id'] = factoryId;
-                filterObj['status_id'] = statusId;
+        // $('#filter_save_option').on('click', function(){
+        //     var factoryId = $('#factory_id').val();
+        //     var statusId = $('#status_id').val();
+        //     var filterObj = {};
+        //         filterObj['factory_id'] = factoryId;
+        //         filterObj['status_id'] = statusId;
 
-            localStorage.setItem('inventory_orders_filter_options', JSON.stringify(filterObj));
+        //     localStorage.setItem('inventory_orders_filter_options', JSON.stringify(filterObj));
+
+        //     setUrlParameter(factoryId, statusId);
+        //     // filterTable(factoryId, statusId, 1);
+        // });
+
+
+        $('body').on('click', '#filter_save_option', function(){
+            var isMobile = window.matchMedia('(max-width: 767.98px)').matches;
+
+            var factoryId = isMobile
+                ? $('#factory_id_mobile').val()
+                : $('#factory_id').val();
+
+            var statusId = isMobile
+                ? $('#status_id_mobile').val()
+                : $('#status_id').val();
+
+            var filterObj = {
+                factory_id: factoryId,
+                status_id: statusId
+            };
+
+            localStorage.setItem(
+                'inventory_orders_filter_options',
+                JSON.stringify(filterObj)
+            );
 
             setUrlParameter(factoryId, statusId);
-            // filterTable(factoryId, statusId, 1);
         });
 
         // View Inventory details
@@ -2604,39 +2919,47 @@
             <div class="card mb-4 order-card" data-id="${item.id}">
                 <div class="card-body">
 
-                    <div class="d-flex align-items-center w-100 order_name_section" style="gap: 13px;">
+                    <div class="order_name_section">
 
-                        <!-- Flag -->
-                        <div class="pe-2">
-                            ${color_picker}
-                        </div>
+                        <div class="order-top-row">
 
-                        <!-- Order No + Organization -->
-                        <div class="flex-grow-1">
-                            <div class="fw-bold">
-                                <a href="#" class="edit-order" data-value="${item.id}">
+                            <!-- Left: Order No + Star -->
+                            <div class="order-id-section">
+
+                                <a href="#"
+                                class="edit-order"
+                                data-value="${item.id}">
                                     #${item.order_no}
                                 </a>
+
+                                <div class="order-flag">
+                                    ${color_picker}
+                                </div>
+
                             </div>
 
-                            <div class="organization-name">
-                                <a href="{{url('organizations/info/${item.organization_details.id}')}}"
-                                style="color: black; text-decoration: none;"
-                                target="_blank">
-                                    ${organizationName}
-                                </a>
+                            <!-- Right: Status + Payment in same row -->
+                            <div class="status-section">
+
+                                <div class="status-name">
+                                    ${orderStatusCard}
+                                </div>
+
+                                <div class="payment-status">
+                                    ${paymentStatus}
+                                </div>
+
                             </div>
+
                         </div>
 
-                        <!-- Status + Payment -->
-                        <div class="text-end status-section">
-                            <div class="status-name">
-                                ${orderStatusCard}
-                            </div>
-
-                            <div class="payment-status">
-                                ${paymentStatus}
-                            </div>
+                        <!-- Organization Name: Full Width -->
+                        <div class="organization-name">
+                            <a href="{{ url('organizations/info') }}/${item.organization_details.id}"
+                            style="color: black; text-decoration: none;"
+                            target="_blank">
+                                ${organizationName}
+                            </a>
                         </div>
 
                     </div>
@@ -3423,19 +3746,55 @@
     };
 
     function setFilterValues(){
-        var factoryId = $('#factory_id').val();
-        var statusId = $('#status_id').val();
-        setUrlParameter(factoryId, statusId);
+        var isMobile = window.matchMedia('(max-width: 767.98px)').matches;
+
+        var factoryId = isMobile
+            ? $('#factory_id_mobile').val()
+            : $('#factory_id').val();
+
+        var statusId = isMobile
+            ? $('#status_id_mobile').val()
+            : $('#status_id').val();
+
+        var orgTxt = isMobile
+            ? $('#searchbox-mobile').val()
+            : $('#searchbox').val();
+
+        setUrlParameter(factoryId, statusId, orgTxt);
     }
 
-    function setUrlParameter(factoryId, statusId){
-        var orgTxt = $("#searchbox").val();
-        var params = { 'fct':factoryId, 'sts':statusId, 'org':orgTxt};
-        // var new_url = '{{ route("orders")}}?' + jQuery.param(params);
-        var new_url = window.location.href.split('?')[0] + '?' + jQuery.param(params);
+
+    // function setUrlParameter(factoryId, statusId){
+    //     var orgTxt = $("#searchbox").val();
+    //     var params = { 'fct':factoryId, 'sts':statusId, 'org':orgTxt};
+    //     // var new_url = '{{ route("orders")}}?' + jQuery.param(params);
+    //     var new_url = window.location.href.split('?')[0] + '?' + jQuery.param(params);
+    //     window.history.pushState('page2', 'Title', new_url);
+    //     location.reload();
+    // }
+
+
+    function setUrlParameter(factoryId, statusId, orgTxt){
+        var isMobile = window.matchMedia('(max-width: 767.98px)').matches;
+
+        if (orgTxt === undefined) {
+            orgTxt = isMobile
+                ? $('#searchbox-mobile').val()
+                : $('#searchbox').val();
+        }
+
+        var params = {
+            'fct': factoryId,
+            'sts': statusId,
+            'org': orgTxt
+        };
+
+        var new_url = window.location.href.split('?')[0] + '?' + $.param(params);
+
         window.history.pushState('page2', 'Title', new_url);
         location.reload();
     }
+
 
     function loadingStart(){
         $(".se-pre-con").fadeIn();

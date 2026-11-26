@@ -950,6 +950,14 @@
         border-radius:4px;
         white-space:nowrap;
     }
+    .coach-payment-btn { border:1px solid #d6a347; background:#d6a347; color:#fff !important; border-radius:7px; padding:7px 12px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; text-decoration:none !important; }
+    .coach-payment-btn:hover { background:#bb8b31; border-color:#bb8b31; color:#fff !important; }
+    .coach-payment-paid { display:inline-flex; align-items:center; gap:6px; border:1px solid #b7e4d6; background:#ecfdf5; color:#117a65; border-radius:7px; padding:7px 12px; font-size:11px; font-weight:700; }
+    .coach-payment-summary { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:12px; }
+    .coach-payment-summary-item { border:1px solid #edf0f3; background:#fafbfc; border-radius:8px; padding:10px 12px; }
+    .coach-payment-summary-item small { display:block; color:#8898aa; font-size:10px; font-weight:700; text-transform:uppercase; margin-bottom:4px; }
+    .coach-payment-summary-item strong { color:#32325d; font-size:14px; }
+    .coach-payment-link-wrap { display:none; margin-top:14px; padding:12px; border:1px solid #d9eee8; background:#f6fffc; border-radius:8px; }
     .usps-label-checkbox { width:16px; height:16px; }
     @media(max-width:767px) {
         .usps-label-toolbar { padding:0 0 12px; }
@@ -999,10 +1007,23 @@
 
                 <div class="row">
 
-                    <div class="card_div" style="width: 80%;">
-
+                    <div class="card_div" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
                         <strong class="shipping_header">Shipping</strong>
 
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            @if(!empty($coachPaymentUnderReview))
+                                <span class="coach-payment-paid" style="background:#fff7d6;border-color:#f0c36d;color:#8a5a00;">
+                                    <i class="fa fa-exclamation-triangle"></i> Coach Payment Review Required
+                                </span>
+                            @elseif(($coachItemCount ?? 0) > 0 && ($coachAmount ?? 0) > 0)
+                                <button type="button" class="coach-payment-btn js-open-coach-payment-modal">
+                                    <i class="fa fa-credit-card"></i>
+                                    Collect Coach Payments (${{ number_format((float) $coachAmount, 2) }})
+                                </button>
+                            @elseif(($coachItemCount ?? 0) > 0)
+                                <span class="coach-payment-paid"><i class="fa fa-check-circle"></i> Coach Shipping Paid</span>
+                            @endif
+                        </div>
                     </div>
 
                 </div>
@@ -1015,9 +1036,23 @@
 
             @can('usps_manage_lables')
                 <div class="usps-label-toolbar">
-                    <div style="font-size:11px;color:#717070;"><span id="usps_selected_count">0</span> selected</div>
+                    <div style="font-size:11px;color:#717070;">
+                        <span id="usps_selected_count">0</span> selected
+                    </div>
                     <div class="usps-label-bulk-actions">
-                        <button type="button" class="usps-label-btn usps-label-btn-primary" onclick="openSelectedUspsLabelsPage()"><i class="fa fa-tags"></i> Manage Selected Labels</button>
+                        <button type="button"
+                                class="usps-label-btn usps-label-btn-primary"
+                                onclick="openSelectedUspsLabelsPage()">
+                            <i class="fa fa-tags"></i> Manage Selected Labels
+                        </button>
+
+                        <button type="button"
+                                class="usps-label-btn usps-label-btn-shippo js-export-selected-shippo"
+                                id="usps_export_shippo_btn"
+                                style="display:none;">
+                            <i class="fa fa-download"></i>
+                            Export Shippo (<span class="usps-export-shippo-count">0</span>)
+                        </button>
                     </div>
                 </div>
             @endcan
@@ -1070,7 +1105,10 @@
 
                                 @can('usps_manage_lables')
                                     <td class="usps-select-cell">
-                                        <input type="checkbox" class="usps-label-checkbox usps-label-select" value="{{ $shipment->id }}">
+                                        <input type="checkbox"
+                                               class="usps-label-checkbox usps-label-select"
+                                               value="{{ $shipment->id }}"
+                                               data-order-no="{{ $shipment->store_order_no }}">
                                     </td>
                                 @endcan
 
@@ -1155,6 +1193,24 @@
         <!-- Mobile Only Layout -->
 
         <div class="mobile-only">
+
+            @if(($coachItemCount ?? 0) > 0)
+                <div style="margin-bottom:12px;">
+                    @if(!empty($coachPaymentUnderReview))
+                        <div class="coach-payment-paid" style="width:100%;justify-content:center;height:40px;background:#fff7d6;border-color:#f0c36d;color:#8a5a00;">
+                            <i class="fa fa-exclamation-triangle"></i> Coach Payment Review Required
+                        </div>
+                    @elseif(($coachAmount ?? 0) > 0)
+                        <button type="button" class="coach-payment-btn js-open-coach-payment-modal" style="width:100%;height:40px;">
+                            <i class="fa fa-credit-card"></i> Collect Coach Payments (${{ number_format((float) $coachAmount, 2) }})
+                        </button>
+                    @else
+                        <div class="coach-payment-paid" style="width:100%;justify-content:center;height:40px;">
+                            <i class="fa fa-check-circle"></i> Coach Shipping Paid
+                        </div>
+                    @endif
+                </div>
+            @endif
 
             <!-- 1. Search Bar -->
 
@@ -1293,7 +1349,19 @@
                 <div class="usps-label-toolbar">
                     <label style="font-size:12px;margin:0;"><input type="checkbox" id="usps_select_mobile_all" class="usps-label-checkbox"> Select visible</label>
                     <div class="usps-label-bulk-actions">
-                        <button type="button" class="usps-label-btn usps-label-btn-primary" onclick="openSelectedUspsLabelsPage()">Manage Selected</button>
+                        <button type="button"
+                                class="usps-label-btn usps-label-btn-primary"
+                                onclick="openSelectedUspsLabelsPage()">
+                            Manage Selected
+                        </button>
+
+                        <button type="button"
+                                class="usps-label-btn usps-label-btn-shippo js-export-selected-shippo"
+                                id="usps_export_shippo_btn_mobile"
+                                style="display:none;">
+                            <i class="fa fa-download"></i>
+                            Export Shippo (<span class="usps-export-shippo-count">0</span>)
+                        </button>
                     </div>
                 </div>
             @endcan
@@ -1433,7 +1501,10 @@
                                     <i class="fa fa-tag"></i> {{ $labelStatus === 'draft' ? 'Create / Edit' : 'Manage Label' }}
                                 </a>
                                 <label class="mobile-share-btn" style="margin:0;cursor:pointer;" title="Select for bulk label action">
-                                    <input type="checkbox" class="usps-label-checkbox usps-label-select" value="{{ $shipment->id }}">
+                                    <input type="checkbox"
+                                           class="usps-label-checkbox usps-label-select"
+                                           value="{{ $shipment->id }}"
+                                           data-order-no="{{ $shipment->store_order_no }}">
                                 </label>
                             @else
                                 @if($shipment->label_url)
@@ -1461,12 +1532,150 @@
 
 </div>
 
+@if(($coachItemCount ?? 0) > 0)
+<div class="modal fade" id="coachPaymentModal" tabindex="-1" role="dialog" aria-labelledby="coachPaymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="coachPaymentModalLabel" style="font-size:16px;font-weight:700;">Collect Coach Shipping Payment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size:12px;color:#717070;line-height:1.6;">Create a secure payment link and send it to the coach.</div>
 
+                <div class="coach-payment-summary">
+                    <div class="coach-payment-summary-item"><small>Coach Items</small><strong>{{ (int) ($coachItemCount ?? 0) }}</strong></div>
+                    <div class="coach-payment-summary-item"><small>Total Required</small><strong>${{ number_format((float) ($coachRequiredAmount ?? 0), 2) }}</strong></div>
+                    <div class="coach-payment-summary-item"><small>Already Collected</small><strong>${{ number_format((float) ($coachPaidAmount ?? 0), 2) }}</strong></div>
+                    <div class="coach-payment-summary-item"><small>Balance To Collect</small><strong style="color:#b45309;">${{ number_format((float) ($coachAmount ?? 0), 2) }}</strong></div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <label style="font-size:11px;font-weight:700;color:#525f7f;">Coach Name</label>
+                    <input type="text" value="{{ $store->contactCoachesDetails->first_name.' '.$store->contactCoachesDetails->last_name }}" class="form-control" id="coach_payment_name" placeholder="Optional" readonly>
+                </div>
+
+                <div style="margin-top:10px;">
+                    <label style="font-size:11px;font-weight:700;color:#525f7f;">Coach Email</label>
+                    <input type="email" value="{{ $store->contactCoachesDetails->email }}" class="form-control" id="coach_payment_email" placeholder="Optional" readonly>
+                </div>
+
+                <div class="coach-payment-link-wrap" id="coach_payment_link_wrap">
+                    <label style="font-size:11px;font-weight:700;color:#117a65;">Payment Link</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="coach_payment_link" readonly>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-success" id="copy_coach_payment_link"><i class="fa fa-copy"></i> Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                @if(($coachAmount ?? 0) > 0 && empty($coachPaymentUnderReview))
+                    <button type="button" class="btn btn-success" id="generate_coach_payment_link"><i class="fa fa-link"></i> Generate Payment Link</button>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
 @endsection
 
 @push('js')
 <script>
+    const coachPaymentPrepareUrl = @json(route('store.coach_payment.prepare', ['store' => $store->id]));
+
+    function copyCoachPaymentLink(link) {
+        if (!link) return;
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(link).then(function () {
+                if (window.Swal) Swal.fire('Payment Link Copied', 'The coach payment link was copied to your clipboard.', 'success');
+            });
+            return;
+        }
+
+        const textarea = document.createElement('textarea');
+        textarea.value = link;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        if (window.Swal) Swal.fire('Payment Link Copied', 'The coach payment link was copied to your clipboard.', 'success');
+    }
+
+    $(document).on('click', '.js-open-coach-payment-modal', function () {
+        $('#coachPaymentModal').modal('show');
+    });
+
+    $(document).on('click', '#copy_coach_payment_link', function () {
+        copyCoachPaymentLink($('#coach_payment_link').val());
+    });
+
+    $(document).on('click', '#generate_coach_payment_link', function () {
+        const $button = $(this);
+
+        $.ajax({
+            url: coachPaymentPrepareUrl,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                _token: '{{ csrf_token() }}',
+                coach_name: $('#coach_payment_name').val(),
+                coach_email: $('#coach_payment_email').val()
+            },
+            beforeSend: function () {
+                $button.prop('disabled', true).html('<i class=\"fa fa-spinner fa-spin\"></i> Creating...');
+                $('.se-pre-con').fadeIn('slow');
+            },
+            complete: function () {
+                $button.prop('disabled', false).html('<i class=\"fa fa-link\"></i> Generate Payment Link');
+                $('.se-pre-con').fadeOut('slow');
+            },
+            success: function (response) {
+                if (!response || !response.success || !response.payment_url) {
+                    const message = response && response.message ? response.message : 'Unable to create the coach payment link.';
+                    if (window.Swal) Swal.fire('Coach Payment', message, 'error'); else alert(message);
+                    return;
+                }
+
+                $('#coach_payment_link').val(response.payment_url);
+                $('#coach_payment_link_wrap').show();
+                $('#coachPaymentModal').modal('hide');
+
+                if (window.Swal) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Coach Payment Link Ready',
+                        html: '<div style=\"text-align:left;font-size:12px;\">' +
+                              '<div style=\"margin-bottom:8px;\">Balance: <strong>$' + parseFloat(response.payment_amount || 0).toFixed(2) +
+                              '</strong><br>Coach total with 3% card fee: <strong>$' + parseFloat(response.total_amount || 0).toFixed(2) + '</strong></div>' +
+                              '<input type=\"text\" class=\"swal2-input\" style=\"width:100%;margin:0;\" value=\"' +
+                              $('<div>').text(response.payment_url).html() + '\" readonly></div>',
+                        showCancelButton: true,
+                        confirmButtonText: 'Copy Link',
+                        cancelButtonText: 'Close',
+                        width: 650
+                    }).then(function (result) {
+                        if (result.isConfirmed || result.value) copyCoachPaymentLink(response.payment_url);
+                    });
+                } else {
+                    copyCoachPaymentLink(response.payment_url);
+                }
+            },
+            error: function (xhr) {
+                const payload = xhr.responseJSON || {};
+                const message = payload.message || 'Unable to create the coach payment link.';
+                if (window.Swal) Swal.fire('Coach Payment', message, 'error'); else alert(message);
+            }
+        });
+    });
+
 
     $(document).ready(function(){
 
@@ -1528,34 +1737,49 @@
         });
 
         @can('usps_manage_lables')
-        $(document).on('change', '.usps-label-select', function(){
-            const id=String(this.value);
-            if(this.checked) uspsSelectedIds[id]=true;
-            else delete uspsSelectedIds[id];
-            syncUspsSelections();
-        });
-        $('#usps_select_all').on('change', function(){
-            const checked=this.checked;
-            $('.desktop-only .usps-label-select').each(function(){
-                const id=String(this.value);
-                if(checked) uspsSelectedIds[id]=true;
-                else delete uspsSelectedIds[id];
-            });
-            syncUspsSelections();
-        });
-        $('#usps_select_mobile_all').on('change', function(){
-            const checked=this.checked;
-            $('#mobile_shipments_list .mobile-shipment-card:visible .usps-label-select').each(function(){
-                const id=String(this.value);
-                if(checked) uspsSelectedIds[id]=true;
-                else delete uspsSelectedIds[id];
-            });
+        $(document).on('change', '.usps-label-select', function () {
+            if (this.checked) {
+                addUspsShipmentSelection(this.value);
+            } else {
+                removeUspsShipmentSelection(this.value);
+            }
             syncUspsSelections();
         });
 
-        $('#product_report_table').on('draw.dt', function(){
+        $('#usps_select_all').on('change', function () {
+            const checked = this.checked;
+
+            $('.desktop-only .usps-label-select').each(function () {
+                if (checked) {
+                    addUspsShipmentSelection(this.value);
+                } else {
+                    removeUspsShipmentSelection(this.value);
+                }
+            });
+
             syncUspsSelections();
         });
+
+        $('#usps_select_mobile_all').on('change', function () {
+            const checked = this.checked;
+            const $visibleBoxes = $('#mobile_shipments_list .mobile-shipment-card:visible .usps-label-select');
+
+            $visibleBoxes.each(function () {
+                if (checked) {
+                    addUspsShipmentSelection(this.value);
+                } else {
+                    removeUspsShipmentSelection(this.value);
+                }
+            });
+
+            syncUspsSelections();
+        });
+
+        $('#product_report_table').on('draw.dt', function () {
+            syncUspsSelections();
+        });
+
+        syncUspsSelections();
         @endcan
 
     });
@@ -1838,58 +2062,191 @@
 
     @can('usps_manage_lables')
     const uspsBulkManageUrl = @json(route('usps.label.bulk-manage'));
-    const uspsSelectedIds = {};
+    const uspsShippoExportUrl = @json(route('store.export_shippo_csv'));
+    const uspsShipmentOrderNos = @json(
+        $shipments->mapWithKeys(function ($shipment) {
+            return [(string) $shipment->id => (string) $shipment->store_order_no];
+        })
+    );
 
-    function syncUspsSelections(){
+    const uspsSelectedIds = Object.create(null);
+
+    function normalizeUspsShipmentId(value) {
+        const raw = String(value == null ? '' : value).trim();
+        if (!/^\d+$/.test(raw)) return null;
+        const id = parseInt(raw, 10);
+        return id > 0 ? String(id) : null;
+    }
+
+    function addUspsShipmentSelection(value) {
+        const id = normalizeUspsShipmentId(value);
+        if (!id) return false;
+        uspsSelectedIds[id] = true;
+        return true;
+    }
+
+    function removeUspsShipmentSelection(value) {
+        const id = normalizeUspsShipmentId(value);
+        if (id) delete uspsSelectedIds[id];
+    }
+
+    function getUspsSelectedIds() {
+        return Object.keys(uspsSelectedIds)
+            .map(normalizeUspsShipmentId)
+            .filter(function (id) { return id !== null; });
+    }
+
+    function syncUspsSelections() {
         const selected = getUspsSelectedIds();
-
         $('#usps_selected_count').text(selected.length);
+        $('.usps-export-shippo-count').text(selected.length);
 
-        // Desktop and mobile both render the same shipment id.
-        // Apply the central state to every visible/detached copy.
-        $('.usps-label-select').each(function(){
-            this.checked = !!uspsSelectedIds[String(this.value)];
+        if (selected.length > 0) {
+            $('.js-export-selected-shippo').show();
+        } else {
+            $('.js-export-selected-shippo').hide();
+        }
+
+        $('.usps-label-select').each(function () {
+            const id = normalizeUspsShipmentId(this.value);
+            this.checked = !!(id && uspsSelectedIds[id]);
         });
 
         const desktopBoxes = $('.desktop-only .usps-label-select');
         const desktopChecked = desktopBoxes.filter(':checked').length;
-
         $('#usps_select_all')
             .prop('checked', desktopBoxes.length > 0 && desktopChecked === desktopBoxes.length)
             .prop('indeterminate', desktopChecked > 0 && desktopChecked < desktopBoxes.length);
 
-        const visibleMobileBoxes =
-            $('#mobile_shipments_list .mobile-shipment-card:visible .usps-label-select');
+        const visibleMobileBoxes = $('#mobile_shipments_list .mobile-shipment-card:visible .usps-label-select');
         const mobileChecked = visibleMobileBoxes.filter(':checked').length;
-
         $('#usps_select_mobile_all')
             .prop('checked', visibleMobileBoxes.length > 0 && mobileChecked === visibleMobileBoxes.length)
             .prop('indeterminate', mobileChecked > 0 && mobileChecked < visibleMobileBoxes.length);
     }
 
-    function getUspsSelectedIds(){
-        return Object.keys(uspsSelectedIds);
+    function getSelectedShippoOrderNos() {
+        const orderNos = [];
+
+        getUspsSelectedIds().forEach(function (shipmentId) {
+            const orderNo = uspsShipmentOrderNos[String(shipmentId)];
+
+            if (orderNo && orderNos.indexOf(String(orderNo)) === -1) {
+                orderNos.push(String(orderNo));
+            }
+        });
+
+        return orderNos;
     }
 
-    function openSelectedUspsLabelsPage(){
+    $(document).on('click', '.js-export-selected-shippo', function (e) {
+        e.preventDefault();
+
+        const selectedOrders = getSelectedShippoOrderNos();
+
+        if (!selectedOrders.length) {
+            if (window.Swal) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Shipments Selected',
+                    text: 'Select at least one shipment to export to Shippo.',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Select at least one shipment to export to Shippo.');
+            }
+            return;
+        }
+
+        const $buttons = $('.js-export-selected-shippo');
+
+        $.ajax({
+            url: uspsShippoExportUrl,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                _token: '{{ csrf_token() }}',
+                order_nos: selectedOrders
+            },
+            beforeSend: function () {
+                $buttons.prop('disabled', true);
+                $('.se-pre-con').fadeIn('slow');
+            },
+            complete: function () {
+                $buttons.prop('disabled', false);
+                $('.se-pre-con').fadeOut('slow');
+            },
+            success: function (response) {
+                if (!response || typeof response.csv_content === 'undefined') {
+                    if (window.Swal) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Export Failed',
+                            text: 'Shippo CSV content was not returned.',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        alert('Shippo CSV content was not returned.');
+                    }
+                    return;
+                }
+
+                const blob = new Blob(
+                    [response.csv_content],
+                    { type: 'text/csv;charset=utf-8;' }
+                );
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+
+                a.href = url;
+                a.download = 'shippo_orders.csv';
+
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                URL.revokeObjectURL(url);
+            },
+            error: function (xhr) {
+                const payload = xhr.responseJSON || {};
+                const message =
+                    payload.message ||
+                    'An error occurred while exporting the selected orders to Shippo.';
+
+                if (window.Swal) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Shippo Export Failed',
+                        text: message,
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    alert(message);
+                }
+            }
+        });
+    });
+
+    function openSelectedUspsLabelsPage() {
         const ids = getUspsSelectedIds();
 
-        if(!ids.length){
-            if(window.Swal){
+        if (!ids.length) {
+            if (window.Swal) {
                 Swal.fire('USPS Labels', 'Select at least one shipment first.', 'info');
-            }else{
+            } else {
                 alert('Select at least one shipment first.');
             }
             return;
         }
 
-        const query = ids
-            .map(function(id){
-                return 'shipment_ids[]=' + encodeURIComponent(id);
-            })
-            .join('&');
+        const separator = uspsBulkManageUrl.indexOf('?') === -1 ? '?' : '&';
+        const targetUrl = uspsBulkManageUrl + separator + 'ids=' + encodeURIComponent(ids.join(','));
 
-        window.location.href = uspsBulkManageUrl + '?' + query;
+        $('.usps-label-bulk-actions .usps-label-btn-primary')
+            .prop('disabled', true)
+            .css('pointer-events', 'none');
+
+        window.location.assign(targetUrl);
     }
     @endcan
 

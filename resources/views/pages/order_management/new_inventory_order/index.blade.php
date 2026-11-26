@@ -332,6 +332,648 @@
         color: grey;
     }
 
+    .input-container {
+    position: relative;
+    }
+
+    .invoice-inputs.modal-datepicker {
+    padding-right: 30px; /* Adjust the value to set the icon's position */
+    }
+
+    .calendar-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #717070;
+    }
+
+    @media (max-width: 767px) {
+        .mobile_padding_top_10 {
+            padding-top: 10px;
+        }
+        .mobile_padding_right_15 {
+            padding-right: 15px !important;
+        }
+        .mobile_margin_b_15 {
+            margin-bottom: 15px;
+        }
+        input,
+        textarea,
+        select {
+            font-size: 16px !important;
+        }
+
+        .form-control,
+        .invoice-inputs,
+        .select2-selection__rendered,
+        .select2-selection {
+            font-size: 16px !important;
+        }
+        .select2-container .select2-search__field {
+            font-size: 16px !important;
+        }
+        .form-control,
+        .invoice-inputs,
+        textarea,
+        .select2-container--default .select2-selection--single,
+        .select2-container--default .select2-selection--multiple,
+        .select2-search__field {
+            font-size: 16px !important;
+        }
+        .form-control {
+            height: calc(1.5rem + 3px);
+            border-radius: 4px;
+        }
+        .mobile_text_align_r {
+            text-align: right;
+        }
+        .mobile_padding_left_15 {
+            padding-left: 15px !important;
+        }
+        .mobile_payment_padding {
+            padding: 10px 25px;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+
+    /* ================================
+       CARD CONTAINER
+       ================================ */
+
+       .content-position {
+        top: -5px;
+       }
+    #order_item_table {
+        width: 100% !important;
+        margin: 0 !important;
+        display: block !important;
+        border: none !important;
+        border-spacing: 0 !important;
+    }
+
+    #order_item_table thead {
+        display: none !important;
+    }
+
+    #order_item_table tbody {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    /* Hide initial row_no row */
+    #order_item_table tbody > tr:first-child {
+        display: none !important;
+    }
+
+    /* Each item = card */
+    #order_item_table tbody > tr {
+        display: grid !important;
+
+        grid-template-columns: 1fr 1fr !important;
+
+        width: 100% !important;
+        margin: 0 0 14px 0 !important;
+        padding: 14px !important;
+
+        background: #fff !important;
+        border: 1px solid #e8e8e8 !important;
+        border-radius: 12px !important;
+
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* ================================
+       RESET TD
+       ================================ */
+
+    #order_item_table tbody > tr > td {
+        display: flex !important;
+
+        width: auto !important;
+        min-width: 0 !important;
+
+        padding: 7px 5px !important;
+
+        border: none !important;
+
+        box-sizing: border-box !important;
+
+        align-items: flex-start !important;
+    }
+
+
+    /* ================================
+       1ST ROW
+       ITEM + ACTION
+
+       Item = column 1
+       Action = column 2
+       ================================ */
+
+    #order_item_table tbody > tr > td:nth-child(1) {
+        grid-column: 1 / 2 !important;
+        grid-row: 1 !important;
+
+        align-items: center !important;
+        padding-bottom: 12px !important;
+    }
+
+    #order_item_table tbody > tr > td:nth-child(1)::before {
+        display: none !important;
+    }
+
+    #order_item_table tbody > tr > td:nth-child(1) input {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #333 !important;
+
+        height: 34px !important;
+    }
+
+
+    /* ACTION */
+    #order_item_table tbody > tr > td:nth-child(12) {
+        grid-column: 2 / 3 !important;
+        grid-row: 1 !important;
+
+        justify-content: flex-end !important;
+        align-items: center !important;
+
+        padding-bottom: 12px !important;
+    }
+
+    #order_item_table tbody > tr > td:nth-child(12)::before {
+        display: none !important;
+    }
+
+    #order_item_table tbody > tr > td:nth-child(12) button {
+        width: 32px !important;
+        height: 32px !important;
+
+        padding: 0 !important;
+        margin-left: 4px !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        border-radius: 7px !important;
+    }
+
+    #order_item_table tbody > tr > td:nth-child(12) i {
+        font-size: 13px !important;
+    }
+
+
+    /* ================================
+       2ND ROW
+       STATUS + EST DELIVERY
+
+       Status = column 1
+       Delivery = column 2
+       ================================ */
+
+    #order_item_table tbody > tr > td:nth-child(3) {
+        grid-column: 1 / 2 !important;
+        grid-row: 2 !important;
+    }
+
+    #order_item_table tbody > tr > td:nth-child(4) {
+        grid-column: 2 / 3 !important;
+        grid-row: 2 !important;
+    }
+
+
+    /* ================================
+       3RD ROW
+       FACTORY + FABRIC
+
+       Factory is hidden in current table
+       because it is a hidden input.
+
+       We use the hidden factory value
+       only if you expose it through CSS
+       is NOT possible.
+       ================================ */
+
+    /*
+       IMPORTANT:
+       Your current HTML does NOT have a
+       visible FACTORY <td>.
+
+       factory_id is a hidden input inside
+       the <tr>, so CSS cannot display its
+       value as a normal card field.
+    */
+
+
+    /* FABRIC */
+    #order_item_table tbody > tr > td:nth-child(6) {
+        grid-column: 2 / 3 !important;
+        grid-row: 3 !important;
+    }
+
+
+    /* ================================
+       4TH ROW
+       EMBELLISHMENT + QTY
+       ================================ */
+
+    #order_item_table tbody > tr > td:nth-child(7) {
+        grid-column: 1 / 2 !important;
+        grid-row: 4 !important;
+    }
+
+    #order_item_table tbody > tr > td:nth-child(9) {
+        grid-column: 2 / 3 !important;
+        grid-row: 4 !important;
+    }
+
+
+    /* ================================
+       5TH ROW
+       UNIT PRICE + TOTAL
+       ================================ */
+
+    #order_item_table tbody > tr > td:nth-child(10) {
+        grid-column: 1 / 2 !important;
+        grid-row: 5 !important;
+    }
+
+    #order_item_table tbody > tr > td:nth-child(11) {
+        grid-column: 2 / 3 !important;
+        grid-row: 5 !important;
+    }
+
+
+    /* ================================
+       LABELS
+
+       Label on top
+       Value underneath
+       ================================ */
+
+    #order_item_table tbody > tr > td:nth-child(3)::before {
+        content: "STATUS";
+    }
+
+    #order_item_table tbody > tr > td:nth-child(4)::before {
+        content: "EST DELIVERY";
+    }
+
+    #order_item_table tbody > tr > td:nth-child(6)::before {
+        content: "FABRIC";
+    }
+
+    #order_item_table tbody > tr > td:nth-child(7)::before {
+        content: "EMBELLISHMENT";
+    }
+
+    #order_item_table tbody > tr > td:nth-child(9)::before {
+        content: "QTY";
+    }
+
+    #order_item_table tbody > tr > td:nth-child(10)::before {
+        content: "UNIT PRICE";
+    }
+
+    #order_item_table tbody > tr > td:nth-child(11)::before {
+        content: "TOTAL";
+    }
+
+
+    /* Label + value vertically */
+    #order_item_table tbody > tr > td:nth-child(3),
+    #order_item_table tbody > tr > td:nth-child(4),
+    #order_item_table tbody > tr > td:nth-child(6),
+    #order_item_table tbody > tr > td:nth-child(7),
+    #order_item_table tbody > tr > td:nth-child(9),
+    #order_item_table tbody > tr > td:nth-child(10),
+    #order_item_table tbody > tr > td:nth-child(11) {
+
+        flex-direction: column !important;
+        align-items: flex-start !important;
+
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
+
+
+    /* Label */
+    #order_item_table tbody > tr > td::before {
+
+        display: block !important;
+
+        margin-bottom: 3px !important;
+
+        font-size: 9px !important;
+        font-weight: 700 !important;
+
+        letter-spacing: .4px !important;
+
+        color: #999 !important;
+
+        line-height: 14px !important;
+    }
+
+
+    /* Value */
+    #order_item_table tbody > tr > td > input:not([type="hidden"]) {
+
+        width: 100% !important;
+        min-width: 0 !important;
+
+        height: 30px !important;
+
+        padding: 2px 0 !important;
+
+        font-size: 12px !important;
+
+        background: transparent !important;
+
+        border: none !important;
+
+        text-overflow: ellipsis !important;
+    }
+
+
+    /* STATUS badge */
+    #order_item_table tbody > tr > td:nth-child(3) > input {
+
+        width: auto !important;
+
+        height: 25px !important;
+
+        padding: 3px 9px !important;
+
+        border-radius: 20px !important;
+
+        font-size: 10px !important;
+        font-weight: 600 !important;
+    }
+
+
+    /* Quantity / Total values */
+    #order_item_table tbody > tr > td:nth-child(9) > input,
+    #order_item_table tbody > tr > td:nth-child(10) > input,
+    #order_item_table tbody > tr > td:nth-child(11) > input {
+
+        text-align: left !important;
+    }
+
+
+    /* ================================
+       HIDDEN COLUMNS
+       ================================ */
+
+    #order_item_table tbody > tr > td:nth-child(2),
+    #order_item_table tbody > tr > td:nth-child(5),
+    #order_item_table tbody > tr > td:nth-child(8) {
+
+        display: none !important;
+    }
+
+
+    /* ================================
+       HIDDEN INPUTS
+       ================================ */
+
+    #order_item_table tbody > tr > input[type="hidden"] {
+        display: none !important;
+    }
+
+
+    /* ================================
+       REMOVE TABLE RESPONSIVE SCROLL
+       ================================ */
+
+    #order_item_table.table-responsive {
+        overflow-x: visible !important;
+    }
+
+    .back_home_mobile {
+        padding-bottom: 10px;
+    }
+        .home-btn-color-mobile {
+            color: #475569 !important;
+            font-size: 11px;
+        }
+        .home-btn-color-mobile:hover {
+            color: #777777 !important;
+        }
+        .header-style {
+            display: none;
+        }
+
+}
+
+    @media (min-width: 769px){
+        #order_cards{
+            display:none !important;
+        }
+
+        .back_home_mobile {
+            display:none !important;
+        }
+        .mobile_search {
+            display:none !important;
+        }
+        .mobile_badge {
+            display:none !important;
+        }
+        .mobile_filters{
+            display:none;
+        }
+
+    }
+
+    /* ================= MODERN DATEPICKER ================= */
+#ui-datepicker-div.ui-datepicker {
+    width: 300px !important;
+    padding: 14px !important;
+    background: #fff !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18) !important;
+    font-family: 'Open Sans', sans-serif !important;
+    z-index: 99999 !important;      /* above bootstrap modals */
+}
+
+/* Header */
+#ui-datepicker-div .ui-datepicker-header {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 36px 12px !important;
+    background: transparent !important;
+    border: none !important;
+}
+#ui-datepicker-div .ui-datepicker-title {
+    display: flex !important;
+    gap: 6px !important;
+    margin: 0 !important;
+    line-height: normal !important;
+}
+#ui-datepicker-div .ui-datepicker-title select {
+    height: 30px !important;
+    margin: 0 !important;
+    padding: 0 6px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1E293B !important;
+    background: #F1F5F9 !important;
+    border: 1px solid transparent !important;
+    border-radius: 8px !important;
+    outline: none !important;
+    cursor: pointer;
+}
+#ui-datepicker-div .ui-datepicker-title select:hover {
+    background: #E2E8F0 !important;
+}
+#ui-datepicker-div .ui-datepicker-title select.ui-datepicker-month { width: 62% !important; }
+#ui-datepicker-div .ui-datepicker-title select.ui-datepicker-year  { width: 38% !important; }
+
+/* Prev / Next arrows */
+#ui-datepicker-div .ui-datepicker-prev,
+#ui-datepicker-div .ui-datepicker-next {
+    position: absolute !important;
+    top: 2px !important;
+    width: 30px !important;
+    height: 30px !important;
+    border: none !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    cursor: pointer;
+    transition: background .15s;
+}
+#ui-datepicker-div .ui-datepicker-prev { left: 0 !important; }
+#ui-datepicker-div .ui-datepicker-next { right: 0 !important; }
+#ui-datepicker-div .ui-datepicker-prev:hover,
+#ui-datepicker-div .ui-datepicker-next:hover { background: #F1F5F9 !important; }
+#ui-datepicker-div .ui-datepicker-prev span,
+#ui-datepicker-div .ui-datepicker-next span { display: none !important; }
+#ui-datepicker-div .ui-datepicker-prev::after,
+#ui-datepicker-div .ui-datepicker-next::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    border-color: #475569;
+    border-style: solid;
+}
+#ui-datepicker-div .ui-datepicker-prev::after {
+    border-width: 0 0 2px 2px;
+    transform: translate(-30%, -50%) rotate(45deg);
+}
+#ui-datepicker-div .ui-datepicker-next::after {
+    border-width: 2px 2px 0 0;
+    transform: translate(-70%, -50%) rotate(45deg);
+}
+#ui-datepicker-div .ui-datepicker-prev.ui-state-disabled,
+#ui-datepicker-div .ui-datepicker-next.ui-state-disabled { opacity: .3; cursor: default; }
+
+/* Calendar grid */
+#ui-datepicker-div table.ui-datepicker-calendar {
+    width: 100% !important;
+    margin: 0 !important;
+    border-collapse: separate !important;
+    border-spacing: 2px !important;
+}
+#ui-datepicker-div .ui-datepicker-calendar th {
+    padding: 6px 0 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    color: #94A3B8 !important;
+    text-align: center !important;
+    border: none !important;
+    background: transparent !important;
+}
+#ui-datepicker-div .ui-datepicker-calendar th span { font-weight: 600 !important; }
+#ui-datepicker-div .ui-datepicker-calendar td {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Day cells */
+#ui-datepicker-div .ui-datepicker-calendar td a,
+#ui-datepicker-div .ui-datepicker-calendar td span {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #1E293B !important;
+    text-align: center !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 50% !important;
+    transition: background .15s, color .15s;
+}
+#ui-datepicker-div .ui-datepicker-calendar td a:hover {
+    background: #E6FAF6 !important;
+    color: #0F766E !important;
+}
+/* faded days of other months */
+#ui-datepicker-div .ui-datepicker-other-month a,
+#ui-datepicker-div .ui-datepicker-other-month span { color: #CBD5E1 !important; }
+/* today */
+#ui-datepicker-div .ui-datepicker-today a,
+#ui-datepicker-div td a.ui-state-highlight {
+    background: #F1F5F9 !important;
+    color: #0F766E !important;
+    font-weight: 700 !important;
+    box-shadow: inset 0 0 0 1.5px #47D6B6;
+}
+/* selected day */
+#ui-datepicker-div td a.ui-state-active,
+#ui-datepicker-div .ui-datepicker-current-day a {
+    background: #47D6B6 !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 6px rgba(71, 214, 182, .45);
+}
+/* disabled days */
+#ui-datepicker-div .ui-state-disabled span { color: #E2E8F0 !important; }
+
+/* Optional button panel (only visible if showButtonPanel is enabled) */
+#ui-datepicker-div .ui-datepicker-buttonpane {
+    margin: 8px 0 0 !important;
+    padding: 8px 0 0 !important;
+    border: none !important;
+    border-top: 1px solid #F1F5F9 !important;
+    background: transparent !important;
+}
+#ui-datepicker-div .ui-datepicker-buttonpane button {
+    padding: 5px 12px !important;
+    font-size: 12px !important;
+    color: #475569 !important;
+    background: #F1F5F9 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    opacity: 1 !important;
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+    #ui-datepicker-div.ui-datepicker { width: 280px !important; padding: 10px !important; }
+    #ui-datepicker-div .ui-datepicker-calendar td a,
+    #ui-datepicker-div .ui-datepicker-calendar td span { width: 32px !important; height: 32px !important; }
+}
 
 </style>
 
@@ -348,6 +990,15 @@
         <a href="{{route('inventory_orders')}}" class="home-btn-color" title="Back to Orders">BACK TO ORDERS</a>
     @endsection
 
+    @section('back-btn-Mobile')
+        <a href="{{ route('inventory_orders') }}" class="home-btn-color-mobile" title="Back to home">< BACK</a>
+    @endsection
+
+    <div class="back_home_mobile">
+        <strong>
+            @yield('back-btn-Mobile')
+        </strong>
+    </div>
 
     {{-- <div class="col-md-12 mt-2">
         <div class="row">
@@ -369,7 +1020,7 @@
                 <div class="col-md-12 header-style">
                     Add New Order
                 </div>
-                <div class="col-md-6" style="padding-right:8px">
+                <div class="col-md-6 mobile_padding_right_15 mobile_margin_b_15" style="padding-right:8px">
                     <div class="card">
                         <div class="row">
                             <div class="col-md-12 sub-header-style">
@@ -477,7 +1128,7 @@
                         </table>
                     </div> --}}
                 </div>
-                <div class="col-md-6" style="padding-left: 8px">
+                <div class="col-md-6 mobile_padding_left_15" style="padding-left: 8px">
                     <div class="card">
                         <div class="row">
                             <div class="col-md-8 sub-header-style">
@@ -1307,7 +1958,7 @@
             $('#people_create_modal').modal('show');
         });
 
-        let header = "NEW ORDER";
+        let header = "NEW INVENTORY ORDER";
             document.getElementById("header").innerHTML = header;
     });
 

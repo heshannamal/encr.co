@@ -575,6 +575,7 @@
         }
         .back_home_mobile {
             padding-bottom: 10px;
+            display: none;
         }
         .searchbox_layout {
             margin-top: 0 !important;
@@ -860,39 +861,39 @@
             background-color: #ffc1076d !important;
             color: #ffc107 !important;
             font-weight: 600;
-            width: 85%;
+            /* width: 85%; */
         }
         .paid_badge {
             background-color: #6de7b295 !important;
             color: #2dce89 !important;
             font-weight: 600;
-            width: 85%;
+            /* width: 85%; */
         }
         .pending_badge {
             background-color: #f5365c54 !important;
             color: #f5365c !important;
             font-weight: 600;
-            width: 85%;
+            /* width: 85%; */
         }
         .production_badge_card {
             color: #16A34A;
             background-color: #F0FDF4;
-            width: 85%;
+            /* width: 85%; */
         }
         .quote_badge_card {
             background-color: rgba(30, 58, 96, 0.18);
             color: #1E3A5F;
-            width: 85%;
+            /* width: 85%; */
         }
         .fullfilled_badge_card {
             background-color: #EEF2FF;
             color: #4338CA;
-            width: 85%;
+            /* width: 85%; */
         }
         .cancelled_badge_card {
             color: #E02020;
             background-color: #FEF2F2;
-            width: 85%;
+            /* width: 85%; */
         }
         .order_name_section {
             border-bottom: 0.5px solid rgba(128, 128, 128, 0.26);
@@ -1152,6 +1153,187 @@
     #ui-datepicker-div .ui-datepicker-calendar td span { width: 32px !important; height: 32px !important; }
 }
 
+@media (max-width: 767.98px) {
+
+    .mobile_badge > .row {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        gap: 8px;
+        margin: 0 !important;
+        padding-bottom: 15px !important;
+    }
+
+    .mobile_badge > .row > .col-6 {
+        flex: 1 1 0 !important;
+        width: 0 !important;
+        max-width: none !important;
+        padding: 0 !important;
+        min-width: 0 !important;
+    }
+
+    .mobile_badge .csv_btn,
+    .mobile_badge .add_ts_order_btn,
+    .mobile_badge .add_order_btn {
+        width: 100% !important;
+        height: 42px !important;
+        padding: 0 4px !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        font-size: 12px;
+        box-sizing: border-box;
+    }
+
+    /* Empty second column hide කරන්න */
+    .mobile_badge > .row:first-child > .col-6:last-child {
+        display: none !important;
+    }
+
+    /* Buttons තුනම එක row එකකට ගන්න */
+    .mobile_badge > .row {
+        display: flex !important;
+    }
+
+    .mobile_badge > .row:nth-child(2) {
+        display: contents !important;
+    }
+
+    .mobile_badge > .row:nth-child(2) > .col-6 {
+        display: contents !important;
+    }
+
+    .mobile_badge {
+        display: flex !important;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    .mobile_badge > .row:first-child {
+        display: contents !important;
+    }
+}
+
+/* Desktop - existing layout එකට බලපෑමක් නැහැ */
+@media (max-width: 767.98px) {
+
+    .order-action-buttons {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        gap: 8px;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 0 15px 0 !important;
+        box-sizing: border-box;
+    }
+
+    .order-action-buttons .order-action-item {
+        flex: 1 1 0 !important;
+        width: 0;
+        min-width: 0;
+        display: flex;
+    }
+
+    .order-action-buttons .order-action-item button {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 42px !important;
+        padding: 0 3px !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        font-size: 11px !important;
+        box-sizing: border-box;
+    }
+
+    .order-action-buttons .order-action-item button i {
+        font-size: 12px !important;
+        flex-shrink: 0;
+    }
+    .order-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+}
+
+.order-id-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.order-id-section .edit-order {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.order-flag {
+    display: flex;
+    align-items: center;
+}
+
+.status-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.status-name,
+.payment-status {
+    display: flex;
+    align-items: center;
+}
+
+.organization-name {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    overflow-wrap: anywhere;
+}
+
+.organization-name a {
+    display: block;
+    width: 100%;
+}
+.fa-star {
+color: #ededed !important;
+}
+}
+
+@media (max-width: 768px) {
+
+    .organization-name {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .organization-name a {
+        display: block !important;
+        width: 100% !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+    }
+
+}
 </style>
 
 <div class="container-fluid mb-5">
@@ -1164,7 +1346,7 @@
     @endsection
 
     @section('back-btn-Mobile')
-        <a href="{{ route('home') }}" class="home-btn-color-mobile" title="Back to home">< BACK TO HOME</a>
+        <a href="{{ route('home') }}" class="home-btn-color-mobile" title="Back to home">< BACK</a>
     @endsection
 
     <div class="mb-5">
@@ -1362,37 +1544,41 @@
             </table>
         </div>
 
-        <div class="mobile_badge" style="padding-bottom: unset;">
-            <div class="row" style="margin: unset; padding-bottom: 15px;">
-                <div class="col-6" style="padding-left: unset;">
-                    @can('add orders')
-                        <button class="btn-grey-text csv_btn"  style="width: 100%;" href="#" id="export_csv" data-href="{{ route('orders.export_csv') }}" onclick="exportTasks(event.target);"  title="Export CSV">
-                            <i class="fa-solid fa-download"></i>&nbsp;&nbsp;CSV Export
-                        </button>
-                    @endcan
-                </div>
-                <div class="col-6">
+        <div class="mobile_badge order-action-buttons" style="padding-bottom: unset;">
 
+            @can('view team store orders')
+                <div class="order-action-item">
+                    <button class="btn-green-outlined add_ts_order_btn"
+                            data-toggle="modal"
+                            data-target="#import_modal"
+                            title="Import Team Store Orders">
+                        <i class="fa fa-plus"></i>&nbsp;&nbsp; TS ORDER
+                    </button>
                 </div>
+            @endcan
 
-            </div>
-            <div class="row" style="margin: unset; padding-bottom: 15px;">
-                <div class="col-6" style="padding-left: unset;">
-                    @can('view team store orders')
-                        <button class="btn-green-outlined add_ts_order_btn" style="" href="#" data-toggle="modal" data-target="#import_modal" title="Import Team Store Orders">
-                            <i class="fa fa-plus"></i>&nbsp;&nbsp;ADD TS ORDER
-                        </button>
-                    @endcan
+            @can('create order')
+                <div class="order-action-item">
+                    <button class="btn-green-filled add_order_btn"
+                            onclick="addNewOrder()"
+                            title="Add New Orders">
+                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp; ORDER
+                    </button>
                 </div>
-                <div class="col-6" style="padding-right: unset;">
-                    @can('create order')
-                        <button class="btn-green-filled add_order_btn" style="" onclick="addNewOrder()" title="Add New Orders">
-                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;ADD ORDER
-                        </button>
-                    @endcan
-                </div>
+            @endcan
 
-            </div>
+            @can('add orders')
+                <div class="order-action-item">
+                    <button class="btn-grey-text csv_btn"
+                            id="export_csv"
+                            data-href="{{ route('orders.export_csv') }}"
+                            onclick="exportTasks(event.target);"
+                            title="Export CSV">
+                        <i class="fa-solid fa-download"></i>&nbsp;&nbsp;CSV
+                    </button>
+                </div>
+            @endcan
+
         </div>
 
         <div class="mobile_filters row  mt-2 mb-2 align-items-center filter-row-mobile">
@@ -3008,9 +3194,9 @@ console.log(item);
 
             let organizationName = item.organization_details?.organization_name ?? '';
 
-            if(organizationName.length > 20){
-                organizationName = organizationName.substring(0, 20) + '...';
-            }
+            // if(organizationName.length > 60){
+            //     organizationName = organizationName.substring(0, 60) + '...';
+            // }
 
             let salesRep = item.user_details?.name ?? '';
 
@@ -3042,40 +3228,47 @@ console.log(item);
             <div class="card mb-4 order-card" data-id="${item.id}">
                 <div class="card-body">
 
-                    <div class="d-flex align-items-center w-100 order_name_section" style="gap: 13px;">
+                    <div class="order_name_section">
 
-                        <!-- Order No + Star + Organization -->
-                        <div class="flex-grow-1">
+                        <div class="order-top-row">
 
-                            <div class="fw-bold d-flex align-items-center" style="gap: 10px;">
-                                <a href="#" class="edit-order" data-value="${item.id}">
+                            <!-- Left: Order No + Star -->
+                            <div class="order-id-section">
+
+                                <a href="#"
+                                class="edit-order"
+                                data-value="${item.id}">
                                     #${item.order_no}
                                 </a>
 
-                                <!-- Flag (now after order no) -->
-                                <div class="pe-2">
+                                <div class="order-flag">
                                     ${color_picker}
                                 </div>
+
                             </div>
 
-                            <div class="organization-name">
-                                <a href="{{url('organizations/info/${item.organization_details.id}')}}"
-                                style="color: black; text-decoration: none;"
-                                target="_blank">
-                                    ${organizationName}
-                                </a>
+                            <!-- Right: Status + Payment in same row -->
+                            <div class="status-section">
+
+                                <div class="status-name">
+                                    ${orderStatusCard}
+                                </div>
+
+                                <div class="payment-status">
+                                    ${paymentStatus}
+                                </div>
+
                             </div>
+
                         </div>
 
-                        <!-- Status + Payment -->
-                        <div class="text-end status-section">
-                            <div class="status-name">
-                                ${orderStatusCard}
-                            </div>
-
-                            <div class="payment-status">
-                                ${paymentStatus}
-                            </div>
+                        <!-- Organization Name: Full Width -->
+                        <div class="organization-name">
+                            <a href="{{ url('organizations/info') }}/${item.organization_details.id}"
+                            style="color: black; text-decoration: none;"
+                            target="_blank">
+                                ${organizationName}
+                            </a>
                         </div>
 
                     </div>

@@ -157,6 +157,28 @@
     .paymentSummaryTable th, .paymentSummaryTable td {
         padding: 10px;
     }
+
+    .payment-history-receipt-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 32px;
+        height: 30px;
+        padding: 0 9px;
+        border: 1px solid #d9dde3;
+        border-radius: 4px;
+        background: #ffffff;
+        color: #555555 !important;
+        text-decoration: none !important;
+        transition: all .15s ease;
+    }
+
+    .payment-history-receipt-btn:hover {
+        background: #47D6B6;
+        border-color: #47D6B6;
+        color: #ffffff !important;
+        text-decoration: none !important;
+    }
     .btn-success:disabled {
     color: #fff;
     border-color: #787878;
@@ -2785,6 +2807,21 @@
         border-top: 1px solid #f0f0f0 !important;
     }
 
+    #PaymentHistoryModal .paymentSummaryTable tbody td:nth-child(7) {
+        grid-column: 1 / -1;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-top: 2px;
+        padding-top: 12px !important;
+        border-top: 1px solid #f0f0f0 !important;
+    }
+
+    #PaymentHistoryModal .paymentSummaryTable tbody td:nth-child(7) .payment-history-receipt-btn {
+        margin-left: auto;
+    }
+
     /* =====================================================
        LABELS
        ===================================================== */
@@ -2826,6 +2863,10 @@
 
     #PaymentHistoryModal .paymentSummaryTable tbody td:nth-child(6)::before {
         content: "AMOUNT";
+    }
+
+    #PaymentHistoryModal .paymentSummaryTable tbody td:nth-child(7)::before {
+        content: "RECEIPT";
     }
 
     /* =====================================================
@@ -3244,12 +3285,12 @@
     @endsection
 
     @section('back-btn-Mobile')
-        <a href="javascript:void(0);" class="home-btn-color goToHome" title="Back to Orders" data-value="{{$orderDetails->order_no}}">< BACK TO ORDER {{$orderDetails->order_no}}</a>
+        <a href="javascript:void(0);" class="home-btn-color goToHome" title="Back to Orders" data-value="{{$orderDetails->order_no}}">< BACK</a>
     @endsection
 
     <div class="back_home_mobile">
         <strong>
-            @yield('back-btn-Mobile')
+            {{-- @yield('back-btn-Mobile') --}}
         </strong>
     </div>
 
@@ -4665,7 +4706,7 @@
                             <td class="text-right">{{number_format(($orderDetails->sub_total + $orderDetails->artwork - $discountValue),2)}}</td>
                         </tr>
                         <tr>
-                            <td>Sales tax fee {{number_format(($orderDetails['organizationDetails']->sales_tax), 2)}}% ($)</td>
+                            <td>Sales tax fee {{number_format(($orderDetails->sales_tax_rate ?? 0), 2)}}% ($)</td>
                             <td class="text-right">{{number_format($sales_tax, 2)}}</td>
                         </tr>
                         <tr>
@@ -4782,7 +4823,7 @@
                             <td class="text-right">{{number_format(($orderDetails->sub_total + $orderDetails->artwork - $discountValue),2)}}</td>
                         </tr>
                         <tr>
-                            <td>Sales tax fee {{number_format(($orderDetails['organizationDetails']->sales_tax), 2)}}% ($)</td>
+                            <td>Sales tax fee {{number_format(($orderDetails->sales_tax_rate ?? 0), 2)}}% ($)</td>
                             <td class="text-right">{{number_format($sales_tax, 2)}}</td>
                         </tr>
                         <tr>
@@ -4871,7 +4912,7 @@
                             <td class="text-right">{{number_format(($orderDetails->sub_total + $orderDetails->artwork - $discountValue),2)}}</td>
                         </tr>
                         <tr>
-                            <td>Sales tax fee {{number_format(($orderDetails['organizationDetails']->sales_tax), 2)}}% ($)</td>
+                            <td>Sales tax fee {{number_format(($orderDetails->sales_tax_rate ?? 0), 2)}}% ($)</td>
                             <td class="text-right">{{number_format($sales_tax, 2)}}</td>
                         </tr>
                         <tr>
@@ -4961,7 +5002,7 @@
                             <td class="text-right">{{number_format(($orderDetails->sub_total + $orderDetails->artwork - $discountValue),2)}}</td>
                         </tr>
                         <tr>
-                            <td>Sales tax fee {{number_format(($orderDetails['organizationDetails']->sales_tax), 2)}}% ($)</td>
+                            <td>Sales tax fee {{number_format(($orderDetails->sales_tax_rate ?? 0), 2)}}% ($)</td>
                             <td class="text-right">{{number_format($sales_tax, 2)}}</td>
                         </tr>
                         <tr>
@@ -5052,7 +5093,7 @@
                             <td class="text-right">{{number_format(($orderDetails->sub_total + $orderDetails->artwork - $discountValue),2)}}</td>
                         </tr>
                         <tr>
-                            <td>Sales tax fee {{number_format(($orderDetails['organizationDetails']->sales_tax), 2)}}% ($)</td>
+                            <td>Sales tax fee {{number_format(($orderDetails->sales_tax_rate ?? 0), 2)}}% ($)</td>
                             <td class="text-right">{{number_format($sales_tax, 2)}}</td>
                         </tr>
                         <tr>
@@ -5163,7 +5204,7 @@
                             <td class="text-right">{{number_format(($orderDetails->sub_total + $orderDetails->artwork - $discountValue),2)}}</td>
                         </tr>
                         <tr>
-                            <td>Sales tax fee {{number_format(($orderDetails['organizationDetails']->sales_tax), 2)}}% ($)</td>
+                            <td>Sales tax fee {{number_format(($orderDetails->sales_tax_rate ?? 0), 2)}}% ($)</td>
                             <td class="text-right">{{number_format($sales_tax, 2)}}</td>
                         </tr>
                         <tr>
@@ -5453,6 +5494,7 @@
                             <th>DATE</th>
                             <th>TIME</th>
                             <th class="text-right">AMOUNT</th>
+                            <th class="text-center">RECEIPT</th>
                         </thead>
                         @if($cardPayments->count() > 0 || $checkPayments->where('is_approved', 3)->count() > 0 || $venmoPayments->where('is_approved', 3)->count() > 0 || $paypalPayments->where('is_approved', 3)->count() > 0 || $checkPayments->where('is_approved', 1)->count() > 0 || $venmoPayments->where('is_approved', 1)->count() > 0 || $paypalPayments->where('is_approved', 1)->count() > 0 || $otherPayments->where('is_approved', 1)->count() > 0)
                         <tbody>
@@ -5465,6 +5507,13 @@
                                     <td>{{$cardPayment->created_at->format('m/d/Y')}}</td>
                                     <td>{{$cardPayment->created_at->format('H:m:s')}}</td>
                                     <td class="text-right">$ {{number_format($cardPayment->amount, 2)}}</td>
+                                    <td class="text-center">
+                                        <a href="{{ route('payment.receipt.download', ['type' => 'card', 'id' => $cardPayment->id]) }}"
+                                           class="payment-history-receipt-btn"
+                                           title="Download Receipt">
+                                            <i class="fa fa-download" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                                 @endif
                             @endforeach
@@ -5477,6 +5526,13 @@
                                                     <td style="vertical-align: middle;">{{$checkPayment->created_at->format('m/d/Y')}}</td>
                                                     <td style="vertical-align: middle;">{{$checkPayment->created_at->format('H:m:s')}}</td>
                                                     <td style="vertical-align: middle;" class="text-right">$ {{number_format($checkPayment->amount, 2)}}</td>
+                                                    <td style="vertical-align: middle;" class="text-center">
+                                                        <a href="{{ route('payment.receipt.download', ['type' => 'check', 'id' => $checkPayment->id]) }}"
+                                                           class="payment-history-receipt-btn"
+                                                           title="Download Receipt">
+                                                            <i class="fa fa-download" aria-hidden="true"></i>
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                 @endif
                             @endforeach
@@ -5488,6 +5544,13 @@
                                     <td style="vertical-align: middle;">{{$otherPayment->created_at->format('m/d/Y')}}</td>
                                     <td style="vertical-align: middle;">{{$otherPayment->created_at->format('H:m:s')}}</td>
                                     <td style="vertical-align: middle;" class="text-right">$ {{number_format($otherPayment->amount, 2)}}</td>
+                                    <td style="vertical-align: middle;" class="text-center">
+                                        <a href="{{ route('payment.receipt.download', ['type' => 'other', 'id' => $otherPayment->id]) }}"
+                                           class="payment-history-receipt-btn"
+                                           title="Download Receipt">
+                                            <i class="fa fa-download" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                             @foreach ($venmoPayments as $venmoPayment)
@@ -5499,6 +5562,13 @@
                                     <td style="vertical-align: middle;">{{$venmoPayment->created_at->format('m/d/Y')}}</td>
                                     <td style="vertical-align: middle;">{{$venmoPayment->created_at->format('H:m:s')}}</td>
                                     <td style="vertical-align: middle;" class="text-right">$ {{number_format($venmoPayment->amount, 2)}}</td>
+                                    <td style="vertical-align: middle;" class="text-center">
+                                        <a href="{{ route('payment.receipt.download', ['type' => 'venmo', 'id' => $venmoPayment->id]) }}"
+                                           class="payment-history-receipt-btn"
+                                           title="Download Receipt">
+                                            <i class="fa fa-download" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             @endif
                             @endforeach
@@ -5511,6 +5581,13 @@
                                     <td style="vertical-align: middle;">{{$paypalPayment->created_at->format('m/d/Y')}}</td>
                                     <td style="vertical-align: middle;">{{$paypalPayment->created_at->format('H:m:s')}}</td>
                                     <td style="vertical-align: middle;" class="text-right">$ {{number_format($paypalPayment->amount, 2)}}</td>
+                                    <td style="vertical-align: middle;" class="text-center">
+                                        <a href="{{ route('payment.receipt.download', ['type' => 'paypal', 'id' => $paypalPayment->id]) }}"
+                                           class="payment-history-receipt-btn"
+                                           title="Download Receipt">
+                                            <i class="fa fa-download" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             @endif
                             @endforeach

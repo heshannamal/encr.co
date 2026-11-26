@@ -28,6 +28,13 @@ use Illuminate\Support\Facades\Log;
 
 class OrderRemakeController extends Controller
 {
+    protected $inventoryOrgIds;
+
+    public function __construct()
+    {
+        $this->inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
+    }
+
     public function add_to_remake_list(Request $request){
         if($request->shipping_order_details_id == null){
             return false;
@@ -669,95 +676,110 @@ class OrderRemakeController extends Controller
 
         DB::beginTransaction();
         try {
-            $studioExfactory = OrdersCommenFacade::getStudioExfacotry();
-            $order_item_count = OrderItem::where('order_id', $order_item->order_id)->count();
-            $new_order_item_count_number = $order_item_count + 1;
-            $order_number = str_pad($order_item->order_id, 6, "0", STR_PAD_LEFT);
+            if(in_array($order_item->organization_id, $this->inventoryOrgIds)){
+                $order_item->is_studio_item = 1;
+                $order_item->update();
+                DB::commit();
 
-            // Create new duplicated OrderItem marked as studio item
-            $new_order_item = new OrderItem();
-            $new_order_item->fill($order_item->toArray());
+                $this->sendAddStudioItemToProductionNotification($order_item->order_id,  $order_item->id, $order_item->est_delivery_date, $order_item->ex_factory_date);
+                $this->emailAddStudioItemToProduction($order_item->order_id,  $order_item->id, $order_item->est_delivery_date, $order_item->ex_factory_date);
 
-            $new_order_item->ex_factory_id = $studioExfactory->id;
-            $new_order_item->qty = 1;
-            $new_order_item->unit_price = $unit_price;
-            $new_order_item->total = $unit_price;
-            $new_order_item->item_no = $order_number . "-" . $new_order_item_count_number;
-            $new_order_item->is_studio_item = 1;
-            // $new_order_item->order_status_id = 3; // Production status
-            $new_order_item->save();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'This item was successfully added as a Studio Item!',
+                    'new_order_item_id' => $order_item_id
+                ]);
+            } else {
+                $studioExfactory = OrdersCommenFacade::getStudioExfacotry();
+                $order_item_count = OrderItem::where('order_id', $order_item->order_id)->count();
+                $new_order_item_count_number = $order_item_count + 1;
+                $order_number = str_pad($order_item->order_id, 6, "0", STR_PAD_LEFT);
 
-            $new_order_item_id = $new_order_item->id;
+                // Create new duplicated OrderItem marked as studio item
+                $new_order_item = new OrderItem();
+                $new_order_item->fill($order_item->toArray());
 
-            // Duplicate order item attributes
-            $order_item_attributes = OrderItemAttribute::where('order_item_id', $order_item->id)->get();
-            if ($order_item_attributes->isNotEmpty()) {
-                foreach ($order_item_attributes as $attribute) {
-                    if($attribute->attribute_id == 1 || $attribute->attribute_id == 2){
-                        continue;
+                $new_order_item->ex_factory_id = $studioExfactory->id;
+                $new_order_item->qty = 1;
+                $new_order_item->unit_price = $unit_price;
+                $new_order_item->total = $unit_price;
+                $new_order_item->item_no = $order_number . "-" . $new_order_item_count_number;
+                $new_order_item->is_studio_item = 1;
+                // $new_order_item->order_status_id = 3; // Production status
+                $new_order_item->save();
+
+                $new_order_item_id = $new_order_item->id;
+
+                // Duplicate order item attributes
+                $order_item_attributes = OrderItemAttribute::where('order_item_id', $order_item->id)->get();
+                if ($order_item_attributes->isNotEmpty()) {
+                    foreach ($order_item_attributes as $attribute) {
+                        if($attribute->attribute_id == 1 || $attribute->attribute_id == 2){
+                            continue;
+                        }
+                        $new_attribute = new OrderItemAttribute();
+                        $new_attribute->order_item_id = $new_order_item_id;
+                        $new_attribute->attribute_id = $attribute->attribute_id;
+                        $new_attribute->save();
                     }
-                    $new_attribute = new OrderItemAttribute();
-                    $new_attribute->order_item_id = $new_order_item_id;
-                    $new_attribute->attribute_id = $attribute->attribute_id;
-                    $new_attribute->save();
                 }
-            }
 
-            // Duplicate order item files
-            $order_item_files = OrderItemFile::where('order_item_id', $order_item->id)->get();
-            if ($order_item_files->isNotEmpty()) {
-                foreach ($order_item_files as $file) {
-                    $newFile = new OrderItemFile();
-                    $newFile->organization_id = $file->organization_id;
-                    $newFile->contact_id = $file->contact_id;
-                    $newFile->order_id = $file->order_id;
-                    $newFile->order_item_id = $new_order_item_id;
-                    $newFile->mockup_images = $file->mockup_images;
-                    $newFile->mockup_image_name = $file->mockup_image_name;
-                    $newFile->tech_pack_files = $file->tech_pack_files;
-                    $newFile->tech_pack_file_name = $file->tech_pack_file_name;
-                    $newFile->tech_pack_images = $file->tech_pack_images;
-                    $newFile->tech_pack_image_name = $file->tech_pack_image_name;
-                    $newFile->production_layout_images = $file->production_layout_images;
-                    $newFile->production_layout_image_name = $file->production_layout_image_name;
-                    $newFile->test_print_images = $file->test_print_images;
-                    $newFile->test_print_image_name = $file->test_print_image_name;
-                    $newFile->product_picture_raw_images = $file->product_picture_raw_images;
-                    $newFile->product_picture_raw_image_name = $file->product_picture_raw_image_name;
-                    $newFile->product_picture_edited_images = $file->product_picture_edited_images;
-                    $newFile->product_picture_edited_image_name = $file->product_picture_edited_image_name;
-                    $newFile->save();
-                }
-            }
-
-            // Duplicate order item details (roster & blank entries)
-            $order_item_details = OrderItemsDetail::where('order_item_id', $order_item->id)->get();
-            if ($order_item_details->isNotEmpty()) {
-                foreach ($order_item_details as $detail) {
-                    $new_detail = new OrderItemsDetail();
-                    $new_detail->order_item_id = $new_order_item_id;
-                    $new_detail->size_id = $detail->size_id;
-                    if($detail->size_id == $studioProductSize){
-                        $new_detail->blanks = 1;
+                // Duplicate order item files
+                $order_item_files = OrderItemFile::where('order_item_id', $order_item->id)->get();
+                if ($order_item_files->isNotEmpty()) {
+                    foreach ($order_item_files as $file) {
+                        $newFile = new OrderItemFile();
+                        $newFile->organization_id = $file->organization_id;
+                        $newFile->contact_id = $file->contact_id;
+                        $newFile->order_id = $file->order_id;
+                        $newFile->order_item_id = $new_order_item_id;
+                        $newFile->mockup_images = $file->mockup_images;
+                        $newFile->mockup_image_name = $file->mockup_image_name;
+                        $newFile->tech_pack_files = $file->tech_pack_files;
+                        $newFile->tech_pack_file_name = $file->tech_pack_file_name;
+                        $newFile->tech_pack_images = $file->tech_pack_images;
+                        $newFile->tech_pack_image_name = $file->tech_pack_image_name;
+                        $newFile->production_layout_images = $file->production_layout_images;
+                        $newFile->production_layout_image_name = $file->production_layout_image_name;
+                        $newFile->test_print_images = $file->test_print_images;
+                        $newFile->test_print_image_name = $file->test_print_image_name;
+                        $newFile->product_picture_raw_images = $file->product_picture_raw_images;
+                        $newFile->product_picture_raw_image_name = $file->product_picture_raw_image_name;
+                        $newFile->product_picture_edited_images = $file->product_picture_edited_images;
+                        $newFile->product_picture_edited_image_name = $file->product_picture_edited_image_name;
+                        $newFile->save();
                     }
-                    $new_detail->save();
-
-                    $orderItemsDetailsPlayerName = new OrderItemsDetailPlayerName();
-                    $orderItemsDetailsPlayerName->order_items_detail_id = $new_detail->id;
-                    $orderItemsDetailsPlayerName->save();
                 }
+
+                // Duplicate order item details (roster & blank entries)
+                $order_item_details = OrderItemsDetail::where('order_item_id', $order_item->id)->get();
+                if ($order_item_details->isNotEmpty()) {
+                    foreach ($order_item_details as $detail) {
+                        $new_detail = new OrderItemsDetail();
+                        $new_detail->order_item_id = $new_order_item_id;
+                        $new_detail->size_id = $detail->size_id;
+                        if($detail->size_id == $studioProductSize){
+                            $new_detail->blanks = 1;
+                        }
+                        $new_detail->save();
+
+                        $orderItemsDetailsPlayerName = new OrderItemsDetailPlayerName();
+                        $orderItemsDetailsPlayerName->order_items_detail_id = $new_detail->id;
+                        $orderItemsDetailsPlayerName->save();
+                    }
+                }
+
+                DB::commit();
+
+                $this->sendAddStudioItemToProductionNotification($new_order_item->order_id,  $new_order_item->id, $new_order_item->est_delivery_date, $new_order_item->ex_factory_date);
+                $this->emailAddStudioItemToProduction($new_order_item->order_id,  $new_order_item->id, $new_order_item->est_delivery_date, $new_order_item->ex_factory_date);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'The new item was successfully added as a Studio Item!',
+                    'new_order_item_id' => $new_order_item_id
+                ]);
             }
-
-            DB::commit();
-
-            $this->sendAddStudioItemToProductionNotification($new_order_item->order_id,  $new_order_item->id, $new_order_item->est_delivery_date, $new_order_item->ex_factory_date);
-            $this->emailAddStudioItemToProduction($new_order_item->order_id,  $new_order_item->id, $new_order_item->est_delivery_date, $new_order_item->ex_factory_date);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'The new item was successfully added as a Studio Item!',
-                'new_order_item_id' => $new_order_item_id
-            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();

@@ -136,6 +136,715 @@
         font-family: FontAwesome;
         right: .65rem !important;
     }
+
+    /* Mobile Sort dropdown — hidden on desktop, visible only on mobile */
+    .mobile-sort-wrapper {
+        display: none;
+    }
+
+@media (max-width: 767px) {
+
+    /* -----------------------------------------------------
+       1. PAGE / CARD LAYOUT
+       ----------------------------------------------------- */
+
+    /* Reduce page side padding on small screens */
+    .content-position {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        background-color: transparent !important;
+    }
+
+    /* Remove desktop card styling on mobile */
+    .content-position .card {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    /* Remove table wrapper horizontal padding on mobile */
+    .order_sammary_table {
+        padding: 0 !important;
+        overflow-x: visible !important;
+        order: 3 !important;
+    }
+
+    /* Stack the DataTable wrapper vertically */
+    #organization_wise_product_report_wrapper {
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* Stack DataTable Bootstrap rows vertically */
+    #organization_wise_product_report_wrapper .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* Make DataTable columns full width */
+    #organization_wise_product_report_wrapper .row > div {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: none !important;
+    }
+
+    /* Keep the first DataTable controls row vertical */
+    #organization_wise_product_report_wrapper .row:first-child {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* Put Search above the entries control */
+    #organization_wise_product_report_wrapper .row:first-child > div:has(.dataTables_filter) {
+        order: 1 !important;
+        width: 100% !important;
+        /* margin-bottom: 10px !important; */
+    }
+
+    /* Put Show Entries below Search */
+    #organization_wise_product_report_wrapper .row:first-child > div:has(.dataTables_length) {
+        order: 2 !important;
+        width: 100% !important;
+    }
+
+    /* Fallback ordering for DataTables markup when :has()
+       is not available or the generated columns differ */
+    #organization_wise_product_report_wrapper .row:first-child > div:nth-child(2):has(.dataTables_filter) {
+        order: 1 !important;
+    }
+
+    #organization_wise_product_report_wrapper .row:first-child > div:nth-child(1):has(.dataTables_length) {
+        order: 2 !important;
+    }
+
+    /* -----------------------------------------------------
+       2. FILTER CARD
+       ----------------------------------------------------- */
+
+    /* Mobile filter card container */
+    #sales_tax_filter_form > .row {
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 16px !important;
+        padding: 16px !important;
+        margin: 0 0 10px 0 !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        flex-direction: row !important;
+        gap: 10px 10px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Date/filter labels */
+    #sales_tax_filter_form .filter_row .date_p {
+        display: inline-block !important;
+        font-size: 13px !important;
+        color: #9ca3af !important;
+        font-weight: 400 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        white-space: nowrap !important;
+    }
+
+    /* Start Date and End Date: two equal columns */
+    #sales_tax_filter_form .filter_row:nth-of-type(1),
+    #sales_tax_filter_form .filter_row:nth-of-type(2) {
+        flex: 1 1 calc(50% - 5px) !important;
+        width: calc(50% - 5px) !important;
+        max-width: calc(50% - 5px) !important;
+        margin: 0 !important;
+        padding: 0 10px 0 12px !important;
+        background: #f9fafb !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 10px !important;
+        height: 42px !important;
+        display: flex !important;
+        align-items: center !important;
+        position: relative !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Keep date labels from shrinking */
+    #sales_tax_filter_form .filter_row:nth-of-type(1) .date_p,
+    #sales_tax_filter_form .filter_row:nth-of-type(2) .date_p {
+        position: relative !important;
+        font-size: 13px !important;
+        color: #9ca3af !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Date input wrapper fills remaining horizontal space */
+    #sales_tax_filter_form .filter_row:nth-of-type(1) .paymen_type_div,
+    #sales_tax_filter_form .filter_row:nth-of-type(2) .paymen_type_div {
+        flex: 1 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    /* Date input fills its mobile date card */
+    #sales_tax_filter_form .filter_row:nth-of-type(1) input.summary-datepicker,
+    #sales_tax_filter_form .filter_row:nth-of-type(2) input.summary-datepicker {
+        width: 100% !important;
+        height: 100% !important;
+        background: transparent !important;
+        border: none !important;
+        padding: 0 18px 0 4px !important;
+        font-size: 13px !important;
+        color: #374151 !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Chevron displayed inside each date field */
+    #sales_tax_filter_form .filter_row:nth-of-type(1)::after,
+    #sales_tax_filter_form .filter_row:nth-of-type(2)::after {
+        content: "\f107";
+        font-family: FontAwesome;
+        font-size: 13px;
+        color: #6b7280;
+        position: absolute;
+        right: 10px;
+        pointer-events: none;
+    }
+
+    /* Organization filter: full width below dates */
+    #sales_tax_filter_form .filter_row:nth-of-type(3) {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 12px !important;
+        background: #f9fafb !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 10px !important;
+        height: 42px !important;
+        display: flex !important;
+        align-items: center !important;
+        position: relative !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Organization label */
+    #sales_tax_filter_form .filter_row:nth-of-type(3) .date_p {
+        color: #9ca3af !important;
+        font-size: 13px !important;
+        margin-right: 8px !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Organization Select2 wrapper fills remaining space */
+    #sales_tax_filter_form .filter_row:nth-of-type(3) .select-width {
+        flex: 1 !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Organization Select2 container fills the row */
+    #sales_tax_filter_form .filter_row:nth-of-type(3) .select2-container {
+        width: 100% !important;
+    }
+
+    /* Remove Select2 border inside the custom organization card */
+    #sales_tax_filter_form .filter_row:nth-of-type(3) .select2-selection--single {
+        background: transparent !important;
+        border: none !important;
+        height: 40px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    /* Organization selected value */
+    #sales_tax_filter_form .filter_row:nth-of-type(3) .select2-selection__rendered {
+        color: #374151 !important;
+        font-size: 13px !important;
+        padding-left: 0 !important;
+        line-height: 40px !important;
+    }
+
+    /* Organization Select2 arrow alignment */
+    #sales_tax_filter_form .filter_row:nth-of-type(3) .select2-selection__arrow {
+        height: 40px !important;
+        right: 4px !important;
+    }
+
+    /* Clear and Filter parent containers - each 50% width */
+    #sales_tax_filter_form > .row > div:has(#clear-filter),
+    #sales_tax_filter_form > .row > div:has(#pin-filter) {
+        flex: 1 1 calc(50% - 5px) !important;
+        width: calc(50% - 5px) !important;
+        max-width: calc(50% - 5px) !important;
+        margin: 4px 0 0 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Order: Clear first (left), Filter second (right) */
+    #sales_tax_filter_form > .row > div:has(#clear-filter) {
+        order: 1 !important;
+    }
+    #sales_tax_filter_form > .row > div:has(#pin-filter) {
+        order: 2 !important;
+    }
+
+    /* Export button - full width on its own row */
+    #sales_tax_filter_form > .row > div:has(#export-report) {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 8px 0 0 0 !important;
+        padding: 0 !important;
+        order: 3 !important;
+    }
+
+    /* FORCE wrapper divs to be full width of their 50% column */
+    #sales_tax_filter_form > .row > div:has(#clear-filter) > div,
+    #sales_tax_filter_form > .row > div:has(#pin-filter) > div {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* Clear Button - White with border, full width of its half */
+    #clear-filter {
+        width: 100% !important;
+        height: 44px !important;
+        background: #ffffff !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 10px !important;
+        color: #374151 !important;
+        /* font-size: 14px !important; */
+        font-weight: 500 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        box-shadow: none !important;
+        cursor: pointer !important;
+        padding: 0 16px !important;
+        flex: 1 !important;
+    }
+
+    #clear-filter:hover {
+        background: #f9fafb !important;
+    }
+
+    /* #clear-filter i {
+        font-size: 14px !important;
+    } */
+
+    /* Filter Button - Black, full width of its half */
+    #pin-filter {
+        width: 100% !important;
+        height: 44px !important;
+        background: #1a1a1a !important;
+        border: none !important;
+        border-radius: 10px !important;
+        color: #ffffff !important;
+        /* font-size: 14px !important; */
+        font-weight: 600 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        box-shadow: none !important;
+        cursor: pointer !important;
+        padding: 0 16px !important;
+        flex: 1 !important;
+    }
+
+    #pin-filter:hover {
+        background: #2d2d2d !important;
+    }
+
+    /* #pin-filter i {
+        font-size: 14px !important;
+    } */
+
+    /* Export Button - Green, full width */
+    #export-report {
+        width: 100% !important;
+        height: 44px !important;
+        background: #2dce89 !important;
+        border: none !important;
+        border-radius: 10px !important;
+        color: #ffffff !important;
+        /* font-size: 14px !important; */
+        font-weight: 600 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        box-shadow: none !important;
+        cursor: pointer !important;
+        padding: 0 16px !important;
+        flex: 1 !important;
+    }
+
+    #export-report:hover {
+        background: #26b77a !important;
+    }
+
+    /* #export-report i {
+        font-size: 14px !important;
+    } */
+
+    /* -----------------------------------------------------
+       3. DATATABLE SEARCH - MODERN SEARCH BAR CARD
+       ----------------------------------------------------- */
+
+    /* Mobile search box - separate white card */
+    #organization_wise_product_report_wrapper .dataTables_filter {
+        width: 100% !important;
+        text-align: left !important;
+        float: none !important;
+        margin: 0 0 10px 0 !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 12px !important;
+        padding: 12px 16px !important;
+        box-sizing: border-box !important;
+        display: block !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    /* Search label fills the search box */
+    #organization_wise_product_report_wrapper .dataTables_filter label {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        font-size: 0 !important;
+        position: relative !important;
+        margin-bottom: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Search icon inside input */
+    #organization_wise_product_report_wrapper .dataTables_filter label::before {
+        content: "\f002";
+        font-family: FontAwesome;
+        color: #6b7280;
+        font-size: 16px;
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* Search input field */
+    #organization_wise_product_report_wrapper .dataTables_filter input {
+        width: 100% !important;
+        margin-left: 0 !important;
+        height: 44px !important;
+        background: #f8f9fa !important;
+        border: 1px solid #e9ecef !important;
+        border-radius: 10px !important;
+        /* font-size: 16px !important; */
+        color: #374151 !important;
+        box-shadow: none !important;
+        outline: none !important;
+        padding: 0 16px 0 40px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Search input placeholder styling */
+    #organization_wise_product_report_wrapper .dataTables_filter input::placeholder {
+        color: #9ca3af !important;
+        /* font-size: 14px !important; */
+        font-weight: 400 !important;
+    }
+
+    /* Fake placeholder text for mobile search */
+    #organization_wise_product_report_wrapper .dataTables_filter label::after {
+        content: "Search by product name or product id" !important;
+        position: absolute !important;
+        left: 40px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        color: #9ca3af !important;
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        pointer-events: none !important;
+        z-index: 1 !important;
+    }
+
+    /* Hide fake placeholder when input is clicked/focused */
+    #organization_wise_product_report_wrapper .dataTables_filter:focus-within label::after {
+        display: none !important;
+    }
+
+    /* Remove default search input clear button */
+    #organization_wise_product_report_wrapper .dataTables_filter input::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    /* -----------------------------------------------------
+       4. DATATABLE CONTROLS / SORTING
+       ----------------------------------------------------- */
+
+    /* Show Entries control row */
+    #organization_wise_product_report_wrapper .row:first-child > div:has(.dataTables_length) {
+        display: flex !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* DataTable length wrapper */
+    #organization_wise_product_report_wrapper .dataTables_length {
+        float: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        font-size: 13px !important;
+        color: #6c757d !important;
+        margin-bottom: 0 !important;
+        width: auto !important;
+    }
+
+    /* DataTable length label */
+    #organization_wise_product_report_wrapper .dataTables_length label {
+        display: inline-flex !important;
+        align-items: center !important;
+        margin-bottom: 0 !important;
+        gap: 2px !important;
+        color: #6c757d !important;
+        font-size: 13px !important;
+    }
+
+    /* Entries dropdown */
+    #organization_wise_product_report_wrapper .dataTables_length select {
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        padding: 4px 24px 4px 10px !important;
+        background-color: #fff !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: #1a202c !important;
+        height: 32px !important;
+    }
+
+    /* Mobile Sort dropdown container */
+    .mobile-sort-wrapper {
+        display: inline-flex !important;
+        align-items: center !important;
+        margin-left: auto !important;
+        gap: 4px !important;
+        font-size: 13px !important;
+        color: #6c757d !important;
+    }
+
+    /* Mobile Sort dropdown */
+    .mobile-sort-wrapper select {
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        background-color: #fff !important;
+        font-size: 13px !important;
+        color: #1a202c !important;
+        height: 32px !important;
+        cursor: pointer !important;
+    }
+
+    /* -----------------------------------------------------
+       5. PRODUCT TABLE -> MOBILE CARDS
+       ----------------------------------------------------- */
+
+    /* Convert the table into a vertical card list */
+    #organization_wise_product_report,
+    #organization_wise_product_report tbody,
+    #organization_wise_product_report tr,
+    #organization_wise_product_report td {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    /* Hide the desktop table header */
+    #organization_wise_product_report thead {
+        display: none !important;
+    }
+
+    /* Each product row becomes a mobile card */
+    #organization_wise_product_report tbody tr {
+        background: #ffffff !important;
+        border: 1px solid #f1f3f5 !important;
+        border-radius: 14px !important;
+        margin-bottom: 12px !important;
+        padding: 14px 16px !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+
+    /* Product number: top-left small label */
+    #organization_wise_product_report tbody tr td:nth-child(1) {
+        order: 1 !important;
+        width: 100% !important;
+        padding: 0 0 2px 0 !important;
+        border: none !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        color: #6c757d !important;
+    }
+
+    /* Product name: bold full-width title */
+    #organization_wise_product_report tbody tr td:nth-child(2) {
+        order: 2 !important;
+        width: 100% !important;
+        padding: 0 0 10px 0 !important;
+        border: none !important;
+        font-size: 14.5px !important;
+        font-weight: 700 !important;
+        color: #212529 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    /* Quantity: right half of the summary row */
+    #organization_wise_product_report tbody tr td:nth-child(3) {
+        order: 4 !important;
+        width: 50% !important;
+        padding: 0 !important;
+        border: none !important;
+        text-align: right !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        color: #212529 !important;
+        line-height: 1.4 !important;
+    }
+
+    /* Quantity label */
+    #organization_wise_product_report tbody tr td:nth-child(3)::before {
+        content: "Ordered Qty\A";
+        white-space: pre-wrap;
+        display: block;
+        font-size: 10px;
+        font-weight: 400;
+        color: #a0aec0;
+        margin-bottom: 2px;
+    }
+
+    /* Default price: left half of the summary row */
+    #organization_wise_product_report tbody tr td:nth-child(4) {
+        order: 3 !important;
+        width: 50% !important;
+        padding: 0 !important;
+        border: none !important;
+        text-align: left !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        color: #212529 !important;
+        line-height: 1.4 !important;
+    }
+
+    /* Default price label */
+    #organization_wise_product_report tbody tr td:nth-child(4)::before {
+        content: "Default Price\A";
+        white-space: pre-wrap;
+        display: block;
+        font-size: 10px;
+        font-weight: 400;
+        color: #a0aec0;
+        margin-bottom: 2px;
+    }
+
+    /* Keep the old dollar pseudo-element disabled */
+    #organization_wise_product_report tbody tr td:nth-child(4)::after {
+        content: "$";
+        position: absolute;
+        left: 0;
+        display: none;
+    }
+
+    /* Order Numbers are intentionally hidden in the mobile card */
+    #organization_wise_product_report tbody tr td:nth-child(5) {
+        /* order: 5 !important;
+        width: 100% !important;
+        padding: 10px 0 0 0 !important;
+        border: none !important;
+        font-size: 11.5px !important;
+        color: #212529 !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        align-items: center !important; */
+        display: none !important;
+    }
+
+    /* Keep order-number styles available if the column is shown */
+    /* #organization_wise_product_report tbody tr td:nth-child(5)::before {
+        content: "Order Numbers";
+        display: block;
+        width: 100%;
+        font-size: 10px;
+        font-weight: 400;
+        color: #a0aec0;
+        margin-bottom: 4px;
+    } */
+
+    /* Order number link/chip styling */
+    /* #organization_wise_product_report tbody tr td:nth-child(5) a {
+        display: inline-block !important;
+        background-color: #f1f3f5 !important;
+        color: #495057 !important;
+        border-radius: 6px !important;
+        padding: 3px 8px !important;
+        font-size: 11.5px !important;
+        font-weight: 500 !important;
+        text-decoration: none !important;
+    } */
+
+    /* -----------------------------------------------------
+       6. DATATABLE FOOTER / PAGINATION
+       ----------------------------------------------------- */
+
+    /* Table result count */
+    #organization_wise_product_report_wrapper .dataTables_info {
+        float: left !important;
+        padding-top: 8px !important;
+        font-size: 12px !important;
+        color: #adb5bd !important;
+    }
+
+    /* Pagination container */
+    #organization_wise_product_report_wrapper .dataTables_paginate {
+        float: right !important;
+        margin-top: 0 !important;
+    }
+
+    /* Remove default pagination margin */
+    #organization_wise_product_report_wrapper .pagination {
+        margin: 0 !important;
+    }
+
+    /* Mobile pagination buttons */
+    #organization_wise_product_report_wrapper .page-item .page-link {
+        border-radius: 6px !important;
+        margin: 0 2px !important;
+        border: 1px solid #e9ecef !important;
+        color: #495057 !important;
+        padding: 4px 8px !important;
+        font-size: 12px !important;
+    }
+
+    /* Active mobile pagination button */
+    #organization_wise_product_report_wrapper .page-item.active .page-link {
+        background-color: #212529 !important;
+        border-color: #212529 !important;
+        color: #ffffff !important;
+    }
+}
 </style>
 <div class=" mb-5 content-position">
 

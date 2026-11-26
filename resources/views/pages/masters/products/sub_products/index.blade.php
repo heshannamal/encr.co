@@ -231,6 +231,194 @@
     color: #333; /* Text color */
     user-select: none; /* Disable text selection */
 }
+
+/* MOBILE VIEW (max-width: 768px) */
+@media (max-width: 767.98px) {
+
+    .content-position { padding-left: 12px; padding-right: 12px; }
+    .sub-product-style { font-family: inherit; }
+    .sub-product-style .row { margin-left: 0; margin-right: 0; }
+    .sub-product-style [class*="col-md-"] { padding-left: 0; padding-right: 0; }
+    .sub-product-style .pr, .sub-product-style .pl { padding-left: 0 !important; padding-right: 0 !important; }
+    .sub-product-style .col-md-6[style*="padding"] { padding: 0 !important; }
+
+    /* Cards */
+    .sub-product-style .card-new {
+        background: #fff;
+        border: 1px solid #eceef3;
+        border-radius: 16px;
+        padding: 16px;
+        margin-top: 12px !important;
+        box-shadow: 0 1px 2px rgba(16,24,40,.04);
+    }
+    .sub-product-style .header-style { font-size: 1rem; font-weight: 700; padding: 0; }
+    .sub-product-style .sub-header-style { font-size: .9rem; margin-top: .75rem; }
+
+    /* Top bar: Show in Catalog + status */
+    .sub-product-style form > .row:first-child {
+        display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between;
+        background: #fff !important; border: 1px solid #eceef3; border-radius: 16px;
+        padding: 12px 16px; margin-bottom: 0 !important; gap: 12px;
+    }
+    .sub-product-style form > .row:first-child > .col-md-3,
+    .sub-product-style form > .row:first-child > .col-md-2 {
+        flex: 1 1 0; max-width: none; width: auto; margin: 0 !important; padding: 0;
+        text-align: left !important; border: none !important;
+    }
+    .sub-product-style form > .row:first-child label[for="toggleButton"] {
+        display: flex; flex-direction: column; align-items: flex-start;
+        font-size: .75rem; color: #6b7280; margin: 0;
+    }
+    .sub-product-style .toggle-switch { margin-left: 0; margin-top: 4px; width: 46px; height: 24px; }
+    .sub-product-style .toggle-switch .toggle-slider:before { height: 20px; width: 20px; }
+    .sub-product-style .toggle-checkbox:checked + .toggle-slider:before { transform: translateX(22px); }
+
+    /* Labels */
+    .sub-product-style .form-label {
+        font-size: .75rem; font-weight: 600 !important; color: #6b7280;
+        margin-top: 14px; margin-bottom: 6px;
+    }
+
+    /* Inputs */
+    .sub-product-style .form-control,
+    .sub-product-style .form-input {
+        height: 46px; border: 1px solid #e3e6ee; border-radius: 12px;
+        background: #f8f9fc; font-size: .9rem; color: #111827; padding: 0 14px;
+        box-shadow: none;
+    }
+    .sub-product-style textarea.form-control { height: auto; min-height: 80px; padding: 12px 14px; }
+    .sub-product-style .form-control:focus { border-color: #111827; background: #fff; }
+
+    /* Select2 */
+    .sub-product-style .select2-container { width: 100% !important; }
+    .sub-product-style .select2-container--default .select2-selection--single {
+        height: 46px; border: 1px solid #e3e6ee; border-radius: 12px; background: #f8f9fc;
+        display: flex; align-items: center;
+    }
+    .sub-product-style .select2-container--default .select2-selection--single .select2-selection__rendered {
+        border: none; line-height: 44px; padding-left: 14px; font-size: .9rem; color: #111827;
+    }
+    .sub-product-style .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 44px; right: 8px;
+    }
+    .sub-product-style .select2 .selection .select2-selection--multiple,
+    .sub-product-style .select2-container--default .select2-selection--multiple {
+        min-height: 46px; border: 1px solid #e3e6ee !important; border-radius: 12px !important;
+        background: #f8f9fc; padding: 4px 8px;
+    }
+    .sub-product-style .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        border-radius: 999px; background: #f1f3f8; border: 1px solid #e3e6ee;
+        font-size: .75rem; padding: 3px 10px; margin-top: 4px;
+    }
+    .sub-product-style .sub_product_status .select2-container--default .select2-selection--single {
+        background: #fff; border-radius: 999px;
+    }
+    .sub-product-style .sub_product_status .select2-selection__rendered { font-weight: 600; }
+
+    /* Product images */
+    .sub-product-style #imagePreviewArea {
+        border: 2px dashed #d5d9e3 !important; border-radius: 14px; padding: 10px;
+        background: #fff; min-height: 220px; object-fit: contain;
+    }
+    .sub-product-style .permission-adding-class .row.mt-1 { display: block; }
+    .sub-product-style .permission-adding-class .row.mt-1 > .col-md-8,
+    .sub-product-style .permission-adding-class .row.mt-1 > .col-md-4 {
+        width: 100%; max-width: 100%; flex: none; padding: 0;
+    }
+    .sub-product-style .permission-adding-class .row.mt-1 > .col-md-8 {
+        background: #f3f4f8; border-radius: 14px; padding: 12px; margin-top: 8px;
+    }
+    .sub-product-style .permission-adding-class .row.mt-1 > .col-md-4 > .col-md-12 {
+        background: #f3f4f8; border-radius: 14px; padding: 12px !important; margin-top: 12px;
+    }
+    .sub-product-style .permission-adding-class .row.mt-1 .form-label { margin-top: 0; color: #111827; font-size: .8rem; }
+
+    .sub-product-style .upload-area {
+        height: 110px; background: #fff; border: 2px dashed #cfd5e2; border-radius: 12px;
+        padding: 8px; margin-bottom: 8px;
+    }
+    .sub-product-style .upload-area:hover { border-color: #0ea5b7; }
+    .sub-product-style .upload-icon i { color: #0ea5b7 !important; font-weight: 700; }
+    .sub-product-style .upload-area p { margin: 2px 0 0; font-size: .7rem !important; }
+    .sub-product-style .upload-area img { max-height: 100%; width: auto; border-radius: 8px; }
+    .sub-product-style .close-button { top: 8px; right: 10px; }
+    .sub-product-style [class^="functionalities_"], .sub-product-style [class*=" functionalities_"] {
+        flex: 1; padding: 8px; background: #fff; border: 1px solid #e3e6ee;
+        border-radius: 10px; font-size: .8rem;
+    }
+
+    /* Image type tabs (scrollable pills) */
+    .sub-product-style .navbarStylePaste .tab-container { padding: 12px 0 0 !important; }
+    .sub-product-style .navbarStylePaste .nav-tabs {
+        display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px;
+        border: none !important; padding-bottom: 4px; -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .sub-product-style .navbarStylePaste .nav-tabs::-webkit-scrollbar { display: none; }
+    .sub-product-style .navbarStylePaste .nav-item { flex: 0 0 auto; margin: 0; }
+    .sub-product-style .navbarStylePaste .nav-link {
+        border: 1px solid #e3e6ee !important; border-radius: 999px;
+        background: #f3f4f8 !important; color: #374151 !important;
+        padding: 8px 16px; font-size: .75rem !important; white-space: nowrap;
+    }
+    .sub-product-style .navbarStylePaste .nav-link.active,
+    .sub-product-style .navbarStylePaste .nav-link:hover {
+        background: #111827 !important; color: #fff !important; border-color: #111827 !important;
+    }
+    .sub-product-style .tab-pane .upload-area { height: 160px; background: #f3f4f8; }
+
+    /* Tables -> list rows */
+    .sub-product-style .subProductTable,
+    .sub-product-style .subProductTable tbody { display: block; width: 100%; }
+    .sub-product-style .subProductTable th,
+    .sub-product-style .subProductTable td { padding: 0; border: none; }
+    .sub-product-style .subProductTable tbody tr {
+        display: flex; align-items: center; justify-content: space-between; gap: 8px;
+        height: auto; min-height: 52px; padding: 8px 0; color: #111827;
+        border-bottom: 1px solid #f0f1f5; font-size: .85rem; font-weight: 600;
+    }
+    .sub-product-style .subProductTable tbody tr:last-child { border-bottom: none; }
+    .sub-product-style .subProductTable thead tr {
+        display: flex; justify-content: space-between; background: transparent;
+        color: #9ca3af; height: auto; padding: 4px 0; font-size: .65rem;
+    }
+    .sub-product-style .subProductTable td.text-center { white-space: nowrap; flex-shrink: 0; }
+    .sub-product-style .subProductTable td:first-child { flex: 1; min-width: 0; word-break: break-word; }
+
+    /* Pricing inputs */
+    .sub-product-style .subProductTable input[type="number"] {
+        width: 110px; height: 40px; text-align: right; background: #f8f9fc;
+        border: 1px solid #e3e6ee !important; border-radius: 10px; padding: 0 12px;
+        font-weight: 700; color: #111827;
+    }
+
+    /* Design file rows */
+    .sub-product-style .subProductTable input[type="file"] { display: none; }
+    .sub-product-style .subProductTable td label[for] { font-size: .7rem; max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sub-product-style .uploadStyles, .sub-product-style .downloadStyles {
+        width: 36px; height: 36px; border: 1px solid #e3e6ee !important; border-radius: 10px;
+        background: #fff; padding: 0; margin-left: 4px;
+    }
+    .sub-product-style .uploadStyles { background: #e6f7fa; color: #0ea5b7; }
+
+    /* Quill */
+    .sub-product-style .ql-toolbar.ql-snow {
+        border: 1px solid #e3e6ee; border-radius: 12px 12px 0 0; background: #f8f9fc;
+        padding: 6px; white-space: nowrap; overflow-x: auto;
+    }
+    .sub-product-style .ql-container.ql-snow { border: 1px solid #e3e6ee; border-top: none; border-radius: 0 0 12px 12px; }
+    .sub-product-style .ql-editor { font-size: .9rem; min-height: 100px; }
+    .sub-product-style #editor-description { height: 180px !important; }
+    .sub-product-style #editor-who-we-made-this-for,
+    .sub-product-style #editor-product-features { height: 110px !important; }
+
+    /* Action buttons */
+    .sub-product-style .col-md-12.text-right { display: flex; gap: 10px; padding: 0 !important; }
+    .sub-product-style .custom_btn {
+        flex: 1; height: 46px; border-radius: 12px; font-size: .9rem; font-weight: 600; padding: 0;
+    }
+}
+
 </style>
 
 <div class="container-fluid mb-5 content-position">
@@ -364,7 +552,7 @@
                             <input class="form-control" @if($isDisable == 1) value="{{$subProduct->pattern_code}}" @endif  name="sub_product_pattern" id="sub_product_pattern" type='text'/>
                         </div>
                         <div class="col-md-3 pl">
-                            <label for="sub_product_weight" class="form-label">Weight (oz)</label>
+                            <label for="sub_product_weight" class="form-label">Weight (lb)</label>
                             <input class="form-control" @if($isDisable == 1) value="{{$subProduct->weight}}" @endif  name="sub_product_weight" id="sub_product_weight" min="0.00" step="0.01" type='number'/>
                         </div>
                         {{-- <div class="col-md-12">

@@ -32,6 +32,7 @@ use domainencore\Facades\OrdersCommenFacade\OrdersCommenFacade;
 use Illuminate\Support\Facades\Auth;
 use Mail;
 use App\Services\NotificationBuilderService;
+use App\Services\EcommerceNotificationService;
 
 class InventoryOrderController extends Controller
 {
@@ -170,12 +171,7 @@ class InventoryOrderController extends Controller
 
         $subtotal = $orderDetails->sub_total - $itemTotalAmount;
 
-        $organization = Organization::find($orderDetails->organization_id);
-        if ($organization->sales_tax_active == 1) {
-            $salesTax = $organization->sales_tax;
-        } else {
-            $salesTax = 0;
-        }
+        $salesTax = $orderDetails->sales_tax_rate ?? 0;
         $orderSalesTax = ($subtotal / 100) * $salesTax;
         $TotalAmountwithoutSaleTax = (($orderDetails->order_total - $itemTotalAmount) - $orderDetails->sales_tax ) - $subtotal;
 
@@ -330,6 +326,9 @@ class InventoryOrderController extends Controller
 
         //return $orders;
         $orders->organization_id = $request->organization_id;
+        if ($orders->isDirty('organization_id')) {
+            $orders->syncOrganizationSalesTaxRate();
+        }
         $orders->order_description = $request->order_description;
 
         $orders->flag = $this->changeFlagByOrder($request->order_status_id, $request->ex_factory_date);
@@ -764,7 +763,7 @@ class InventoryOrderController extends Controller
                 $row['Contact Person'] = $order->contactDetails['first_name'].' '.$order->contactDetails['last_name'];
                 $row['Order Description'] = $order->order_description;
                 // $row['Sub Total'] = $order->sub_total;
-                // $row['Tax Rate'] = $order->organizationDetails['sales_tax'] . '%';
+                // $row['Tax Rate'] = $order->sales_tax_rate . '%';
                 // $row['Tax Amount'] = $order->sales_tax;
                 // $row['Shipping'] = $order->shipping;
                 // $row['Artwork'] = $order->artwork;
@@ -1391,8 +1390,18 @@ class InventoryOrderController extends Controller
                 // dd($data);
                 $inventory->update($data);
             } else {
-                InventoryAddedOrder::create($data);
+                $inventory = InventoryAddedOrder::create($data);
             }
+
+            try {
+                $order = Order::with('organizationDetails')->withCount('orderItems')->find($request->order_id);
+                if ($order) {
+                    (new EcommerceNotificationService())->notifyInventoryOrderSent($order, $inventory, auth()->user());
+                }
+            } catch (\Throwable $notifyEx) {
+                \Log::warning('Failed to notify ecommerce system for inventory order: ' . $notifyEx->getMessage());
+            }
+
             return redirect()->back()->withSuccess('Order has successfuly sent to inventory.');
         } catch (\Throwable $th) {
             return redirect()->back()->withErrors($th->getMessage());

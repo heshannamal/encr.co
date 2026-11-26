@@ -129,6 +129,7 @@
     #encore-dashboard .dashboard-search { margin-left: 0; width: 100%; }
     #encore-dashboard select, #encore-dashboard .dashboard-date { min-height: 40px; }
     #encore-dashboard button { min-width: 40px; min-height: 40px; }
+    .header1 { top: 112px !important; }
 }
 @media (max-width: 575px) {
     #encore-dashboard .dashboard-metrics { grid-template-columns: minmax(0,1fr); }

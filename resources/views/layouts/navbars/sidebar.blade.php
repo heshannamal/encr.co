@@ -294,6 +294,30 @@
 
 }
 
+/* Keep sidebar active links consistent on every page */
+#sidenav-main .navbar-nav .nav-link.active,
+#sidenav-main .navbar-nav .nav-link.active:hover,
+#sidenav-main .navbar-nav .nav-link.active:focus {
+    color: #ca5d5d !important;
+    background-color: transparent !important;
+    font-weight: normal !important;
+    box-shadow: none !important;
+}
+
+
+/* Keep sidebar active links consistent on every page */
+#sidenav-main .navbar-nav .nav-link.active,
+#sidenav-main .navbar-nav .nav-link.active:hover,
+#sidenav-main .navbar-nav .nav-link.active:focus {
+    color: #ca5d5d !important;
+    background-color: transparent !important;
+    font-weight: normal !important;
+    box-shadow: none !important;
+    border-top: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+}
+
     </style>
 
     <nav style="padding-bottom: 1rem;" class="sidenav navbar navbar-vertical fixed-left navbar-expand-md navbar-dark bg-dark pb-5 responsive_top_bar" id="sidenav-main">
@@ -460,18 +484,18 @@
 
                     {{-- Contact --}}
                     @if (Gate::check('view people') || Gate::check('view organization'))
-                        <li class="nav-item{{ $activePage == 'organizations' || $activePage == 'people' ? ' active' : '' }}" title="Contact">
-                            <a class="nav-link collapsed" href="#contact-panel" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="admin-panel">
+                        <li class="nav-item{{ $activePage == 'organizations' || $activePage == 'organizations_customers' || $activePage == 'organizations_leads' || $activePage == 'people' ? ' active' : '' }}" title="Contact">
+                            <a class="nav-link collapsed" href="#contact-panel" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="contact-panel">
                                 <i class="fa-solid fas fa-address-book"></i>
                                 <span class="nav-link-text">{{ __('Contacts') }}</span>
                             </a>
 
-                            <div  class="collapse{{ $activePage == 'organizations_customers' || $activePage == 'organizations_leads' || $activePage == 'people' ? ' show' : '' }}" id="contact-panel">
+                            <div class="collapse{{ $activePage == 'organizations' || $activePage == 'organizations_customers' || $activePage == 'organizations_leads' || $activePage == 'people' ? ' show' : '' }}" id="contact-panel">
                                 <ul class="nav nav-sm flex-column">
 
                                     @can('view organization')
                                         <li class="nav-item" title="Customers">
-                                            <a class="nav-link{{ $activePage == 'organizations_customers' ? ' active' : '' }} unsave_event_class" href="{{ route('organizations', ['type' => 'organizations_customers']) }}"">
+                                            <a class="nav-link{{ $activePage == 'organizations_customers' ? ' active' : '' }} unsave_event_class" href="{{ route('organizations', ['type' => 'organizations_customers']) }}">
                                                 <i class="fa-solid fas fa-building"></i> {{ __('Organizations') }}
                                             </a>
                                         </li>
@@ -496,18 +520,6 @@
                         </li>
                     @endif
 
-                    @php
-                    $activePageName = ''; // Initialize the active page name variable
-
-                    $currentUrl = Request::url();
-                    if (strpos($currentUrl, 'emails') !== false) {
-                        $activePageName = 'Mail';
-                    } elseif (strpos($currentUrl, 'activities') !== false) {
-                        $activePageName = 'activities';
-                    }else {
-                        $activePageName = '';
-                    }
-                    @endphp
 
                     {{-- Email & Activities --}}
                     @can('view email')
@@ -517,7 +529,7 @@
                                 <span class="nav-link-text">{{ __('Email & Activities') }}</span>
                             </a>
 
-                            <div class="collapse {{ $activePage == 'Mail' || $activePage == 'activities' ? ' show' : '' }}" id="Email-Activities">
+                            <div class="collapse {{ $activePage == 'Mail' || $activePage == 'activities' || $activePage == 'Template' ? ' show' : '' }}" id="Email-Activities">
                                 <ul class="nav nav-sm flex-column">
                                     @can('view email')
                                         <li class="nav-item" title="Email">
@@ -556,42 +568,33 @@
                     @endcan
 
                     {{-- Customer Portal --}}
-                    @if (Gate::check('view tickets') || Gate::check('view customer settings') || Gate::check('customer enquiries') || Gate::check('catalog enquiries') || Gate::check('view subscribers') || Gate::check('view customer supports'))
-                        <li class="nav-item{{ $activePage == 'customer_enquiries' || $activePage == 'subscribers' || $activePage == 'under_contruction' ? ' active' : '' }}" title="Customer Portal">
-                            <a class="nav-link collapsed" href="#customer-panel" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="admin-panel">
+                    @if (Gate::check('view tickets') || Gate::check('view customer settings') || Gate::check('customer enquiries') || Gate::check('catalog enquiries') || Gate::check('view customer supports'))
+                        <li class="nav-item{{ $activePage == 'customer_enquiries' || $activePage == 'under_contruction' || $activePage == 'enquiries' || $activePage == 'customer_supports' || request()->is('customer_enquiries*') || request()->is('enquiries*') || request()->routeIs('customer_supports') ? ' active' : '' }}" title="Customer Portal">
+                            <a class="nav-link collapsed" href="#customer-panel" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="customer-panel">
                                 <i class="fa-solid fas fa-chalkboard-user"></i>
                                 <span class="nav-link-text">{{ __('Customer Portal') }}</span>
                             </a>
 
-                            <div class="collapse{{ $activePage == 'customer_enquiries' || $activePage == 'under_contruction' || $activePage == 'enquiries' || $activePage == 'subscribers' || $activePage == 'customer_supports' ? ' show' : '' }}" id="customer-panel">
+                            <div class="collapse{{ $activePage == 'customer_enquiries' || $activePage == 'under_contruction' || $activePage == 'enquiries' || $activePage == 'customer_supports' || request()->is('customer_enquiries*') || request()->is('enquiries*') || request()->routeIs('customer_supports') ? ' show' : '' }}" id="customer-panel">
                                 <ul class="nav nav-sm flex-column">
 
                                     @can('customer enquiries')
                                         <li class="nav-item" title="Customer Inquiries">
-                                            <a class="nav-link{{ $activePage == 'customer_enquiries' ? ' active' : '' }} unsave_event_class" href="{{ url('customer_enquiries') }}">
+                                            <a class="nav-link{{ $activePage == 'customer_enquiries' || request()->is('customer_enquiries*') ? ' active' : '' }} unsave_event_class" href="{{ url('customer_enquiries') }}">
                                                 <i class="fa-solid fas fa-person-circle-question"></i> {{ __('Customer Inquiries') }}
                                             </a>
                                         </li>
                                     @endcan
                                     @can('catalog enquiries')
                                         <li class="nav-item" title="Catalog Inquiries">
-                                            <a class="nav-link{{ $activePage == 'enquiries' ? ' active' : '' }} unsave_event_class" href="{{ url('enquiries') }}">
-
+                                            <a class="nav-link{{ $activePage == 'enquiries' || request()->is('enquiries*') ? ' active' : '' }} unsave_event_class" href="{{ url('enquiries') }}">
                                                 <i class="fa-solid fas fa-clipboard-question"></i> {{ __('Catalog Inquiries') }}
-
-                                            </a>
-                                        </li>
-                                    @endcan
-                                    @can('view subscribers')
-                                        <li class="nav-item" title="Subscribers">
-                                            <a class="nav-link{{ $activePage == 'subscribers' ? ' active' : '' }} unsave_event_class" href="{{ url('subscribers') }}">
-                                                <i class="fa-solid fas fa-person-circle-plus"></i> {{ __('Subscribers') }}
                                             </a>
                                         </li>
                                     @endcan
                                     @can('view customer supports')
-                                        <li class="nav-item" title="customer_supports">
-                                            <a class="nav-link {{ $activePage == 'customer_supports' ? ' active' : '' }} " href="{{ route('customer_supports') }}">
+                                        <li class="nav-item" title="Customer Supports">
+                                            <a class="nav-link{{ $activePage == 'customer_supports' || request()->routeIs('customer_supports') ? ' active' : '' }} unsave_event_class" href="{{ route('customer_supports') }}">
                                                 <i class="fas fa-comment-dots"></i> {{ __('Customer Supports') }}
                                             </a>
                                         </li>
@@ -601,9 +604,9 @@
                         </li>
                     @endif
 
-                    @if (Gate::check('view project management') || Gate::check('view project management') )
+                    @if (Gate::check('view project management'))
                         <li class="nav-item{{ $activePage == 'projects' || $activePage == 'pm_dashboard' || $activePage == 'project_inbox' || $activePage == 'my_tasks' ? ' active' : '' }}" title="Project Management">
-                            <a class="nav-link collapsed" href="#project-management-panel" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="admin-panel">
+                            <a class="nav-link collapsed" href="#project-management-panel" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="project-management-panel">
                                 <i class="fa-solid fas fa-sitemap"></i>
                                 <span class="nav-link-text">{{ __('Project Management') }}</span>
                             </a>
@@ -612,46 +615,33 @@
                                 <ul class="nav nav-sm flex-column">
 
                                         <li class="nav-item" title="Project Management Home">
-                                            <a class="nav-link{{ $activePage == 'pm_dashboard' ? ' active' : '' }}" href="{{ url('projects/home') }}">
+                                            <a class="nav-link{{ $activePage == 'pm_dashboard' ? ' active' : '' }} unsave_event_class" href="{{ url('projects/home') }}">
                                                 <i class="fa-solid fas fa-house-chimney-user"></i> {{ __('Home') }}
                                             </a>
                                         </li>
 
                                         <li class="nav-item" title="Project Management List">
-                                            <a class="nav-link{{ $activePage == 'projects' ? ' active' : '' }}" href="{{ url('projects/list') }}">
-                                               <i class="fa-solid fas fa-layer-group"></i> {{ __('Projects') }}
+                                            <a class="nav-link{{ $activePage == 'projects' ? ' active' : '' }} unsave_event_class" href="{{ url('projects/list') }}">
+                                                <i class="fa-solid fas fa-layer-group"></i> {{ __('Projects') }}
                                             </a>
                                         </li>
 
                                         <li class="nav-item" title="Project Management Inbox">
-                                            <a class="nav-link{{ $activePage == 'project_inbox' ? ' active' : '' }}" href="{{ url('projects/inbox') }}">
+                                            <a class="nav-link{{ $activePage == 'project_inbox' ? ' active' : '' }} unsave_event_class" href="{{ url('projects/inbox') }}">
                                                 <i class="fa-solid fas fa-comment-dots"></i> {{ __('Inbox') }}
                                             </a>
                                         </li>
 
                                         <li class="nav-item" title="Project Management My Tasks">
-                                            <a class="nav-link{{ $activePage == 'my_tasks' ? ' active' : '' }}" href="{{ url('projects/my_tasks') }}">
+                                            <a class="nav-link{{ $activePage == 'my_tasks' ? ' active' : '' }} unsave_event_class" href="{{ url('projects/my_tasks') }}">
                                                 <i class="fa-solid fas fa-list-check"></i> {{ __('My Tasks') }}
                                             </a>
                                         </li>
-
                                 </ul>
                             </div>
                         </li>
                     @endif
 
-                    @php
-                        $activePageName2 = ''; // Initialize the active page name variable
-
-                        $currentUrl = Request::url();
-                        if (strpos($currentUrl, 'OMG/store/add') !== false) {
-                            $activePageName2 = 'add_OMG_Store';
-                        } elseif (strpos($currentUrl, 'OMG/stores') !== false) {
-                            $activePageName2 = 'all_omg_stores';
-                        }else {
-                            $activePageName2 = '';
-                        }
-                    @endphp
 
                     {{-- Team Stores --}}
                     @if (Gate::check('view add omg store') || Gate::check('view all omg store'))
@@ -672,125 +662,103 @@
                         </li>
                     @endif --}}
 
-                    @php
-                        $activePageReport = ''; // Initialize the active page name variable
-
-                        $currentUrl = Request::url();
-                        if (strpos($currentUrl, 'reports') !== false) {
-                            $activePageReport = 'sales_leader_summary';
-                        }
-                        elseif (strpos($currentUrl, 'customerPayment') !== false) {
-                            $activePageReport = 'payment_summary';
-                        }
-                        elseif (strpos($currentUrl, 'sales_summary') !== false) {
-                            $activePageReport = 'sales_summary';
-                        }
-                        elseif (strpos($currentUrl, 'salesInvoice') !== false) {
-                            $activePageReport = 'invoice_sammary';
-                        }
-                        elseif (strpos($currentUrl, 'orderSummary') !== false) {
-                            $activePageReport = 'order_summary';
-                        }
-                        elseif (strpos($currentUrl, 'orderSheduleSheet') !== false) {
-                            $activePageReport = 'order_shedule';
-                        }
-                        elseif (strpos($currentUrl, 'account_receivable_report') !== false) {
-                            $activePageReport = 'ar_report';
-                        }
-                        elseif (strpos($currentUrl, 'customer_sales') !== false) {
-                            $activePageReport = 'cu_sales_summary';
-                        }elseif (strpos($currentUrl, 'canceled_order_report') !== false) {
-                            $activePageReport = 'canceled_order_report';
-                        }elseif(strpos($currentUrl, 'org_wise_product_report') !== false){
-                            $activePageReport = 'org_wise_product_report';
-                        }
-
-                    @endphp
 
                     {{-- Reports --}}
-                    @if (Gate::check('view reports') || Gate::check('view order embellishments report') || Gate::check('view sales leader summary') || Gate::check('view invoice summary') || Gate::check('view order summary') || Gate::check('view payment summary') || Gate::check('view order shedule') || Gate::check('view organizations with orders report'))
+                    @if (Gate::check('view reports') || Gate::check('view order embellishments report') || Gate::check('view sales leader summary') || Gate::check('view invoice summary') || Gate::check('view order summary') || Gate::check('view payment summary') || Gate::check('view order shedule') || Gate::check('view organizations with orders report') || Gate::check('view sales tax reports'))
 
-                        <li class="nav-item {{ $activePageReport == 'sales_leader_summary' ||  $activePage == 'sales_activity_report' || $activePage == 'analytical_summary_report' || $activePageReport == 'sales_summary' || $activePageReport == 'order_summary' || $activePageReport == 'payment_summary' || $activePageReport == 'cu_sales_summary' || $activePageReport == 'canceled_order_report' || $activePageReport == 'order_shedule' || $activePage == 'organizations_with_orders' ? ' active' : '' }}" title="Reports">
-                            <a class="nav-link collapsed" href="#summary_reports"  data-toggle="collapse" role="button" aria-expanded="false" aria-controls="admin-panel">
+                        <li class="nav-item{{ $activePage == 'sales_activity_report' || $activePage == 'analytical_summary_report' || $activePage == 'Sales_Tax_Report' || $activePage == 'organizations_with_orders' || $activePage == 'order_embellishments_report' || $activePage == 'remake_order_item_report' || request()->routeIs('reports.sales_activity_report.*') || request()->routeIs('reports.analytical_summary_report.*') || request()->routeIs('reports.sales_summary') || request()->routeIs('reports.cu_sales_summary') || request()->routeIs('reports.remake_order_item_report') || request()->routeIs('orderSheduleSheet') || request()->routeIs('reports.canceled_order_report') || request()->routeIs('reports.compared_Reports') || request()->routeIs('reports.Sales_Tax_Report') || request()->routeIs('reports.organization_sales_tax') || request()->routeIs('reports.organizations_with_orders') || request()->routeIs('reports.org_wise_product_report') || request()->routeIs('reports.order_embellishments_report') || request()->is('*customerPayment*') || request()->is('*orderSummary*') ? ' active' : '' }}" title="Reports">
+                            <a class="nav-link collapsed" href="#summary_reports" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="summary_reports">
                                 <i class="fa-solid fas fa-file-waveform"></i> {{ __('Reports') }}
                             </a>
-                            <div class="collapse {{ $activePageReport == 'sales_leader_summary' ||  $activePage == 'order_embellishments_report' || $activePage == 'Sales_Tax_Report' ||  $activePage == 'sales_activity_report' || $activePage == 'analytical_summary_report' || $activePageReport == 'sales_summary' || $activePageReport == 'order_summary' || $activePageReport == 'payment_summary' || $activePageReport == 'cu_sales_summary' || $activePageReport == 'canceled_order_report' || $activePage == 'organizations_with_orders' || $activePageReport == 'org_wise_product_report' || $activePageReport == 'order_shedule'? ' show' : '' }}" id="summary_reports">
+
+                            <div class="collapse{{ $activePage == 'sales_activity_report' || $activePage == 'analytical_summary_report' || $activePage == 'Sales_Tax_Report' || $activePage == 'organizations_with_orders' || $activePage == 'order_embellishments_report' || $activePage == 'remake_order_item_report' || request()->routeIs('reports.sales_activity_report.*') || request()->routeIs('reports.analytical_summary_report.*') || request()->routeIs('reports.sales_summary') || request()->routeIs('reports.cu_sales_summary') || request()->routeIs('reports.remake_order_item_report') || request()->routeIs('orderSheduleSheet') || request()->routeIs('reports.canceled_order_report') || request()->routeIs('reports.compared_Reports') || request()->routeIs('reports.Sales_Tax_Report') || request()->routeIs('reports.organization_sales_tax') || request()->routeIs('reports.organizations_with_orders') || request()->routeIs('reports.org_wise_product_report') || request()->routeIs('reports.order_embellishments_report') || request()->is('*customerPayment*') || request()->is('*orderSummary*') ? ' show' : '' }}" id="summary_reports">
                                 <ul class="nav nav-sm flex-column">
 
                                     @can('view Sales activity Report')
                                         <li class="nav-item" title="Sales Activity Report">
-                                            <a class="nav-link{{ $activePage == 'sales_activity_report' ? ' active' : '' }} unsave_event_class" href="{{ route('reports.sales_activity_report.index') }}">
+                                            <a class="nav-link{{ $activePage == 'sales_activity_report' || request()->routeIs('reports.sales_activity_report.*') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.sales_activity_report.index') }}">
                                                 <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Sales Activity Report') }}
                                             </a>
                                         </li>
                                     @endcan
                                     @can('view Analytical Summary Report')
-                                        <li class="nav-item" title="Sales Summary">
-                                            <a class="nav-link{{ $activePage == 'analytical_summary_report' ? ' active' : '' }} unsave_event_class" href="{{ route('reports.analytical_summary_report.index') }}">
+                                        <li class="nav-item" title="Analytical Summary Report">
+                                            <a class="nav-link{{ $activePage == 'analytical_summary_report' || request()->routeIs('reports.analytical_summary_report.*') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.analytical_summary_report.index') }}">
                                                 <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Analytical Summary Report') }}
                                             </a>
                                         </li>
                                     @endcan
                                     @can('view sales summary report')
                                         <li class="nav-item" title="Sales Summary">
-                                            <a class="nav-link{{ $activePageReport == 'sales_summary' ? ' active' : '' }} unsave_event_class" href="{{ route('reports.sales_summary') }}">
+                                            <a class="nav-link{{ request()->routeIs('reports.sales_summary') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.sales_summary') }}">
                                                 <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Sales Summary') }}
                                             </a>
                                         </li>
                                     @endcan
                                     @can('view Customer Sales Summary')
-                                        <li class="nav-item" title="Customer Sales Summery">
-                                            <a class="nav-link{{ $activePageReport == 'cu_sales_summary' ? ' active' : '' }} unsave_event_class" href="{{ route('reports.cu_sales_summary') }}">
+                                        <li class="nav-item" title="Customer Sales Summary">
+                                            <a class="nav-link{{ request()->routeIs('reports.cu_sales_summary') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.cu_sales_summary') }}">
                                                 <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Customer Sales Summary') }}
                                             </a>
                                         </li>
                                     @endcan
-
+                                    @can('view Remake Order Item Report')
+                                        <li class="nav-item" title="Remake Order Item Report">
+                                            <a class="nav-link{{ $activePage == 'remake_order_item_report' || request()->routeIs('reports.remake_order_item_report') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.remake_order_item_report') }}">
+                                                <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Remake Order Item Report') }}
+                                            </a>
+                                        </li>
+                                    @endcan
                                     @can('view order shedule')
                                         <li class="nav-item" title="Encore Order Shedule">
-                                            <a class="nav-link{{ $activePageReport == 'order_shedule' ? ' active' : '' }} unsave_event_class" href="{{ route('orderSheduleSheet') }}">
-                                                <i class="fa-solid fas fa-square-poll-vertical"></i>{{ __('Encore Order Shedule') }}
+                                            <a class="nav-link{{ request()->routeIs('orderSheduleSheet') ? ' active' : '' }} unsave_event_class" href="{{ route('orderSheduleSheet') }}">
+                                                <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Encore Order Shedule') }}
                                             </a>
                                         </li>
                                     @endcan
                                     @can('view canceled quotation')
-                                        <li class="nav-item" title="Canceled Sales Report">
-                                            <a class="nav-link{{ $activePageReport == 'canceled_order_report' ? ' active' : '' }} unsave_event_class" href="{{ route('reports.canceled_order_report') }}">
+                                        <li class="nav-item" title="Canceled Quotation">
+                                            <a class="nav-link{{ request()->routeIs('reports.canceled_order_report') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.canceled_order_report') }}">
                                                 <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Canceled Quotation') }}
                                             </a>
                                         </li>
                                     @endcan
                                     @can('view compared reports')
-                                        <li class="nav-item" title="compaired reports">
-                                            <a class="nav-link{{ $activePageReport == 'compared_Reports' ? ' active' : '' }} unsave_event_class" href="{{ route('reports.compared_Reports') }}">
+                                        <li class="nav-item" title="Comparison Reports">
+                                            <a class="nav-link{{ request()->routeIs('reports.compared_Reports') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.compared_Reports') }}">
                                                 <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Comparison Reports') }}
                                             </a>
                                         </li>
                                     @endcan
                                     @can('view sales tax reports')
                                         <li class="nav-item" title="Sales Tax Report">
-                                            <a class="nav-link{{ $activePage == 'Sales_Tax_Report' ? ' active' : '' }} unsave_event_class" href="{{ route('reports.Sales_Tax_Report') }}">
-                                                <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Sales Tax Report') }}
+                                            <a class="nav-link{{ $activePage == 'Sales_Tax_Report' || request()->routeIs('reports.Sales_Tax_Report') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.Sales_Tax_Report') }}">
+                                                <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Tax Report') }}
+                                            </a>
+                                        </li>
+                                        <li class="nav-item" title="Organization Sales Tax Review">
+                                            <a class="nav-link{{ request()->routeIs('reports.organization_sales_tax') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.organization_sales_tax') }}">
+                                                <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Organization Sales Tax Review') }}
                                             </a>
                                         </li>
                                     @endcan
                                     @can('view organizations with orders report')
-                                        <li class="nav-item" title="Organizations with orders">
-                                            <a class="nav-link{{ $activePage == 'organizations_with_orders' ? ' active' : '' }} unsave_event_class" href="{{ route('reports.organizations_with_orders') }}">
-                                               <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Lead Source Report') }}
+                                        <li class="nav-item" title="Lead Source Report">
+                                            <a class="nav-link{{ $activePage == 'organizations_with_orders' || request()->routeIs('reports.organizations_with_orders') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.organizations_with_orders') }}">
+                                                <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Lead Source Report') }}
                                             </a>
                                         </li>
                                     @endcan
                                     @can('view organization-wise product report')
                                         <li class="nav-item" title="Organization-wise Product Report">
-                                            <a class="nav-link{{ $activePageReport == 'org_wise_product_report' ? ' active' : '' }} unsave_event_class" href="{{ route('reports.org_wise_product_report') }}">
+                                            <a class="nav-link{{ request()->routeIs('reports.org_wise_product_report') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.org_wise_product_report') }}">
                                                 <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Organization-wise Product Report') }}
                                             </a>
                                         </li>
                                     @endcan
                                     @can('view order embellishments report')
                                         <li class="nav-item" title="Order Embellishments Report">
-                                            <a class="nav-link{{ $activePage == 'order_embellishments_report' ? ' active' : '' }} unsave_event_class" href="{{ route('reports.order_embellishments_report') }}">
+                                            <a class="nav-link{{ $activePage == 'order_embellishments_report' || request()->routeIs('reports.order_embellishments_report') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.order_embellishments_report') }}">
                                                 <i class="fa-solid fas fa-square-poll-vertical"></i> {{ __('Order Embellishments Report') }}
                                             </a>
                                         </li>
@@ -847,153 +815,136 @@
                         </li>
                     @endif
 
-                    @php
-                        $activePageName3 = ''; // Initialize the active page name variable
 
-                        $currentUrl = Request::url();
-                        if (strpos($currentUrl, 'transactions') !== false) {
-                            $activePageName3 = 'allTransactions';
-                        } elseif (strpos($currentUrl, 'payable_invoice') !== false) {
-                            $activePageName3 = 'payable';
-                        }elseif (strpos($currentUrl, 'generate_invoice') !== false) {
-                            $activePageName3 = 'generateInvoice';
-                        }else {
-                            $activePageName3 = '';
-                        }
-                    @endphp
-
+                    {{-- Accounting --}}
                     @if (Gate::check('view accounting'))
-                    <li class="nav-item {{ $activePageReport == 'ar_report' || $activePageReport == 'invoice_sammary' || $activePageName3 == 'allTransactions' || $activePageName3 == 'bulk_invoice' || $activePageName3 == 'generateInvoice' || $activePageName3 == 'payable' || $activePage == 'payment_ledger' || $activePage == 'finacial_year' || $activePage == 'credit_account' || $activePage == 'debit_account' ? ' active' : '' }}" title="Accounting">
-                        <li class="nav-item {{ $activePageName3 == 'allTransactions' || $activePageName3 == 'bulk_invoice' || $activePageName3 == 'payable' || $activePageName3 == 'generateInvoice' || $activePageReport == 'ar_report' || $activePageReport == 'invoice_sammary' || $activePage == 'payment_ledger' || $activePage == 'finacial_year' || $activePage == 'credit_account' || $activePage == 'tax_report' || $activePage == 'debit_account' ? ' active' : '' }}" title="Accounting">
-                            <a class="nav-link" href="#accounting-panel"  data-toggle="collapse" role="button" aria-expanded="false" aria-controls="admin-panel">
-                                <i class="fa-solid fas fa-money-check-dollar"></i> {{ __('Accounting') }}
+                        <li class="nav-item{{ request()->routeIs('reports.ar_report') || request()->routeIs('salesInvoice') || request()->is('*transactions*') || request()->is('*bulk_invoice*') || $activePage == 'tax_report' || request()->is('tax_report*') || request()->is('*generate_invoice*') || request()->is('*payable_invoice*') || $activePage == 'payment_ledger' || request()->is('payment_ledger*') || $activePage == 'all_invoice' || request()->is('all_invoices*') || $activePage == 'finacial_year' || $activePage == 'financial_year' || $activePage == 'credit_account' || $activePage == 'debit_account' || request()->routeIs('chart_of_accounts.finacial_year') || request()->routeIs('chart_of_accounts.debit_account') ? ' active' : '' }}" title="Accounting">
+                            <a class="nav-link collapsed" href="#accounting-panel" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="accounting-panel">
+                                <i class="fa-solid fas fa-money-check-dollar"></i>
+                                <span class="nav-link-text">{{ __('Accounting') }}</span>
                             </a>
+
+                            <div class="collapse{{ request()->routeIs('reports.ar_report') || request()->routeIs('salesInvoice') || request()->is('*transactions*') || request()->is('*bulk_invoice*') || $activePage == 'tax_report' || request()->is('tax_report*') || request()->is('*generate_invoice*') || request()->is('*payable_invoice*') || $activePage == 'payment_ledger' || request()->is('payment_ledger*') || $activePage == 'all_invoice' || request()->is('all_invoices*') || $activePage == 'finacial_year' || $activePage == 'financial_year' || $activePage == 'credit_account' || $activePage == 'debit_account' || request()->routeIs('chart_of_accounts.finacial_year') || request()->routeIs('chart_of_accounts.debit_account') ? ' show' : '' }}" id="accounting-panel">
+                                <ul class="nav nav-sm flex-column">
+
+                                    {{-- Customer's Account --}}
+                                    @if (Gate::check('view customers account'))
+                                        <li class="nav-item{{ request()->routeIs('reports.ar_report') || request()->routeIs('salesInvoice') || request()->is('*transactions*') || request()->is('*bulk_invoice*') || $activePage == 'tax_report' || request()->is('tax_report*') ? ' active' : '' }}" title="Customer's Account">
+                                            <a class="nav-link collapsed" href="#accountingCustomers" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="accountingCustomers">
+                                                <i class="fa-solid fas fa-user-tag"></i>
+                                                <span class="nav-link-text">{{ __("Customer's Account") }}</span>
+                                            </a>
+
+                                            <div class="collapse{{ request()->routeIs('reports.ar_report') || request()->routeIs('salesInvoice') || request()->is('*transactions*') || request()->is('*bulk_invoice*') || $activePage == 'tax_report' || request()->is('tax_report*') ? ' show' : '' }}" id="accountingCustomers">
+                                                <ul class="nav nav-sm flex-column">
+                                                    @can('view account receivable report')
+                                                        <li class="nav-item" title="Accounts receivable">
+                                                            <a class="nav-link{{ request()->routeIs('reports.ar_report') ? ' active' : '' }} unsave_event_class" href="{{ route('reports.ar_report') }}">
+                                                                <i class="fa-solid fas fa-hand-holding-dollar"></i> {{ __('Accounts receivable') }}
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('view invoice summary')
+                                                        <li class="nav-item" title="Invoice Summary">
+                                                            <a class="nav-link{{ request()->routeIs('salesInvoice') ? ' active' : '' }} unsave_event_class" href="{{ route('salesInvoice') }}">
+                                                                <i class="fa-solid fas fa-clipboard-list"></i> {{ __('Invoice Summary') }}
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('view received payments')
+                                                        <li class="nav-item" title="Received Payments">
+                                                            <a class="nav-link{{ request()->is('*transactions*') ? ' active' : '' }} unsave_event_class" href="{{ url('transactions') }}">
+                                                                <i class="fa-solid fas fa-money-bill-wave"></i> {{ __('Received Payments') }}
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('view bulk invoice')
+                                                        <li class="nav-item" title="Bulk Invoice">
+                                                            <a class="nav-link{{ request()->is('*bulk_invoice*') ? ' active' : '' }} unsave_event_class" href="{{ url('bulk_invoices') }}">
+                                                                <i class="fa-solid fas fa-file-circle-check"></i> {{ __('Bulk Invoice') }}
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    @endif
+
+                                    {{-- Vendor's Account --}}
+                                    @if (Gate::check('view vendors account'))
+                                        <li class="nav-item{{ request()->is('*generate_invoice*') || request()->is('*payable_invoice*') || $activePage == 'payment_ledger' || request()->is('payment_ledger*') || $activePage == 'all_invoice' || request()->is('all_invoices*') ? ' active' : '' }}" title="Vendor's Account">
+                                            <a class="nav-link collapsed" href="#accountingVendor" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="accountingVendor">
+                                                <i class="fa-solid fas fa-store"></i>
+                                                <span class="nav-link-text">{{ __("Vendor's Account") }}</span>
+                                            </a>
+
+                                            <div class="collapse{{ request()->is('*generate_invoice*') || request()->is('*payable_invoice*') || $activePage == 'payment_ledger' || request()->is('payment_ledger*') || $activePage == 'all_invoice' || request()->is('all_invoices*') ? ' show' : '' }}" id="accountingVendor">
+                                                <ul class="nav nav-sm flex-column">
+                                                    @can('view generate invoice')
+                                                        <li class="nav-item" title="Generated Invoice">
+                                                            <a class="nav-link{{ request()->is('*generate_invoice*') ? ' active' : '' }} unsave_event_class" href="{{ url('generate_invoice') }}">
+                                                                <i class="fa-solid fas fa-file-invoice"></i> {{ __('Generated Invoice') }}
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('view payable')
+                                                        <li class="nav-item" title="Payable">
+                                                            <a class="nav-link{{ request()->is('*payable_invoice*') ? ' active' : '' }} unsave_event_class" href="{{ url('payable_invoice') }}">
+                                                                <i class="fa-solid fas fa-dollar-sign"></i> {{ __('Payable') }}
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('view payment leger')
+                                                        <li class="nav-item" title="Payment Ledger">
+                                                            <a class="nav-link{{ $activePage == 'payment_ledger' || request()->is('payment_ledger*') ? ' active' : '' }} unsave_event_class" href="{{ url('payment_ledger') }}">
+                                                                <i class="fa-solid fas fa-book"></i> {{ __('Payment Ledger') }}
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('view All Invoice')
+                                                        <li class="nav-item" title="All Invoices">
+                                                            <a class="nav-link{{ $activePage == 'all_invoice' || request()->is('all_invoices*') ? ' active' : '' }} unsave_event_class" href="{{ url('all_invoices') }}">
+                                                                <i class="fa-solid fas fa-file-lines"></i> {{ __('All Invoices') }}
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    @endif
+
+                                    {{-- Chart of Accounts --}}
+                                    @if (Gate::check('view chart of account'))
+                                        <li class="nav-item{{ $activePage == 'finacial_year' || $activePage == 'financial_year' || $activePage == 'credit_account' || $activePage == 'debit_account' || request()->routeIs('chart_of_accounts.finacial_year') || request()->routeIs('chart_of_accounts.debit_account') ? ' active' : '' }}" title="Chart of Accounts">
+                                            <a class="nav-link collapsed" href="#chartOfAccounts" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="chartOfAccounts">
+                                                <i class="fa-solid fas fa-chart-line"></i>
+                                                <span class="nav-link-text">{{ __('Chart of Accounts') }}</span>
+                                            </a>
+
+                                            <div class="collapse{{ $activePage == 'finacial_year' || $activePage == 'financial_year' || $activePage == 'credit_account' || $activePage == 'debit_account' || request()->routeIs('chart_of_accounts.finacial_year') || request()->routeIs('chart_of_accounts.debit_account') ? ' show' : '' }}" id="chartOfAccounts">
+                                                <ul class="nav nav-sm flex-column">
+                                                    @can('view financial year')
+                                                        <li class="nav-item" title="Financial Year">
+                                                            <a class="nav-link{{ $activePage == 'finacial_year' || $activePage == 'financial_year' || request()->routeIs('chart_of_accounts.finacial_year') ? ' active' : '' }} unsave_event_class" href="{{ route('chart_of_accounts.finacial_year') }}">
+                                                                <i class="fa-solid fas fa-calendar"></i> {{ __('Financial Year') }}
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('view debit account')
+                                                        <li class="nav-item" title="Debit Account">
+                                                            <a class="nav-link{{ $activePage == 'debit_account' || request()->routeIs('chart_of_accounts.debit_account') ? ' active' : '' }} unsave_event_class" href="{{ route('chart_of_accounts.debit_account') }}">
+                                                                <i class="fa-solid fa-credit-card"></i> {{ __('Debit Account') }}
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    @endif
+
+                                </ul>
+                            </div>
                         </li>
-
-                        <div class="collapse {{ $activePageReport == 'ar_report' || $activePageReport == 'invoice_sammary' || $activePageName3 == 'allTransactions' || $activePageName3 == 'bulk_invoice' || $activePage == 'tax_report' || $activePageName3 == 'generateInvoice' || $activePageName3 == 'payable' || $activePage == 'payment_ledger' || $activePage == 'finacial_year' || $activePage == 'credit_account' || $activePage == 'debit_account' ? ' show' : '' }}" id="accounting-panel">
-                            <ul class="nav nav-sm flex-column">
-                                @if (Gate::check('view customers account'))
-                                    <li class="nav-item {{ $activePageReport == 'ar_report' || $activePageReport == 'invoice_sammary' || $activePageName3 == 'allTransactions' || $activePage == 'tax_report' || $activePageName3 == 'bulk_invoice' ? ' active' : '' }}" title="Masters">
-                                        <a class="nav-link" href="#accountingCustomers" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="accountingCustomers">
-                                            <i class="fa-solid fas fa-user-tag"></i>
-                                            <span class="nav-link-text">{{ __("Customer's Account") }}</span>
-                                        </a>
-
-                                        <div class="collapse  {{ $activePageReport == 'ar_report' || $activePageReport == 'invoice_sammary' || $activePageName3 == 'allTransactions' || $activePage == 'tax_report' || $activePageName3 == 'bulk_invoice' ? ' show' : '' }}" id="accountingCustomers">
-                                            <ul class="nav nav-sm flex-column">
-                                                @can('view account receivable report')
-                                                    <li class="nav-item" title="Accounts receivable">
-                                                        <a class="nav-link{{ $activePageReport == 'ar_report' ? ' active' : '' }} unsave_event_class" href="{{ route('reports.ar_report') }}">
-                                                            <i class="fa-solid fas fa-hand-holding-dollar"></i> {{ __('Accounts receivable') }}
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                @can('view invoice summary')
-                                                    <li class="nav-item" title="Invoice Summary">
-                                                        <a class="nav-link{{ $activePageReport == 'invoice_sammary' ? ' active' : '' }} unsave_event_class" href="{{ route('salesInvoice') }}">
-                                                            <i class="fa-solid fas fa-clipboard-list"></i> {{ __('Invoice Summary') }}
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                @can('view received payments')
-                                                    <li class="nav-item" title="Received Payments">
-                                                        <a class="nav-link{{ $activePageName3 == 'allTransactions' ? ' active' : '' }} unsave_event_class" href="{{ url('transactions') }}">
-                                                            <i class="fa-solid fas fa-money-bill-wave"></i> {{ __('Received Payments') }}
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                @can('view bulk invoice')
-                                                    <li class="nav-item" title="Bulk Invoice">
-                                                        <a class="nav-link{{ $activePageName3 == 'bulk_invoice' ? ' active' : '' }} unsave_event_class" href="{{ url('bulk_invoices') }}">
-                                                            <i class="fa-solid fas fa-file-circle-check"></i> {{ __('Bulk Invoice') }}
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                @can('view tax report')
-                                                    <li class="nav-item" title="Tax Report">
-                                                        <a class="nav-link{{ $activePage == 'tax_report' ? ' active' : '' }} unsave_event_class" href="{{ url('tax_report') }}">
-                                                            <i class="fa-solid fas fa-percent"></i> {{ __('Tax Report') }}
-                                                        </a>
-                                                    </li>
-                                                @endcan
-
-                                            </ul>
-                                        </div>
-                                    </li>
-                                @endif
-
-                                @if (Gate::check('view vendors account'))
-                                    <li class="nav-item {{  $activePageName3 == 'generateInvoice' || $activePage == 'all_invoice' || $activePageName3 == 'payable' || $activePage == 'payment_ledger' ? ' active' : '' }}" title="Users & Privileges">
-                                        <a class="nav-link collapsed" href="#accountingVendor" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="accountingVendor">
-                                            <i class="fa-solid fas fa-store"></i>
-                                            <span class="nav-link-text">{{ __("Vendor's Account") }}</span>
-                                        </a>
-
-                                        <div class="collapse {{ $activePageName3 == 'generateInvoice' || $activePage == 'all_invoice' || $activePageName3 == 'payable' || $activePage == 'payment_ledger' ? ' show' : '' }}" id="accountingVendor">
-                                            <ul class="nav nav-sm flex-column">
-                                                @can('view generate invoice')
-                                                    <li class="nav-item" title="Generated Invoice">
-                                                        <a class="nav-link{{ $activePageName3 == 'generateInvoice' ? ' active' : '' }} unsave_event_class" href="{{ url('generate_invoice') }}">
-                                                            <i class="fa-solid fas fa-file-invoice"></i> {{ __('Generated Invoice') }}
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                @can('view payable')
-                                                    <li class="nav-item" title="Payable">
-                                                        <a class="nav-link{{ $activePageName3 == 'payable' ? ' active' : '' }} unsave_event_class" href="{{ url('payable_invoice') }}">
-                                                            <i class="fa-solid fas fa-dollar-sign"></i> {{ __('Payable') }}
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                @can('view payment leger')
-                                                    <li class="nav-item" title="Payment Ledger">
-                                                        <a class="nav-link{{ $activePage == 'payment_ledger' ? ' active' : '' }} unsave_event_class" href="{{ url('payment_ledger') }}">
-                                                            <i class="fa-solid fas fa-book"></i> {{ __('Payment Ledger') }}
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                @can('view All Invoice')
-                                                    <li class="nav-item" title="All Invoices">
-                                                        <a class="nav-link{{ $activePage == 'all_invoice' ? ' active' : '' }} unsave_event_class" href="{{ url('all_invoices') }}">
-                                                            <i class="fa-solid fas fa-file-lines"></i> {{ __('All Invoices') }}
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                            </ul>
-                                        </div>
-                                    </li>
-                                @endif
-                                @if (Gate::check('view chart of account'))
-                                    <li class="nav-item {{  $activePage == 'finacial_year' || $activePage == 'credit_account' || $activePage == 'debit_account' ? ' active' : '' }}" title="Chart of Accounts">
-                                        <a class="nav-link collapsed" href="#chartOfAccounts" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="chartOfAccounts">
-                                            <i class="fa-solid fas fa-chart-line"></i>
-                                            <span class="nav-link-text">{{ __('Chart of Accounts') }}</span>
-                                        </a>
-
-                                        <div class="collapse {{ $activePage == 'finacial_year' || $activePage == 'credit_account' || $activePage == 'debit_account' ? ' show' : '' }}" id="chartOfAccounts">
-                                            <ul class="nav nav-sm flex-column">
-                                                @can('view financial year')
-                                                    <li class="nav-item" title="Finacial Year">
-                                                        <a class="nav-link{{ $activePage == 'finacial_year'  ? ' active' : '' }} unsave_event_class" href="{{ route('chart_of_accounts.finacial_year') }}">
-                                                            <i class="fa-solid fas fa-calendar"></i> {{ __('Financial Year') }}
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                @can('view debit account')
-                                                    <li class="nav-item" title="Debit Account">
-                                                        <a class="nav-link{{ $activePage == 'debit_account'  ? ' active' : '' }} unsave_event_class" href="{{ route('chart_of_accounts.debit_account') }}">
-                                                            <i class="fa-solid fa-credit-card"></i> {{ __('Debit Account') }}
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                            </ul>
-                                        </div>
-                                    </li>
-                                @endif
-                            </ul>
-                        </div>
-                    </li>
-
                     @endif
 
                     {{-- Settings --}}
@@ -1083,8 +1034,202 @@
                 @endif
 
 
+                @php
+                    $marketingPages = [
+                        'pdt_design_requests',
+                        'Marketing Dashboard',
+                        'subscribers',
+                        'Marketing Customers',
+                        'Marketing Audiences',
+                        'Marketing Templates',
+                        'Marketing Campaigns',
+                    ];
+
+                    $studioPhotoshootPages = [
+                        'studio_order',
+                        'shoot_schedule',
+                        'shoot_models',
+                        'past_photoshoot',
+                    ];
+                @endphp
+
+
+                {{-- =========================
+                    MARKETING
+                ========================= --}}
+                @if (
+                    Gate::check('view marketing module')
+                    || Gate::check('view subscribers')
+                )
+                <li
+                    class="nav-item{{ in_array($activePage, $marketingPages) ? ' active' : '' }}"
+                    title="Marketing"
+                >
+                    <a
+                        class="nav-link collapsed"
+                        href="#Marketing-panel"
+                        data-toggle="collapse"
+                        role="button"
+                        aria-expanded="{{ in_array($activePage, $marketingPages) ? 'true' : 'false' }}"
+                        aria-controls="Marketing-panel"
+                    >
+                        <i class="fa fa-bullhorn"></i>
+                        <span class="nav-link-text">{{ __('Marketing') }}</span>
+                    </a>
+
+                    <div
+                        class="collapse{{ in_array($activePage, $marketingPages) ? ' show' : '' }}"
+                        id="Marketing-panel"
+                    >
+                        <ul class="nav nav-sm flex-column">
+
+                            {{-- @can('view marketing dashboard')
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link{{ $activePage == 'Marketing Dashboard' ? ' active' : '' }} unsave_event_class"
+                                        href="{{ route('marketing.dashboard') }}"
+                                    >
+                                        <i class="fa fa-bar-chart"></i>
+                                        {{ __('Marketing Dashboard') }}
+                                    </a>
+                                </li>
+                            @endcan --}}
+
+                            @can('view subscribers')
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link{{ $activePage == 'subscribers' ? ' active' : '' }} unsave_event_class"
+                                        href="{{ route('subscribers') }}"
+                                    >
+                                        <i class="fa fa-user-plus"></i>
+                                        {{ __('Subscribers') }}
+                                    </a>
+                                </li>
+                            @endcan
+
+
+                            {{-- @if(Gate::check('view marketing module'))
+
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link{{ $activePage == 'Marketing Customers' ? ' active' : '' }} unsave_event_class"
+                                        href="{{ route('marketing.contacts.index') }}"
+                                    >
+                                        <i class="fa fa-user"></i>
+                                        {{ __('Customers') }}
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link{{ $activePage == 'Marketing Audiences' ? ' active' : '' }} unsave_event_class"
+                                        href="{{ route('marketing.audiences.index') }}"
+                                    >
+                                        <i class="fa fa-users"></i>
+                                        {{ __('Audiences & Segments') }}
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link{{ $activePage == 'Marketing Templates' ? ' active' : '' }} unsave_event_class"
+                                        href="{{ route('marketing.templates.index') }}"
+                                    >
+                                        <i class="fa fa-envelope-o"></i>
+                                        {{ __('Email Templates') }}
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link{{ $activePage == 'Marketing Campaigns' ? ' active' : '' }} unsave_event_class"
+                                        href="{{ route('marketing.campaigns.index') }}"
+                                    >
+                                        <i class="fa fa-line-chart"></i>
+                                        {{ __('Campaigns') }}
+                                    </a>
+                                </li>
+
+                            @endif --}}
+
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+
+                {{-- =========================
+                    STUDIO PHOTOSHOOT
+                ========================= --}}
+                <li
+                    class="nav-item{{ in_array($activePage, $studioPhotoshootPages) ? ' active' : '' }}"
+                    title="Studio Photoshoot"
+                >
+                    <a
+                        class="nav-link collapsed"
+                        href="#Studio-Photoshoot-panel"
+                        data-toggle="collapse"
+                        role="button"
+                        aria-expanded="{{ in_array($activePage, $studioPhotoshootPages) ? 'true' : 'false' }}"
+                        aria-controls="Studio-Photoshoot-panel"
+                    >
+                        <i class="fa fa-camera"></i>
+                        <span class="nav-link-text">{{ __('Studio Photoshoot') }}</span>
+                    </a>
+
+                    <div
+                        class="collapse{{ in_array($activePage, $studioPhotoshootPages) ? ' show' : '' }}"
+                        id="Studio-Photoshoot-panel"
+                    >
+                        <ul class="nav nav-sm flex-column">
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link{{ $activePage == 'studio_order' ? ' active' : '' }} unsave_event_class"
+                                    href="{{ route('studio.index') }}"
+                                >
+                                    <i class="fa fa-shopping-cart"></i>
+                                    {{ __('Studio Orders') }}
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link{{ $activePage == 'shoot_schedule' ? ' active' : '' }} unsave_event_class"
+                                    href="{{ route('studio.shoot.schedule') }}"
+                                >
+                                    <i class="fa fa-calendar"></i>
+                                    {{ __('Photo Shoot Schedules') }}
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link{{ $activePage == 'shoot_models' ? ' active' : '' }} unsave_event_class"
+                                    href="{{ route('studio.shoot.models') }}"
+                                >
+                                    <i class="fa fa-users"></i>
+                                    {{ __('Model Management') }}
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link{{ $activePage == 'past_photoshoot' ? ' active' : '' }} unsave_event_class"
+                                    href="{{ route('studio.past.photoshoot') }}"
+                                >
+                                    <i class="fa fa-image"></i>
+                                    {{ __('Past Photo Shoots') }}
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
+
                     @if (Gate::check('view pdt tool') || Gate::check('view Notification Settings') || Gate::check('view fabric') || Gate::check('view product') || Gate::check('view factory price') || Gate::check('view product categories') || Gate::check('view sizes') || Gate::check('view fits') || Gate::check('view embellishment type') || Gate::check('view product tagline') || Gate::check('view catalog category') || Gate::check('view gender') || Gate::check('manage project icons') || Gate::check('view factories') || Gate::check('view user group') || Gate::check('view user group member') || Gate::check('view user') || Gate::check('view sport') || Gate::check('add size type'))
-                    <li class="nav-item {{ $activePage == 'Notification_settings' || $activePage == 'fabrics' || $activePage == 'user_log'  || $activePage == 'factory_priceList' || $activePage == 'products' || $activePage == 'product_categories' || $activePage == 'sizes' || $activePage == 'product_sports' || request()->routeIs('attributes') || $activePage == 'attribute_groups' || $activePage == 'pattern_codes' || $activePage == 'embellishment_types' || $activePage == 'product_tagline' || $activePage == 'catalog_categories' || $activePage == 'gender' || $activePage == 'project_icons' || $activePage == 'project_types'  || $activePage == 'sports'|| $activePage == 'factories' || request()->routeIs('size_type') || request()->routeIs('additional_payment') ? ' active' : '' }}" title="Settings">
+                    <li class="nav-item {{ $activePage == 'fabrics' || $activePage == 'user_log'  || $activePage == 'factory_priceList' || $activePage == 'products' || $activePage == 'product_categories' || $activePage == 'sizes' || $activePage == 'product_sports' || request()->routeIs('attributes') || $activePage == 'attribute_groups' || $activePage == 'pattern_codes' || $activePage == 'embellishment_types' || $activePage == 'product_tagline' || $activePage == 'catalog_categories' || $activePage == 'gender' || $activePage == 'project_icons' || $activePage == 'project_types'  || $activePage == 'sports'|| $activePage == 'factories' || $activePage == 'pdt_tool' || $activePage == 'lead_sources' || $activePage == 'master_organizations' || $activePage == 'fits' || request()->routeIs('size_type') || request()->routeIs('additional_payment') || request()->routeIs('theme_setting') || request()->routeIs('sizing_fit') ? ' active' : '' }}" title="Settings">
 
 
                         <a class="nav-link collapsed" href="#admin-panel" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="admin-panel">
@@ -1094,22 +1239,19 @@
 
 
 
-                        <div class="collapse {{$activePage == 'pdt_tool' || $activePage == 'Notification_settings' || $activePage == 'fabrics' || $activePage == 'user_log'  || $activePage == 'lead_sources' || $activePage == 'factory_priceList' || $activePage == 'products' || $activePage == 'master_organizations'|| $activePage == 'product_categories' || $activePage == 'sizes' || $activePage == 'product_sports' || $activePage == 'fits' || request()->routeIs('attributes') || $activePage == 'attribute_groups' || $activePage == 'pattern_codes' || $activePage == 'embellishment_types' || $activePage == 'product_tagline' || $activePage == 'catalog_categories' || $activePage == 'gender' || $activePage == 'project_icons' || $activePage == 'project_types' || $activePage == 'sports' || $activePage == 'factories' || request()->routeIs('size_type') || request()->routeIs('additional_payment') ? ' show' : '' }}" id="admin-panel">
+                        <div class="collapse {{ $activePage == 'pdt_design_settings' || $activePage == 'pdt_tool' || $activePage == 'pdt_design_settings' || $activePage == 'fabrics' || $activePage == 'user_log'  || $activePage == 'lead_sources' || $activePage == 'factory_priceList' || $activePage == 'products' || $activePage == 'master_organizations'|| $activePage == 'product_categories' || $activePage == 'sizes' || $activePage == 'product_sports' || $activePage == 'fits' || request()->routeIs('attributes') || $activePage == 'attribute_groups' || $activePage == 'pattern_codes' || $activePage == 'embellishment_types' || $activePage == 'product_tagline' || $activePage == 'catalog_categories' || $activePage == 'gender' || $activePage == 'project_icons' || $activePage == 'project_types' || $activePage == 'sports' || $activePage == 'factories' || request()->routeIs('size_type') || request()->routeIs('additional_payment') || request()->routeIs('theme_setting') || request()->routeIs('sizing_fit') ? ' show' : '' }}" id="admin-panel">
 
                             <ul class="nav nav-sm flex-column">
 
                                 @if (Gate::check('view fabric') || Gate::check('view product') || Gate::check('view factory price') || Gate::check('view product categories') || Gate::check('view sizes') || Gate::check('view fits') || Gate::check('view embellishment type') || Gate::check('view product tagline') || Gate::check('view catalog category') || Gate::check('view gender') || Gate::check('manage project icons') || Gate::check('view factories') || Gate::check('view sport'))
-                                    <li class="nav-item {{ $activePage == 'fabrics' || $activePage == 'lead_sources' || $activePage == 'factory_priceList' || $activePage == 'products' || $activePage == 'master_organizations'|| $activePage == 'product_categories' || $activePage == 'sizes' || $activePage == 'product_sports' || request()->routeIs('attributes') || $activePage == 'attribute_groups' || $activePage == 'pattern_codes' || $activePage == 'embellishment_types' || $activePage == 'product_tagline' || $activePage == 'catalog_categories' || $activePage == 'gender' || $activePage == 'project_icons' || $activePage == 'project_types' || $activePage == 'sports' || $activePage == 'factories' || request()->routeIs('size_type') || request()->routeIs('additional_payment')
-
-
-                                     ? ' active' : '' }}" title="Masters">
+                                    <li class="nav-item {{ $activePage == 'fabrics' || $activePage == 'lead_sources' || $activePage == 'factory_priceList' || $activePage == 'products' || $activePage == 'master_organizations'|| $activePage == 'product_categories' || $activePage == 'sizes' || $activePage == 'product_sports' || request()->routeIs('attributes') || $activePage == 'attribute_groups' || $activePage == 'pattern_codes' || $activePage == 'embellishment_types' || $activePage == 'product_tagline' || $activePage == 'catalog_categories' || $activePage == 'gender' || $activePage == 'project_icons' || $activePage == 'project_types' || $activePage == 'sports' || $activePage == 'factories' || $activePage == 'fits' || request()->routeIs('size_type') || request()->routeIs('additional_payment') || request()->routeIs('theme_setting') || request()->routeIs('sizing_fit') ? ' active' : '' }}" title="Masters">
                                         <a class="nav-link" href="#master-panel" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="admin-panel">
                                             <i class="fas fa-crown"></i>
                                             <span class="nav-link-text">{{ __('Masters') }}</span>
                                         </a>
 
 
-                                        <div class="collapse  {{ $activePage == 'fabrics' || $activePage == 'lead_sources' || $activePage == 'factory_priceList' || $activePage == 'products' || $activePage == 'master_organizations' || $activePage == 'product_categories' || $activePage == 'sizes' || $activePage == 'product_sports' || $activePage == 'fits' || request()->routeIs('attributes') || $activePage == 'attribute_groups' || $activePage == 'pattern_codes' || $activePage == 'embellishment_types' || $activePage == 'product_tagline' || $activePage == 'catalog_categories' || $activePage == 'gender' || $activePage == 'project_icons' || $activePage == 'project_types'  || $activePage == 'sports'|| $activePage == 'factories' || request()->routeIs('size_type') ||request()->routeIs('additional_payment') ? ' show' : '' }}" id="master-panel">
+                                        <div class="collapse  {{ $activePage == 'fabrics' || $activePage == 'lead_sources' || $activePage == 'factory_priceList' || $activePage == 'products' || $activePage == 'master_organizations' || $activePage == 'product_categories' || $activePage == 'sizes' || $activePage == 'product_sports' || $activePage == 'fits' || request()->routeIs('attributes') || $activePage == 'attribute_groups' || $activePage == 'pattern_codes' || $activePage == 'embellishment_types' || $activePage == 'product_tagline' || $activePage == 'catalog_categories' || $activePage == 'gender' || $activePage == 'project_icons' || $activePage == 'project_types'  || $activePage == 'sports'|| $activePage == 'factories' || request()->routeIs('size_type') || request()->routeIs('additional_payment') || request()->routeIs('theme_setting') || request()->routeIs('sizing_fit') ? ' show' : '' }}" id="master-panel">
 
                                             <ul class="nav nav-sm flex-column">
                                                 @can('view product')
@@ -1226,7 +1368,7 @@
                                                 @endcan
                                                 @can('view project type')
                                                 <li class="nav-item" title="Project Type">
-                                                    <a class="nav-link{{ $activePage == 'project_types' && !request()->routeIs('sports') && !request()->routeIs('size_type') ? ' active' : '' }} unsave_event_class" href="{{ route('project_type') }}">
+                                                    <a class="nav-link{{ $activePage == 'project_types' && !request()->routeIs('sports') && !request()->routeIs('size_type') && !request()->routeIs('additional_payment') ? ' active' : '' }} unsave_event_class" href="{{ route('project_type') }}">
                                                         <i class="fa-solid fas fa-diagram-project"></i> {{ __('Project Types') }}
                                                     </a>
                                                 </li>
@@ -1241,21 +1383,21 @@
                                             @endcan
                                             @can('view size type')
                                                 <li class="nav-item" title="Size Types">
-                                                    <a class="nav-link {{ request()->routeIs('size_type') ? ' active' : 'size_type' }} unsave_event_class" href="{{ route('size_type') }}">
+                                                    <a class="nav-link {{ request()->routeIs('size_type') ? ' active' : '' }} unsave_event_class" href="{{ route('size_type') }}">
                                                         <i class="fa-solid fas fa-swatchbook"></i> {{ __('Size Types') }}
                                                     </a>
                                                 </li>
                                             @endcan
                                             @can('view additional payment')
                                                 <li class="nav-item" title="Additional Payments">
-                                                    <a class="nav-link {{ request()->routeIs('additional_payment') ? ' active' : 'additional_payment' }} unsave_event_class" href="{{ route('additional_payment') }}">
+                                                    <a class="nav-link {{ request()->routeIs('additional_payment') ? ' active' : '' }} unsave_event_class" href="{{ route('additional_payment') }}">
                                                         <i class="fa-solid fas fa-sack-dollar"></i> {{ __('Additional Payments') }}
                                                     </a>
                                                 </li>
                                             @endcan
                                             @can('view theme settings')
                                                 <li class="nav-item" title="Theme Setting">
-                                                    <a class="nav-link{{ $activePage == 'theme_setting' ? ' active' : '' }} unsave_event_class" href="{{ route('theme_setting') }}">
+                                                    <a class="nav-link{{ $activePage == 'theme_setting' || request()->routeIs('theme_setting') ? ' active' : '' }} unsave_event_class" href="{{ route('theme_setting') }}">
                                                         <i class="fa-solid fas fa-wand-magic-sparkles"></i> {{ __('Theme Setting') }}
                                                     </a>
                                                 </li>
@@ -1296,14 +1438,24 @@
                                         </li>
                                     @endcan
                                 @endif
-                                @if (Gate::check('view pdt tool'))
-                                    @can('view pdt tool')
-                                        <li class="nav-item" title="PDT tool">
-                                            <a class="nav-link{{ $activePage == 'pdt_tool' ? ' active' : '' }} " href="{{ route('pdt.index') }}">
-                                                <i class="fa-solid fas fa-object-group"></i> {{ __('PDT') }}
-                                            </a>
-                                        </li>
-                                    @endcan
+                                @if (Gate::check('view pdt tool') || Gate::check('view pdt design settings'))
+                                    @php($designConceptActive = in_array($activePage, ['pdt_tool', 'pdt_design_settings']))
+                                    <li class="nav-item{{ $designConceptActive ? ' active' : '' }}" title="Design Concept">
+                                        <a class="nav-link{{ $designConceptActive ? '' : ' collapsed' }}" href="#design-concept-panel" data-toggle="collapse" role="button" aria-expanded="{{ $designConceptActive ? 'true' : 'false' }}" aria-controls="design-concept-panel">
+                                            <i class="fa-solid fa-palette"></i>
+                                            <span class="nav-link-text">{{ __('Design Concept') }}</span>
+                                        </a>
+                                        <div class="collapse{{ $designConceptActive ? ' show' : '' }}" id="design-concept-panel">
+                                            <ul class="nav nav-sm flex-column">
+                                                @if (Gate::check('view pdt tool'))
+                                                    <li class="nav-item"><a class="nav-link{{ $activePage == 'pdt_tool' ? ' active' : '' }} unsave_event_class" href="{{ route('pdt.index') }}"><i class="fa-solid fa-object-group"></i> {{ __('PDT Models') }}</a></li>
+                                                @endif
+                                                @if (Gate::check('view pdt design settings'))
+                                                    <li class="nav-item"><a class="nav-link{{ $activePage == 'pdt_design_settings' ? ' active' : '' }} unsave_event_class" href="{{ route('pdt.design-settings.index') }}"><i class="fa-solid fa-sliders"></i> {{ __('PDT Settings') }}</a></li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </li>
                                 @endif
                             </ul>
                         </div>
@@ -1313,7 +1465,7 @@
                 @if (Gate::check('view system configuration'))
 
 
-                        <li class="nav-item {{ $activePage == 'Notification_settings' || $activePage == 'config_Settings' || $activePage == 'Payment_Gateway' || $activePage == 'folder_structure'  ? ' active' : '' }}" title="System Configuration">
+                        <li class="nav-item {{ $activePage == 'Notification_settings' || $activePage == 'config_Settings' || $activePage == 'Payment_Gateway' || $activePage == 'folder_structure' || $activePage == 'system_api' || $activePage == 'Database_Settings' || $activePage == 'studio_settings' || request()->routeIs('system_api.index') || request()->routeIs('NotificationEmail.Settings') ? ' active' : '' }}" title="System Configuration">
 
 
                             <a class="nav-link collapsed" href="#Configurations-panel" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="admin-panel">
@@ -1323,7 +1475,7 @@
 
 
 
-                            <div class="collapse {{ $activePage == 'Notification_settings' || $activePage == 'config_Settings' || $activePage == 'Payment_Gateway' || $activePage == 'folder_structure' ? ' show' : '' }}" id="Configurations-panel">
+                            <div class="collapse {{ $activePage == 'Notification_settings' || $activePage == 'config_Settings' || $activePage == 'Payment_Gateway' || $activePage == 'folder_structure' || $activePage == 'system_api' || $activePage == 'Database_Settings' || $activePage == 'studio_settings' || request()->routeIs('system_api.index') || request()->routeIs('NotificationEmail.Settings') ? ' show' : '' }}" id="Configurations-panel">
 
                                 <ul class="nav nav-sm flex-column">
                                     @can('view configuration dashboard')
@@ -1347,7 +1499,7 @@
                                         <li class="nav-item" title="Shared with Me">
 
 
-                                            <a class="nav-link{{ $activePage == 'file_share' ? ' active' : '' }} unsave_event_class" href="{{ route('NotificationEmail.Settings') }}">
+                                            <a class="nav-link{{ request()->routeIs('NotificationEmail.Settings') ? ' active' : '' }} unsave_event_class" href="{{ route('NotificationEmail.Settings') }}">
 
 
                                                 <i class="fas fa-envelope"></i> {{ __('Email') }}
@@ -1362,6 +1514,12 @@
                                             </a>
                                         </li>
                                     @endcan
+
+                                    <li class="nav-item" title="Studio Settings">
+                                        <a class="nav-link{{ $activePage == 'studio_settings' ? ' active' : '' }} unsave_event_class" href="{{ route('studio.settings') }}">
+                                            <i class="fa-solid fa-camera"></i> {{ __('Studio Settings') }}
+                                        </a>
+                                    </li>
 
 
                                     @if (Gate::check('view system other configurations'))

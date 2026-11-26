@@ -6,6 +6,280 @@
         padding: .5rem;
         cursor: pointer;
     }
+
+    /* MOBILE VIEW CSS (Edit Fabrics Modal) */
+    @media (max-width: 768px) {
+        #fabric_edit_modal .modal-dialog {
+            margin: 12px auto !important;
+            max-width: 95% !important;
+            width: 95% !important;
+        }
+
+        #fabric_edit_modal .modal-content {
+            border-radius: 20px !important;
+            border: 1px solid #edf0f2 !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+            padding: 8px 10px !important;
+            background: #ffffff !important;
+        }
+
+        #fabric_edit_modal .modal-header {
+            border-bottom: 1px solid #f1f3f5 !important;
+            padding: 14px 14px 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+        }
+
+        #fabric_edit_modal .modal-title {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
+            margin: 0 !important;
+        }
+
+        #fabric_edit_modal .modal-header .close {
+            font-size: 24px !important;
+            font-weight: 300 !important;
+            color: #9ca3af !important;
+            opacity: 1 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            line-height: 1 !important;
+            outline: none !important;
+        }
+
+        #fabric_edit_modal .modal-body {
+            padding: 14px 10px !important;
+        }
+
+        #fabric_edit_modal .col-md-12 {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+
+        /* Form Labels */
+        #fabric_edit_modal .form-label,
+        #fabric_edit_modal .form-lable {
+            font-size: 13.5px !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
+            margin-bottom: 6px !important;
+            display: block !important;
+        }
+
+        /* Text Input */
+        #fabric_edit_modal input[type="text"].form-control {
+            border-radius: 10px !important;
+            border: 1px solid #e5e7eb !important;
+            padding: 10px 14px !important;
+            height: 44px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #111827 !important;
+            box-shadow: none !important;
+        }
+
+        /* +Add Color Button */
+        #fabric_edit_modal #addColor2 {
+            background-color: #ffffff !important;
+            border: 1.5px solid #2563eb !important;
+            color: #2563eb !important;
+            border-radius: 999px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            padding: 5px 18px !important;
+            margin-top: 8px !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        /* Select2 Embellishments Container */
+        #fabric_edit_modal .select2-container--bootstrap-5 .select2-selection--multiple,
+        #fabric_edit_modal .select2-container .select2-selection--multiple {
+            border-radius: 12px !important;
+            border: 1px solid #e5e7eb !important;
+            min-height: 44px !important;
+            padding: 4px 8px !important;
+        }
+
+        /* Quill Editor Box */
+        #fabric_edit_modal .ql-toolbar {
+            border-top-left-radius: 12px !important;
+            border-top-right-radius: 12px !important;
+            border: 1px solid #e5e7eb !important;
+            background-color: #f3f4f6 !important;
+            padding: 8px 10px !important;
+        }
+
+        #fabric_edit_modal .ql-container {
+            border-bottom-left-radius: 12px !important;
+            border-bottom-right-radius: 12px !important;
+            border: 1px solid #e5e7eb !important;
+            border-top: none !important;
+            background: #ffffff !important;
+            font-size: 14px !important;
+        }
+
+        #fabric_edit_modal #edit_description_editor {
+            height: 110px !important;
+        }
+
+        /* Upload Area */
+        #fabric_edit_modal .upload-area {
+            border: 1.5px dashed #d1d5db !important;
+            border-radius: 16px !important;
+            background-color: #f9fafb !important;
+            height: auto !important;
+            min-height: 170px !important;
+            padding: 20px 14px !important;
+            margin-top: 6px !important;
+        }
+
+        /* Hide default icon & text, replaced with clean modern icon and upload button */
+        #fabric_edit_modal .upload-area i.fa-cloud-upload {
+            display: none !important;
+        }
+
+        #fabric_edit_modal .upload-area .upload-icon {
+            display: none !important;
+        }
+
+        #fabric_edit_modal .upload-area::before {
+            content: "" !important;
+            display: block !important;
+            width: 44px !important;
+            height: 44px !important;
+            margin: 0 auto 10px auto !important;
+            background: #e5e7eb url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23374151' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='18' height='18' rx='2' ry='2'></rect><circle cx='8.5' cy='8.5' r='1.5'></circle><polyline points='21 15 16 10 5 21'></polyline></svg>") center/22px no-repeat !important;
+            border-radius: 10px !important;
+        }
+
+        #fabric_edit_modal .upload-area p {
+            font-size: 12px !important;
+            color: #374151 !important;
+            margin: 0 0 12px 0 !important;
+            line-height: 1.4 !important;
+            text-align: center !important;
+            font-weight: 500 !important;
+        }
+
+        #fabric_edit_modal .upload-area::after {
+            content: "Upload" !important;
+            display: inline-block !important;
+            margin: 0 auto !important;
+            padding: 6px 26px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            color: #2563eb !important;
+            background-color: #ffffff !important;
+            border: 1.5px solid #2563eb !important;
+            border-radius: 8px !important;
+        }
+
+        /* Uploaded Images Section */
+        #fabric_edit_modal #uploaded_fabric_images_table {
+            margin-top: 14px !important;
+        }
+
+        #fabric_edit_modal .sub-header-style {
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
+            margin-bottom: 8px !important;
+        }
+
+        #fabric_edit_modal .subProductTable thead {
+            display: none !important;
+        }
+
+        #fabric_edit_modal .subProductTable tr {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            border-bottom: 1px solid #f3f4f6 !important;
+            padding: 8px 0 !important;
+        }
+
+        #fabric_edit_modal .subProductTable td {
+            font-size: 13px !important;
+            color: #4b5563 !important;
+            padding: 0 !important;
+            border: none !important;
+        }
+
+        #fabric_edit_modal .subProductTable td:first-child {
+            flex: 1 1 auto !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+            padding-right: 8px !important;
+        }
+
+        #fabric_edit_modal .subProductTable td.text-center {
+            display: flex !important;
+            gap: 6px !important;
+            flex: 0 0 auto !important;
+        }
+
+        #fabric_edit_modal .uploadStyles {
+            width: 34px !important;
+            height: 34px !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 8px !important;
+            background: #ffffff !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+        }
+
+        #fabric_edit_modal .uploadStyles i {
+            font-size: 14px !important;
+        }
+
+        /* Modal Footer Action Buttons (Delete, Cancel, Save/Update) */
+        #fabric_edit_modal .modal-footer {
+            border-top: none !important;
+            padding: 14px 10px 10px !important;
+        }
+
+        #fabric_edit_modal .control-btns {
+            display: flex !important;
+            gap: 10px !important;
+            width: 100% !important;
+            padding: 0 !important;
+        }
+
+        #fabric_edit_modal .control-btns .btn {
+            flex: 1 1 33.33% !important;
+            height: 46px !important;
+            border-radius: 12px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin: 0 !important;
+            border: none !important;
+        }
+
+        #fabric_edit_modal .control-btns .btn-danger {
+            background-color: #dc2626 !important;
+            color: #ffffff !important;
+        }
+
+        #fabric_edit_modal .control-btns .btn-secondary {
+            background-color: #94a3b8 !important;
+            color: #ffffff !important;
+        }
+
+        #fabric_edit_modal .control-btns .btn-success {
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+        }
+    }
 </style>
 
 <div class="modal fade" id="fabric_edit_modal" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">

@@ -2084,7 +2084,7 @@
     font-weight: 600;
 }
 .description_font_weight {
-    font-family: 'Mollen Personal Use', cursive;
+    /* font-family: 'Mollen Personal Use', cursive; */
     font-weight: 400;
     text-shadow: 0 0 0.6px #000;
 }
@@ -2887,8 +2887,395 @@
 }
 
 </style>
+
+
+@if (str_contains(url()->current(), 'admin_product_catalog_product'))
+<style>
+
+    .navbar {
+        /* width: unset !important; */
+    }
+
+    .container-fluid {
+        margin-bottom: unset !important;
+    }
+
+    .header-layout {
+        z-index: 9999 !important;
+    }
+
+    .col-lg-4.text-center.d-flex.justify-content-center.customer-header-logo.mobile-logo {
+        display: none !important;
+    }
+
+    .customer-header-actions {
+        display: none !important;
+    }
+
+    .admin_catalog_navbar {
+        position: absolute;
+    }
+
+    .admin_catalog_padding_l_unset {
+        padding-left: unset !important;
+    }
+
+    .admin_catalog_padding_l_unset .breadcrumb-wrapper {
+        /* display: none; */
+    }
+
+    .admin_catalog_padding_l_unset .d-flex.align-items-center.ms-auto.filter-wrapper {
+        padding-left: 25px;
+    }
+
+    .show_more_button {
+        background-color: transparent;
+    }
+    .product_content {
+        padding-top: 0px;
+    }
+
+    h2 {
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+    /* ADMIN ONLY CSS */
+
+</style>
+@endif
+
+@if (str_contains(url()->current(), 'admin_product_catalog'))
+<style>
+
+    /* Keep admin sidebar visible */
+    .navbar-nav,
+    .navbar-nav .nav-item,
+    .navbar-nav .nav-link {
+        /* display: block !important; */
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* Bootstrap collapse menus */
+    .navbar-nav .collapse {
+        visibility: visible;
+    }
+
+.subProductTable{
+    width: 100%;
+}
+.subProductTable thead tr{
+    background-color: grey;
+    color: white;
+    font-size: .7rem;
+    height: 2.5rem;
+}
+.subProductTable tbody tr{
+    height: 2.2rem;
+    color: grey;
+    border-bottom: 1px solid #e5e5e5
+}
+.subProductTable th, .subProductTable td{
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.uploadStyles, .downloadStyles{
+    border: none;
+    background-color: transparent;
+    outline: unset;
+    cursor: pointer;
+}
+.uploadStyles{
+    color: #00af77;
+}
+.downloadStyles{
+    color:#44b4b4;
+}
+.uploadStyles:disabled, .downloadStyles:disabled {
+    color: #dedede;
+    border: none;
+    background-color: transparent;
+    outline: unset;
+    cursor: not-allowed;
+}
+.header-style{
+    color: black;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.admin_inquiry_btn {
+    display: none;
+}
+
+
+
+    /* 1. Navbar (search only) goes back into the normal flow and floats right */
+    .admin_catalog_navbar {
+        position: relative !important;
+        float: right;
+        width: 340px !important;
+        margin: 0 3.5% 0 0 !important;
+        padding: 0 !important;
+        background-color: transparent !important;
+        border-bottom: none !important;
+        display: block !important;
+    }
+
+    .admin_catalog_navbar > .customer-header-modern {
+        width: 100% !important;
+        padding: 12px 0 !important;
+        border-bottom: none !important;
+    }
+
+    .admin_catalog_navbar .customer-header-row {
+        margin: 0 !important;
+    }
+
+    .admin_catalog_navbar .customer-header-logo,
+    .admin_catalog_navbar .customer-header-actions {
+        display: none !important;
+    }
+
+    .admin_catalog_navbar .customer-header-search {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+
+    /* 2. Breadcrumb fills the left side of the same row, vertically centered */
+    .container_style > .breadcrumb-wrapper {
+        display: flex !important;
+        align-items: center;
+        min-height: 66px;
+        padding-right: 0 !important;
+    }
+
+
+
+    /* Search box: floats to the right corner */
+    .admin_catalog_navbar {
+        position: relative !important;
+        float: right;
+        width: 340px !important;
+        margin: 0 3.5% 0 0 !important;
+        padding: 0 !important;
+        background-color: transparent !important;
+        border-bottom: none !important;
+        display: block !important;
+    }
+
+    .admin_catalog_navbar > .customer-header-modern {
+        position: static !important;      /* cancels any sticky/fixed from .mobile-sticky-header */
+        width: 100% !important;
+        padding: 12px 0 !important;
+        border-bottom: none !important;
+    }
+
+    .admin_catalog_navbar .customer-header-row {
+        margin: 0 !important;
+    }
+
+    .admin_catalog_navbar .customer-header-logo,
+    .admin_catalog_navbar .customer-header-actions {
+        display: none !important;
+    }
+
+    .admin_catalog_navbar .customer-header-search {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+
+    /* Breadcrumb: left corner, same row */
+    .container_style {
+        padding-top: 0 !important;
+    }
+
+    .container_style > .breadcrumb-wrapper {
+        display: flex !important;
+        align-items: center;
+        width: auto !important;           /* overrides any fixed width */
+        min-height: 66px;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        overflow: hidden;                 /* makes it sit beside the float, not under it */
+    }
+    .enquary_attribute {
+        padding-top: 0px !important;
+    }
+    .breadcrumb-wrapper {
+        border-bottom: unset !important;
+    }
+    @media (max-width: 767.98px){
+        .container-fluid {
+            flex-direction: unset !important;
+        }
+        .admin_catalog_navbar > .customer-header-modern {
+            position: fixed !important;
+        }
+    }
+
+    /* ===== Design Files: modern mobile layout ===== */
+@media (max-width: 767px) {
+
+    /* Outer card */
+    .card-new {
+        width: 100%;
+        padding: 16px 14px !important;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    .header-style {
+        font-size: 1.1rem;
+        letter-spacing: 0.2px;
+    }
+
+    /* Turn the table into a list of cards */
+    .subProductTable,
+    .subProductTable tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .subProductTable thead {
+        display: none;               /* column headings not needed on mobile */
+    }
+
+    .subProductTable tbody tr {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 10px 12px;
+        height: auto;
+        padding: 14px;
+        margin-bottom: 12px;
+        background: #f8fafc;
+        border: 1px solid #eef0f4;
+        border-radius: 14px;
+        color: #374151;
+    }
+
+    .subProductTable th,
+    .subProductTable td {
+        display: block;
+        padding: 0 !important;
+        border: none;
+    }
+
+    /* File name (left, top) */
+    .subProductTable tbody tr td:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    /* Action buttons (right, top) */
+    .subProductTable tbody tr td:nth-child(3) {
+        grid-column: 2;
+        grid-row: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-align: right;
+    }
+
+    /* File picker / file name (full width, below) */
+    .subProductTable tbody tr td:nth-child(2) {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        min-width: 0;
+    }
+
+    /* "No permission" row */
+    .subProductTable tbody tr td:only-child {
+        grid-column: 1 / -1;
+        grid-row: auto;
+        text-align: center;
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+
+    /* File input */
+    .subProductTable input[type="file"] {
+        width: 100%;
+        padding: 8px;
+        font-size: 0.8rem;
+        color: #6b7280;
+        background: #fff;
+        border: 1.5px dashed #cbd5e1;
+        border-radius: 10px;
+    }
+
+    .subProductTable input[type="file"]::file-selector-button {
+        margin-right: 10px;
+        padding: 7px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #fff;
+        background: #00af77;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    /* Uploaded file name chip */
+    .subProductTable td:nth-child(2) label {
+        display: inline-block;
+        max-width: 100%;
+        padding: 8px 12px !important;
+        font-size: 0.8rem;
+        word-break: break-all;
+        background: #e8f7f1 !important;
+        color: #047857 !important;
+        border-radius: 10px !important;
+    }
+
+    /* Round touch-friendly action buttons */
+    .uploadStyles,
+    .downloadStyles {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        font-size: 1.15rem;
+        border: none !important;     /* removes the inline divider line */
+        border-radius: 12px;
+        transition: transform 0.15s ease;
+    }
+
+    .uploadStyles:active,
+    .downloadStyles:active {
+        transform: scale(0.94);
+    }
+
+    .uploadStyles {
+        background: #e6f8f1;
+    }
+
+    .downloadStyles {
+        background: #e5f4f4;
+    }
+
+    .uploadStyles:disabled,
+    .downloadStyles:disabled {
+        background: #f1f3f5;
+        color: #cfd4da;
+    }
+}
+
+</style>
+
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+@endif
+
 <script src="https://cdn.tailwindcss.com"></script>
-<div class="navbar" style=" background-color:white; z-index:99; padding: unset;">
+<div class="navbar admin_catalog_navbar" style=" background-color:white; z-index:99; padding: unset;">
 
     @section('page-route')
         {{-- @if(isset($searchValue))
@@ -2937,23 +3324,41 @@
     $currentCategory = $mainCategories->firstWhere('id', $mainCategoryId);
 @endphp
 
+@php
+    $isAdminCatalog = str_contains(url()->current(), 'admin_product_catalog');
+
+    $catalogFilterRoute = $isAdminCatalog
+        ? 'admin_product_catlog_product_filter1'
+        : 'product_filter1';
+@endphp
+
 <div class="breadcrumb-wrapper">
     <nav class="breadcrumb-nav">
 
-        <a href="{{ route('customer_catlog') }}">Home</a>
+        {{-- HOME --}}
+        @if(!$isAdminCatalog)
+            <a href="{{ route('customer_catlog') }}">Home</a>
+            <span>/</span>
+        @endif
+
+
+        {{-- CATALOG --}}
+        <a href="{{ route($catalogFilterRoute, [
+            'selectedGender' => 'All',
+            'selectedCategory' => '5',
+            'selectedSport' => '18',
+            'selectedStyle' => '0',
+        ]) }}">
+            Catalog
+        </a>
+
         <span>/</span>
 
-        <a href="{{ route('product_filter1', [
-                    'selectedGender' => 'All',
-                    'selectedCategory' => '5',
-                    'selectedSport' => '18',
-                    'selectedStyle' => '0',
-                    ]) }}"
-                    >Catalog</a>
-        <span>/</span>
 
+        {{-- CURRENT CATEGORY --}}
         @if($currentCategory)
-            <a href="{{ route('product_filter1', [
+
+            <a href="{{ route($catalogFilterRoute, [
                 'selectedCategory' => $currentCategory->id,
                 'selectedGender' => 'All',
                 'selectedSport' => '18',
@@ -2961,9 +3366,13 @@
             ]) }}">
                 {{ $currentCategory->category_name }}
             </a>
+
             <span>/</span>
+
         @endif
 
+
+        {{-- CURRENT PRODUCT --}}
         <span class="breadcrumb-current">
             {{ $product->product_name }}
         </span>
@@ -3302,7 +3711,7 @@
                         </div>
                     </div> --}}
 
-                    <div class="row details_div_style" style="padding-top: 14px; padding-bottom: 10px;">
+                    <div class="row details_div_style admin_inquiry_btn" style="padding-top: 14px; padding-bottom: 10px;">
                         <!-- Button with data attributes -->
                         <button class="sweep-btn inquiry_btn" style=""
                                 data-bs-toggle="modal"
@@ -3629,6 +4038,838 @@
 
                     @endif
 
+
+                    @if (str_contains(url()->current(), 'admin_product_catalog'))
+
+                        <div class="col-md-12" style="padding: .5rem">
+                            <div class="row" style="margin: unset;">
+
+                                @can('view design files')
+
+                                    <div class="card-new">
+
+                                        <div class="row">
+
+                                            <div class="col-md-12 header-style">
+                                                Design Files
+                                            </div>
+
+                                            <div class="col-md-12 mt-3 mb-2">
+
+                                                <table class="subProductTable">
+
+                                                    <thead>
+                                                        <tr>
+                                                            <th>FILE NAME</th>
+                                                            <th></th>
+                                                            <th class="text-center">ACTION</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+
+                                                        {{-- =========================================================
+                                                            2D MOCKUP TEMPLATE
+                                                            ========================================================= --}}
+                                                        @can('view_2D_Mockup_Template')
+                                                            <tr>
+                                                                <td>2D Mockup Template</td>
+
+                                                                <td>
+                                                                    <input
+                                                                        type="file"
+                                                                        id="2D_mockup_template"
+                                                                        @if($product->{'2D_mockup'} != null)
+                                                                            @if(!Str::startsWith($product->{'2D_mockup'}, 'http'))
+                                                                                style="display:none"
+                                                                            @endif
+                                                                        @endif
+                                                                        name="2D_mockup_template"
+                                                                        onchange="buttonEnableFunc('2D_mockup_template')"
+                                                                        class="file-select"
+                                                                    >
+
+                                                                    <label
+                                                                        for="2D_mockup_template"
+                                                                        style="
+                                                                            margin-bottom: 0rem;
+                                                                            color: black;
+                                                                            background-color: #efefef;
+                                                                            padding: .1rem .5rem;
+                                                                            border-radius: .5rem;
+                                                                            cursor: pointer;
+
+                                                                            @if(
+                                                                                $product->{'2D_mockup'} == null ||
+                                                                                Str::startsWith($product->{'2D_mockup'}, 'http')
+                                                                            )
+                                                                                display:none;
+                                                                            @endif
+                                                                        "
+                                                                    >
+                                                                        @if($product->{'2D_mockup'} != null)
+                                                                            {{ basename($product->{'2D_mockup'}) }}
+                                                                        @endif
+                                                                    </label>
+                                                                </td>
+
+                                                                <td class="text-center">
+
+                                                                    @can('upload_2D_Mockup_Template')
+                                                                        <button
+                                                                            disabled
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="uploadImages('2D_mockup_template', '2D_mockup', '2D Mockup Template', '2D_mockup')"
+                                                                            id="2D_mockup_template_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="2D_mockup_template_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="2D_mockup_template_loading" style="display:none"></i>
+                                                                        </button>
+                                                                    @else
+                                                                        <button
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="showPermissionError('You do not have permission to upload 2D Mockup Templates.')"
+                                                                            id="2D_mockup_template_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                            disabled
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="2D_mockup_template_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="2D_mockup_template_loading" style="display:none"></i>
+                                                                        </button>
+                                                                    @endcan
+
+                                                                    <button
+                                                                        type="button"
+                                                                        id="2D_mockup_template_downloading"
+                                                                        title="Download"
+                                                                        class="downloadStyles"
+                                                                        @if($product->{'2D_mockup'} == null)
+                                                                            disabled
+                                                                        @else
+                                                                            onclick="window.location.href = '{{ asset('assets') }}{{ $product->{'2D_mockup'} }}'"
+                                                                        @endif
+                                                                    >
+                                                                        <i class="fa fa-cloud-download"></i>
+                                                                    </button>
+
+                                                                </td>
+                                                            </tr>
+                                                        @endcan
+
+
+                                                        {{-- =========================================================
+                                                            3D MOCKUP TEMPLATE
+                                                            ========================================================= --}}
+                                                        @can('view_3D_Mockup_Template')
+                                                            <tr>
+                                                                <td>3D Mockup Template</td>
+
+                                                                <td>
+                                                                    <input
+                                                                        type="file"
+                                                                        id="3D_mockup_template"
+                                                                        @if($product->{'3D_mockup'} != null)
+                                                                            @if(!Str::startsWith($product->{'3D_mockup'}, 'http'))
+                                                                                style="display:none"
+                                                                            @endif
+                                                                        @endif
+                                                                        name="3D_mockup_template"
+                                                                        onchange="buttonEnableFunc('3D_mockup_template')"
+                                                                        class="file-select"
+                                                                    >
+
+                                                                    <label
+                                                                        for="3D_mockup_template"
+                                                                        style="
+                                                                            margin-bottom: 0rem;
+                                                                            color: black;
+                                                                            background-color: #efefef;
+                                                                            padding: .1rem .5rem;
+                                                                            border-radius: .5rem;
+                                                                            cursor: pointer;
+
+                                                                            @if(
+                                                                                $product->{'3D_mockup'} == null ||
+                                                                                Str::startsWith($product->{'3D_mockup'}, 'http')
+                                                                            )
+                                                                                display:none;
+                                                                            @endif
+                                                                        "
+                                                                    >
+                                                                        @if($product->{'3D_mockup'} != null)
+                                                                            {{ basename($product->{'3D_mockup'}) }}
+                                                                        @endif
+                                                                    </label>
+                                                                </td>
+
+                                                                <td class="text-center">
+
+                                                                    @can('upload_3D_Mockup_Template')
+                                                                        <button
+                                                                            disabled
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="uploadImages('3D_mockup_template', '3D_mockup', '3D Mockup Template', '3D_mockup')"
+                                                                            id="3D_mockup_template_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="3D_mockup_template_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="3D_mockup_template_loading" style="display:none"></i>
+                                                                        </button>
+                                                                    @else
+                                                                        <button
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="showPermissionError('You do not have permission to upload 3D Mockup Templates.')"
+                                                                            id="3D_mockup_template_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                            disabled
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="3D_mockup_template_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="3D_mockup_template_loading" style="display:none"></i>
+                                                                        </button>
+                                                                    @endcan
+
+                                                                    <button
+                                                                        type="button"
+                                                                        id="3D_mockup_template_downloading"
+                                                                        title="Download"
+                                                                        class="downloadStyles"
+                                                                        @if($product->{'3D_mockup'} == null)
+                                                                            disabled
+                                                                        @else
+                                                                            onclick="window.location.href = '{{ asset('assets') }}{{ $product->{'3D_mockup'} }}'"
+                                                                        @endif
+                                                                    >
+                                                                        <i class="fa fa-cloud-download"></i>
+                                                                    </button>
+
+                                                                </td>
+                                                            </tr>
+                                                        @endcan
+
+
+                                                        {{-- =========================================================
+                                                            DESIGN TECH PACK
+                                                            ========================================================= --}}
+                                                        @can('view_Design_Tech_Pack')
+                                                            <tr>
+                                                                <td>Design Tech Pack</td>
+
+                                                                <td>
+                                                                    <input
+                                                                        type="file"
+                                                                        id="design_tech_pack"
+                                                                        @if($product->tech_pack != null)
+                                                                            @if(!Str::startsWith($product->tech_pack, 'http'))
+                                                                                style="display:none"
+                                                                            @endif
+                                                                        @endif
+                                                                        name="design_tech_pack"
+                                                                        onchange="buttonEnableFunc('design_tech_pack')"
+                                                                        class="file-select"
+                                                                    >
+
+                                                                    <label
+                                                                        for="design_tech_pack"
+                                                                        style="
+                                                                            margin-bottom: 0rem;
+                                                                            color: black;
+                                                                            background-color: #efefef;
+                                                                            padding: .1rem .5rem;
+                                                                            border-radius: .5rem;
+                                                                            cursor: pointer;
+
+                                                                            @if(
+                                                                                $product->tech_pack == null ||
+                                                                                Str::startsWith($product->tech_pack, 'http')
+                                                                            )
+                                                                                display:none;
+                                                                            @endif
+                                                                        "
+                                                                    >
+                                                                        @if($product->tech_pack != null)
+                                                                            {{ basename($product->tech_pack) }}
+                                                                        @endif
+                                                                    </label>
+                                                                </td>
+
+                                                                <td class="text-center">
+
+                                                                    @can('upload_Design_Tech_Pack')
+                                                                        <button
+                                                                            disabled
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="uploadImages('design_tech_pack', 'tech_pack', 'Design Tech Pack', 'tech_pack')"
+                                                                            id="design_tech_pack_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="design_tech_pack_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="design_tech_pack_loading" style="display:none"></i>
+                                                                        </button>
+                                                                    @else
+                                                                        <button
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="showPermissionError('You do not have permission to upload Design Tech Packs.')"
+                                                                            id="design_tech_pack_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                            disabled
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="design_tech_pack_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="design_tech_pack_loading" style="display:none"></i>
+                                                                        </button>
+                                                                    @endcan
+
+                                                                    <button
+                                                                        type="button"
+                                                                        id="design_tech_pack_downloading"
+                                                                        title="Download"
+                                                                        class="downloadStyles"
+                                                                        @if($product->tech_pack == null)
+                                                                            disabled
+                                                                        @else
+                                                                            onclick="window.location.href = '{{ asset('assets') }}{{ $product->tech_pack }}'"
+                                                                        @endif
+                                                                    >
+                                                                        <i class="fa fa-cloud-download"></i>
+                                                                    </button>
+
+                                                                </td>
+                                                            </tr>
+                                                        @endcan
+
+
+                                                        {{-- =========================================================
+                                                            MEASUREMENT CHART
+                                                            ========================================================= --}}
+                                                        @can('view_Measurement_Chart')
+                                                            <tr>
+                                                                <td>Measurement Chart</td>
+
+                                                                <td>
+                                                                    <input
+                                                                        type="file"
+                                                                        id="measurement_chart"
+                                                                        @if($product->measurement != null)
+                                                                            @if(!Str::startsWith($product->measurement, 'http'))
+                                                                                style="display:none"
+                                                                            @endif
+                                                                        @endif
+                                                                        name="measurement_chart"
+                                                                        onchange="buttonEnableFunc('measurement_chart')"
+                                                                        class="file-select"
+                                                                    >
+
+                                                                    <label
+                                                                        for="measurement_chart"
+                                                                        style="
+                                                                            margin-bottom: 0rem;
+                                                                            color: black;
+                                                                            background-color: #efefef;
+                                                                            padding: .1rem .5rem;
+                                                                            border-radius: .5rem;
+                                                                            cursor: pointer;
+
+                                                                            @if(
+                                                                                $product->measurement == null ||
+                                                                                Str::startsWith($product->measurement, 'http')
+                                                                            )
+                                                                                display:none;
+                                                                            @endif
+                                                                        "
+                                                                    >
+                                                                        @if($product->measurement != null)
+                                                                            {{ basename($product->measurement) }}
+                                                                        @endif
+                                                                    </label>
+                                                                </td>
+
+                                                                <td class="text-center">
+
+                                                                    @can('upload_Measurement_Chart')
+                                                                        <button
+                                                                            disabled
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="uploadImages('measurement_chart', 'measurement', 'Measurement Chart', 'measurement')"
+                                                                            id="measurement_chart_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="measurement_chart_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="measurement_chart_loading" style="display:none"></i>
+                                                                        </button>
+                                                                    @else
+                                                                        <button
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="showPermissionError('You do not have permission to upload Measurement Charts.')"
+                                                                            id="measurement_chart_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                            disabled
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="measurement_chart_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="measurement_chart_loading" style="display:none"></i>
+                                                                        </button>
+                                                                    @endcan
+
+                                                                    <button
+                                                                        type="button"
+                                                                        id="measurement_chart_downloading"
+                                                                        title="Download"
+                                                                        class="downloadStyles"
+                                                                        @if($product->measurement == null)
+                                                                            disabled
+                                                                        @else
+                                                                            onclick="window.location.href = '{{ asset('assets') }}{{ $product->measurement }}'"
+                                                                        @endif
+                                                                    >
+                                                                        <i class="fa fa-cloud-download"></i>
+                                                                    </button>
+
+                                                                </td>
+                                                            </tr>
+                                                        @endcan
+
+
+                                                        {{-- =========================================================
+                                                            PRODUCTION LAYOUT
+                                                            ========================================================= --}}
+                                                        @can('view_Production_Layout')
+                                                            <tr>
+                                                                <td>Production Layout</td>
+
+                                                                <td>
+                                                                    <input
+                                                                        type="file"
+                                                                        id="production_layouts"
+                                                                        @if($product->product_layout != null)
+                                                                            @if(!Str::startsWith($product->product_layout, 'http'))
+                                                                                style="display:none"
+                                                                            @endif
+                                                                        @endif
+                                                                        name="production_layouts"
+                                                                        onchange="buttonEnableFunc('production_layouts')"
+                                                                        class="file-select"
+                                                                    >
+
+                                                                    <label
+                                                                        for="production_layouts"
+                                                                        style="
+                                                                            margin-bottom: 0rem;
+                                                                            color: black;
+                                                                            background-color: #efefef;
+                                                                            padding: .1rem .5rem;
+                                                                            border-radius: .5rem;
+                                                                            cursor: pointer;
+
+                                                                            @if(
+                                                                                $product->product_layout == null ||
+                                                                                Str::startsWith($product->product_layout, 'http')
+                                                                            )
+                                                                                display:none;
+                                                                            @endif
+                                                                        "
+                                                                    >
+                                                                        @if($product->product_layout != null)
+                                                                            {{ basename($product->product_layout) }}
+                                                                        @endif
+                                                                    </label>
+                                                                </td>
+
+                                                                <td class="text-center">
+
+                                                                    @can('upload_Production_Layout')
+                                                                        <button
+                                                                            disabled
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="uploadImages('production_layouts', 'product_layout', 'Production Layout', 'product_layout')"
+                                                                            id="production_layouts_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="production_layouts_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="production_layouts_loading" style="display:none"></i>
+                                                                            <div class="loading-icon"></div>
+                                                                        </button>
+                                                                    @else
+                                                                        <button
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="showPermissionError('You do not have permission to upload Production Layouts.')"
+                                                                            id="production_layouts_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                            disabled
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="production_layouts_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="production_layouts_loading" style="display:none"></i>
+                                                                            <div class="loading-icon"></div>
+                                                                        </button>
+                                                                    @endcan
+
+                                                                    <button
+                                                                        type="button"
+                                                                        id="production_layouts_downloading"
+                                                                        title="Download"
+                                                                        class="downloadStyles"
+                                                                        @if($product->product_layout == null)
+                                                                            disabled
+                                                                        @else
+                                                                            onclick="window.location.href = '{{ asset('assets') }}{{ $product->product_layout }}'"
+                                                                        @endif
+                                                                    >
+                                                                        <i class="fa fa-cloud-download"></i>
+                                                                    </button>
+
+                                                                </td>
+                                                            </tr>
+                                                        @endcan
+
+
+                                                        {{-- =========================================================
+                                                            TECHNICAL TECH PACK
+                                                            ========================================================= --}}
+                                                        @can('view_Technical_Tech_Pack')
+                                                            <tr>
+                                                                <td>Technical Tech Pack</td>
+
+                                                                <td>
+                                                                    <input
+                                                                        type="file"
+                                                                        id="technical_tech_pack"
+                                                                        @if($product->technical_tech_pack != null)
+                                                                            @if(!Str::startsWith($product->technical_tech_pack, 'http'))
+                                                                                style="display:none"
+                                                                            @endif
+                                                                        @endif
+                                                                        name="technical_tech_pack"
+                                                                        onchange="buttonEnableFunc('technical_tech_pack')"
+                                                                        class="file-select"
+                                                                    >
+
+                                                                    <label
+                                                                        for="technical_tech_pack"
+                                                                        style="
+                                                                            margin-bottom: 0rem;
+                                                                            color: black;
+                                                                            background-color: #efefef;
+                                                                            padding: .1rem .5rem;
+                                                                            border-radius: .5rem;
+                                                                            cursor: pointer;
+
+                                                                            @if(
+                                                                                $product->technical_tech_pack == null ||
+                                                                                Str::startsWith($product->technical_tech_pack, 'http')
+                                                                            )
+                                                                                display:none;
+                                                                            @endif
+                                                                        "
+                                                                    >
+                                                                        @if($product->technical_tech_pack != null)
+                                                                            {{ basename($product->technical_tech_pack) }}
+                                                                        @endif
+                                                                    </label>
+                                                                </td>
+
+                                                                <td class="text-center">
+
+                                                                    @can('upload_Technical_Tech_Pack')
+                                                                        <button
+                                                                            disabled
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="uploadImages('technical_tech_pack', 'technical_tech_pack', 'Technical Tech Pack', 'technical_tech_pack')"
+                                                                            id="technical_tech_pack_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="technical_tech_pack_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="technical_tech_pack_loading" style="display:none"></i>
+                                                                            <div class="loading-icon"></div>
+                                                                        </button>
+                                                                    @else
+                                                                        <button
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="showPermissionError('You do not have permission to upload Technical Tech Packs.')"
+                                                                            id="technical_tech_pack_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                            disabled
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="technical_tech_pack_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="technical_tech_pack_loading" style="display:none"></i>
+                                                                            <div class="loading-icon"></div>
+                                                                        </button>
+                                                                    @endcan
+
+                                                                    <button
+                                                                        type="button"
+                                                                        id="technical_tech_pack_downloading"
+                                                                        title="Download"
+                                                                        class="downloadStyles"
+                                                                        @if($product->technical_tech_pack == null)
+                                                                            disabled
+                                                                        @else
+                                                                            onclick="window.location.href = '{{ asset('assets') }}{{ $product->technical_tech_pack }}'"
+                                                                        @endif
+                                                                    >
+                                                                        <i class="fa fa-cloud-download"></i>
+                                                                    </button>
+
+                                                                </td>
+                                                            </tr>
+                                                        @endcan
+
+
+                                                        {{-- =========================================================
+                                                            PATTERN FILES
+                                                            ========================================================= --}}
+                                                        @can('view_Pattern_Files')
+                                                            <tr>
+                                                                <td>Pattern Files</td>
+
+                                                                <td>
+                                                                    <input
+                                                                        type="file"
+                                                                        id="pattern_file"
+                                                                        @if($product->pattern != null)
+                                                                            @if(!Str::startsWith($product->pattern, 'http'))
+                                                                                style="display:none"
+                                                                            @endif
+                                                                        @endif
+                                                                        name="pattern_file"
+                                                                        onchange="buttonEnableFunc('pattern_file')"
+                                                                        class="file-select"
+                                                                    >
+
+                                                                    <label
+                                                                        for="pattern_file"
+                                                                        style="
+                                                                            margin-bottom: 0rem;
+                                                                            color: black;
+                                                                            background-color: #efefef;
+                                                                            padding: .1rem .5rem;
+                                                                            border-radius: .5rem;
+                                                                            cursor: pointer;
+
+                                                                            @if(
+                                                                                $product->pattern == null ||
+                                                                                Str::startsWith($product->pattern, 'http')
+                                                                            )
+                                                                                display:none;
+                                                                            @endif
+                                                                        "
+                                                                    >
+                                                                        @if($product->pattern != null)
+                                                                            {{ basename($product->pattern) }}
+                                                                        @endif
+                                                                    </label>
+                                                                </td>
+
+                                                                <td class="text-center">
+
+                                                                    @can('upload_Pattern_Files')
+                                                                        <button
+                                                                            disabled
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="uploadImages('pattern_file', 'pattern_file', 'Pattern File', 'pattern')"
+                                                                            id="pattern_file_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="pattern_file_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="pattern_file_loading" style="display:none"></i>
+                                                                            <div class="loading-icon"></div>
+                                                                        </button>
+                                                                    @else
+                                                                        <button
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="showPermissionError('You do not have permission to upload Pattern Files.')"
+                                                                            id="pattern_file_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                            disabled
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="pattern_file_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="pattern_file_loading" style="display:none"></i>
+                                                                            <div class="loading-icon"></div>
+                                                                        </button>
+                                                                    @endcan
+
+                                                                    <button
+                                                                        type="button"
+                                                                        id="pattern_file_downloading"
+                                                                        title="Download"
+                                                                        class="downloadStyles"
+                                                                        @if($product->pattern == null)
+                                                                            disabled
+                                                                        @else
+                                                                            onclick="window.location.href = '{{ asset('assets') }}{{ $product->pattern }}'"
+                                                                        @endif
+                                                                    >
+                                                                        <i class="fa fa-cloud-download"></i>
+                                                                    </button>
+
+                                                                </td>
+                                                            </tr>
+                                                        @endcan
+
+
+                                                        {{-- =========================================================
+                                                            SIZE CHART
+                                                            ========================================================= --}}
+                                                        @can('view_size_chart')
+                                                            <tr>
+                                                                <td>Size Chart</td>
+
+                                                                <td>
+                                                                    <input
+                                                                        type="file"
+                                                                        id="size_chart"
+                                                                        @if($product->size_chart != null)
+                                                                            @if(!Str::startsWith($product->size_chart, 'http'))
+                                                                                style="display:none"
+                                                                            @endif
+                                                                        @endif
+                                                                        name="size_chart"
+                                                                        onchange="buttonEnableFunc('size_chart')"
+                                                                        class="file-select"
+                                                                    >
+
+                                                                    <label
+                                                                        for="size_chart"
+                                                                        style="
+                                                                            margin-bottom: 0rem;
+                                                                            color: black;
+                                                                            background-color: #efefef;
+                                                                            padding: .1rem .5rem;
+                                                                            border-radius: .5rem;
+                                                                            cursor: pointer;
+
+                                                                            @if(
+                                                                                $product->size_chart == null ||
+                                                                                Str::startsWith($product->size_chart, 'http')
+                                                                            )
+                                                                                display:none;
+                                                                            @endif
+                                                                        "
+                                                                    >
+                                                                        @if($product->size_chart != null)
+                                                                            {{ basename($product->size_chart) }}
+                                                                        @endif
+                                                                    </label>
+                                                                </td>
+
+                                                                <td class="text-center">
+
+                                                                    @can('upload_size_chart')
+                                                                        <button
+                                                                            disabled
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="uploadImages('size_chart', 'size_chart', 'Size Chart', 'size_chart')"
+                                                                            id="size_chart_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="size_chart_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="size_chart_loading" style="display:none"></i>
+                                                                            <div class="loading-icon"></div>
+                                                                        </button>
+                                                                    @else
+                                                                        <button
+                                                                            class="uploadStyles"
+                                                                            type="button"
+                                                                            title="Upload"
+                                                                            onclick="showPermissionError('You do not have permission to upload size chart.')"
+                                                                            id="size_chart_uploading"
+                                                                            style="border-right: 2px solid #b3b3b3"
+                                                                            disabled
+                                                                        >
+                                                                            <i class="fa fa-cloud-upload" id="size_chart_upload"></i>
+                                                                            <i class="fas fa-spinner fa-spin" id="size_chart_loading" style="display:none"></i>
+                                                                            <div class="loading-icon"></div>
+                                                                        </button>
+                                                                    @endcan
+
+                                                                    <button
+                                                                        type="button"
+                                                                        id="size_chart_downloading"
+                                                                        title="Download"
+                                                                        class="downloadStyles"
+                                                                        @if($product->size_chart == null)
+                                                                            disabled
+                                                                        @else
+                                                                            onclick="window.location.href = '{{ asset('assets') }}{{ $product->size_chart }}'"
+                                                                        @endif
+                                                                    >
+                                                                        <i class="fa fa-cloud-download"></i>
+                                                                    </button>
+
+                                                                </td>
+                                                            </tr>
+                                                        @endcan
+
+
+                                                        {{-- =========================================================
+                                                            NO PERMISSION MESSAGE
+                                                            ========================================================= --}}
+                                                        @php
+                                                            $hasPermission = Gate::none([
+                                                                'view_2D_Mockup_Template',
+                                                                'view_3D_Mockup_Template',
+                                                                'view_Design_Tech_Pack',
+                                                                'view_Measurement_Chart',
+                                                                'view_Production_Layout',
+                                                                'view_Technical_Tech_Pack',
+                                                                'view_Pattern_Files',
+                                                                'view_size_chart'
+                                                            ]);
+                                                        @endphp
+
+                                                        @if($hasPermission)
+                                                            <tr>
+                                                                <td colspan="3" style="text-align:center; color:red;">
+                                                                    You do not have permissions to view any templates or files.
+                                                                    Please contact the administrator if you need access.
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                @endcan
+
+                            </div>
+                        </div>
+
+                    @endif
+
                 </div>
 
 
@@ -3909,8 +5150,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Message</label>
-                        <textarea class="form-control" name="message" id="inquiryText" rows="3"></textarea>
+                        <label class="form-label">Message <span style="color: red;">*</span></label>
+                        <textarea class="form-control" name="message" id="inquiryText" rows="3" required></textarea>
                     </div>
 
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -4699,11 +5940,71 @@ console.log(label);
         <button style="display: none;" type="submit">Submit</button>
     </form> --}}
 
-    <form action="{{ route('search.products') }}" method="GET" id="searchForm" onsubmit="return submitSearchForm()">
+    {{-- <form action="{{ route('search.products') }}" method="GET" id="searchForm" onsubmit="return submitSearchForm()">
         @csrf
         <input type="hidden" name="search" id="searchInput" value="">
         <button style="display: none;" type="submit">Submit</button>
-    </form>
+    </form> --}}
+
+
+@php
+    $currentUrl = url()->current();
+
+    $searchAction = str_contains($currentUrl, 'admin_product_catalog')
+        ? route('admin_product_catalog_product_search.products')
+        : route('search.products');
+@endphp
+
+<form action="{{ $searchAction }}" method="GET" id="searchForm">
+    <input type="hidden"
+           name="search"
+           id="searchInput"
+           value="">
+
+    <button style="display: none;" type="submit">
+        Submit
+    </button>
+</form>
+
+<script>
+    $(document).ready(function () {
+
+        var searchInput = $('#searchInput');
+        var searchForm = $('#searchForm');
+
+        $('.search_text').on('input', function () {
+            searchInput.val($(this).val());
+        });
+
+        $('.search_text').on('blur', function () {
+
+            var searchValue = $(this).val();
+
+            searchInput.val(searchValue);
+
+            if (searchValue.trim() !== '') {
+                searchForm.submit();
+            }
+        });
+
+        $('.search_text').on('keydown', function (event) {
+
+            if (event.key === 'Enter') {
+
+                event.preventDefault();
+
+                var searchValue = $(this).val();
+
+                searchInput.val(searchValue);
+
+                if (searchValue.trim() !== '') {
+                    searchForm.submit();
+                }
+            }
+        });
+
+    });
+</script>
 
     <script>
 document.addEventListener('DOMContentLoaded', function () {

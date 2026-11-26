@@ -2,12 +2,17 @@
     .select2 {
         height: 1.8rem;
         border-radius: 5px !important;
+        border: 1px solid rgb(238, 238, 238) !important;
     }
     .select2-selection.select2-selection--single {
         height: 1.6rem !important;
     }
     #people_create_modal .select2.select2-container {
         width: 75% !important;
+        border: 1px solid rgb(242, 242, 242) !important;
+    }
+    .select2.select2-container {
+        border: 1px solid rgb(238, 238, 238) !important;
     }
 </style>
 <div class="modal fade" id="people_create_modal" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
@@ -201,4 +206,30 @@
         });
 
     });
+
+
+$(document).ready(function () {
+
+    $('#people_create_modal').on('shown.bs.modal', function () {
+
+        $(this).find('.select2-people-modal').each(function () {
+
+            var $select = $(this);
+
+            // Prevent duplicate initialization
+            if ($select.hasClass('select2-hidden-accessible')) {
+                $select.select2('destroy');
+            }
+
+            $select.select2({
+                width: '75%',
+                dropdownParent: $('#people_create_modal')
+            });
+
+        });
+
+    });
+
+});
+
 </script>

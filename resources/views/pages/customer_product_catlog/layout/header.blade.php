@@ -518,6 +518,17 @@
 
 </style>
 
+
+@if (str_contains(url()->current(), 'admin_product_catalog'))
+<style>
+@media (max-width: 767.98px){ 
+    .product_content {
+        padding-top: 55px !important;
+        margin-top: unset !important;
+    }
+}
+</style>
+@endif
 <div class="col-lg-12 customer-header-modern mobile-sticky-header" style=" width:100%;padding-right: 1%;padding-left: 1%; border-bottom: rgb(235, 232, 232) solid 1.5px; padding-top: 5px; padding-bottom: 10px;">
     <div class="row customer-header-row mobile-header-layout">
         <div class="col-lg-4 text-center d-flex justify-content-center customer-header-logo mobile-logo" style="padding-left: 3%;">
@@ -671,7 +682,17 @@
 
 </div>
 
-<form action="{{ route('product_filter1') }}" method="GET" id="filterForm">
+@php
+    $currentUrl = url()->current();
+
+    if (str_contains($currentUrl, 'admin_product')) {
+        $filterAction = route('admin_product_catlog');
+    } else {
+        $filterAction = route('product_filter1');
+    }
+@endphp
+
+<form action="{{ $filterAction }}" method="GET" id="filterForm">
     @csrf
     <input type="hidden" name="selectedCategory" id="selectedCategoryInput" value="">
     <input type="hidden" name="selectedGender" id="selectedGenderInput" value="">

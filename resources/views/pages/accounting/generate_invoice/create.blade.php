@@ -85,6 +85,210 @@
         font-size: 1.2rem !important;
     }
 
+    /* =====================================================================
+       EDIT COMMERCIAL INVOICE — MOBILE LAYOUT
+       ===================================================================== */
+    .gi-m-accordion { display: none; }
+
+    @media (max-width: 767px) {
+        #generate_invoice .modal-dialog {
+            max-width: none !important;              /* inline max-width: 1300px */
+            min-height: calc(100% - 24px);
+            margin: 12px;
+        }
+        #generate_invoice .invoice-modal-content {
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 24px);
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        #generate_invoice .modal-header {
+            flex: 0 0 auto;
+            align-items: center;
+            margin: 0 16px;
+            padding: 16px 0 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        #modal-title-create {
+            left: 0 !important;                      /* inline left: 42% */
+            font-size: 0;
+        }
+        #modal-title-create::after {
+            content: "Edit Commercial Invoice";
+            font-size: 19px;
+            font-weight: 700;
+            color: #111827;
+        }
+        #generate_invoice .modal-header .close { margin: 0; padding: 0 2px; opacity: 1; }
+        #generate_invoice .modal-header .close span { font-size: 26px; font-weight: 300; color: #111827; }
+
+        #invoice_form {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+        /* Desktop form layout hidden on phones (still filled and submitted as before) */
+        #generate_invoice .order-number-details,
+        #generate_invoice #invoice_form > .modal-body { display: none !important; }
+
+        .gi-m-accordion {
+            display: block;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 12px 16px 6px;
+        }
+        .gi-m-logo { margin: 0 0 12px; text-align: center; }
+        .gi-m-logo img { max-width: 72%; height: 46px; object-fit: contain; }
+        .gi-m-logo img:not([src]), .gi-m-logo img[src=""] { display: none; }
+
+        .gi-m-section {
+            margin-bottom: 12px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(17, 24, 39, 0.05);
+            overflow: hidden;
+        }
+        .gi-m-section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 12px 14px;
+            background: #fff;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            text-align: left;
+        }
+        .gi-m-section-head i { font-size: 13px; transition: transform .2s ease; }
+        .gi-m-section.is-open .gi-m-section-head i { transform: rotate(90deg); }
+        .gi-m-section-body { display: none; padding: 0 14px 12px; }
+        .gi-m-section.is-open .gi-m-section-body { display: block; }
+
+        .gi-m-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 5px 0;
+            font-size: 14px;
+            color: #111827;
+        }
+        .gi-m-row > span:first-child { flex: 0 0 auto; color: #8a8f98; }
+        .gi-m-row > span:last-child { text-align: right; overflow-wrap: anywhere; }
+        .gi-m-row.is-strong > span:first-child { color: #111827; }
+        .gi-m-row.is-total { font-weight: 700; }
+        .gi-m-row.is-total > span:first-child { color: #111827; }
+        .gi-m-input {
+            width: 128px;
+            max-width: 52%;
+            height: 38px;
+            padding: 0 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: #fff;
+            color: #6b7280;
+            font-size: 14px;
+            text-align: right;
+            box-shadow: none;
+            outline: none;
+        }
+        .gi-m-input:focus { border-color: #47D6B6; color: #111827; }
+        .gi-m-input[readonly] { background: #fff; }
+        select.gi-m-input { text-align-last: right; }
+
+        .gi-m-lines { margin: 0; padding: 0; list-style: none; }
+        .gi-m-lines li { padding: 5px 0; font-size: 14px; line-height: 1.5; color: #111827; }
+        .gi-m-country {
+            margin-top: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+            color: #111827;
+        }
+
+        /* Product List */
+        .gi-m-product {
+            padding: 10px 0 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .gi-m-product-no { font-size: 14px; font-weight: 700; color: #111827; }
+        .gi-m-product-name { margin-bottom: 4px; font-size: 14px; color: #111827; }
+        .gi-m-product .gi-m-row { padding: 3px 0; font-size: 12.5px; }
+        .gi-m-subtotal { padding: 12px 0 2px; font-size: 15px; font-weight: 700; }
+        .gi-m-subtotal > span:first-child { color: #111827 !important; font-weight: 500; }
+        .gi-m-empty { padding: 8px 0; font-size: 13px; color: #6b7280; }
+
+        /* Payment Info */
+        .gi-m-charge > span:first-child { line-height: 1.25; }
+        .gi-m-reason {
+            display: block;
+            width: 120px;
+            margin-top: 2px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: #e01e1e;
+            font-size: 11px;
+            outline: none;
+        }
+        .gi-m-reason::placeholder { color: #e01e1e; }
+
+        /* Footer: Cancel / Delete / Download PDF, then Save / Request Payment / Pay */
+        #generate_invoice .modal-footer {
+            flex: 0 0 auto;
+            padding: 10px 16px 16px;
+            border-top: none;
+        }
+        #generate_invoice .control-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 0;
+        }
+        #generate_invoice .control-btns::after {          /* line break after the first row */
+            content: "";
+            order: 4;
+            flex: 0 0 100%;
+            height: 0;
+            margin-top: -10px;
+        }
+        #generate_invoice .control-btns .btn {
+            flex: 1 1 0;
+            min-width: 0;
+            height: 44px;
+            margin: 0 !important;
+            padding: 0 8px;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: 0;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(17, 24, 39, 0.08);
+        }
+        #generate_invoice .control-btns .btn-secondary  { order: 1; background: #b3b3b3; }
+        #generate_invoice .control-btns .frm_delete_btn { order: 2; background: #d0021b; }
+        #generate_invoice .control-btns #download-pdf-btn { order: 3; flex-grow: 1.6; background: #47D6B6; }
+        #generate_invoice .control-btns #frm_submit_btn_save { order: 5; background: #fff; border: 1px solid #47D6B6; color: #1f9e83; }
+        #generate_invoice .control-btns #frm_submit_btn { order: 6; background: #111827; }
+        #generate_invoice .control-btns .frm_payed_btn { order: 7; background: #f0a800; }
+
+        /* Download PDF on a phone: render the real (desktop) layout for the capture */
+        body.gi-pdf-mode #generate_invoice .modal-dialog {
+            min-width: 1100px !important;
+        }
+    }
+
 </style>
 
 
@@ -270,6 +474,63 @@
                         <hr class="bottom-hr">
                     </div>
                 </div>
+                {{-- Mobile only: collapsible view of this invoice. The editable
+                     fields here mirror the real form fields above; they have no
+                     "name", so only the real fields are submitted. --}}
+                <div class="gi-m-accordion" id="gi-m-accordion">
+                    <div class="gi-m-logo"><img id="gi-m-factory-image" alt=""></div>
+
+                    <div class="gi-m-section">
+                        <button type="button" class="gi-m-section-head">Invoice Details <i class="fa fa-chevron-right"></i></button>
+                        <div class="gi-m-section-body">
+                            <div class="gi-m-row"><span>Date</span><span id="gi-m-date"></span></div>
+                            <div class="gi-m-row"><span>Club Name</span><span id="gi-m-club"></span></div>
+                            <div class="gi-m-row"><span>Order Number</span><select id="gi-m-order-number" class="gi-m-input"></select></div>
+                            <div class="gi-m-row"><span>Invoice Number</span><input type="text" id="gi-m-invoice-no" class="gi-m-input" readonly></div>
+                        </div>
+                    </div>
+
+                    <div class="gi-m-section">
+                        <button type="button" class="gi-m-section-head">Shipper <i class="fa fa-chevron-right"></i></button>
+                        <div class="gi-m-section-body"><ul class="gi-m-lines" id="gi-m-shipper"></ul></div>
+                    </div>
+
+                    <div class="gi-m-section">
+                        <button type="button" class="gi-m-section-head">Consignee <i class="fa fa-chevron-right"></i></button>
+                        <div class="gi-m-section-body"><ul class="gi-m-lines" id="gi-m-consignee"></ul></div>
+                    </div>
+
+                    <div class="gi-m-section">
+                        <button type="button" class="gi-m-section-head">Bank Details <i class="fa fa-chevron-right"></i></button>
+                        <div class="gi-m-section-body">
+                            <div class="gi-m-row"><span>Acc Name</span><span id="gi-m-acc-name"></span></div>
+                            <div class="gi-m-row"><span>Acc No</span><span id="gi-m-acc-no"></span></div>
+                            <div class="gi-m-row"><span>Bank</span><span id="gi-m-bank"></span></div>
+                            <div class="gi-m-row"><span>Branch</span><span id="gi-m-branch"></span></div>
+                            <div class="gi-m-row"><span>Swift Code</span><span id="gi-m-swift"></span></div>
+                            <div class="gi-m-country" id="gi-m-country"></div>
+                        </div>
+                    </div>
+
+                    <div class="gi-m-section">
+                        <button type="button" class="gi-m-section-head">Product List <i class="fa fa-chevron-right"></i></button>
+                        <div class="gi-m-section-body">
+                            <div id="gi-m-products"></div>
+                            <div class="gi-m-row gi-m-subtotal"><span>Subtotal($)</span><span id="gi-m-subtotal"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="gi-m-section">
+                        <button type="button" class="gi-m-section-head">Payment Info <i class="fa fa-chevron-right"></i></button>
+                        <div class="gi-m-section-body">
+                            <div class="gi-m-row is-total"><span>Subtotals ($)</span><span id="gi-m-charges-sum"></span></div>
+                            <div id="gi-m-charges"></div>
+                            <div class="gi-m-row is-strong"><span>Reduced Value ($)</span><input type="number" step="0.01" id="gi-m-reduce" class="gi-m-input" placeholder="0.00"></div>
+                            <div class="gi-m-row is-total"><span>Total($)</span><span id="gi-m-total"></span></div>
+                        </div>
+                    </div>
+                </div>
+
                 <input type="hidden" id="Issave" name="Issave">
                 <input type="hidden" name="table_data" id="table_data_input" value="">
 
@@ -924,6 +1185,175 @@ console.log(manufacturePrice);
                 }
             }
         }
+/* =====================================================================
+   MOBILE VIEW of this popup
+   ===================================================================== */
+(function () {
+    var giMq = window.matchMedia('(max-width: 767px)');
+    function isMobile() { return giMq.matches; }
+    function txt(id) { var el = document.getElementById(id); return el ? $.trim(el.textContent) : ''; }
+    function esc(v) { return $('<div>').text(v == null ? '' : String(v)).html(); }
+    function productRows() { return $('#order-items-table').children('tbody').first().children('tr'); }
+    var acc = document.getElementById('gi-m-accordion');
+
+    // Sections open / close
+    $(document).on('click', '#gi-m-accordion .gi-m-section-head', function () {
+        $(this).closest('.gi-m-section').toggleClass('is-open');
+    });
+
+    function renderStatic() {
+        $('#gi-m-factory-image').attr('src', $('#factory_image').attr('src') || '');
+        $('#gi-m-date').text(txt('current-date'));
+        $('#gi-m-club').text(txt('club-name'));
+
+        var $real = $('#order_number'), $sel = $('#gi-m-order-number');
+        if ($sel.children().length !== $real.children().length) {
+            $sel.html($real.html());
+        }
+        $sel.val($real.val());
+        $('#gi-m-invoice-no').val($('#invoice_no').val());
+
+        var lines = function (ids) {
+            return ids.map(txt).filter(Boolean).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
+        };
+        $('#gi-m-shipper').html(lines(['shipper-name', 'shipper-street', 'shipper-city', 'shipper-postal-code', 'shipper-country']));
+        $('#gi-m-consignee').html(lines(['organization-name', 'shipping-street', 'shipping-city', 'shipping-postal-code', 'shipping-country', 'phone', 'email']));
+        $('#gi-m-acc-name').text(txt('account_name'));
+        $('#gi-m-acc-no').text(txt('account_no'));
+        $('#gi-m-bank').text(txt('bank'));
+        $('#gi-m-branch').text(txt('branch'));
+        $('#gi-m-swift').text(txt('swift_code'));
+        $('#gi-m-country').text(txt('country'));
+    }
+
+    function renderProducts() {
+        var html = '';
+        productRows().each(function (i) {
+            var $tr = $(this), $price = $tr.find('.unit-price-input');
+            if (!$price.length) {
+                var t = $.trim($tr.text());
+                if (t) { html += '<div class="gi-m-empty">' + esc(t) + '</div>'; }
+                return;
+            }
+            var c = $tr.children('td');
+            html += '<div class="gi-m-product">'
+                + '<div class="gi-m-product-no">' + esc($.trim(c.eq(0).text())) + '</div>'
+                + '<div class="gi-m-product-name">' + esc($.trim(c.eq(1).text())) + '</div>'
+                + '<div class="gi-m-row"><span>Style No</span><span>' + esc($.trim(c.eq(2).text())) + '</span></div>'
+                + '<div class="gi-m-row"><span>Fabric</span><span>' + esc($.trim(c.eq(3).text())) + '</span></div>'
+                + '<div class="gi-m-row"><span>Embellishment Type</span><span>' + esc($.trim(c.eq(4).text())) + '</span></div>'
+                + '<div class="gi-m-row"><span>Quantity</span><span>' + esc($.trim(c.eq(5).text())) + '</span></div>'
+                + '<div class="gi-m-row"><span>Unit Price ($)</span><input type="text" inputmode="decimal" class="gi-m-input gi-m-price" data-row="' + i + '"'
+                +     ($price.prop('disabled') ? ' disabled' : '') + '></div>'
+                + '<div class="gi-m-row"><span>Total</span><span class="gi-m-row-total" data-row="' + i + '"></span></div>'
+                + '</div>';
+        });
+        $('#gi-m-products').html(html);
+    }
+
+    function renderCharges() {
+        var html = '';
+        $('#invoice_form .additional').each(function (i) {
+            var $row = $(this).closest('tr');
+            var label = $.trim($row.find('.addition_id').first().clone().children().remove().end().text());
+            var hasReason = $row.find('.other-reson').length > 0;
+            html += '<div class="gi-m-row gi-m-charge"><span>' + esc(label)
+                + (hasReason ? '<input type="text" class="gi-m-reason" data-row="' + i + '" placeholder="(Enter reason)">' : '')
+                + '</span><input type="number" step="0.01" min="0" class="gi-m-input gi-m-charge-input" data-row="' + i + '"></div>';
+        });
+        $('#gi-m-charges').html(html);
+    }
+
+    // Values (real -> mobile). Never overwrite the field being typed in.
+    function refreshValues() {
+        var active = document.activeElement;
+        function setVal(el, v) { if (el && el !== active) { el.value = v == null ? '' : v; } }
+
+        var $rows = productRows();
+        $('#gi-m-products .gi-m-price').each(function () {
+            var $tr = $rows.eq(+this.getAttribute('data-row'));
+            setVal(this, $tr.find('.unit-price-input').val());
+        });
+        $('#gi-m-products .gi-m-row-total').each(function () {
+            var $tr = $rows.eq(+this.getAttribute('data-row'));
+            $(this).text($.trim($tr.find('.total_price').text()));
+        });
+        $('#gi-m-subtotal').text(txt('subTotal'));
+
+        var $charges = $('#invoice_form .additional'), sum = 0;
+        $charges.each(function () { sum += parseFloat(this.value) || 0; });
+        $('#gi-m-charges .gi-m-charge-input').each(function () {
+            setVal(this, $charges.eq(+this.getAttribute('data-row')).val());
+        });
+        $('#gi-m-charges .gi-m-reason').each(function () {
+            var $row = $charges.eq(+this.getAttribute('data-row')).closest('tr');
+            setVal(this, $row.find('.other-reson').val());
+        });
+        $('#gi-m-charges-sum').text(sum.toFixed(2));
+        setVal(document.getElementById('gi-m-reduce'), $('#reduce_value_input').val());
+        $('#gi-m-total').text(txt('total_value'));
+        setVal(document.getElementById('gi-m-order-number'), $('#order_number').val());
+    }
+
+    function renderAll() {
+        if (!isMobile() || !acc) return;
+        // While a mobile field is being edited, only refresh values (keeps focus)
+        if (acc.contains(document.activeElement) && $(document.activeElement).is('input, select')) {
+            refreshValues();
+            return;
+        }
+        renderStatic();
+        renderProducts();
+        renderCharges();
+        refreshValues();
+    }
+    var renderTimer;
+    function scheduleRender() { clearTimeout(renderTimer); renderTimer = setTimeout(renderAll, 40); }
+
+    // Mobile -> real fields (fire the events the existing code listens to)
+    $(document).on('input', '#gi-m-products .gi-m-price', function () {
+        var $real = productRows().eq(+this.getAttribute('data-row')).find('.unit-price-input');
+        $real.val(this.value).trigger('input');
+    });
+    $(document).on('input', '#gi-m-charges .gi-m-charge-input', function () {
+        var real = $('#invoice_form .additional').get(+this.getAttribute('data-row'));
+        if (real) { real.value = this.value; $(real).trigger('input'); }
+        refreshValues();
+    });
+    $(document).on('input', '#gi-m-charges .gi-m-reason', function () {
+        var real = $('#invoice_form .additional').eq(+this.getAttribute('data-row')).closest('tr').find('.other-reson').get(0);
+        if (real) { real.value = this.value; }
+    });
+    $(document).on('input', '#gi-m-reduce', function () {
+        $('#reduce_value_input').val(this.value).trigger('input');
+    });
+    $(document).on('change', '#gi-m-order-number', function () {
+        $('#order_number').val(this.value).trigger('change');
+    });
+
+    // Re-render when the popup opens or the real form is (re)filled
+    $('#generate_invoice').on('shown.bs.modal', renderAll);
+    if (window.MutationObserver) {
+        var observer = new MutationObserver(function () { if (isMobile()) scheduleRender(); });
+        ['order-items-table', 'current-date', 'club-name', 'factory_image'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) observer.observe(el, { childList: true, characterData: true, subtree: true, attributes: id === 'factory_image' });
+        });
+        $('#generate_invoice #invoice_form > .modal-body p').each(function () {
+            observer.observe(this, { childList: true, characterData: true, subtree: true });
+        });
+    }
+
+    // Download PDF on a phone: the existing code captures the popup at its
+    // current width. Widen it for that moment so the capture uses the normal
+    // desktop layout (same PDF as on desktop), then switch back.
+    document.addEventListener('click', function (e) {
+        if (!isMobile() || !e.target.closest || !e.target.closest('#download-pdf-btn')) return;
+        document.body.classList.add('gi-pdf-mode');
+        setTimeout(function () { document.body.classList.remove('gi-pdf-mode'); }, 600);
+    }, true);   // capture phase: runs before the existing download handler
+})();
+
 var allowInvoiceModalClose = false;
 var invoiceCloseWarningOpen = false;
 

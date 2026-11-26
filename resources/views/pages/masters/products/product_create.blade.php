@@ -270,6 +270,207 @@
     color: #333; /* Text color */
     user-select: none; /* Disable text selection */
 }
+
+    @media (max-width: 767.98px) {
+
+        .content-position { padding-left: 12px; padding-right: 12px; background: #f4f4f6; }
+        .sub-product-style { margin: 0 -3px; }
+        .sub-product-style .row { margin-left: 0; margin-right: 0; }
+        .sub-product-style [class*="col-"] { padding-left: 0; padding-right: 0; }
+        .sub-product-style .col-md-12[style*="padding: .5rem"] { padding: 0 !important; }
+
+        /* ---------- Cards ---------- */
+        .sub-product-style .card-new {
+            background: #fff;
+            border-radius: 16px;
+            padding: 1rem !important;
+            margin: 0 0 12px 0 !important;
+            max-width: 100% !important;
+            width: 100%;
+            flex: 0 0 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,.04);
+        }
+        .sub-product-style .card-new > .row { margin: 0; }
+        .sub-product-style .header-style { font-size: 1rem; font-weight: 700; padding: 0 !important; }
+
+        /* ---------- Top bar card (reference link / catalog / status) ---------- */
+        #product_create_form > .row.mb-3 {
+            background: #fff;
+            border-radius: 16px;
+            padding: 1rem;
+            margin: 0 0 12px 0 !important;
+            border-bottom: 0 !important;
+        }
+        #product_create_form > .row.mb-3 > div {
+            width: 100%; max-width: 100%; flex: 0 0 100%;
+            margin: 0 0 .75rem 0 !important; padding: 0 !important;
+            border-bottom: 0 !important; text-align: left !important;
+        }
+        #product_create_form > .row.mb-3 input#new_product_reference_link,
+        #product_create_form > .row.mb-3 select#active {
+            background: #f5f5f7 !important;
+            border: 1px solid #ececf0 !important;
+            border-radius: 12px !important;
+            color: #333 !important;
+            height: 46px;
+            padding: 0 .9rem;
+        }
+        #product_create_form > .row.mb-3 label[for="toggleButton"] {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; margin: 0; font-size: .8rem; font-weight: 600; color: #000;
+        }
+
+        /* ---------- Form fields ---------- */
+        .sub-product-style .form-label {
+            font-size: .78rem; font-weight: 600; color: #222;
+            margin: .9rem 0 .35rem; display: block;
+        }
+        .sub-product-style .col-md-12.mt-3,
+        .sub-product-style .col-md-6.mt-3 { margin-top: 0 !important; }
+        .sub-product-style .form-control,
+        .sub-product-style .form-input {
+            background: #f5f5f7;
+            border: 1px solid #ececf0;
+            border-radius: 12px;
+            height: 46px;
+            font-size: .85rem;
+            padding: 0 .9rem;
+            color: #333;
+        }
+        .sub-product-style textarea.form-control { height: 46px; padding: .7rem .9rem; }
+        .sub-product-style .select2-container { width: 100% !important; }
+        .sub-product-style .select2-container .select2-selection--single {
+            height: 46px; background: #f5f5f7; border: 1px solid #ececf0; border-radius: 12px;
+        }
+        .sub-product-style .select2-selection--single .select2-selection__rendered {
+            border: none; background: transparent; line-height: 44px; padding-left: .9rem; padding-right: 2rem;
+        }
+        .sub-product-style .select2-selection--single .select2-selection__arrow { height: 44px; right: 8px; }
+        .sub-product-style .select2 .selection .select2-selection--multiple {
+            background: #f5f5f7 !important;
+            border: 1px solid #ececf0 !important;
+            border-radius: 12px !important;
+            min-height: 46px;
+            padding: 4px 6px;
+        }
+
+        /* ---------- Product images ---------- */
+        .permission-adding-class .row.mt-1 { margin: 0; }
+        .permission-adding-class .col-md-8.pr,
+        .permission-adding-class .col-md-4.pl { width: 100%; max-width: 100%; flex: 0 0 100%; padding: 0 !important; }
+        #imagePreviewArea {
+            width: 100% !important; height: 260px !important;
+            object-fit: contain; background: #f5f5f7;
+            border: 2px dashed #ddd !important; border-radius: 14px; padding: 1rem;
+        }
+        .permission-adding-class .col-md-4.pl > .col-md-12 {
+            background: #f5f5f7;
+            border-radius: 14px;
+            padding: .75rem !important;
+            margin-top: .75rem;
+        }
+        .permission-adding-class .col-md-4.pl .form-label { margin: 0 0 .5rem; font-size: .8rem; font-weight: 700 !important; }
+        .upload-area {
+            height: 120px;
+            background: #fff;
+            border: 2px dashed #d6d6dc;
+            border-radius: 12px;
+        }
+        .upload-area img { max-width: 100%; object-fit: contain; }
+        .close-button { top: 8px; right: 10px; }
+
+        /* ---------- Additional image tabs (pills, horizontal scroll) ---------- */
+        .navbarStylePaste { margin: 0; }
+        .navbarStylePaste .tab-container { padding: .75rem 0 0 !important; }
+        .sub-product-style .navbarStylePaste .nav-tabs {
+            display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
+            gap: 8px; padding-bottom: 6px; scrollbar-width: none;
+        }
+        .sub-product-style .navbarStylePaste .nav-tabs::-webkit-scrollbar { display: none; }
+        .sub-product-style .navbarStylePaste .nav-tabs .nav-item { flex: 0 0 auto; margin: 0; }
+        .sub-product-style .navbarStylePaste .nav-tabs .nav-link {
+            font-size: .75rem !important; font-weight: 600; white-space: nowrap;
+            padding: .5rem 1rem; border-radius: 999px !important;
+            background: #f1f1f4 !important; color: #555 !important;
+            border: none !important;
+        }
+        .sub-product-style .navbarStylePaste .nav-tabs .nav-link.active {
+            background: #000 !important; color: #fff !important;
+        }
+        .navbarStylePaste .upload-area { height: 150px !important; padding: 12px; }
+        .navbarStylePaste .upload-area p { font-size: .75rem !important; }
+
+        /* ---------- Tables (design files, pricing, uploaded image lists) ---------- */
+        .subProductTable, .subProductTable tbody { display: block; width: 100%; }
+        .subProductTable thead { display: none; }
+        .subProductTable tbody tr {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            column-gap: .75rem;
+            height: auto;
+            padding: .6rem 0;
+            border-bottom: 1px solid #f0f0f3;
+            color: #222;
+        }
+        .subProductTable th, .subProductTable td { padding: 0; font-size: .85rem; }
+
+        /* 3-column rows (design files): name + file on the left, actions on the right */
+        .subProductTable tbody tr > td:nth-child(1) { grid-column: 1; grid-row: 1; font-weight: 600; }
+        .subProductTable tbody tr > td:nth-child(2):not(:last-child) { grid-column: 1; grid-row: 2; min-width: 0; }
+        .subProductTable tbody tr > td:nth-child(3):last-child { grid-column: 2; grid-row: 1 / span 2; text-align: right; white-space: nowrap; }
+        .subProductTable input[type="file"] { font-size: .7rem; max-width: 100%; color: #999; }
+        .subProductTable .uploadStyles, .subProductTable .downloadStyles { padding: .4rem .5rem; font-size: 1rem; }
+
+        /* 2-column rows (pricing / uploaded images) */
+        .subProductTable tbody tr > td:nth-child(2):last-child { grid-column: 2; grid-row: 1; text-align: right; }
+        .subProductTable td input.form-control {
+            width: 120px; text-align: right; height: 40px;
+            background: #f5f5f7; border: 1px solid #ececf0 !important; border-radius: 10px;
+        }
+
+        /* ---------- Editors ---------- */
+        .ql-toolbar.ql-snow { border-radius: 12px 12px 0 0; background: #f5f5f7; border-color: #ececf0; }
+        .ql-container.ql-snow { border-radius: 0 0 12px 12px; border-color: #ececf0; font-size: .85rem; }
+        #editor-description { height: 160px !important; }
+        #editor-who-we-made-this-for, #editor-product-features { height: 120px !important; }
+
+        /* ---------- Action buttons ---------- */
+        /* .sub-product-style .custom_btn { width: 100%; height: 46px; border-radius: 12px; margin-bottom: .5rem; } */
+        /* .sub-product-style .card-new > .col-md-12.text-right { padding: 0 !important; margin-bottom: 0 !important; } */
+/* ---------- Action buttons ---------- */
+.sub-product-style .card-new > .col-md-12.text-right {
+    display: flex;
+    flex-direction: row-reverse; /* Delete left, Save right */
+    gap: 12px;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+}
+.sub-product-style .custom_btn {
+    flex: 1 1 0;
+    width: auto;
+    height: 46px;
+    margin: 0 !important;
+    padding: 0 .5rem;
+    border-radius: 10px;
+    font-size: .95rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    border: none;
+    color: #fff;
+    box-shadow: none;
+}
+.sub-product-style .custom_btn.btn-danger {
+    background: #e32424;
+}
+.sub-product-style .custom_btn.btn-success {
+    background: #1fa35a;
+}
+        /* ---------- Modals ---------- */
+        #imageCaptionModal .modal-dialog, #imageCaptionModal2 .modal-dialog { max-width: 94% !important; margin: .75rem auto; }
+        #imageCaptionModal .col-md-6 img, #imageCaptionModal2 .col-md-6 img { width: 100% !important; padding: 0 !important; margin-bottom: 1rem; }
+    }
+
 </style>
 
 {{-- {{dd($product)}} --}}
@@ -2368,6 +2569,16 @@ function validateImage(file, maxFileSizeMB, requiredWidth, requiredHeight, callb
                 .not('#size_chart_downloading')
                 .prop('disabled', true);
         }
+    </script>
+@endif
+@if (Gate::check('upload_size_chart'))
+    <script>
+        $('#size_chart').prop('disabled', false);
+    </script>
+@endif
+@if (Gate::check('upload_Measurement_Chart'))
+    <script>
+        $('#measurement_chart').prop('disabled', false);
     </script>
 @endif
 @if (Gate::check('edit product description'))

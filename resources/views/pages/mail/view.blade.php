@@ -702,6 +702,1289 @@
     .message-content p, .ql-editor p{
         line-height: 1.5;
     }
+
+
+    /* =========================================================
+    MOBILE EMAIL RESPONSIVE LAYOUT
+    Existing desktop layout remains unchanged
+    ========================================================= */
+
+    @media (max-width: 767.98px) {
+
+        /* Main email wrapper */
+        .mobile_email_side_row {
+            display: flex !important;
+            flex-direction: column !important;
+            flex-wrap: nowrap !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            width: 100% !important;
+            box-shadow: none !important;
+            position: relative;
+            padding-top: 10px;
+        }
+
+        /* Top toolbar container */
+        .mobile_email_side_row > .Icon-bar {
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 8px !important;
+            /* background: #fff; */
+            border-radius: 10px;
+            /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); */
+            box-sizing: border-box;
+            border-bottom: unset;
+        }
+
+        .mobile_email_side_row > .Icon-bar > .row {
+            display: flex !important;
+            flex-direction: column !important;
+            flex-wrap: nowrap !important;
+            margin: 0 !important;
+            width: 100% !important;
+            gap: 10px;
+        }
+
+        /* First row: all action icons */
+        .mobile_email_side_row .icon-set.col-4 {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: 0 0 100% !important;
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 2px;
+            margin: 0 !important;
+            padding: 5px 2px !important;
+            background: #ffffff;
+            border: 1px solid #ececec;
+            border-radius: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            box-sizing: border-box;
+        }
+
+        .mobile_email_side_row .icon-set.col-4::-webkit-scrollbar {
+            display: none;
+        }
+
+        .mobile_email_side_row .icon-set.col-4 .mail-icon {
+            flex: 0 0 34px !important;
+            width: 34px !important;
+            max-width: 34px !important;
+            min-width: 34px !important;
+            height: 36px;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            padding: 0 !important;
+            margin: 0 !important;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .mobile_email_side_row .icon-set.col-4 .mail-icon i {
+            font-size: 16px !important;
+        }
+
+        /* Second row: search card */
+        .mobile_email_side_row .Icon-bar .col-lg-3.ml-6 {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: 0 0 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .mobile_email_side_row .Icon-bar .col-lg-3.ml-6 > .row {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 8px 10px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            box-sizing: border-box;
+        }
+
+        .mobile_email_side_row .Icon-bar .col-lg-3.ml-6 .col-lg-1 {
+            flex: 0 0 30px !important;
+            max-width: 30px !important;
+            padding: 0 !important;
+            border-bottom: none !important;
+        }
+
+        .mobile_email_side_row .Icon-bar .col-lg-3.ml-6 .col-lg-1 i {
+            top: 0 !important;
+            position: static !important;
+            font-size: 17px !important;
+        }
+
+        .mobile_email_side_row .Icon-bar .col-lg-3.ml-6 .col-lg-10 {
+            flex: 1 1 auto !important;
+            width: auto !important;
+            max-width: none !important;
+            padding: 0 !important;
+            border-bottom: none !important;
+            text-align: left !important;
+        }
+
+        .mobile_email_side_row #searchbox {
+            width: 100% !important;
+            height: 30px !important;
+            border: none !important;
+            outline: none !important;
+            font-size: 14px !important;
+            background: transparent;
+            box-sizing: border-box;
+        }
+
+        /* Third row: filter, message count, previous/next, logout */
+        .mobile_email_side_row .email-navigator {
+            width: 100% !important;
+            max-width: 100% !important;
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 8px;
+            margin: 0 !important;
+            padding: 10px !important;
+            background: #f7f8fa;
+            border: 1px solid #ececec;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .mobile_email_side_row #mail_filter_div {
+            flex: 0 0 auto;
+            margin: 0 !important;
+        }
+
+        .mobile_email_side_row #mail_filter {
+            max-width: 90px;
+            height: 32px;
+            font-size: 13px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fff;
+        }
+
+        .mobile_email_side_row .email-navigator > label {
+            flex: 1 1 130px;
+            min-width: 0;
+            margin: 0 !important;
+            font-size: 11px !important;
+            line-height: 1.5;
+            text-align: center;
+            align-content: center !important;
+            white-space: normal;
+        }
+
+        .mobile_email_side_row .btn-pre,
+        .mobile_email_side_row .btn-next {
+            flex: 0 0 30px;
+            width: 30px;
+            min-width: 30px;
+            height: 32px;
+            padding: 0 !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+        }
+
+        /* Last icon set inside navigation: hide desktop-only toggle */
+        .mobile_email_side_row .email-navigator > .icon-set {
+            flex: 0 0 auto !important;
+            width: auto !important;
+            max-width: none !important;
+            display: flex !important;
+            align-items: center;
+            gap: 8px;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .mobile_email_side_row .email-navigator > .icon-set .mail-icon {
+            width: 30px !important;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .mobile_email_side_row .org-set-toggle {
+            display: none !important;
+        }
+
+        /* =====================================================
+        LEFT SLIDE SIDEBAR
+        ===================================================== */
+
+        .mobile_email_side_row > .sidebar {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            width: 78% !important;
+            max-width: 300px !important;
+            height: 100vh !important;
+            height: 100dvh !important;
+            margin: 0 !important;
+            padding: 15px 10px !important;
+            background: #fff !important;
+            box-shadow: 4px 0 18px rgba(0, 0, 0, 0.2);
+            z-index: 10050 !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch;
+            transform: translateX(-110%);
+            visibility: hidden;
+            transition: transform 0.25s ease, visibility 0.25s ease;
+            box-sizing: border-box;
+        }
+
+        .mobile_email_side_row > .sidebar.mobile-sidebar-open {
+            transform: translateX(0);
+            visibility: visible;
+        }
+
+        .mobile-sidebar-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 10040;
+            display: none;
+        }
+
+        .mobile-sidebar-backdrop.active {
+            display: block;
+        }
+
+        .mobile_email_side_row .sidebar-content {
+            width: 100% !important;
+        }
+
+        .mobile_email_side_row .sidebar-item-list {
+            padding-left: 0 !important;
+            margin-bottom: 0;
+        }
+
+        .mobile_email_side_row .sidebar-content-li {
+            width: 100%;
+        }
+
+        /* Email list / compose area */
+        .mobile_email_side_row #composereply {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: 0 0 100% !important;
+            margin: 188px 0 20px !important;
+            padding: 0 8px !important;
+            height: auto !important;
+            min-height: 60vh;
+            overflow-x: hidden !important;
+            box-sizing: border-box;
+        }
+
+        .mobile_email_side_row #mailchat-div {
+            width: 100% !important;
+            padding-left: 0 !important;
+            margin: 0 !important;
+        }
+
+        .mobile_email_side_row #mailchat-div > li {
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+
+        .mobile_email_side_row .chat-row {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            align-items: center !important;
+            gap: 7px;
+            padding: 10px 6px;
+            margin: 0 !important;
+            min-width: 0;
+        }
+
+        .mobile_email_side_row .chkbox,
+        .mobile_email_side_row .starbox,
+        .mobile_email_side_row .dot {
+            flex: 0 0 auto !important;
+        }
+
+        .mobile_email_side_row .chat-name {
+            flex: 0 1 30% !important;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .mobile_email_side_row .chat-subject {
+            flex: 1 1 auto !important;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .mobile_email_side_row .chat-date {
+            flex: 0 0 auto !important;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .mobile_email_side_row .chat-name p,
+        .mobile_email_side_row .chat-subject p {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 12px;
+            margin: 0 !important;
+        }
+
+        /* Compose form */
+        .mobile_email_side_row #compose-div {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            box-sizing: border-box;
+        }
+
+        .mobile_email_side_row #compose-div form > .col-md-12 {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding-left: 5px !important;
+            padding-right: 5px !important;
+            box-sizing: border-box;
+        }
+
+        .mobile_email_side_row #compose-div .recipient-input,
+        .mobile_email_side_row #compose-div .cc-input,
+        .mobile_email_side_row #compose-div .bcc-input {
+            max-width: 90% !important;
+        }
+
+        .mobile_email_side_row #editor-container {
+            max-width: 100% !important;
+        }
+
+        .mobile_email_side_row #section-of-sidebar {
+            /* display: none !important; */
+        }
+    }
+
+@media (max-width: 767.98px) {
+
+    .mobile_email_side_toggle {
+        position: fixed !important;
+        top: 50% !important;
+        left: 0 !important;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 58px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        color: #333;
+        border: 1px solid #ddd;
+        border-left: none;
+        border-radius: 0 8px 8px 0;
+        box-shadow: 2px 0 6px rgba(0, 0, 0, 0.15);
+        z-index: 10060;
+        font-size: 17px;
+        cursor: pointer;
+        transition: left 0.25s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile_email_side_toggle.sidebar-open {
+        left: min(78%, 300px) !important;
+        border-left: 1px solid #ddd;
+        border-radius: 0px 8px 8px 0px;
+        box-shadow: -2px 0 6px rgba(0, 0, 0, 0.12);
+    }
+
+    .mobile_email_side_toggle i {
+        pointer-events: none;
+    }
+    .header1 {
+        top: 112px !important;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    /* Modern mobile navigation card */
+    .mobile_email_side_row .email-navigator {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 10px 12px !important;
+
+        background: #ffffff;
+        border: 1px solid #e9edf2;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+
+        box-sizing: border-box;
+    }
+
+    /* Hide "Showing message" text */
+    .mobile_email_side_row .email-navigator > label {
+        display: none !important;
+    }
+
+    /* All / Unread filter */
+    .mobile_email_side_row #mail_filter_div {
+        flex: 1 1 auto !important;
+        min-width: 0;
+        margin: 0 !important;
+    }
+
+    .mobile_email_side_row #mail_filter {
+        width: 100% !important;
+        max-width: 100px;
+        height: 38px !important;
+        padding: 0 26px 0 10px !important;
+
+        background-color: #f5f7fa;
+        border: 1px solid #e5e9ef;
+        border-radius: 8px;
+
+        color: #343a40;
+        font-size: 13px !important;
+        font-weight: 600;
+        outline: none;
+    }
+
+    /* Previous / Next buttons */
+    .mobile_email_side_row .email-navigator .btn-pre,
+    .mobile_email_side_row .email-navigator .btn-next {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        flex: 0 0 38px !important;
+        width: 38px !important;
+        min-width: 38px !important;
+        height: 38px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+
+        background: #f5f7fa;
+        border: 1px solid #e5e9ef;
+        border-radius: 8px;
+
+        color: #343a40;
+        font-size: 15px;
+        transition: background 0.2s ease;
+    }
+
+    .mobile_email_side_row .email-navigator .btn-pre:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .mobile_email_side_row .email-navigator .btn-next:not(:disabled):active,
+    .mobile_email_side_row .email-navigator .btn-pre:not(:disabled):active {
+        background: #e7edf5;
+    }
+
+    /* Logout icon */
+    .mobile_email_side_row .email-navigator > .icon-set {
+        display: flex !important;
+        flex: 0 0 38px !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: 38px !important;
+        max-width: 38px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .mobile_email_side_row .email-navigator > .icon-set .log-out {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: 38px !important;
+        height: 38px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+
+        /* background: #fff1f0;
+        border: 1px solid #ffe0dc; */
+        border-radius: 8px;
+        color: #d94841;
+        cursor: pointer;
+    }
+
+    .mobile_email_side_row .email-navigator > .icon-set .log-out i {
+        font-size: 16px !important;
+    }
+
+    /* Hide desktop-only organization toggle */
+    .mobile_email_side_row .email-navigator .org-set-toggle {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+
+    /* Show only message count numbers */
+    .mobile_email_side_row .email-navigator > label {
+        display: flex !important;
+        flex: 1 1 auto !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 3px;
+
+        margin: 0 !important;
+        padding: 0 2px !important;
+
+        font-size: 12px !important;
+        font-weight: 600;
+        color: #495057;
+        white-space: nowrap;
+        line-height: 1.4;
+    }
+
+    /* Hide only the text "showing message" */
+    .mobile_email_side_row .email-navigator > label {
+        font-size: 0 !important;
+    }
+
+    .mobile_email_side_row .email-navigator > label span {
+        font-size: 12px !important;
+        display: inline !important;
+    }
+
+    .mobile_email_side_row .email-navigator > label span + span::before {
+        content: "-";
+        margin: 0 3px;
+    }
+
+    .mobile_email_side_row .email-navigator > label span:last-of-type::before {
+        content: "of";
+        margin: 0 3px;
+        font-weight: 400;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    #mailchat-div {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100%;
+    }
+
+    #mailchat-div > li.chatliclass {
+        background: #fff;
+        /* border: 1px solid #e9edf2; */
+        border-radius: 8px;
+        margin: 0 0 9px !important;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        transition: background 0.2s ease;
+        height: unset;
+    }
+
+    #mailchat-div .chat-row {
+        display: grid !important;
+        grid-template-columns: 18px 18px 36px minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        align-items: center !important;
+        gap: 3px 9px;
+        padding: 12px 9px !important;
+        margin: 0 !important;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Checkbox */
+    #mailchat-div .chkbox {
+        grid-column: 1;
+        grid-row: 1 / 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #mailchat-div .chk_boxes {
+        width: 15px;
+        height: 15px;
+        margin: 0 !important;
+        accent-color: #377dff;
+    }
+
+    /* Favourite star */
+    #mailchat-div .starbox {
+        grid-column: 2;
+        grid-row: 1 / 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 36px;
+    }
+
+    #mailchat-div .starbox i {
+        font-size: 15px !important;
+    }
+
+    /* Sender avatar */
+    #mailchat-div .dot {
+        grid-column: 3;
+        grid-row: 1 / 3;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #e9f0ff;
+        color: #315db5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-left: unset;
+    }
+
+    #mailchat-div .dot .white-text {
+        color: inherit !important;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    /* Sender name */
+    #mailchat-div .chat-name {
+        grid-column: 4;
+        grid-row: 1;
+        min-width: 0;
+        width: 100%;
+        margin: 0 !important;
+    }
+
+    #mailchat-div .chat-name p {
+        font-size: 13px;
+        font-weight: 600;
+        color: #303846;
+        margin: 0 !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Subject */
+    #mailchat-div .chat-subject {
+        grid-column: 4;
+        grid-row: 2;
+        min-width: 0;
+        width: 100%;
+        margin: 0 !important;
+    }
+
+    #mailchat-div .chat-subject p {
+        font-size: 12px;
+        color: #737d8c;
+        margin: 0 !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Date */
+    #mailchat-div .chat-date {
+        grid-column: 5;
+        grid-row: 1;
+        text-align: right;
+        white-space: nowrap;
+        align-self: start;
+        margin: 0 !important;
+    }
+
+    #mailchat-div .chat-date p {
+        font-size: 10px;
+        color: #87909d;
+        margin: 0 !important;
+    }
+
+    /* Unread message */
+    #mailchat-div > li.bg-unread {
+        background: #d9ffe1 !important;
+        border-color: #dce9ff !important;
+        position: relative;
+        height: unset;
+    }
+
+    #mailchat-div > li.bg-unread::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 3px;
+        background: #377dff;
+    }
+
+    #mailchat-div > li.bg-unread .chat-name p {
+        color: #172b4d;
+        font-weight: 700;
+    }
+
+    #mailchat-div > li.bg-unread .chat-subject p {
+        color: #465875;
+    }
+
+    /* Smaller mobile screens */
+    @media (max-width: 360px) {
+        #mailchat-div .chat-row {
+            grid-template-columns: 16px 16px 32px minmax(0, 1fr) auto;
+            gap: 3px 7px;
+            padding: 10px 7px !important;
+        }
+
+        #mailchat-div .dot {
+            width: 32px;
+            height: 32px;
+        }
+
+        #mailchat-div .chat-name p {
+            font-size: 12px;
+        }
+
+        #mailchat-div .chat-subject p {
+            font-size: 11px;
+        }
+    }
+}
+
+
+/* Desktop: Keep the original sidebar Compose button */
+.mobile_compose_button {
+    display: none !important;
+}
+
+/* Mobile only */
+@media (max-width: 767.98px) {
+
+    /* Hide the original Compose button inside sidebar */
+    .mobile_email_side_row .sidebar .compose-li {
+        display: none !important;
+    }
+
+    /* Show Compose button below the search box */
+    .mobile_email_side_row .mobile_compose_button {
+        display: block !important;
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 12px 10px !important;
+        /* order: 3; */
+    }
+
+    .mobile_email_side_row .mobile_compose_button .row {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .mobile_email_side_row .mobile_compose_button .compose-btn {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        outline: unset !important;
+        padding: 7px 10px;
+        border-radius: 5px;
+    }
+    #mail_filter_div .select2-container--default .select2-selection--single {
+        border: .1px solid rgb(185, 185, 185) !important;
+    }
+
+}
+
+
+@media (max-width: 767.98px) {
+
+    /* Allow the page to grow with its content */
+    html,
+    body {
+        height: auto !important;
+        min-height: 100% !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+    /* Main email layout */
+    .mobile_email_side_row {
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        align-items: stretch !important;
+    }
+
+    /* Email list content */
+    #composereply {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin-bottom: 20px !important;
+    }
+
+    #mailchat-div {
+        margin-bottom: 0 !important;
+    }
+
+    /* Sidebar content must remain in normal page flow */
+    #section-of-sidebar {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+
+        margin-top: 15px !important;
+        margin-bottom: 25px !important;
+
+        z-index: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    #hiddenDiv {
+        width: 100% !important;
+    }
+    /* Prevent fixed-height parent sections from cutting off content */
+    .container,
+    .container-fluid,
+    .content,
+    .main-content {
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+    }
+    .footer {
+        margin-top: 25rem !important;
+    }
+}
+
+/* Desktop: hide mobile back button */
+.mobile-compose-back {
+    display: none;
+}
+
+@media (max-width: 767.98px) {
+
+    .mobile-compose-back {
+        display: block;
+        width: 100%;
+        padding: 10px 8px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #back-to-emails {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: #fff;
+        color: #333;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    #back-to-emails:active {
+        background: #f0f0f0;
+    }
+    /* .mobile_email_side_row .mobile_compose_button .row{
+        padding: unset !important;
+    } */
+}
+@media (max-width: 768px) {
+    body .mobile_email_side_row .mobile_compose_button .row {
+        padding: 0 !important;
+    }
+}
+
+
+/* ==========================================
+   EMAIL COMPOSER - MOBILE RESPONSIVE DESIGN
+   Existing HTML and JavaScript preserved
+========================================== */
+
+@media screen and (max-width: 768px) {
+
+    /* Main form */
+    #email_template_create_form {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 12px !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+
+    #email_template_create_form,
+    #email_template_create_form * {
+        box-sizing: border-box;
+    }
+
+    /* Recipient rows: To, Cc, Bcc */
+    #email_template_create_form > div.col-md-12.mb-3,
+    #email_template_create_form > div.col-md-12.ccbcc-input,
+    #email_template_create_form > div.col-md-12.mb-2.ccbcc-input {
+        display: flex !important;
+        align-items: flex-start !important;
+        flex-wrap: wrap !important;
+        width: 100% !important;
+        margin: 0 0 10px 0 !important;
+        padding: 10px 0 !important;
+        border-bottom: 1px solid #dedede !important;
+    }
+
+    /* Recipient labels */
+    #email_template_create_form > div.col-md-12 > label:not(.toggle-cc-bcc) {
+        width: 42px !important;
+        min-width: 42px !important;
+        margin: 8px 8px 0 0 !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #444 !important;
+    }
+
+    /* Select2 recipient fields */
+    #email_template_create_form select.recipient-input,
+    #email_template_create_form select.cc-input,
+    #email_template_create_form select.bcc-input {
+        width: calc(100% - 58px) !important;
+        max-width: calc(100% - 58px) !important;
+        min-width: 0 !important;
+        height: auto !important;
+        margin: 0 !important;
+    }
+
+    /* Select2 container */
+    #email_template_create_form .select2-container {
+        width: calc(100% - 58px) !important;
+        max-width: calc(100% - 58px) !important;
+        min-width: 0 !important;
+    }
+
+    #email_template_create_form .select2-container--default
+    .select2-selection--multiple {
+        min-height: 38px !important;
+        height: auto !important;
+        border: 1px solid #d5dbe3 !important;
+        border-radius: 7px !important;
+        background: #fff !important;
+        padding: 3px 5px !important;
+    }
+
+    #email_template_create_form .select2-container--default
+    .select2-selection--multiple .select2-selection__rendered {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        white-space: normal !important;
+    }
+
+    #email_template_create_form .select2-container--default
+    .select2-selection--multiple .select2-selection__choice {
+        max-width: 100% !important;
+        overflow-wrap: anywhere !important;
+        margin: 3px 4px 3px 0 !important;
+        font-size: 12px !important;
+    }
+
+    /* To row Cc/Bcc toggle */
+    #email_template_create_form .toggle-cc-bcc {
+        width: auto !important;
+        margin: 7px 0 0 auto !important;
+        padding: 3px 5px !important;
+        cursor: pointer !important;
+        display: none;
+    }
+
+    /* Subject row */
+    #email_template_create_form > div.col-md-12[style*="inline-flex"] {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        margin: 8px 0 14px 0 !important;
+        padding: 0 !important;
+    }
+
+    #email_template_create_form > div.col-md-12[style*="inline-flex"] label {
+        width: 58px !important;
+        min-width: 58px !important;
+        margin: 0 !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+    }
+
+    #email_template_create_form #template_subject {
+        flex: 1 1 auto !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        height: 42px !important;
+        margin: 0 !important;
+        padding: 8px 10px !important;
+        border: 1px solid #d5dbe3 !important;
+        border-radius: 7px !important;
+        font-size: 16px !important;
+    }
+
+    /* Pick Template section */
+    #email_template_create_form .to-field {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 8px 0 !important;
+    }
+
+    #email_template_create_form .customBtn-DroupDown {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: 40px !important;
+        padding: 9px 14px !important;
+        border-radius: 7px !important;
+        font-size: 14px !important;
+        cursor: pointer !important;
+    }
+
+    #email_template_create_form #myDropdown {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 240px !important;
+        overflow-y: auto !important;
+        z-index: 1055 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12) !important;
+    }
+
+    #email_template_create_form #myInput {
+        width: calc(100% - 16px) !important;
+        max-width: calc(100% - 16px) !important;
+        margin: 8px !important;
+        padding: 10px !important;
+        font-size: 16px !important;
+        border-radius: 6px !important;
+    }
+
+    #email_template_create_form .pick-template {
+        padding: 10px 8px !important;
+        margin: 0 6px !important;
+        font-size: 14px !important;
+        overflow-wrap: anywhere !important;
+        border-bottom: 1px solid #eee !important;
+        cursor: pointer !important;
+    }
+
+    /* Email Body / editor section */
+    #email_template_create_form > div.col-md-12.mt-3.mb-1 {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 16px 0 12px 0 !important;
+    }
+
+    #email_template_create_form > div.col-md-12.mt-3.mb-1 > div {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    #email_template_create_form > div.col-md-12.mt-3.mb-1 > div label {
+        font-size: 14px !important;
+    }
+
+    #email_template_create_form #editor-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 300px !important;
+        min-height: 220px !important;
+        overflow-y: auto !important;
+        border-radius: 0 0 7px 7px !important;
+    }
+
+    /* Quill editor, if used */
+    #email_template_create_form #editor-container .ql-editor {
+        min-height: 220px !important;
+        padding: 12px !important;
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    /* Attachment names */
+    #email_template_create_form #file-names-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 90px !important;
+        overflow-y: auto !important;
+        overflow-wrap: anywhere !important;
+        margin: 0 0 12px 0 !important;
+    }
+
+    /* Bottom action buttons */
+    #email_template_create_form > div.col-md-12.mb-3.text-right {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 9px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 12px 0 0 0 !important;
+        padding: 12px 0 0 0 !important;
+        border-top: 1px solid #e5e7eb !important;
+        text-align: center !important;
+    }
+
+    #email_template_create_form .custom-btn-style {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 42px !important;
+        margin: 0 !important;
+        padding: 9px 5px !important;
+        border-radius: 7px !important;
+        font-size: 12px !important;
+        line-height: 1.35 !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    #email_template_create_form .custom-btn-style i {
+        margin-right: 5px !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Full-width Send button */
+    #email_template_create_form #submit_btn_text {
+        grid-column: 1 / -1 !important;
+        min-height: 46px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+    }
+
+    /* Prevent overflowing content */
+    #email_template_create_form input,
+    #email_template_create_form select,
+    #email_template_create_form button,
+    #email_template_create_form .select2-container {
+        max-width: 100% !important;
+    }
+}
+
+/* Extra-small phones */
+@media screen and (max-width: 380px) {
+
+    #email_template_create_form {
+        padding: 9px !important;
+    }
+
+    #email_template_create_form > div.col-md-12 > label:not(.toggle-cc-bcc) {
+        width: 36px !important;
+        min-width: 36px !important;
+        margin-right: 6px !important;
+    }
+
+    #email_template_create_form select.recipient-input,
+    #email_template_create_form select.cc-input,
+    #email_template_create_form select.bcc-input,
+    #email_template_create_form .select2-container {
+        width: calc(100% - 48px) !important;
+        max-width: calc(100% - 48px) !important;
+    }
+
+    #email_template_create_form > div.col-md-12[style*="inline-flex"] {
+        gap: 6px !important;
+    }
+
+    #email_template_create_form > div.col-md-12[style*="inline-flex"] label {
+        width: 52px !important;
+        min-width: 52px !important;
+        font-size: 13px !important;
+    }
+
+    #email_template_create_form .custom-btn-style {
+        font-size: 11px !important;
+        padding: 8px 3px !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+
+    #email_template_create_form > div.col-md-12.mb-3.text-right {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    /* Close, Attach, Save Draft, Add to Template */
+    #email_template_create_form > div.col-md-12.mb-3.text-right
+    > button,
+    #email_template_create_form > div.col-md-12.mb-3.text-right
+    > label[for="attachment"] {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 44px !important;
+        margin: 0 !important;
+        padding: 8px 4px !important;
+        box-sizing: border-box !important;
+        float: none !important;
+        font-size: 12px !important;
+        white-space: normal !important;
+    }
+
+    /* Send - third row, full width */
+    #email_template_create_form #submit_btn_text {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        min-height: 46px !important;
+        font-size: 14px !important;
+    }
+
+    /* Attachment filenames occupy full row */
+    #email_template_create_form #file-names-container {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        margin: 0 0 5px 0 !important;
+    }
+}
+
+
 </style>
 <div class="container-fluid "  >
     <div class="se-pre-con"></div>
@@ -709,16 +1992,16 @@
     @section('order-header')
         <span id="email-header">{{$showHeading}}</span>
     @endsection
-    <div class="row" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 15px 0 rgba(0, 0, 0, 0.19);">
+    <div class="row mobile_email_side_row" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 15px 0 rgba(0, 0, 0, 0.19);">
         <div class="Icon-bar mx-2" style="">
             <div class="row mt-3 mx-2">
                 <input type="hidden" name="" id="needtoload" value="{{$loadmessageId}}">
                 <div class="icon-set col-4">
-                    <div class="mail-icon mt-2 col-1 chat-mail-action" data-action="delete"><i class="fa fa-trash-o fa-lg" title="Remove" aria-hidden="true"></i></div>
+                    <div class="mail-icon mt-2 col-1 chat-mail-action" data-action="delete"><i class="fa fa-trash fa-lg" title="Remove" aria-hidden="true"></i></div>
                     <div class="mail-icon mt-2 col-1 chat-mail-action" data-action="move"><i class="fa fa-arrows fa-lg" title="Move" aria-hidden="true"></i></div>
-                    <div class="mail-icon mt-2 col-1 chat-mail-action" data-action="unread"><i class="fa fa-envelope-o fa-lg" title="Mark as unread" aria-hidden="true"></i></div>
-                    <div class="mail-icon mt-2 col-1 chat-mail-action" data-action="read"><i class="fa fa-envelope-open-o fa-lg" title="Marrk as read" aria-hidden="true"></i></div>
-                    <div class="mail-icon mt-2 col-1 chat-mail-action" data-action="flag"><i class="fa fa-star-o fa-lg" title="Favourite" aria-hidden="true"></i></div>
+                    <div class="mail-icon mt-2 col-1 chat-mail-action" data-action="unread"><i class="fa fa-envelope fa-lg" title="Mark as unread" aria-hidden="true"></i></div>
+                    <div class="mail-icon mt-2 col-1 chat-mail-action" data-action="read"><i class="fa fa-envelope-open fa-lg" title="Marrk as read" aria-hidden="true"></i></div>
+                    <div class="mail-icon mt-2 col-1 chat-mail-action" data-action="flag"><i class="fa fa-star fa-lg" title="Favourite" aria-hidden="true"></i></div>
                     <div class="mail-icon mt-2 col-1" data-action="forward"><i class="fa fa-share fa-lg"  title="Forward" aria-hidden="true"></i></div>
                     <div class="mail-icon mt-2 col-1 chat-mail-action" data-action="spam"><i class="fa fa-exclamation-circle fa-lg" title="Spam" aria-hidden="true"></i></div>
                     <div class="mail-icon mt-2 col-1 mail-template" data-action="template"><i class="fa fa-signature fa-lg" title="Signature" aria-hidden="true"></i></div>
@@ -737,6 +2020,15 @@
                         <div class="col-lg-10 text-center" style="border-bottom: 1px solid #464444 !important;">
                             <input class="searchbox-layout"  type="text" id="searchbox" placeholder="Email Search">
                         </div>
+
+                    </div>
+
+                </div>
+                <div class="col-lg-3 ml-6 mobile_compose_button" style="padding-right: 0px;">
+                    <div class="row" style="width: 100%;">
+                        <button class="btn-green-filled compose-btn" style="outline: unset;" >
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> COMPOSE
+                        </button>
 
                     </div>
 
@@ -846,6 +2138,14 @@
                     </li>
                 @endforeach
             </ul>
+
+            <!-- Mobile: Back to Emails button -->
+            <div class="mobile-compose-back">
+                <button type="button" id="back-to-emails">
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                    Back to Emails
+                </button>
+            </div>
 
             <div class="col-12 compose-div hidden my-2" id="compose-div" >
                 {{-- <div class="col-12 to-field form-group displayflex">
@@ -1087,6 +2387,136 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
   <!-- After quill script includes -->
   <script src="https://unpkg.com/quill-magic-url@3.0.0/dist/index.js"></script>
+
+  <script>
+
+        
+$(document).ready(function () {
+
+    if (window.innerWidth > 767.98) return;
+
+    const $sidebar = $('.mobile_email_side_row > .sidebar');
+
+    if (!$sidebar.length) return;
+
+    // Create backdrop
+    if (!$('.mobile-sidebar-backdrop').length) {
+        $('body').append(
+            '<div class="mobile-sidebar-backdrop"></div>'
+        );
+    }
+
+    const $backdrop = $('.mobile-sidebar-backdrop');
+
+    // Remove the previous toolbar button if it exists
+    $('.mobile-email-sidebar-toggle').remove();
+
+    // Create the side-edge toggle icon
+    if (!$('.mobile_email_side_toggle').length) {
+        $('body').append(`
+            <button type="button"
+                class="mobile_email_side_toggle"
+                aria-label="Open email folders"
+                aria-expanded="false">
+                <i class="fa fa-angle-double-right"></i>
+            </button>
+        `);
+    }
+
+    const $toggle = $('.mobile_email_side_toggle');
+
+    // Open sidebar
+    function openMobileSidebar() {
+        $sidebar.addClass('mobile-sidebar-open');
+        $backdrop.addClass('active');
+
+        $toggle
+            .addClass('sidebar-open')
+            .attr('aria-label', 'Close email folders')
+            .attr('aria-expanded', 'true');
+
+        $toggle.find('i')
+            .removeClass('fa-angle-double-right')
+            .addClass('fa-angle-double-left');
+    }
+
+    // Close sidebar
+    function closeMobileSidebar() {
+        $sidebar.removeClass('mobile-sidebar-open');
+        $backdrop.removeClass('active');
+
+        $toggle
+            .removeClass('sidebar-open')
+            .attr('aria-label', 'Open email folders')
+            .attr('aria-expanded', 'false');
+
+        $toggle.find('i')
+            .removeClass('fa-angle-double-left')
+            .addClass('fa-angle-double-right');
+    }
+
+    // Toggle sidebar using the edge icon
+    $toggle.off('click.mobileEmailSidebar')
+        .on('click.mobileEmailSidebar', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if ($sidebar.hasClass('mobile-sidebar-open')) {
+                closeMobileSidebar();
+            } else {
+                openMobileSidebar();
+            }
+        });
+
+    // Close when tapping outside
+    $backdrop.off('click.mobileEmailSidebar')
+        .on('click.mobileEmailSidebar', closeMobileSidebar);
+
+    // Close using Escape
+    $(document)
+        .off('keydown.mobileEmailSidebar')
+        .on('keydown.mobileEmailSidebar', function (e) {
+            if (e.key === 'Escape') {
+                closeMobileSidebar();
+            }
+        });
+
+    // Close after selecting a folder
+    $sidebar.off('click.mobileEmailSidebar', '.mail-sidebar-item')
+        .on('click.mobileEmailSidebar', '.mail-sidebar-item', function () {
+            closeMobileSidebar();
+        });
+
+});
+
+$(document).on('click', '#back-to-emails', function () {
+
+    if (window.matchMedia('(max-width: 767.98px)').matches) {
+
+        // Find the Index folder in the sidebar
+        const $indexFolder = $('.sidebar-item-list')
+            .first()
+            .find('.sidebar-content-li')
+            .has('.mail-sidebar-item')
+            .find('.mail-sidebar-item')
+            .filter(function () {
+                return $(this).find('p').first().text().trim() === 'Inbox';
+            })
+            .first();
+
+        if ($indexFolder.length) {
+            // Trigger the existing folder click functionality
+            $indexFolder.trigger('click');
+        } else {
+            // If Index is not found, return to the email list
+            $('#compose-div').addClass('hidden');
+            $('#mailchat-div').show();
+        }
+    }
+
+});
+
+  </script>
   <script>
     $(document).ready(function() {
         $('#mail_template_publish_type-reply').select2({
@@ -1136,29 +2566,79 @@
             // or making an AJAX request to retrieve specific message data.
         });
     });
-    $(document).ready(function() {
-        let hoverTimeout;
+    // $(document).ready(function() {
+    //     let hoverTimeout;
 
-        if ($('#minimize_icon').css('display') != 'none') {
-            $('#minimize_icon')[0].click();
+    //     if ($('#minimize_icon').css('display') != 'none') {
+    //         $('#minimize_icon')[0].click();
+    //     }
+
+    //     $('#sidenav-main').hover(
+    //         function() {
+    //             hoverTimeout = setTimeout(function() {
+    //                 if ($('#maximize_icon').css('display') != 'none') {
+    //                     $('#maximize_icon').click();
+    //                 }
+    //             }, 500);
+    //         },
+    //         function() {
+    //             clearTimeout(hoverTimeout);
+    //             if ($('#minimize_icon').css('display') != 'none') {
+    //                 $('#minimize_icon')[0].click();
+    //             }
+    //         }
+    //     );
+    // });
+
+
+    $(document).ready(function () {
+
+        let hoverTimeout;
+        const isMobile = window.matchMedia('(max-width: 767.98px)').matches;
+
+        if (isMobile) {
+
+            // Mobile: maximize icon එක හැම වෙලේම පෙන්වන්න
+            $('#maximize_icon').css({
+                'display': 'flex',
+                'visibility': 'visible',
+                'opacity': '1',
+                'pointer-events': 'auto'
+            });
+
+            // Mobile එකේ hover මගින් sidebar එක minimize කිරීම නවත්වන්න
+            $('#sidenav-main').off('mouseenter mouseleave');
+
+            // Minimize icon එකෙන් automatic minimize වීම නවත්වන්න
+            // Initial click එකත් සිදු නොකරන්න
+
+        } else {
+
+            // Desktop: existing behavior
+            if ($('#minimize_icon').css('display') != 'none') {
+                $('#minimize_icon')[0].click();
+            }
+
+            $('#sidenav-main').hover(
+                function () {
+                    hoverTimeout = setTimeout(function () {
+                        if ($('#maximize_icon').css('display') != 'none') {
+                            $('#maximize_icon').click();
+                        }
+                    }, 500);
+                },
+                function () {
+                    clearTimeout(hoverTimeout);
+
+                    if ($('#minimize_icon').css('display') != 'none') {
+                        $('#minimize_icon')[0].click();
+                    }
+                }
+            );
         }
 
-        $('#sidenav-main').hover(
-            function() {
-                hoverTimeout = setTimeout(function() {
-                    if ($('#maximize_icon').css('display') != 'none') {
-                        $('#maximize_icon').click();
-                    }
-                }, 500);
-            },
-            function() {
-                clearTimeout(hoverTimeout);
-                if ($('#minimize_icon').css('display') != 'none') {
-                    $('#minimize_icon')[0].click();
-                }
-            }
-        );
     });
+
 </script>
   <script>
 

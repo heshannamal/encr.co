@@ -849,39 +849,39 @@
             background-color: #ffc1076d !important;
             color: #ffc107 !important;
             font-weight: 600;
-            width: 90%;
+            /* width: 90%; */
         }
         .paid_badge {
             background-color: #6de7b295 !important;
             color: #2dce89 !important;
             font-weight: 600;
-            width: 90%;
+            /* width: 90%; */
         }
         .pending_badge {
             background-color: #f5365c54 !important;
             color: #f5365c !important;
             font-weight: 600;
-            width: 90%;
+            /* width: 90%; */
         }
         .production_badge_card {
             color: #16A34A;
             background-color: #F0FDF4;
-            width: 90%;
+            /* width: 90%; */
         }
         .quote_badge_card {
             background-color: rgba(30, 58, 96, 0.18);
             color: #1E3A5F;
-            width: 90%;
+            /* width: 90%; */
         }
         .fullfilled_badge_card {
             background-color: #EEF2FF;
             color: #4338CA;
-            width: 90%;
+            /* width: 90%; */
         }
         .cancelled_badge_card {
             color: #E02020;
             background-color: #FEF2F2;
-            width: 90%;
+            /* width: 90%; */
         }
         .order_name_section {
             border-bottom: 0.5px solid rgba(128, 128, 128, 0.26);
@@ -936,6 +936,19 @@
             font-size: 10px;
             background-color: #11cdef;
         }
+        .mobile_filter_item select,
+        .mobile_filter_item input {
+            width: 100% !important;
+            height: 23px !important;
+            font-size: 11px !important;
+            border: 0.5px solid gray;
+            border-radius: 4px;
+        }
+
+        .mobile_filter_item input:focus,
+        .mobile_filter_item select:focus {
+            font-size: 16px !important;
+        }
     }
 
     @media (max-width: 400px){
@@ -950,6 +963,444 @@
         }
      }
 
+/* ================= MODERN DATEPICKER ================= */
+#ui-datepicker-div.ui-datepicker {
+    width: 300px !important;
+    padding: 14px !important;
+    background: #fff !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18) !important;
+    font-family: 'Open Sans', sans-serif !important;
+    z-index: 99999 !important;      /* above bootstrap modals */
+}
+
+/* Header */
+#ui-datepicker-div .ui-datepicker-header {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 36px 12px !important;
+    background: transparent !important;
+    border: none !important;
+}
+#ui-datepicker-div .ui-datepicker-title {
+    display: flex !important;
+    gap: 6px !important;
+    margin: 0 !important;
+    line-height: normal !important;
+}
+#ui-datepicker-div .ui-datepicker-title select {
+    height: 30px !important;
+    margin: 0 !important;
+    padding: 0 6px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1E293B !important;
+    background: #F1F5F9 !important;
+    border: 1px solid transparent !important;
+    border-radius: 8px !important;
+    outline: none !important;
+    cursor: pointer;
+}
+#ui-datepicker-div .ui-datepicker-title select:hover {
+    background: #E2E8F0 !important;
+}
+#ui-datepicker-div .ui-datepicker-title select.ui-datepicker-month { width: 62% !important; }
+#ui-datepicker-div .ui-datepicker-title select.ui-datepicker-year  { width: 38% !important; }
+
+/* Prev / Next arrows */
+#ui-datepicker-div .ui-datepicker-prev,
+#ui-datepicker-div .ui-datepicker-next {
+    position: absolute !important;
+    top: 2px !important;
+    width: 30px !important;
+    height: 30px !important;
+    border: none !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    cursor: pointer;
+    transition: background .15s;
+}
+#ui-datepicker-div .ui-datepicker-prev { left: 0 !important; }
+#ui-datepicker-div .ui-datepicker-next { right: 0 !important; }
+#ui-datepicker-div .ui-datepicker-prev:hover,
+#ui-datepicker-div .ui-datepicker-next:hover { background: #F1F5F9 !important; }
+#ui-datepicker-div .ui-datepicker-prev span,
+#ui-datepicker-div .ui-datepicker-next span { display: none !important; }
+#ui-datepicker-div .ui-datepicker-prev::after,
+#ui-datepicker-div .ui-datepicker-next::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    border-color: #475569;
+    border-style: solid;
+}
+#ui-datepicker-div .ui-datepicker-prev::after {
+    border-width: 0 0 2px 2px;
+    transform: translate(-30%, -50%) rotate(45deg);
+}
+#ui-datepicker-div .ui-datepicker-next::after {
+    border-width: 2px 2px 0 0;
+    transform: translate(-70%, -50%) rotate(45deg);
+}
+#ui-datepicker-div .ui-datepicker-prev.ui-state-disabled,
+#ui-datepicker-div .ui-datepicker-next.ui-state-disabled { opacity: .3; cursor: default; }
+
+/* Calendar grid */
+#ui-datepicker-div table.ui-datepicker-calendar {
+    width: 100% !important;
+    margin: 0 !important;
+    border-collapse: separate !important;
+    border-spacing: 2px !important;
+}
+#ui-datepicker-div .ui-datepicker-calendar th {
+    padding: 6px 0 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    color: #94A3B8 !important;
+    text-align: center !important;
+    border: none !important;
+    background: transparent !important;
+}
+#ui-datepicker-div .ui-datepicker-calendar th span { font-weight: 600 !important; }
+#ui-datepicker-div .ui-datepicker-calendar td {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Day cells */
+#ui-datepicker-div .ui-datepicker-calendar td a,
+#ui-datepicker-div .ui-datepicker-calendar td span {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #1E293B !important;
+    text-align: center !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 50% !important;
+    transition: background .15s, color .15s;
+}
+#ui-datepicker-div .ui-datepicker-calendar td a:hover {
+    background: #E6FAF6 !important;
+    color: #0F766E !important;
+}
+/* faded days of other months */
+#ui-datepicker-div .ui-datepicker-other-month a,
+#ui-datepicker-div .ui-datepicker-other-month span { color: #CBD5E1 !important; }
+/* today */
+#ui-datepicker-div .ui-datepicker-today a,
+#ui-datepicker-div td a.ui-state-highlight {
+    background: #F1F5F9 !important;
+    color: #0F766E !important;
+    font-weight: 700 !important;
+    box-shadow: inset 0 0 0 1.5px #47D6B6;
+}
+/* selected day */
+#ui-datepicker-div td a.ui-state-active,
+#ui-datepicker-div .ui-datepicker-current-day a {
+    background: #47D6B6 !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 6px rgba(71, 214, 182, .45);
+}
+/* disabled days */
+#ui-datepicker-div .ui-state-disabled span { color: #E2E8F0 !important; }
+
+/* Optional button panel (only visible if showButtonPanel is enabled) */
+#ui-datepicker-div .ui-datepicker-buttonpane {
+    margin: 8px 0 0 !important;
+    padding: 8px 0 0 !important;
+    border: none !important;
+    border-top: 1px solid #F1F5F9 !important;
+    background: transparent !important;
+}
+#ui-datepicker-div .ui-datepicker-buttonpane button {
+    padding: 5px 12px !important;
+    font-size: 12px !important;
+    color: #475569 !important;
+    background: #F1F5F9 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    opacity: 1 !important;
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+    #ui-datepicker-div.ui-datepicker { width: 280px !important; padding: 10px !important; }
+    #ui-datepicker-div .ui-datepicker-calendar td a,
+    #ui-datepicker-div .ui-datepicker-calendar td span { width: 32px !important; height: 32px !important; }
+}
+/* ===== Month / Year selects (modern) ===== */
+#ui-datepicker-div .ui-datepicker-title {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    line-height: normal !important;
+}
+
+#ui-datepicker-div .ui-datepicker-title select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+
+    height: 34px !important;
+    margin: 0 !important;
+    padding: 0 28px 0 12px !important;
+
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1E293B !important;
+
+    background-color: #F8FAFC !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 10px center !important;
+    background-size: 12px !important;
+
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 999px !important;
+    outline: none !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: background-color .15s, border-color .15s, box-shadow .15s;
+
+    /* keep long month names from overflowing */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#ui-datepicker-div .ui-datepicker-title select:hover {
+    background-color: #E6FAF6 !important;
+    border-color: #47D6B6 !important;
+    color: #0F766E !important;
+}
+
+#ui-datepicker-div .ui-datepicker-title select:focus {
+    background-color: #fff !important;
+    border-color: #47D6B6 !important;
+    box-shadow: 0 0 0 3px rgba(71, 214, 182, .25) !important;
+}
+
+#ui-datepicker-div .ui-datepicker-title select.ui-datepicker-month { flex: 1 1 58% !important; width: auto !important; }
+#ui-datepicker-div .ui-datepicker-title select.ui-datepicker-year  { flex: 1 1 42% !important; width: auto !important; }
+
+/* dropdown list items (applies in Chrome/Edge/Firefox on Windows & Linux) */
+#ui-datepicker-div .ui-datepicker-title select option {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1E293B;
+    background: #fff;
+    padding: 6px 10px;
+}
+
+@media (max-width: 480px) {
+    #ui-datepicker-div.ui-datepicker { width: 280px !important; padding: 10px !important; }
+    #ui-datepicker-div .ui-datepicker-calendar td a,
+    #ui-datepicker-div .ui-datepicker-calendar td span { width: 32px !important; height: 32px !important; }
+    #ui-datepicker-div .ui-datepicker-title select { font-size: 16px !important; height: 36px !important; }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .mobile_badge > .row {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        gap: 8px;
+        margin: 0 !important;
+        padding-bottom: 15px !important;
+    }
+
+    .mobile_badge > .row > .col-6 {
+        flex: 1 1 0 !important;
+        width: 0 !important;
+        max-width: none !important;
+        padding: 0 !important;
+        min-width: 0 !important;
+    }
+
+    .mobile_badge .csv_btn,
+    .mobile_badge .add_ts_order_btn,
+    .mobile_badge .add_order_btn {
+        width: 100% !important;
+        height: 42px !important;
+        padding: 0 4px !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        font-size: 12px;
+        box-sizing: border-box;
+    }
+
+    /* Empty second column hide කරන්න */
+    .mobile_badge > .row:first-child > .col-6:last-child {
+        display: none !important;
+    }
+
+    /* Buttons තුනම එක row එකකට ගන්න */
+    .mobile_badge > .row {
+        display: flex !important;
+    }
+
+    .mobile_badge > .row:nth-child(2) {
+        display: contents !important;
+    }
+
+    .mobile_badge > .row:nth-child(2) > .col-6 {
+        display: contents !important;
+    }
+
+    .mobile_badge {
+        display: flex !important;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    .mobile_badge > .row:first-child {
+        display: contents !important;
+    }
+}
+
+/* Desktop - existing layout එකට බලපෑමක් නැහැ */
+@media (max-width: 767.98px) {
+
+    .order-action-buttons {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        gap: 8px;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 0 15px 0 !important;
+        box-sizing: border-box;
+    }
+
+    .order-action-buttons .order-action-item {
+        flex: 1 1 0 !important;
+        width: 0;
+        min-width: 0;
+        display: flex;
+    }
+
+    .order-action-buttons .order-action-item button {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 42px !important;
+        padding: 0 3px !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        font-size: 11px !important;
+        box-sizing: border-box;
+    }
+
+    .order-action-buttons .order-action-item button i {
+        font-size: 12px !important;
+        flex-shrink: 0;
+    }
+    .order-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+}
+
+.order-id-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.order-id-section .edit-order {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.order-flag {
+    display: flex;
+    align-items: center;
+}
+
+.status-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.status-name,
+.payment-status {
+    display: flex;
+    align-items: center;
+}
+
+.organization-name {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    overflow-wrap: anywhere;
+}
+
+.organization-name a {
+    display: block;
+    width: 100%;
+}
+.fa-star {
+color: #ededed !important;
+}
+}
+
+@media (max-width: 768px) {
+
+    .organization-name {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .organization-name a {
+        display: block !important;
+        width: 100% !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+    }
+
+}
+
 </style>
 
 <div class="container-fluid mb-5">
@@ -962,7 +1413,7 @@
     @endsection
 
     @section('back-btn-Mobile')
-        <a href="{{ route('home') }}" class="home-btn-color-mobile" title="Back to home">< BACK TO HOME</a>
+        <a href="{{ route('home') }}" class="home-btn-color-mobile" title="Back to home">< BACK</a>
     @endsection
 
     <div class="mb-5">
@@ -1156,37 +1607,41 @@
             </table>
         </div>
 
-        <div class="mobile_badge" style="padding-bottom: unset;">
-            <div class="row" style="margin: unset; padding-bottom: 15px;">
-                <div class="col-6" style="padding-left: unset;">
-                    @can('add orders')
-                        <button class="btn-grey-text csv_btn"  style="width: 100%;" href="#" id="export_csv" data-href="{{ route('orders.export_csv') }}" onclick="exportTasks(event.target);"  title="Export CSV">
-                            <i class="fa-solid fa-download"></i>&nbsp;&nbsp;CSV Export
-                        </button>
-                    @endcan
-                </div>
-                <div class="col-6">
+        <div class="mobile_badge order-action-buttons" style="padding-bottom: unset;">
 
+            @can('view team store orders')
+                <div class="order-action-item">
+                    <button class="btn-green-outlined add_ts_order_btn"
+                            data-toggle="modal"
+                            data-target="#import_modal"
+                            title="Import Team Store Orders">
+                        <i class="fa fa-plus"></i>&nbsp;&nbsp; TS ORDER
+                    </button>
                 </div>
+            @endcan
 
-            </div>
-            <div class="row" style="margin: unset; padding-bottom: 15px;">
-                <div class="col-6" style="padding-left: unset;">
-                    @can('view team store orders')
-                        <button class="btn-green-outlined add_ts_order_btn" style="" href="#" data-toggle="modal" data-target="#import_modal" title="Import Team Store Orders">
-                            <i class="fa fa-plus"></i>&nbsp;&nbsp;ADD TS ORDER
-                        </button>
-                    @endcan
+            @can('create order')
+                <div class="order-action-item">
+                    <button class="btn-green-filled add_order_btn"
+                            onclick="addNewOrder()"
+                            title="Add New Orders">
+                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp; ORDER
+                    </button>
                 </div>
-                <div class="col-6" style="padding-right: unset;">
-                    @can('create order')
-                        <button class="btn-green-filled add_order_btn" style="" onclick="addNewOrder()" title="Add New Orders">
-                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;ADD ORDER
-                        </button>
-                    @endcan
-                </div>
+            @endcan
 
-            </div>
+            @can('add orders')
+                <div class="order-action-item">
+                    <button class="btn-grey-text csv_btn"
+                            id="export_csv"
+                            data-href="{{ route('orders.export_csv') }}"
+                            onclick="exportTasks(event.target);"
+                            title="Export CSV">
+                        <i class="fa-solid fa-download"></i>&nbsp;&nbsp;CSV
+                    </button>
+                </div>
+            @endcan
+            
         </div>
 
         <div class="mobile_filters row  mt-2 mb-2 align-items-center filter-row-mobile">
@@ -2000,6 +2455,47 @@
 </div>
 
 <script>
+    $.datepicker.setDefaults({
+        changeMonth: true,
+        changeYear: true,
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        yearRange: 'c-10:c+10',
+        prevText: '',
+        nextText: ''
+    });
+
+    // also update any pickers that were already initialized
+    $(function () {
+        $('.hasDatepicker').datepicker('option', {
+            changeMonth: true,
+            changeYear: true,
+            yearRange: 'c-10:c+10'
+        });
+    });
+
+    // Calendar only: no keyboard on tap
+    $(function () {
+        function lockDatepickerInputs() {
+            $('.hasDatepicker, .summary-datepicker, .modal-datepicker, .item-datepicker')
+                .attr('readonly', true)
+                .attr('inputmode', 'none')
+                .css('background-color', function () {
+                    // keep the input looking normal (readonly can turn it grey)
+                    return $(this).css('background-color');
+                });
+        }
+
+        lockDatepickerInputs();
+
+        // inputs inside modals / created later
+        $(document).on('focus click', '.hasDatepicker, .summary-datepicker, .modal-datepicker, .item-datepicker', function () {
+            $(this).attr('readonly', true).attr('inputmode', 'none');
+        });
+        $('.modal').on('shown.bs.modal', lockDatepickerInputs);
+    });
+</script>
+<script>
 $('.summary-datepicker').datepicker();
     function addNewOrder() {
       window.location.href = '{{ route('new_orders') }}'; // Replace with your desired URL or route
@@ -2659,9 +3155,9 @@ $('.summary-datepicker').datepicker();
 
             let organizationName = item.organization_details?.organization_name ?? '';
 
-            if(organizationName.length > 20){
-                organizationName = organizationName.substring(0, 20) + '...';
-            }
+            // if(organizationName.length > 20){
+            //     organizationName = organizationName.substring(0, 20) + '...';
+            // }
 
             let salesRep = item.user_details?.name ?? '';
 
@@ -2693,39 +3189,47 @@ $('.summary-datepicker').datepicker();
             <div class="card mb-4 order-card" data-id="${item.id}">
                 <div class="card-body">
 
-                    <div class="d-flex align-items-center w-100 order_name_section" style="gap: 13px;">
+                    <div class="order_name_section">
 
-                        <!-- Flag -->
-                        <div class="pe-2">
-                            ${color_picker}
-                        </div>
+                        <div class="order-top-row">
 
-                        <!-- Order No + Organization -->
-                        <div class="flex-grow-1">
-                            <div class="fw-bold">
-                                <a href="#" class="edit-order" data-value="${item.id}">
+                            <!-- Left: Order No + Star -->
+                            <div class="order-id-section">
+
+                                <a href="#"
+                                class="edit-order"
+                                data-value="${item.id}">
                                     #${item.order_no}
                                 </a>
+
+                                <div class="order-flag">
+                                    ${color_picker}
+                                </div>
+
                             </div>
 
-                            <div class="organization-name">
-                                <a href="{{url('organizations/info/${item.organization_details.id}')}}"
-                                style="color: black; text-decoration: none;"
-                                target="_blank">
-                                    ${organizationName}
-                                </a>
+                            <!-- Right: Status + Payment in same row -->
+                            <div class="status-section">
+
+                                <div class="status-name">
+                                    ${orderStatusCard}
+                                </div>
+
+                                <div class="payment-status">
+                                    ${paymentStatus}
+                                </div>
+
                             </div>
+
                         </div>
 
-                        <!-- Status + Payment -->
-                        <div class="text-end status-section">
-                            <div class="status-name">
-                                ${orderStatusCard}
-                            </div>
-
-                            <div class="payment-status">
-                                ${paymentStatus}
-                            </div>
+                        <!-- Organization Name: Full Width -->
+                        <div class="organization-name">
+                            <a href="{{ url('organizations/info') }}/${item.organization_details.id}"
+                            style="color: black; text-decoration: none;"
+                            target="_blank">
+                                ${organizationName}
+                            </a>
                         </div>
 
                     </div>

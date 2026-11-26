@@ -2128,6 +2128,65 @@ body {
     }
 }
 
+td.numseq-disabled-cell {
+    cursor: not-allowed;
+}
+td.numseq-disabled-cell input.numseq:disabled {
+    pointer-events: none;
+}
+@keyframes numseqBlinkHighlight {
+    0%, 100% {
+        background-color: #ffffff;
+        border-color: #cad1d7;
+        box-shadow: none;
+    }
+    50% {
+        background-color: #ffe082;
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.45);
+    }
+}
+input.numseq.numseq-blink {
+    animation: numseqBlinkHighlight 0.55s ease-in-out 3;
+    position: relative;
+    z-index: 2;
+}
+.numseq-guide-tooltip {
+    position: fixed;
+    z-index: 9999;
+    background-color: #1f2937;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+}
+.numseq-guide-tooltip.show {
+    opacity: 1;
+}
+.numseq-guide-tooltip::after {
+    content: "";
+    position: absolute;
+    left: var(--arrow-left, 50%);
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+}
+.numseq-guide-tooltip.placement-top::after {
+    top: 100%;
+    border-color: #1f2937 transparent transparent transparent;
+}
+.numseq-guide-tooltip.placement-bottom::after {
+    bottom: 100%;
+    border-color: transparent transparent #1f2937 transparent;
+}
+
 </style>
 <head>
     <link type="text/css" rel="stylesheet" href="{{ asset('argon') }}/file_inputs/css/fileinput.css">
@@ -2157,12 +2216,12 @@ body {
             @endif
         @endif --}}
         @if ($orderTrait->isInventoryOrder($order->organization_id))
-            <a href="{{route('inventory_orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders"> < BACK TO ORDERS</a>
+            <a href="{{route('inventory_orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders"> < BACK</a>
         @else
             @if($order->plorder == 1)
-                <a href="{{route('plorders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders"> < BACK TO ORDERS</a>
+                <a href="{{route('plorders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders"> < BACK</a>
             @else
-                <a href="{{route('orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders"> < BACK TO ORDERS</a>
+                <a href="{{route('orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders"> < BACK</a>
             @endif
         @endif
     @endsection
@@ -4929,6 +4988,8 @@ document.addEventListener('change', function (e) {
                 return $(this).val() != "" && $(this);
             }).addClass("counted");
 
+            updateAllNumseqDisabledStates();
+
             calculateTOTALalQtys();
             calculateTOTALalQtysDefault();
 
@@ -4940,6 +5001,12 @@ document.addEventListener('change', function (e) {
                 }else if($(this).val() == ''){
                     $(this).removeClass("counted");
                 }
+
+                var detailId = $(this).attr('data-orderItemDetailId');
+                if (detailId) {
+                    updateNumseqDisabledState(detailId);
+                }
+                hideNumseqGuideTooltip();
 
                 if($(this).closest('td').find('.below').length == 0 && $(this).closest('td').find('.below1').length == 0 && $(this).closest('td').find('.below2').length == 0 && $(this).closest('td').find('.below3').length == 0 && $(this).closest('td').find('.below4').length == 0) {
                     var countedThis = $(this).closest('tr').find('.counted').length; // row 1
@@ -5003,11 +5070,162 @@ document.addEventListener('change', function (e) {
                 calculateTOTALalQtys();
             });
 
+            $("body").on('change', '.numseq', function () {
+                var detailId = $(this).attr('data-orderItemDetailId');
+                if (detailId) {
+                    updateNumseqDisabledState(detailId);
+                }
+                hideNumseqGuideTooltip();
+            });
+
+            // Highlight and guide user to the related enabled input when clicking a disabled numseq cell
+            $("body").on('click', 'td.numseq-disabled-cell', function () {
+                var $disabledInput = $(this).find('input.numseq:disabled');
+                if (!$disabledInput.length) {
+                    return;
+                }
+
+                var detailId = $disabledInput.attr('data-orderItemDetailId');
+                if (!detailId) {
+                    return;
+                }
+
+                var $inputs = $('input.numseq.numseqVal' + detailId);
+                var clickedIndex = $inputs.index($disabledInput);
+                var $targetInput = null;
+
+                // Find the nearest preceding enabled empty input in this sequence
+                for (var i = clickedIndex - 1; i >= 0; i--) {
+                    var $candidate = $inputs.eq(i);
+                    if (!$candidate.prop('disabled') && $.trim($candidate.val()) === '') {
+                        $targetInput = $candidate;
+                        break;
+                    }
+                }
+
+                // Fallback: first enabled empty input in this sequence
+                if (!$targetInput) {
+                    $inputs.each(function () {
+                        if (!$(this).prop('disabled') && $.trim($(this).val()) === '') {
+                            $targetInput = $(this);
+                            return false;
+                        }
+                    });
+                }
+
+                if ($targetInput && $targetInput.length) {
+                    highlightRequiredNumseqInput($targetInput);
+                }
+            });
+
+            $(window).on('scroll resize', function () {
+                hideNumseqGuideTooltip();
+            });
+
         //calculate TOTALal qty When Adding Blanks
             $("body").on('input', '.blankseq', function () {
                 calculateTOTALalQtys();
             });
         });
+
+        var numseqBlinkTimer = null;
+        var numseqTooltipTimer = null;
+
+        function hideNumseqGuideTooltip() {
+            if (numseqTooltipTimer) {
+                clearTimeout(numseqTooltipTimer);
+                numseqTooltipTimer = null;
+            }
+            var $tooltip = $('#numseq-guide-tooltip');
+            if ($tooltip.length) {
+                $tooltip.removeClass('show');
+            }
+        }
+
+        function showNumseqGuideTooltip($targetInput, message) {
+            var $tooltip = $('#numseq-guide-tooltip');
+            if (!$tooltip.length) {
+                $tooltip = $('<div id="numseq-guide-tooltip" class="numseq-guide-tooltip" role="tooltip"></div>').appendTo('body');
+            }
+
+            if (numseqTooltipTimer) {
+                clearTimeout(numseqTooltipTimer);
+            }
+
+            $tooltip.text(message).removeClass('placement-top placement-bottom show');
+
+            var rect = $targetInput[0].getBoundingClientRect();
+            var tooltipWidth = $tooltip.outerWidth();
+            var tooltipHeight = $tooltip.outerHeight();
+            var inputCenterX = rect.left + (rect.width / 2);
+
+            var left = inputCenterX - (tooltipWidth / 2);
+            left = Math.max(8, Math.min(left, window.innerWidth - tooltipWidth - 8));
+
+            var top = rect.top - tooltipHeight - 10;
+            var placementClass = 'placement-top';
+            if (top < 8) {
+                top = rect.bottom + 10;
+                placementClass = 'placement-bottom';
+            }
+
+            var arrowLeft = Math.max(10, Math.min(inputCenterX - left, tooltipWidth - 10));
+            $tooltip
+                .css({
+                    left: left + 'px',
+                    top: top + 'px',
+                    '--arrow-left': arrowLeft + 'px'
+                })
+                .addClass(placementClass + ' show');
+
+            numseqTooltipTimer = setTimeout(function () {
+                hideNumseqGuideTooltip();
+            }, 2600);
+        }
+
+        function highlightRequiredNumseqInput($targetInput) {
+            if (numseqBlinkTimer) {
+                clearTimeout(numseqBlinkTimer);
+                numseqBlinkTimer = null;
+            }
+
+            $('input.numseq.numseq-blink').removeClass('numseq-blink');
+
+            $targetInput.focus();
+
+            // Force reflow so rapid consecutive clicks cleanly restart the blink animation
+            void $targetInput[0].offsetWidth;
+            $targetInput.addClass('numseq-blink');
+
+            showNumseqGuideTooltip($targetInput, 'Please fill this field first');
+
+            numseqBlinkTimer = setTimeout(function () {
+                $targetInput.removeClass('numseq-blink');
+                numseqBlinkTimer = null;
+            }, 1700);
+        }
+
+        function updateNumseqDisabledState(orderItemDetailId) {
+            var $inputs = $('input.numseq.numseqVal' + orderItemDetailId);
+            $inputs.each(function (index) {
+                var hasValue = $.trim($(this).val()) !== '';
+                var prevHasValue = index > 0 && $.trim($inputs.eq(index - 1).val()) !== '';
+                var shouldEnable = (index === 0) || hasValue || prevHasValue;
+                $(this).prop('disabled', !shouldEnable);
+                $(this).closest('td').toggleClass('numseq-disabled-cell', !shouldEnable);
+            });
+        }
+
+        function updateAllNumseqDisabledStates() {
+            var processedIds = {};
+            $('body input.numseq').each(function () {
+                var detailId = $(this).attr('data-orderItemDetailId');
+                if (detailId && !processedIds[detailId]) {
+                    processedIds[detailId] = true;
+                    updateNumseqDisabledState(detailId);
+                }
+            });
+        }
         getFiles();
         function calculateTOTALalQtys() {
 
@@ -5124,6 +5342,7 @@ document.addEventListener('change', function (e) {
             var elementID = $(this).attr("data-clickedItem");
 
             $.unique(numberSequencesFilled).forEach(clearTextBoxes);
+            updateAllNumseqDisabledStates();
 
             $(".TOTALblanks").each(function() {
                 $(this).val($( this ).attr("data-alradysaved"));
@@ -5183,7 +5402,10 @@ document.addEventListener('change', function (e) {
 
             $('.notify_changes').val($.unique(numberSequencesFilled));
 
+            var $disabledNumseqs = $("#formItem"+ItemForm).find('input.numseq:disabled');
+            $disabledNumseqs.prop('disabled', false);
             var dataString = $("#formItem"+ItemForm).serialize();
+            $disabledNumseqs.prop('disabled', true);
             dataString = "saveLeave=yes&"+dataString;
             $.ajax({
                 type: "POST",

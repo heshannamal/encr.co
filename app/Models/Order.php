@@ -10,6 +10,23 @@ class Order extends Model implements Auditable
 {
     use AuditableTrait;
 
+    protected static function booted()
+    {
+        static::saving(function ($order) {
+            if (!$order->exists || $order->isDirty('organization_id')) {
+                $order->syncOrganizationSalesTaxRate();
+            }
+        });
+    }
+
+    public function syncOrganizationSalesTaxRate(): void
+    {
+        $organization = Organization::query()->find($this->organization_id);
+        $this->sales_tax_rate = $organization && $organization->sales_tax_active == 1
+            ? $organization->sales_tax
+            : null;
+    }
+
     public function orderItems(){
         // return $this->hasMany('App\Models\OrderItem');
         return $this->hasMany('App\Models\OrderItem')->ordered();

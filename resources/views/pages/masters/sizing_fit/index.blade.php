@@ -107,6 +107,591 @@
     .color_gray_text {
         color: rgb(145, 145, 145);
     }
+    .mobile-tabs { display: none; }
+
+    /* MOBILE RESPONSIVE STYLES (max-width: 768px) */
+    @media (max-width: 768px) {
+
+        /* body {
+            background-color: #f8fafc !important;
+        } */
+
+        /* -- Page Container -- */
+        /* .content-position {
+            position: relative !important;
+            top: 0 !important;
+            padding: 10px 14px 36px 14px !important;
+            margin-bottom: 0 !important;
+        } */
+
+        /* .col-md-12 {
+            padding: 0 !important;
+        } */
+
+        /* -- Back Arrow Button -- */
+        /* .home-btn-color {
+            font-size: 0 !important;
+            color: transparent !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 32px !important;
+            height: 32px !important;
+            background-color: #f1f5f9 !important;
+            border-radius: 50% !important;
+            text-decoration: none !important;
+            position: absolute !important;
+            left: 16px !important;
+            top: 14px !important;
+            z-index: 20 !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+        } */
+
+        /* .home-btn-color::before {
+            content: "\f053" !important;
+            font-family: 'Font Awesome 5 Free', 'FontAwesome' !important;
+            font-weight: 900 !important;
+            font-size: 11px !important;
+            color: #94a3b8 !important;
+        } */
+
+        /* -- Header title -- */
+        /* .header1 {
+            display: block !important;
+            width: 100% !important;
+            text-align: center !important;
+            margin: 0 !important;
+            padding: 6px 0 10px 0 !important;
+        } */
+
+        /* .headder_size,
+        #header span {
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: #64748b !important;
+            letter-spacing: 0.08em !important;
+            text-transform: uppercase !important;
+        } */
+
+        /* -- Top Body Diagram Image Area -- */
+        .top_image_div {
+            position: relative !important;
+            border-bottom: none !important;
+            background: #ffffff !important;
+            border-radius: 14px !important;
+            padding: 0 !important;
+            margin: 0 0 14px 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            border: 1px solid #e2e8f0 !important;
+            overflow: hidden !important;
+        }
+
+        .top_image_div img {
+            width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            object-fit: contain !important;
+            order: 2 !important;
+        }
+
+        /* Export button (visual only - generated via CSS) */
+        /* .top_image_div::before {
+            content: "\f019\00a0\00a0 Export" !important;
+            font-family: 'Font Awesome 5 Free', 'Open Sans', sans-serif !important;
+            font-weight: 600 !important;
+            order: 1 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: calc(100% - 24px) !important;
+            height: 42px !important;
+            margin: 12px !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            background-color: #ffffff !important;
+            color: #64748b !important;
+            font-size: 13px !important;
+            cursor: pointer !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
+            box-sizing: border-box !important;
+        } */
+
+        /* Zoom icon circle at top-right of diagram */
+        /* .top_image_div::after {
+            content: "\f00e" !important;
+            font-family: 'Font Awesome 5 Free', 'FontAwesome' !important;
+            font-weight: 900 !important;
+            position: absolute !important;
+            top: 72px !important;
+            right: 14px !important;
+            width: 30px !important;
+            height: 30px !important;
+            background-color: #334155 !important;
+            color: #ffffff !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 12px !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.18) !important;
+            z-index: 5 !important;
+            pointer-events: none !important;
+        } */
+
+        /* -- Section header rows (Men's Sizes, Boy's Youth Sizes, etc.) -- */
+        .row:has(> .top_topic) {
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            display: block !important;
+            position: relative !important;
+        }
+
+        /* Hide the grey "SOCKS" badge (desktop overlap layout) */
+        .top_topic_red {
+            display: none !important;
+        }
+
+        .top_topic,
+        div.top_topic {
+            position: static !important;
+            top: auto !important;
+            margin: 0 !important;
+            background-color: #222629 !important;
+            border-radius: 14px 14px 0 0 !important;
+            padding: 15px 18px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+            text-align: left !important;
+            cursor: pointer !important;
+            box-shadow: none !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Socks_topic (the second top_topic in the row for socks) */
+        .socks_topic {
+            position: static !important;
+            top: auto !important;
+            width: 100% !important;
+            margin: 0 !important;
+        }
+
+        /* Prefix socks header with "Socks — " to match design */
+        .socks_topic .top_topic_text::before {
+            content: "Socks \2014 " !important;
+        }
+
+        .top_topic_text {
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            color: #ffffff !important;
+            letter-spacing: 0.01em !important;
+            margin: 0 !important;
+            text-transform: capitalize !important;
+        }
+
+        /* Chevron icon on accordion headers */
+        .top_topic::after {
+            content: "\f078" !important;
+            font-family: 'Font Awesome 5 Free', 'FontAwesome' !important;
+            font-weight: 900 !important;
+            font-size: 12px !important;
+            color: #ffffff !important;
+            opacity: 0.7 !important;
+        }
+
+        /* Hide the desktop SAVE button in the dark header row */
+        /* .save_button {
+            display: none !important;
+        } */
+        
+        .order_sammary_table.card::after {
+            display: none !important;
+        }
+
+        .order_sammary_table.card .save_button {
+            position: absolute !important;
+            top: auto !important;
+            bottom: 14px !important;
+            right: 14px !important;
+            width: calc(50% - 20px) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .order_sammary_table.card .save_button button {
+            width: 100% !important;
+            height: 48px !important;
+            border: none !important;
+            border-radius: 10px !important;
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+            font-size: 0 !important;
+            padding: 0 !important;
+            box-shadow: 0 2px 8px rgba(16,185,129,0.25) !important;
+        }
+
+        .order_sammary_table.card .save_button button::after {
+            content: "Save Changes";
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* -- Open Accordion Card (table container) -- */
+        .order_sammary_table.card {
+            background-color: #ffffff !important;
+            border-radius: 0 0 14px 14px !important;
+            border: 1px solid #e2e8f0 !important;
+            border-top: none !important;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.05) !important;
+            margin: 0 0 10px 0 !important;
+            padding: 14px 14px 76px 14px !important;
+            overflow-x: hidden !important;
+            overflow-y: visible !important;
+            display: flex !important;
+            flex-direction: column !important;
+            position: relative !important;
+        }
+
+        #global_check_icon {
+            display: none !important;
+        }
+
+        /* -- Size Pill Row (XS, S, M, L, XL, XXL, 3XL) -- */
+        table.table,
+        table.table#order_sammary_table {
+            display: block !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            border-collapse: collapse !important;
+        }
+
+        table.table thead {
+            display: block !important;
+            width: 100% !important;
+            background: transparent !important;
+            border: none !important;
+            margin-bottom: 16px !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+        }
+
+        table.table thead::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        table.table thead tr {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 7px !important;
+            width: max-content !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 2px 0 !important;
+        }
+
+        /* Hide the first empty th placeholder */
+        table.table thead tr th:first-child {
+            display: none !important;
+        }
+
+        /* Size pill styling */
+        table.table thead tr th.table_header_text {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            height: 34px !important;
+            min-width: 36px !important;
+            padding: 0 12px !important;
+            border: 1.5px solid transparent !important;
+            background-color: #e2e8f0 !important;
+            border-radius: 999px !important;
+            color: #64748b !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            cursor: pointer !important;
+            box-sizing: border-box !important;
+            flex: 0 0 auto !important;
+        }
+
+        /* First active pill -- teal ring + teal text */
+        /* table.table thead tr th.table_header_text:nth-child(2) {
+            background-color: #f0fdf9 !important;
+            color: #0d9488 !important;
+            border: 1.5px solid #0d9488 !important;
+        } */
+
+        table.table thead tr th.table_header_text.active {
+            background-color: #f0fdf9 !important;
+            color: #0d9488 !important;
+            border: 1.5px solid #0d9488 !important;
+        }
+
+        table.table thead tr th.table_header_text .table_header_span {
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            color: inherit !important;
+        }
+
+        /* -- Table Body: stacked form-field rows -- */
+        table.table tbody {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 14px !important;
+            width: 100% !important;
+        }
+
+        table.table tbody tr {
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100% !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            background: transparent !important;
+        }
+
+        /* Row header label (HEIGHT, WEIGHT, etc.) -- small label above inputs */
+        table.table tbody tr th {
+            display: block !important;
+            width: 100% !important;
+            padding: 0 0 6px 0 !important;
+            border: none !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            color: #64748b !important;
+            text-align: left !important;
+            vertical-align: top !important;
+            white-space: nowrap !important;
+            text-transform: capitalize !important;
+        }
+
+        /* Unit suffixes for Men/Women sections */
+        #adult_men_table_body tr:nth-child(2) th::after,
+        #adult_women_table_body tr:nth-child(2) th::after { content: " (lbs)" !important; }
+        #adult_men_table_body tr:nth-child(3) th::after,
+        #adult_women_table_body tr:nth-child(3) th::after { content: " (in)" !important; }
+        #adult_men_table_body tr:nth-child(4) th::after,
+        #adult_women_table_body tr:nth-child(4) th::after { content: " (in)" !important; }
+
+        /* Only show first td (active size column), hide the rest on mobile */
+        table.table tbody tr td {
+            display: none !important;
+            border: none !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+
+        /* table.table tbody tr td:first-of-type {
+            display: block !important;
+            width: 100% !important;
+        } */
+
+        table.table tbody tr td.active-col {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        /* Inner row of inputs + dash */
+        table.table tbody tr td .row {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            gap: 6px !important;
+            flex-wrap: nowrap !important;
+        }
+
+        /* All form inputs in mobile view */
+        table.table tbody tr td input.form-control {
+            flex: 1 1 0 !important;
+            width: auto !important;
+            min-width: 0 !important;
+            height: 48px !important;
+            border-radius: 10px !important;
+            border: 1px solid #e2e8f0 !important;
+            background-color: #f8fafc !important;
+            color: #1e293b !important;
+            font-size: 15px !important;
+            font-weight: 500 !important;
+            text-align: center !important;
+            box-shadow: none !important;
+            outline: none !important;
+            box-sizing: border-box !important;
+            padding: 6px 4px !important;
+            margin: 0 !important;
+        }
+
+        /* Dash separator spans */
+        table.table tbody tr td .row span[style*="padding-top: 8px"] {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 2px !important;
+            color: #94a3b8 !important;
+            font-size: 16px !important;
+            font-weight: 400 !important;
+            flex-shrink: 0 !important;
+        }
+
+        /* Hide unit text spans (', ", lbs) */
+        table.table tbody tr td .row > span:not([style*="padding-top: 8px"]) {
+            display: none !important;
+        }
+
+        /* -- Reset & Save Changes footer buttons area -- */
+        /* Use ::before for Reset and ::after for Save Changes at bottom of card */
+        /* .order_sammary_table.card::before {
+            content: "Reset" !important;
+            position: absolute !important;
+            bottom: 14px !important;
+            left: 14px !important;
+            width: calc(50% - 20px) !important;
+            height: 48px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background-color: #f1f5f9 !important;
+            border-radius: 10px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #334155 !important;
+            box-sizing: border-box !important;
+            pointer-events: none !important;
+            order: 10 !important;
+        } */
+
+        /* .order_sammary_table.card::after {
+            content: "Save Changes" !important;
+            position: absolute !important;
+            bottom: 14px !important;
+            right: 14px !important;
+            width: calc(50% - 20px) !important;
+            height: 48px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background-color: #e2e8f0 !important;
+            border-radius: 10px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #94a3b8 !important;
+            box-sizing: border-box !important;
+            pointer-events: none !important;
+            order: 11 !important;
+        } */
+
+        /* When user changes input, make save changes green (via JS existing class toggle) */
+        .order_sammary_table.card.has-changes::after {
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 8px rgba(16,185,129,0.25) !important;
+        }
+
+        /* Collapsed state */
+        .top_topic.collapsed-section::after {
+            transform: rotate(-90deg) !important;
+        }
+
+        /* .collapsed-section-card {
+            display: none !important;
+        } */
+
+        .order_sammary_table.card.collapsed-section-card {
+            display: none !important;
+        }
+
+        .top_topic::after {
+            transition: transform .2s ease !important;
+        }
+
+        /* Keep header rounded when its card is hidden */
+        .top_topic.collapsed-section {
+            border-radius: 14px !important;
+            margin-bottom: 10px !important;
+        }
+
+        .mobile-tabs {
+            display: flex !important;
+            gap: 10px;
+            overflow-x: auto;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 10px;
+            margin: 0 0 14px 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .mobile-tabs::-webkit-scrollbar { display: none; }
+
+        .mobile-tab {
+            flex: 0 0 auto;
+            height: 40px;
+            padding: 0 26px;
+            border-radius: 999px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 500;
+            outline: none;
+        }
+        .mobile-tab.active {
+            background: #1e2227;
+            border-color: #1e2227;
+            color: #fff;
+        }
+
+        /* top image zoom in */
+        .top_image_div::after {
+            content: "\f00e" !important;
+            font-family: 'Font Awesome 5 Free', 'FontAwesome' !important;
+            font-weight: 900 !important;
+            position: absolute !important;
+            top: 12px !important;
+            right: 12px !important;
+            width: 34px !important;
+            height: 34px !important;
+            background-color: #4b5563 !important;
+            color: #ffffff !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 14px !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.18) !important;
+            /* z-index: 5 !important; */
+            pointer-events: none !important;
+        }
+
+        /* zoomed state: fullscreen image, no new HTML */
+        .top_image_div.zoomed {
+            position: fixed !important;
+            inset: 0 !important;
+            z-index: 99999 !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            background: rgba(0,0,0,0.9) !important;
+            overflow: auto !important;
+            justify-content: center !important;
+        }
+        .top_image_div.zoomed img {
+            width: 200% !important;
+            max-width: none !important;
+        }
+        .top_image_div.zoomed::after {
+            content: "\f00d" !important;
+        }
+    }
 </style>
 
 <div class="container-fluid mb-5 content-position">
@@ -124,6 +709,14 @@
 
         <div class="top_image_div">
             <img src="{{ asset('assets') }}\img\sizingFit\lighter.png" style="width: 100%;" alt="">
+        </div>
+
+        <div class="mobile-tabs">
+            <button type="button" class="mobile-tab active" data-target="0">Men</button>
+            <button type="button" class="mobile-tab" data-target="2">Women</button>
+            <button type="button" class="mobile-tab" data-target="1">Boys</button>
+            <button type="button" class="mobile-tab" data-target="3">Girls</button>
+            <button type="button" class="mobile-tab" data-target="4,5">Socks</button>
         </div>
 
         {{-- Mens Sizes --}}
@@ -1200,6 +1793,7 @@
 
 
     </div>
+</div>
 
 
 <script>
@@ -1815,7 +2409,88 @@
 
     //End save Men Shoe size table data
 
+    // Mobile size pill switching
+    function setActiveSize(table, idx) {
+        table.querySelectorAll('thead th').forEach((th, i) => th.classList.toggle('active', i === idx));
+        table.querySelectorAll('tbody tr').forEach(tr => {
+            Array.from(tr.children).forEach((cell, i) => {
+                if (cell.tagName === 'TD') cell.classList.toggle('active-col', i === idx);
+            });
+        });
+    }
 
+    document.querySelectorAll('table.table').forEach(t => setActiveSize(t, 1));
+
+    document.addEventListener('click', function (e) {
+        const th = e.target.closest('th.table_header_text');
+        if (!th) return;
+        const table = th.closest('table');
+        setActiveSize(table, Array.from(th.parentElement.children).indexOf(th));
+    });
+
+    // Mobile accordion toggle
+    document.addEventListener('click', function (e) {
+        if (window.innerWidth > 768) return;
+        if (e.target.closest('button')) return;
+
+        const header = e.target.closest('.top_topic');
+        if (!header) return;
+
+        const row = header.closest('.row');
+        const card = row.nextElementSibling;
+        if (!card || !card.classList.contains('order_sammary_table')) return;
+
+        header.classList.toggle('collapsed-section');
+        card.classList.toggle('collapsed-section-card');
+    });
+
+    if (window.innerWidth <= 768) {
+        document.querySelectorAll('.top_topic').forEach(h => {
+            h.classList.add('collapsed-section');
+            h.closest('.row').nextElementSibling.classList.add('collapsed-section-card');
+        });
+    }
+
+    if (window.innerWidth <= 768) {
+        document.querySelectorAll('.top_topic').forEach(h => {
+            const row = h.closest('.row');
+            const card = row.nextElementSibling;
+
+            // Move the real save button into the card
+            const saveBtn = row.querySelector('.save_button');
+            if (saveBtn) card.appendChild(saveBtn);
+
+            // Start collapsed
+            h.classList.add('collapsed-section');
+            card.classList.add('collapsed-section-card');
+        });
+    }
+
+    // Mobile top tabs -> open matching accordion
+    function openSection(indexes) {
+        const list = Array.isArray(indexes) ? indexes : [indexes];
+        document.querySelectorAll('.top_topic').forEach((h, idx) => {
+            const card = h.closest('.row').nextElementSibling;
+            const open = list.includes(idx);
+            h.classList.toggle('collapsed-section', !open);
+            card.classList.toggle('collapsed-section-card', !open);
+        });
+    }
+
+    document.querySelectorAll('.mobile-tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+            document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            openSection(this.dataset.target.split(',').map(Number));
+        });
+    });
+
+    if (window.innerWidth <= 768) openSection([0]);
+
+    // top image zoom in
+    document.querySelector('.top_image_div').addEventListener('click', function () {
+        if (window.innerWidth <= 768) this.classList.toggle('zoomed');
+    });
 </script>
 
 @endsection

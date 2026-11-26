@@ -200,7 +200,7 @@
                             <p class="fw-semi-bold">{{number_format(($order->sub_total + $order->artwork - $discountValue),2)}}</p>
                             </div>
                             <div class="d-flex justify-content-between">
-                            <p class="fw-semi-bold">Sales tax fee {{number_format(($order['organizationDetails']->sales_tax), 2)}}% ($) :</p>
+                            <p class="fw-semi-bold">Sales tax fee {{number_format(($order->sales_tax_rate ?? 0), 2)}}% ($) :</p>
                             <p class="fw-semi-bold">{{number_format($sales_tax, 2)}}</p>
                             </div>
                             <div class="d-flex justify-content-between">

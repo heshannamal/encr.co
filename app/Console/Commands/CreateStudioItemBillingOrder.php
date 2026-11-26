@@ -26,6 +26,7 @@ class CreateStudioItemBillingOrder extends Command
      * @var string
      */
     protected $description = 'Command description';
+    protected $inventoryOrgIds;
 
     /**
      * Create a new command instance.
@@ -35,6 +36,7 @@ class CreateStudioItemBillingOrder extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
     }
 
     /**
@@ -51,6 +53,7 @@ class CreateStudioItemBillingOrder extends Command
                                         ->where('is_billed', 0)
                                         ->where('active', 1)
                                         ->where('order_status_id', 4)
+                                        ->whereNotIn('organization_id', $this->inventoryOrgIds)
                                         ->get();
             $orderItemSubTotal = $orderItems->sum('total');
 

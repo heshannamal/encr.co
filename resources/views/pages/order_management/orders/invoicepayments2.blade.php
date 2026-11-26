@@ -169,7 +169,7 @@
                                 <td><h5 class="text-right">{{number_format($order->sub_total, 2)}}</h5></td>
                             </tr>
                             <tr>
-                                <th class="text-left">SALES TAX ($) {{$order->organizationDetails['sales_tax']}}% RATE :</th>
+                                <th class="text-left">SALES TAX ($) {{ $order->sales_tax_rate ?? 0 }}% RATE :</th>
                                 <td><h5 class="text-right">{{number_format($order->sales_tax, 2)}}</h5></td>
                             </tr>
                             <tr>

@@ -25,7 +25,7 @@ class EmailNotificationBuilderService{
     var $smptHost = 'mail.encr.co';
     var $username = 'info@encr.co';
     var $password = 'Encr.co@ec123';
-    public function sendEmailFromTemplate(string $templateId, array $replacements): bool
+    public function sendEmailFromTemplate(string $templateId, array $replacements, array $options = []): bool
     {
         config(['mail.mailers.smtp.transport' => 'smtp']);
         config(['mail.mailers.smtp.host' => $this->smptHost]);
@@ -474,16 +474,17 @@ class EmailNotificationBuilderService{
                             </div>
                         ';
 
-                        \Mail::html($testBody, function ($message) use ($testEmails, $subject) {
+                        \Mail::html($testBody, function ($message) use ($testEmails, $subject, $options) {
                             $message->to($testEmails);
                             $message->subject('[TEST EMAIL] ' . $subject);
+                        $this->applyPdtMailOptions($message, $options);
                         });
 
                         return true;
 
                     } else {
 
-                        \Mail::html($New_body, function ($message) use ($to_new, $cc, $bcc, $subject) {
+                        \Mail::html($New_body, function ($message) use ($to_new, $cc, $bcc, $subject, $options) {
                             $message->to($to_new);
 
                             if (!empty($cc)) {
@@ -495,6 +496,7 @@ class EmailNotificationBuilderService{
                             }
 
                             $message->subject($subject);
+                        $this->applyPdtMailOptions($message, $options);
                         });
 
                         return true;
@@ -545,9 +547,10 @@ class EmailNotificationBuilderService{
 
 
                 try {
-                    \Mail::html($testBody, function ($message) use ($testEmails, $subject) {
+                    \Mail::html($testBody, function ($message) use ($testEmails, $subject, $options) {
                         $message->to($testEmails);
                         $message->subject('[TEST EMAIL] ' . $subject);
+                        $this->applyPdtMailOptions($message, $options);
                     });
 
                     return true;
@@ -558,7 +561,7 @@ class EmailNotificationBuilderService{
 
             } else {
                 try {
-                    \Mail::html($body, function ($message) use ($to, $cc, $bcc, $subject) {
+                    \Mail::html($body, function ($message) use ($to, $cc, $bcc, $subject, $options) {
                         $message->to($to);
 
                         if (!empty($cc)) {
@@ -568,6 +571,7 @@ class EmailNotificationBuilderService{
                             $message->bcc($bcc);
                         }
                         $message->subject($subject);
+                        $this->applyPdtMailOptions($message, $options);
                     });
 
                     return true;
@@ -576,6 +580,16 @@ class EmailNotificationBuilderService{
                     return false;
                 }
             }
+        }
+    }
+
+    protected function applyPdtMailOptions($message, array $options): void
+    {
+        if (!empty($options['reply_to'])) {
+            $message->replyTo($options['reply_to'], $options['reply_name'] ?? null);
+        }
+        foreach ($options['attachments'] ?? [] as $attachment) {
+            $message->attachData($attachment['data'], $attachment['name'], ['mime' => $attachment['mime']]);
         }
     }
 

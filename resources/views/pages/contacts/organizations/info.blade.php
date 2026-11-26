@@ -4024,6 +4024,46 @@ button#focus_button:focus, button#history_button:focus{
         box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
         padding: 20px;
     }
+    .sample-request-card {
+        padding: 0;
+        border-radius: 10px;
+        border-left: 4px solid #e9bc53;
+        overflow: hidden;
+        transition: box-shadow .18s, border-color .18s;
+    }
+    .sample-request-card.is-delivered { border-left-color: #36c9a8; }
+    .sample-request-card:hover { box-shadow: 0 5px 18px rgba(31, 54, 65, .09); }
+    .sample-request-toggle {
+        display: grid;
+        grid-template-columns: minmax(210px, 1.3fr) minmax(145px, 1fr) minmax(230px, 1.2fr) auto 32px;
+        align-items: center;
+        gap: 24px;
+        width: 100%;
+        padding: 22px 24px;
+        border: 0;
+        background: #fff;
+        text-align: left;
+        color: #344054;
+        cursor: pointer;
+        transition: background .18s;
+    }
+    .sample-request-toggle:hover, .sample-request-toggle[aria-expanded="true"] { background: #f7fcfa; }
+    .sample-request-toggle:focus-visible, .sample-request-close:focus-visible { outline: 2px solid #24b99a; outline-offset: -3px; }
+    .sample-request-identity { display: flex; align-items: center; gap: 12px; }
+    .sample-request-icon { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 10px; background: #edf9f5; color: #20a88b; font-size: 17px; flex-shrink: 0; }
+    .sample-request-label { display: block; color: #9099a6; font-size: 10px; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 5px; }
+    .sample-request-counts { display: flex; flex-wrap: wrap; gap: 8px; }
+    .sample-request-counts span { padding: 6px 10px; border-radius: 6px; background: #f3f5f8; font-size: 12px; }
+    .sample-request-counts i { color: #82909e; margin-right: 5px; }
+    .sample-request-chevron { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: #f1f5f4; color: #60766d; }
+    .sample-request-header-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .sample-request-close { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; padding: 0; border: 1px solid #e2e7ec; border-radius: 50%; color: #7c8794; background: #fff; cursor: pointer; }
+    .sample-request-close:hover { color: #c44545; background: #fff3f3; border-color: #efc9c9; }
+    @media (max-width: 991px) {
+        .sample-request-toggle { grid-template-columns: 1fr auto; gap: 16px; padding: 18px; }
+        .sample-request-identity { grid-column: 1; }
+        .sample-request-chevron { grid-column: 2; grid-row: 1; }
+    }
     .sample-workflow-header {
         display: flex;
         align-items: flex-start;
@@ -4598,21 +4638,512 @@ button#focus_button:focus, button#history_button:focus{
         }
     }
 
+@media (max-width: 767.98px) {
+
+    #orderInvoiceModal #invoice_items {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+
+    #orderInvoiceModal #invoice_items thead {
+        display: none !important;
+    }
+
+    #orderInvoiceModal #invoice_items tbody {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    #orderInvoiceModal #invoice_items tbody tr {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0 14px !important;
+        width: 100% !important;
+        margin: 0 0 16px !important;
+        padding: 14px !important;
+        background: #fff !important;
+        border: 1px solid #e8edf3 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05) !important;
+        box-sizing: border-box !important;
+    }
+
+    #orderInvoiceModal #invoice_items tbody td {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        padding: 5px 0 !important;
+        border: none !important;
+        text-align: left !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Label above its value */
+    #orderInvoiceModal #invoice_items tbody td::before {
+        content: attr(data-label);
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 6px !important;
+        color: black !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        line-height: 1.4 !important;
+        text-transform: uppercase !important;
+        text-align: left !important;
+    }
+
+    /* ITEM takes the full first row */
+    #orderInvoiceModal #invoice_items tbody td:first-child {
+        grid-column: 1 / -1 !important;
+        border-bottom: 1px solid #edf0f4 !important;
+        margin-bottom: 4px !important;
+        padding-top: 0 !important;
+        padding-bottom: 3px !important;
+    }
+
+    #orderInvoiceModal #invoice_items tbody td:first-child::before {
+        color: #526176 !important;
+        font-size: 11px !important;
+    }
+
+    #orderInvoiceModal #invoice_items tbody td > * {
+        max-width: 100% !important;
+        overflow-wrap: anywhere !important;
+        color: #747474;
+    }
+
+    /* Summary table HTML and inline style remain unchanged */
+    #orderInvoiceModal #invoice_summery_table {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+
+    .back_home_mobile {
+        padding-bottom: 17px;
+        padding-left: 24px;
+    }
+        .home-btn-color-mobile {
+            color: #475569 !important;
+            font-size: 11px;
+        }
+        .home-btn-color-mobile:hover {
+            color: #777777 !important;
+        }
+        .header-style {
+            display: none;
+        }
+        body {
+            padding-top: 50px !important;
+        }
+        .content-position {
+            top: 15px;
+        }
+
+}
+
+    @media (min-width: 769px){
+        #order_cards{
+            display:none !important;
+        }
+
+        .back_home_mobile {
+            display:none !important;
+        }
+        .mobile_search {
+            display:none !important;
+        }
+        .mobile_badge {
+            display:none !important;
+        }
+        .mobile_filters{
+            display:none;
+        }
+
+    }
+
+/* ================= MODERN DATEPICKER ================= */
+#ui-datepicker-div.ui-datepicker {
+    width: 300px !important;
+    padding: 14px !important;
+    background: #fff !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18) !important;
+    font-family: 'Open Sans', sans-serif !important;
+    z-index: 99999 !important;      /* above bootstrap modals */
+}
+
+/* ---------- Header ---------- */
+#ui-datepicker-div .ui-datepicker-header {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 36px 12px !important;
+    background: transparent !important;
+    border: none !important;
+}
+#ui-datepicker-div .ui-datepicker-title {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    line-height: normal !important;
+}
+
+/* ---------- Month / Year selects ---------- */
+#ui-datepicker-div .ui-datepicker-title select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+
+    height: 34px !important;
+    margin: 0 !important;
+    padding: 0 28px 0 12px !important;
+
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1E293B !important;
+
+    background-color: #F8FAFC !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 10px center !important;
+    background-size: 12px !important;
+
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 999px !important;
+    outline: none !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: background-color .15s, border-color .15s, box-shadow .15s;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#ui-datepicker-div .ui-datepicker-title select:hover {
+    background-color: #E6FAF6 !important;
+    border-color: #47D6B6 !important;
+    color: #0F766E !important;
+}
+#ui-datepicker-div .ui-datepicker-title select:focus {
+    background-color: #fff !important;
+    border-color: #47D6B6 !important;
+    box-shadow: 0 0 0 3px rgba(71, 214, 182, .25) !important;
+}
+#ui-datepicker-div .ui-datepicker-title select.ui-datepicker-month { flex: 1 1 58% !important; width: auto !important; }
+#ui-datepicker-div .ui-datepicker-title select.ui-datepicker-year  { flex: 1 1 42% !important; width: auto !important; }
+#ui-datepicker-div .ui-datepicker-title select option {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1E293B;
+    background: #fff;
+    padding: 6px 10px;
+}
+
+/* ---------- Prev / Next arrows ---------- */
+#ui-datepicker-div .ui-datepicker-prev,
+#ui-datepicker-div .ui-datepicker-next {
+    position: absolute !important;
+    top: 2px !important;
+    width: 30px !important;
+    height: 30px !important;
+    border: none !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    cursor: pointer;
+    transition: background .15s;
+}
+#ui-datepicker-div .ui-datepicker-prev { left: 0 !important; }
+#ui-datepicker-div .ui-datepicker-next { right: 0 !important; }
+#ui-datepicker-div .ui-datepicker-prev:hover,
+#ui-datepicker-div .ui-datepicker-next:hover { background: #F1F5F9 !important; }
+#ui-datepicker-div .ui-datepicker-prev span,
+#ui-datepicker-div .ui-datepicker-next span { display: none !important; }
+#ui-datepicker-div .ui-datepicker-prev::after,
+#ui-datepicker-div .ui-datepicker-next::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    border-color: #475569;
+    border-style: solid;
+}
+#ui-datepicker-div .ui-datepicker-prev::after {
+    border-width: 0 0 2px 2px;
+    transform: translate(-30%, -50%) rotate(45deg);
+}
+#ui-datepicker-div .ui-datepicker-next::after {
+    border-width: 2px 2px 0 0;
+    transform: translate(-70%, -50%) rotate(45deg);
+}
+#ui-datepicker-div .ui-datepicker-prev.ui-state-disabled,
+#ui-datepicker-div .ui-datepicker-next.ui-state-disabled { opacity: .3; cursor: default; }
+
+/* ---------- Calendar grid ---------- */
+#ui-datepicker-div table.ui-datepicker-calendar {
+    width: 100% !important;
+    margin: 0 !important;
+    border-collapse: separate !important;
+    border-spacing: 2px !important;
+}
+#ui-datepicker-div .ui-datepicker-calendar th {
+    padding: 6px 0 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    color: #94A3B8 !important;
+    text-align: center !important;
+    border: none !important;
+    background: transparent !important;
+}
+#ui-datepicker-div .ui-datepicker-calendar th span { font-weight: 600 !important; }
+#ui-datepicker-div .ui-datepicker-calendar td {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* ---------- Day cells ---------- */
+#ui-datepicker-div .ui-datepicker-calendar td a,
+#ui-datepicker-div .ui-datepicker-calendar td span {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #1E293B !important;
+    text-align: center !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 50% !important;
+    transition: background .15s, color .15s;
+}
+#ui-datepicker-div .ui-datepicker-calendar td a:hover {
+    background: #E6FAF6 !important;
+    color: #0F766E !important;
+}
+/* days of other months */
+#ui-datepicker-div .ui-datepicker-other-month a,
+#ui-datepicker-div .ui-datepicker-other-month span { color: #CBD5E1 !important; }
+/* today */
+#ui-datepicker-div .ui-datepicker-today a,
+#ui-datepicker-div td a.ui-state-highlight {
+    background: #F1F5F9 !important;
+    color: #0F766E !important;
+    font-weight: 700 !important;
+    box-shadow: inset 0 0 0 1.5px #47D6B6;
+}
+/* selected day */
+#ui-datepicker-div td a.ui-state-active,
+#ui-datepicker-div .ui-datepicker-current-day a {
+    background: #47D6B6 !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 6px rgba(71, 214, 182, .45);
+}
+/* disabled days */
+#ui-datepicker-div .ui-state-disabled span { color: #E2E8F0 !important; }
+
+/* ---------- Button panel (only if showButtonPanel is enabled) ---------- */
+#ui-datepicker-div .ui-datepicker-buttonpane {
+    margin: 8px 0 0 !important;
+    padding: 8px 0 0 !important;
+    border: none !important;
+    border-top: 1px solid #F1F5F9 !important;
+    background: transparent !important;
+}
+#ui-datepicker-div .ui-datepicker-buttonpane button {
+    padding: 5px 12px !important;
+    font-size: 12px !important;
+    color: #475569 !important;
+    background: #F1F5F9 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    opacity: 1 !important;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 480px) {
+    #ui-datepicker-div.ui-datepicker { width: 280px !important; padding: 10px !important; }
+    #ui-datepicker-div .ui-datepicker-calendar td a,
+    #ui-datepicker-div .ui-datepicker-calendar td span { width: 32px !important; height: 32px !important; }
+    #ui-datepicker-div .ui-datepicker-title select { font-size: 16px !important; height: 36px !important; }
+}
+.organization-created-date {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .organization-status-mobile {
+        display: flex;
+        width: 100%;
+    }
+
+    .organization-status-mobile > div {
+        width: 100%;
+    }
+
+    .organization-created-date {
+        display: inline-block;
+        font-size: 12px;
+        color: #777;
+        white-space: nowrap;
+    }
+    .mobile_organization_name_hide {
+        display: none !important;
+    }
+}
+
+/* Keep sample layouts within the content area, including the expanded cards. */
+#Samples_Swatches .sample-request-toggle > *,
+#Samples_Swatches .sample-product-row > *,
+#Samples_Swatches .sample-two-column-col,
+#Samples_Swatches .sample-section { min-width: 0; }
+#Samples_Swatches .sample-request-counts span { overflow-wrap: anywhere; }
+#Samples_Swatches .select2-container { max-width: 100%; }
+#Samples_Swatches .select2-selection__choice { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+#Samples_Swatches .sample-workflow-header > div:first-child { min-width: 0; }
+#Samples_Swatches .sample-workflow-subtitle { overflow-wrap: anywhere; }
+#Samples_Swatches .sample-request-card #sampleRequestEditor { padding: 0 12px 12px; }
+#Samples_Swatches .sample-request-card #sampleRequestEditor > .sample-workflow-card { box-shadow: none; }
+@media (max-width: 1199.98px) {
+    #Samples_Swatches .sample-request-toggle {
+        grid-template-columns: minmax(0, 1fr) auto 30px;
+        gap: 16px;
+        padding: 18px;
+    }
+    #Samples_Swatches .sample-request-identity { grid-column: 1; grid-row: 1; }
+    #Samples_Swatches .sample-request-toggle > .sample-status-badge { grid-column: 2; grid-row: 1; }
+    #Samples_Swatches .sample-request-chevron { grid-column: 3; grid-row: 1; }
+    #Samples_Swatches .sample-request-toggle > span:nth-child(2) { grid-column: 1; grid-row: 2; }
+    #Samples_Swatches .sample-request-counts { grid-column: 2 / 4; grid-row: 2; }
+    #Samples_Swatches .sample-two-column-col { flex: 0 0 100%; max-width: 100%; }
+    #Samples_Swatches .sample-metadata > .col-md-6 { flex: 0 0 100%; max-width: 100%; padding-left: 15px !important; padding-right: 15px !important; }
+    #Samples_Swatches .sample-metadata .col-md-3 { flex: 0 0 25%; max-width: 25%; }
+}
+@media (max-width: 767.98px) {
+    #Samples_Swatches .sample-workflow-wrap { padding: 12px 0 18px; gap: 12px; flex-wrap: wrap; }
+    #Samples_Swatches > .sample-workflow-wrap > .sample-save-btn { width: auto; min-height: 40px; }
+    #Samples_Swatches .sample-workflow-card { padding: 14px; }
+    #Samples_Swatches .sample-request-card { padding: 0; margin-left: 0 !important; margin-right: 0 !important; }
+    #Samples_Swatches .sample-request-card #sampleRequestEditor { padding: 0 6px 6px; }
+    #Samples_Swatches .sample-workflow-header { position: relative; padding-right: 0; gap: 12px; }
+    #Samples_Swatches .sample-workflow-header > div:first-child { padding-right: 34px; }
+    #Samples_Swatches .sample-request-header-actions { flex-wrap: wrap; }
+    #Samples_Swatches .sample-request-close { position: absolute; right: 0; top: 0; width: 32px; height: 32px; }
+    #Samples_Swatches .sample-metadata .col-md-3,
+    #Samples_Swatches .sample-metadata .row > .col-md-6 { flex: 0 0 100%; max-width: 100%; margin-bottom: 12px; }
+    #Samples_Swatches .sample-two-column-row .sample-product-row { grid-template-columns: minmax(0, 1fr) 36px; gap: 10px; padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid #e9edf1; }
+    #Samples_Swatches .sample-product-row > div:first-child { grid-column: 1 / -1; }
+    #Samples_Swatches .sample-product-row > div:nth-child(2) { grid-column: 1; }
+    #Samples_Swatches .sample-product-row .sample-remove-row { grid-column: 2; width: 36px; height: 36px; }
+    #Samples_Swatches .sample-section-header { gap: 10px; flex-wrap: wrap; }
+    #Samples_Swatches .sample-section-body { padding: 12px; }
+    #Samples_Swatches .sample-note-editor-wrapper { min-height: 280px !important; height: 280px; }
+    #Samples_Swatches .sample-control { max-width: 100%; }
+}
+@media (max-width: 479.98px) {
+    #Samples_Swatches .sample-request-toggle { grid-template-columns: minmax(0, 1fr) 30px; gap: 14px 8px; padding: 14px; }
+    #Samples_Swatches .sample-request-chevron { grid-column: 2; grid-row: 1; }
+    #Samples_Swatches .sample-request-toggle > span:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+    #Samples_Swatches .sample-request-counts { grid-column: 1 / -1; grid-row: 3; }
+    #Samples_Swatches .sample-request-toggle > .sample-status-badge { grid-column: 1 / -1; grid-row: 4; justify-self: start; }
+    #Samples_Swatches .sample-request-icon { width: 34px; height: 34px; }
+    #Samples_Swatches .sample-request-identity { gap: 8px; }
+    #Samples_Swatches > .sample-workflow-wrap > .sample-save-btn { width: 100%; }
+}
+
+/* Shipment summary fields share one responsive grid. */
+#Samples_Swatches .sample-request-toggle {
+    grid-template-columns: minmax(160px, 1.2fr) minmax(105px, .8fr) minmax(110px, 1fr) minmax(110px, .9fr) minmax(115px, .8fr) auto 30px;
+    gap: 16px;
+}
+#Samples_Swatches .sample-request-toggle > span { grid-column: auto; grid-row: auto; }
+#Samples_Swatches .sample-request-value { display: block; overflow-wrap: anywhere; }
+#Samples_Swatches .sample-card-tracking-link { color: #169f87; font-weight: 600; text-decoration: none; }
+#Samples_Swatches .sample-card-tracking-link:hover { text-decoration: underline; }
+@media (max-width: 1399.98px) {
+    #Samples_Swatches .sample-request-toggle { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) 30px; gap: 20px 16px; }
+    #Samples_Swatches .sample-request-identity { grid-column: 1 / 3; grid-row: 1; }
+    #Samples_Swatches .sample-request-toggle > .sample-status-badge { grid-column: 3; grid-row: 1; justify-self: end; }
+    #Samples_Swatches .sample-request-chevron { grid-column: 4; grid-row: 1; }
+    #Samples_Swatches .sample-card-link { grid-column: 1 / 3; grid-row: 3; }
+    #Samples_Swatches .sample-card-estimated { grid-column: 3 / 5; grid-row: 3; }
+}
+@media (max-width: 575.98px) {
+    #Samples_Swatches .sample-request-toggle { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 30px; gap: 18px 10px; }
+    #Samples_Swatches .sample-request-identity { grid-column: 1 / 3; grid-row: 1; }
+    #Samples_Swatches .sample-request-chevron { grid-column: 3; grid-row: 1; }
+    #Samples_Swatches .sample-card-requested { grid-column: 1; grid-row: 2; }
+    #Samples_Swatches .sample-card-tracking { grid-column: 2 / 4; grid-row: 2; }
+    #Samples_Swatches .sample-card-link { grid-column: 1; grid-row: 3; }
+    #Samples_Swatches .sample-card-estimated { grid-column: 2 / 4; grid-row: 3; }
+    #Samples_Swatches .sample-request-toggle > .sample-status-badge { grid-column: 1 / -1; grid-row: 4; justify-self: start; }
+}
+
+/* Compact sample request summaries. */
+#Samples_Swatches .sample-request-toggle { padding: 12px 18px; gap: 12px; }
+#Samples_Swatches .sample-request-icon { width: 32px; height: 32px; border-radius: 8px; font-size: 14px; }
+#Samples_Swatches .sample-request-label { margin-bottom: 3px; font-size: 9px; }
+#Samples_Swatches .sample-request-identity { gap: 9px; }
+#Samples_Swatches .sample-request-card { margin-bottom: 10px !important; }
+#Samples_Swatches .sample-request-toggle > .sample-status-badge { padding: 4px 10px; }
+#Samples_Swatches .sample-request-chevron { width: 26px; height: 26px; }
+@media (max-width: 1399.98px) {
+    #Samples_Swatches .sample-request-toggle { gap: 12px 14px; }
+}
+@media (max-width: 575.98px) {
+    #Samples_Swatches .sample-request-toggle { padding: 10px 12px; gap: 10px; }
+}
 </style>
 
 @section('back-btn')
     <a @if($orders->count() > 0) href="{{ route('organizations', ['type' => 'organizations_customers']) }}" class="home-btn-color" title="Back to customers">BACK TO CUSTOMERS</a> @else <a href="{{ route('organizations', ['type' => 'organizations_leads']) }}" class="home-btn-color" title="Back to leads">BACK TO LEADS</a> @endif
 @endsection
 
-<button type="button" id="mobileScrollDownBtn" class="mobile-scroll-down-btn" title="Scroll to bottom">
+
+    @section('back-btn-Mobile')
+    <a @if($orders->count() > 0) href="{{ route('organizations', ['type' => 'organizations_customers']) }}" class="home-btn-color-mobile" title="Back to customers">< BACK</a> @else <a href="{{ route('organizations', ['type' => 'organizations_leads']) }}" class="home-btn-color-mobile" title="Back to leads">< BACK</a> @endif
+        {{-- <a href="{{ route('inventory_orders') }}" class="home-btn-color-mobile" title="Back to home">< BACK TO ORDERS</a> --}}
+    @endsection
+
+    <div class="back_home_mobile">
+        <strong>
+            {{-- @yield('back-btn-Mobile') --}}
+        </strong>
+    </div>
+
+{{-- <button type="button" id="mobileScrollDownBtn" class="mobile-scroll-down-btn" title="Scroll to bottom">
     <i class="fas fa-chevron-down"></i>
-</button>
+</button> --}}
 
 <div class="container-fluid mb-5 content-position organization-unique-styles">
     <div class="se-pre-con"></div>
 
     @foreach ($organizations as $organization)
 
+    @section('order-header')
+        <span>{{$organization->organization_name}}</span>
+    @endsection
 
     <div class="col-md-12 btn-top" style="display: none">
         <div class="row ">
@@ -4836,7 +5367,7 @@ button#focus_button:focus, button#history_button:focus{
                                             <img src="{{ asset('assets') }}/img/organization/default.png" style="width:100%;height:auto" id="image_previewe_info_header" />
                                         @endif --}}
                                     </td>
-                                    <td class="organization-info-cell">
+                                    <td class="organization-info-cell mobile_organization_name_hide">
                                         <div class="row">
                                             <div class="col-md-12"><span style="font-size: 1.5rem;color: black;font-weight: 600;">{{$organization->organization_name}}</span></div>
                                             <div class="col-md-12" style="color: grey">{{$organization->created_at->format('Y-m-d')}}</div>
@@ -4960,8 +5491,25 @@ button#focus_button:focus, button#history_button:focus{
                                                         <div class="col-md-8 sub-header-style mb-3">
                                                             Organization
                                                         </div>
-                                                        <div class="col-md-4 mb-3">
+                                                        {{-- <div class="col-md-4 mb-3">
                                                             <label class="form-lable-info"><span style="font-size: .8rem;background-color: #b3b3b3;padding: 0.3rem 0.7rem;border-radius: 0.7rem;color: white;">{{$organization_status}}</span></label>
+                                                        </div> --}}
+                                                        <div class="col-md-4 mb-3 organization-status-mobile">
+                                                            <div class="d-flex justify-content-between align-items-center w-100">
+
+                                                                <!-- Left side: Status -->
+                                                                <label class="form-lable-info mb-0">
+                                                                    <span style="font-size: .8rem;background-color: #b3b3b3;padding: 0.3rem 0.7rem;border-radius: 0.7rem;color: white;">
+                                                                        {{$organization_status}}
+                                                                    </span>
+                                                                </label>
+
+                                                                <!-- Right side: Created Date -->
+                                                                <span class="organization-created-date">
+                                                                    {{$organization->created_at->format('Y-m-d')}}
+                                                                </span>
+
+                                                            </div>
                                                         </div>
                                                         <div class="col-md-12 organization-mobile-info-block">
                                                             <table style="width:100%">
@@ -4983,7 +5531,12 @@ button#focus_button:focus, button#history_button:focus{
                                                             <table style="width:100%">
                                                                 <tr style="border: none;">
                                                                     <td style="line-height: 1.3em;width:25%"><label class="form-lable-info">Sales Tax (%)</label></td>
-                                                                    <td style="width:25%"><input type="text" class="form-control info-form-input" name="sales_tax" value="{{number_format($organization->sales_tax, 3)}}" /></td>
+                                                                    <td style="width:25%">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <input type="text" class="form-control info-form-input" name="sales_tax" value="{{number_format($organization->sales_tax, 3)}}" />
+                                                                            @include('pages.contacts.organizations.cdtfa_update_info')
+                                                                        </div>
+                                                                    </td>
                                                                     <td style="line-height: 1.3em;width:25%"><label class="form-lable-info">Tax Active</label></td>
                                                                     <td style="width:25%"><select class="form-control info-form-input select2-organization" id="sales_tax_active_info" style="color: #717070" name="sales_tax_active">
                                                                             <option value="1" {{ ($organization->sales_tax_active == 1) ? 'selected' : '' }}>Yes</option>
@@ -5135,6 +5688,10 @@ button#focus_button:focus, button#history_button:focus{
                                                                     <td style="width:25%">
                                                                         <input type="text" class="form-control info-form-input" id="shipping_postal_code" name="shipping_postal_code" value="{{$organization->shipping_postal_code ?? ''}}" />
                                                                     </td>
+                                                                </tr>
+                                                                <tr style="border: none;">
+                                                                    <td><label class="form-lable-info" for="shipping_county">County</label></td>
+                                                                    <td colspan="3"><input type="text" class="form-control info-form-input" id="shipping_county" name="shipping_county" maxlength="255" value="{{ $organization->shipping_county ?? '' }}" /></td>
                                                                 </tr>
                                                             </table>
                                                         </div>
@@ -5601,6 +6158,31 @@ button#focus_button:focus, button#history_button:focus{
 
 {{--================================ Samples & Fabric Swatches ======================================== --}}
                             <div class="tab-pane fade" id="Samples_Swatches" role="tabpanel" aria-labelledby="Samples_SwatchesTab">
+                                <div class="sample-workflow-wrap d-flex justify-content-between align-items-center">
+                                    <h4 class="sample-workflow-title">Sample Requests ({{ $sampleShipments->count() }})</h4>
+                                    <button type="button" class="sample-save-btn" id="newSampleRequest"><i class="fa fa-plus mr-1"></i> Request Samples</button>
+                                </div>
+                                <div id="newSampleRequestHost"></div>
+                                @foreach($sampleShipments as $requestSample)
+                                    <div class="sample-workflow-card sample-request-card {{ $requestSample->status === 'delivered' ? 'is-delivered' : '' }} mb-3 mx-3">
+                                        <div class="sample-request-toggle" role="button" tabindex="0" data-shipment-id="{{ $requestSample->id }}" aria-expanded="false" aria-controls="sampleRequestDetails{{ $requestSample->id }}">
+                                            <span class="sample-request-identity"><span class="sample-request-icon"><i class="fa fa-cube" aria-hidden="true"></i></span><span><span class="sample-request-label">Sample package</span><strong>Request #{{ $requestSample->id }}</strong></span></span>
+                                            <span class="sample-card-requested"><span class="sample-request-label">Requested date</span>{{ optional($requestSample->received_date)->format('m/d/Y') ?: 'Not recorded' }}</span>
+                                            <span class="sample-card-tracking"><span class="sample-request-label">Tracking number</span><span class="sample-request-value">{{ $requestSample->tracking_number ?: 'Not added' }}</span></span>
+                                            <span class="sample-card-link"><span class="sample-request-label">Tracking link</span>
+                                                @if($requestSample->tracking_link && preg_match('/^https?:\/\//i', $requestSample->tracking_link))
+                                                    <a class="sample-card-tracking-link" href="{{ $requestSample->tracking_link }}" target="_blank" rel="noopener noreferrer" title="{{ $requestSample->tracking_link }}">Track package <i class="fa fa-external-link ml-1" aria-hidden="true"></i></a>
+                                                @else
+                                                    <span>Not added</span>
+                                                @endif
+                                            </span>
+                                            <span class="sample-card-estimated"><span class="sample-request-label">Est. delivery date</span>{{ optional($requestSample->delivered_date)->format('m/d/Y') ?: 'Not added' }}</span>
+                                            <span class="sample-status-badge {{ $requestSample->status === 'delivered' ? 'status-delivered' : 'status-received' }}"><i class="fa {{ $requestSample->status === 'delivered' ? 'fa-check-circle' : 'fa-clock-o' }}" aria-hidden="true"></i>{{ $requestSample->status === 'delivered' ? 'Delivered' : 'Requested' }}</span>
+                                            <span class="sample-request-chevron"><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+                                        </div>
+                                        <div id="sampleRequestDetails{{ $requestSample->id }}" hidden></div>
+                                    </div>
+                                @endforeach
                                 @php
                                     $sampleProducts = $sampleShipment && is_array($sampleShipment->products)
                                         ? $sampleShipment->products
@@ -5642,13 +6224,14 @@ button#focus_button:focus, button#history_button:focus{
                                         : ($organization->shipping_country ?? '');
                                 @endphp
 
-                                <div class="sample-workflow-wrap">
+                                <div class="sample-workflow-wrap" id="sampleRequestEditor" style="{{ $sampleShipments->isNotEmpty() ? 'display:none;' : '' }}">
                                     <div class="sample-workflow-card">
                                         <div class="sample-workflow-header">
                                             <div>
                                                 <h4 class="sample-workflow-title">Samples &amp; Fabric Swatches</h4>
-                                                <p class="sample-workflow-subtitle">Track the one-time sample package for this organization, including products, sizes, fabric swatches, dates and delivery status.</p>
+                                                <p class="sample-workflow-subtitle">Request and track sample packages for this organization, including products, sizes, fabric swatches, dates and delivery status.</p>
                                             </div>
+                                            <div class="sample-request-header-actions">
                                             <span
                                                 id="sampleShipmentStatus"
                                                 class="sample-status-badge {{ !$sampleHasData ? 'status-empty' : ($sampleDelivered ? 'status-delivered' : 'status-received') }}"
@@ -5656,9 +6239,11 @@ button#focus_button:focus, button#history_button:focus{
                                                 <i class="fa {{ !$sampleHasData ? 'fa-minus-circle' : ($sampleDelivered ? 'fa-check-circle' : 'fa-clock-o') }}"></i>
                                                 <span id="sampleShipmentStatusText">{{ $sampleStatusText }}</span>
                                             </span>
+                                            <button type="button" id="closeNewSampleRequest" class="sample-request-close" aria-label="Close new sample request" title="Close new request"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                            </div>
                                         </div>
 
-                                        <div class="row mb-2">
+                                        <div class="row mb-2 sample-metadata">
                                             <div class="col-md-6 col-sm-12 mb-3  pl-3 pr-2">
                                                 <div class="row p-0">
                                                     <div class="col-md-3 col-sm-12">
@@ -6506,7 +7091,74 @@ button#focus_button:focus, button#history_button:focus{
         &#10095;
     </button>
 </div>
+
 <script>
+    $.datepicker.setDefaults({
+        changeMonth: true,
+        changeYear: true,
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        yearRange: 'c-10:c+10',
+        prevText: '',
+        nextText: ''
+    });
+
+    // also update any pickers that were already initialized
+    $(function () {
+        $('.hasDatepicker').datepicker('option', {
+            changeMonth: true,
+            changeYear: true,
+            yearRange: 'c-10:c+10'
+        });
+    });
+
+    // Calendar only: no keyboard on tap
+    $(function () {
+        function lockDatepickerInputs() {
+            $('.hasDatepicker, .summary-datepicker, .modal-datepicker, .item-datepicker')
+                .attr('readonly', true)
+                .attr('inputmode', 'none')
+                .css('background-color', function () {
+                    // keep the input looking normal (readonly can turn it grey)
+                    return $(this).css('background-color');
+                });
+        }
+
+        lockDatepickerInputs();
+
+        // inputs inside modals / created later
+        $(document).on('focus click', '.hasDatepicker, .summary-datepicker, .modal-datepicker, .item-datepicker', function () {
+            $(this).attr('readonly', true).attr('inputmode', 'none');
+        });
+        $('.modal').on('shown.bs.modal', lockDatepickerInputs);
+    });
+</script>
+
+<script>
+    function makeInvoiceItemsMobileCards() {
+    var $table = $('#orderInvoiceModal #invoice_items');
+
+    if (!$table.length) return;
+
+    var labels = [];
+
+    $table.find('thead th').each(function () {
+        labels.push($(this).text().trim());
+    });
+
+    $table.find('tbody tr').each(function () {
+        $(this).children('td').each(function (index) {
+            $(this).attr(
+                'data-label',
+                labels[index] || 'Details'
+            );
+        });
+    });
+}
+
+
+</script>
+{{-- <script>
 
     $(document).ready(function () {
 
@@ -6569,7 +7221,7 @@ button#focus_button:focus, button#history_button:focus{
             form.remove();
         }, 1000);
     }
-</script>
+</script> --}}
 <script>
     let debitBalance = 0;
 
@@ -6926,6 +7578,7 @@ button#focus_button:focus, button#history_button:focus{
                 data: { order_id: orderId },
                 success: function(response) {
                     $('#invoiceContent').html(response); // Load the invoice inside modal
+                    makeInvoiceItemsMobileCards();
                     $('#orderInvoiceModal').modal('show'); // Show the modal
                 },
                 error: function() {
@@ -6968,7 +7621,7 @@ button#focus_button:focus, button#history_button:focus{
             var start_date = $('#payment_start_date').val();
             var end_date = $('#payment_end_date').val();
             var filterColumn = $('#filterColumn').val();
-
+            console.log(end_date);
             $(".se-pre-con").fadeOut('slow');
 
             $.ajax({
@@ -7656,7 +8309,7 @@ function formatSubTable(payments) {
                                         </div>
 
                                         <div style="display: flex; justify-content: space-between; padding: 5px 0;">
-                                            <div style="font-weight: bold; color: #555;">Sales Tax (${orderDetails.organization_details.sales_tax}%) ($):</div>
+                                            <div style="font-weight: bold; color: #555;">Sales Tax (${(orderDetails.sales_tax_rate ?? 0)}%) ($):</div>
                                             <div style="color: #333;">${parseFloat((orderDetails.sales_tax) || 0).toFixed(2)}</div>
                                         </div>
 
@@ -7762,21 +8415,41 @@ function formatSubTable(payments) {
             $('#minimize_icon')[0].click();
         }
 
-        $('#sidenav-main').hover(
-            function() {
-                hoverTimeout = setTimeout(function() {
-                    if ($('#maximize_icon').css('display') != 'none') {
-                        $('#maximize_icon').click();
+        // $('#sidenav-main').hover(
+        //     function() {
+        //         hoverTimeout = setTimeout(function() {
+        //             if ($('#maximize_icon').css('display') != 'none') {
+        //                 $('#maximize_icon').click();
+        //             }
+        //         }, 500);
+        //     },
+        //     function() {
+        //         clearTimeout(hoverTimeout);
+        //         if ($('#minimize_icon').css('display') != 'none') {
+        //             $('#minimize_icon')[0].click();
+        //         }
+        //     }
+        // );
+        if (window.matchMedia('(min-width: 768px)').matches) {
+
+            $('#sidenav-main').hover(
+                function() {
+                    hoverTimeout = setTimeout(function() {
+                        if ($('#maximize_icon').css('display') != 'none') {
+                            $('#maximize_icon').click();
+                        }
+                    }, 500);
+                },
+                function() {
+                    clearTimeout(hoverTimeout);
+
+                    if ($('#minimize_icon').css('display') != 'none') {
+                        $('#minimize_icon')[0].click();
                     }
-                }, 500);
-            },
-            function() {
-                clearTimeout(hoverTimeout);
-                if ($('#minimize_icon').css('display') != 'none') {
-                    $('#minimize_icon')[0].click();
                 }
-            }
-        );
+            );
+
+        }
     });
     function modalShowReply(){
         $('#modal-reply').modal('show');
@@ -9320,6 +9993,60 @@ function escapeHtml(unsafe) {
         var sampleImageUploadUrl = @json(route('organizations.sample_shipment.upload_image', ['id' => $organization->id]));
         var csrfToken = @json(csrf_token());
 
+        // Refresh an expired page token once, keeping the entered form intact.
+        function sampleAjax(options) {
+            var result = $.Deferred();
+            var onSuccess = options.success;
+            var onError = options.error;
+            var settings = $.extend({}, options);
+            delete settings.success;
+            delete settings.error;
+
+            function send(retried) {
+                if (settings.data instanceof FormData) {
+                    settings.data.set('_token', csrfToken);
+                } else {
+                    settings.data = $.extend({}, settings.data, { _token: csrfToken });
+                }
+                settings.headers = $.extend({}, settings.headers, { 'X-CSRF-TOKEN': csrfToken });
+                $.ajax(settings).done(function (data, status, xhr) {
+                    if (onSuccess) onSuccess(data, status, xhr);
+                    result.resolve(data, status, xhr);
+                }).fail(function (xhr, status, error) {
+                    if (xhr.status === 419 && !retried) {
+                        $.ajax({
+                            url: window.location.href.split('#')[0],
+                            type: 'GET',
+                            dataType: 'html',
+                            cache: false
+                        }).done(function (html) {
+                            var documentHtml = new DOMParser().parseFromString(html, 'text/html');
+                            var token = documentHtml.querySelector('meta[name="csrf-token"]');
+                            // A login page means the session must be restored by the user.
+                            if (token && documentHtml.querySelector('#Samples_Swatches')) {
+                                csrfToken = token.content;
+                                $('meta[name="csrf-token"]').attr('content', csrfToken);
+                                send(true);
+                            } else {
+                                fail(xhr, status, error);
+                            }
+                        }).fail(function () { fail(xhr, status, error); });
+                        return;
+                    }
+                    fail(xhr, status, error);
+                });
+            }
+            function fail(xhr, status, error) {
+                if (xhr.status === 419) {
+                    xhr.responseJSON = { message: 'Your session has expired. Sign in again in another tab, then retry. Your sample details are still here.' };
+                }
+                if (onError) onError(xhr, status, error);
+                result.reject(xhr, status, error);
+            }
+            send(false);
+            return result.promise();
+        }
+
         function getSampleNoteContent() {
             var $note = $('#sample_shipment_note');
             if ($note.data('editor-initialized')) {
@@ -9339,6 +10066,51 @@ function escapeHtml(unsafe) {
                 text: message,
                 confirmButtonText: 'OK',
                 confirmButtonColor: type === 'success' ? '#47D6B6' : '#d33'
+            });
+        }
+
+        function showSampleValidationAlert(xhr, fallbackMessage, isDelivery) {
+            var response = xhr.responseJSON || {};
+            var errors = [];
+            var missingFields = {
+                'Please enter delivery date.': 'Estimated delivery date',
+                'Please enter tracking number.': 'Tracking number',
+                'Please enter tracking link.': 'Tracking link'
+            };
+
+            $.each(response.errors || {}, function (field, messages) {
+                $.each(Array.isArray(messages) ? messages : [messages], function (index, message) {
+                    if (typeof message === 'string' && errors.indexOf(message) === -1) {
+                        errors.push(message);
+                    }
+                });
+            });
+
+            if (!errors.length) {
+                showSampleAlert(response.message || fallbackMessage, 'error');
+                return;
+            }
+
+            var onlyMissingShipmentDetails = isDelivery && errors.every(function (message) {
+                return Object.prototype.hasOwnProperty.call(missingFields, message);
+            });
+            var $content = $('<div>').css('text-align', 'left');
+            $('<p>').text(onlyMissingShipmentDetails
+                ? 'Please complete these fields before marking the sample as sent:'
+                : 'Please correct the following details before continuing:').appendTo($content);
+            var $list = $('<ul>').css({ 'padding-left': '24px', 'margin-bottom': '0' }).appendTo($content);
+            errors.forEach(function (message) {
+                $('<li>').css('margin-bottom', '8px')
+                    .text(onlyMissingShipmentDetails ? missingFields[message] : message)
+                    .appendTo($list);
+            });
+
+            Swal.fire({
+                icon: 'error',
+                title: onlyMissingShipmentDetails ? 'Missing shipment details' : 'Please check the following',
+                html: $content.prop('outerHTML'),
+                confirmButtonText: 'OK, got it',
+                confirmButtonColor: '#d33'
             });
         }
 
@@ -9502,7 +10274,7 @@ function escapeHtml(unsafe) {
 
             $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin mr-1"></i> Requesting...');
 
-            $.ajax({
+            sampleAjax({
                 url: sampleSaveUrl,
                 type: 'POST',
                 dataType: 'json',
@@ -9522,31 +10294,10 @@ function escapeHtml(unsafe) {
                     note: getSampleNoteContent()
                 },
                 success: function (response) {
-                    setSampleStatus(response.status || 'received');
-
-                    if (response.received_date) {
-                        $('#sample_received_date').val(response.received_date);
-                    }
-
-                    // if (response.delivered_date) {
-                    //     $('#sample_delivered_date').val(response.delivered_date);
-                    // }
-
-                    showSampleAlert(response.message || 'Sample request saved successfully.', 'success');
-
-                    $button.prop('disabled', true).html('Sample Requested');
-                    $('#confirmSampleDelivered').show();
-                    $('#sample_received_date').prop('readonly', true);
-                    $('#sample_delivered_date').prop('readonly', false);
-                    $('#sample_tracking_number').prop('readonly', false);
-                    $('#sample_tracking_link').prop('readonly', false);
+                    window.location.href = window.location.pathname + '?tab=sample';
                 },
                 error: function (xhr) {
-                    var message = 'Unable to request samples.';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        message = xhr.responseJSON.message;
-                    }
-                    showSampleAlert(message, 'error');
+                    showSampleValidationAlert(xhr, 'Unable to request samples.', false);
                     $button.prop('disabled', false).html(originalHtml);
                 }
             });
@@ -9572,12 +10323,13 @@ function escapeHtml(unsafe) {
 
                 $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin mr-1"></i> Confirming...');
 
-                $.ajax({
+                sampleAjax({
                     url: sampleDeliverUrl,
                     type: 'POST',
                     dataType: 'json',
                     data: {
                         _token: csrfToken,
+                        shipment_id: activeShipmentId,
                         delivered_date: $('#sample_delivered_date').val(),
                         received_date: $('#sample_received_date').val(),
                         tracking_number: $('#sample_tracking_number').val(),
@@ -9593,28 +10345,10 @@ function escapeHtml(unsafe) {
                         note: getSampleNoteContent()
                     },
                     success: function (response) {
-                        setSampleStatus('delivered');
-
-                        if (response.delivered_date) {
-                            $('#sample_delivered_date').val(response.delivered_date);
-                        }
-
-                        showSampleAlert(response.message || 'Sample shipment marked as delivered.', 'success');
-
-                        $button.hide();
-                        $('#saveSampleShipment').prop('disabled', true);
-                        $('#sample_received_date').prop('readonly', true);
-                        $('#sample_delivered_date').prop('readonly', true);
-                        $('#sample_tracking_number').prop('readonly', true);
-                        $('#sample_tracking_link').prop('readonly', true);
+                        window.location.href = window.location.pathname + '?tab=sample';
                     },
                     error: function (xhr) {
-                        var message = 'Unable to confirm delivery.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            message = xhr.responseJSON.message;
-                        }
-
-                        showSampleAlert(message, 'error');
+                        showSampleValidationAlert(xhr, 'Unable to confirm delivery.', true);
                         $button.prop('disabled', false).html(originalHtml);
                     }
                 });
@@ -9708,6 +10442,93 @@ function escapeHtml(unsafe) {
             }
         }
 
+
+        var sampleRequests = @json($sampleShipments->keyBy('id'));
+        var activeShipmentId = null;
+        var $requestEditor = $('#sampleRequestEditor');
+        var $blankProductRow = $('#sampleProductRows .sample-product-row:first').clone(false, false);
+        resetClonedSampleRow($blankProductRow);
+        var newRequestDefaults = {
+            received_date: @json(now()->format('m/d/Y')),
+            shipping_street: @json($organization->shipping_street ?? ''),
+            shipping_city: @json($organization->shipping_city ?? ''),
+            shipping_state: @json($organization->shipping_state ?? ''),
+            shipping_postal_code: @json($organization->shipping_postal_code ?? ''),
+            shipping_country: @json($organization->shipping_country ?? ''),
+            contact_id: $('#sample_contact_id').val()
+        };
+        function sampleDisplayDate(value) {
+            if (!value) return '';
+            var date = value.substring(0, 10).split('-');
+            return date.length === 3 ? date[1] + '/' + date[2] + '/' + date[0] : value;
+        }
+        function openSampleRequest(shipment, $host) {
+            activeShipmentId = shipment ? shipment.id : null;
+            $('#closeNewSampleRequest').toggle(!shipment);
+            $('#sampleShipmentStatus').toggle(!shipment);
+            var data = shipment || newRequestDefaults;
+            $('.sample-request-toggle').attr('aria-expanded', 'false').find('.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+            $('[id^="sampleRequestDetails"]').prop('hidden', true);
+            $requestEditor.appendTo($host).show();
+            $host.prop('hidden', false);
+            $('#sample_received_date').val(shipment ? sampleDisplayDate(data.received_date) : data.received_date).prop('readonly', !!shipment).css('pointer-events', shipment ? 'none' : '');
+            $('#sample_delivered_date').val(sampleDisplayDate(data.delivered_date));
+            ['tracking_number', 'tracking_link', 'shipping_street', 'shipping_city', 'shipping_state', 'shipping_postal_code', 'shipping_country', 'contact_id'].forEach(function (field) {
+                $('#sample_' + field).val(data[field] || '').trigger('change');
+            });
+            if ($.fn.select2) $('#sampleProductRows .sample-product-select.select2-hidden-accessible').select2('destroy');
+            $('#sampleProductRows').empty();
+            var products = data.products && data.products.length ? data.products : [{}];
+            products.forEach(function (product) {
+                var $row = $blankProductRow.clone(false, false);
+                $row.find('.sample-product-select').val(product.product_id || '');
+                $row.find('.sample-size-select').val(product.size_id || '');
+                $('#sampleProductRows').append($row);
+                initSampleProductSelects($row);
+            });
+            $('#sample_fabric_swatches').val(data.fabric_swatches || []).trigger('change');
+            $('#sample_shipment_note').val(data.note || '').Editor('setText', data.note || '');
+            setSampleStatus(shipment ? data.status : 'empty');
+            if (!shipment) {
+                $('#sampleShipmentStatusText').text('New Request');
+                $('#confirmSampleDelivered').hide();
+            }
+            $('#saveSampleShipment').toggle(!shipment).prop('disabled', false);
+            if ($('#sample_received_date').hasClass('hasDatepicker')) {
+                $('#sample_received_date').datepicker(shipment ? 'disable' : 'enable');
+            }
+            // Reinitialize controls after moving the editor out of a collapsed card.
+            initSampleProductSelects();
+        }
+        $('#closeNewSampleRequest').on('click', function () {
+            $requestEditor.hide();
+            $('#newSampleRequest').trigger('focus');
+        });
+        $('#newSampleRequest').on('click', function () {
+            openSampleRequest(null, $('#newSampleRequestHost'));
+            $requestEditor[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        $('.sample-card-tracking-link').on('click keydown', function (event) {
+            event.stopPropagation();
+        });
+        $('.sample-request-toggle').on('keydown', function (event) {
+            if (event.target === this && (event.key === 'Enter' || event.key === ' ')) {
+                event.preventDefault();
+                $(this).trigger('click');
+            }
+        });
+        $('.sample-request-toggle').on('click', function () {
+            var $toggle = $(this);
+            if ($toggle.attr('aria-expanded') === 'true') {
+                $requestEditor.hide();
+                $toggle.attr('aria-expanded', 'false').find('.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                return;
+            }
+            var id = $toggle.data('shipment-id');
+            openSampleRequest(sampleRequests[id], $('#sampleRequestDetails' + id));
+            $toggle.attr('aria-expanded', 'true').find('.fa-chevron-down').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        });
+
         // Handle Image File Selection & Upload
         $('body').on('change', '#sample-note-file', async function () {
             var files = this.files;
@@ -9754,7 +10575,7 @@ function escapeHtml(unsafe) {
                 }
                 fd.append('_token', csrfToken);
 
-                var response = await $.ajax({
+                var response = await sampleAjax({
                     url: sampleImageUploadUrl,
                     type: 'POST',
                     data: fd,
@@ -9843,7 +10664,7 @@ function escapeHtml(unsafe) {
                 fd.append('_token', csrfToken);
 
                 try {
-                    var response = await $.ajax({
+                    var response = await sampleAjax({
                         url: sampleImageUploadUrl,
                         type: 'POST',
                         data: fd,

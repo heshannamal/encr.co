@@ -48,7 +48,7 @@
     .filter_row {
         margin-left: unset;
         padding-left: 8px;
-        padding-right: 9px;
+        padding-right: 12px;
         background-color: #F8F8F8;
         border: 1px solid#DEDEDE;
         border-radius: 20px;
@@ -1376,17 +1376,14 @@
             <div class="modal-body">
 
                 <div class="row">
-                    <div class="col-12 px-5">
+                    <div class="col-12 px-3">
                         <div class="row" style="padding-bottom: 2px; margin:5px;">
                             <table style="width: 100%;">
                                 <tr>
                                     <td>
-                                        <span class="badge badge-info" style="font-size:14px;">
-                                            <strong>REMAINING:</strong>
-                                            <span id="adminRemainingText">
-                                                <i class="fa fa-spinner fa-spin" style="font-size:11px;"></i>
-                                            </span>
-                                        </span>
+                                        <div id="adminRemainingText" style="width:100%;">
+                                            <i class="fa fa-spinner fa-spin" style="font-size:11px;color:#94a3b8;"></i>
+                                        </div>
                                         <!-- <span class="badge badge-info" style="font-size:14px;">
                                             <strong>Remaining: </strong>
                                             Annual - 0 <span id="remainingAnnualLeaves"></span>,

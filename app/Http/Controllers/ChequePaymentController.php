@@ -20,7 +20,9 @@ use App\Models\PaypalPayment;
 use App\Models\VenmoPayment;
 use App\Models\OtherPayment;
 use App\Models\DebitEntry;
+use App\Models\EmailNotification;
 use App\Services\EmailNotificationBuilderService;
+use Illuminate\Support\Facades\Blade;
 
 class ChequePaymentController extends Controller
 {
@@ -148,6 +150,12 @@ class ChequePaymentController extends Controller
         $encryptedId = Crypt::encrypt($checkPayment->id);
         $this->sendPaymentMail($request->order_id, $encryptedId, $request->check_customer_paid_amount, $checkFront, $checkBack, $paymentUrl);
 
+        $orderData = Order::where('id', $request->order_id)->with('organizationDetails', 'contactDetails')->first();
+
+        $customerEmailForReceipt = optional($orderData->contactDetails)->email;
+        if ($customerEmailForReceipt) {
+            $this->sendPaymentMailCustomerCheck($request->order_id, $checkPayment, $summaryAtPayment, $customerEmailForReceipt);
+        }
 
         return redirect()->back()->withSuccess('Check uploaded Successfully!');
     }
@@ -186,7 +194,7 @@ class ChequePaymentController extends Controller
         $checkPayment->customer_paid_amount = $request->check_customer_paid_amount;
         $checkPayment->check_front = $checkFront;
         $checkPayment->check_back = $checkBack;
-        $checkPayment->is_approved = 0; 
+        $checkPayment->is_approved = 0;
         $checkPayment->save();
 
         $orderData = Order::where('id', $request->order_id)->with('organizationDetails')->first();
@@ -267,7 +275,26 @@ class ChequePaymentController extends Controller
             $this->sendPaymentMailCustomerCheck($request->order_id, $checkPayment, $summaryAtPayment, $customerEmailForReceipt);
         }
 
-        return redirect()->back()->withSuccess('Check uploaded Successfully!')->with('payment_success', 'Check uploaded Successfully!');
+        $receipt = $this->prepareSingleCheckReceiptDownload(
+            $request->order_id,
+            $checkPayment,
+            $summaryAtPayment,
+            $customerEmailForReceipt ?? ''
+        );
+
+        session()->flash('success', 'Check uploaded Successfully!');
+        session()->flash('payment_success', 'Check uploaded Successfully!');
+
+       
+        if (!empty($receipt['base64'])) {
+            return view('pages.customer_portal.single_payment_redirect', [
+                'pdfBase64'   => $receipt['base64'],
+                'fileName'    => $receipt['name'],
+                'redirectUrl' => url()->previous(),  
+            ]);
+        }
+
+        return redirect()->back();
     }
 
     public function uploadCheckFront(Request $request) {
@@ -389,7 +416,167 @@ class ChequePaymentController extends Controller
 
     public function sendPaymentMailCustomerCheck($order, $checkPayment, $summaryAtPayment, $mail)
     {
-      
+        try {
+            $orderModel = $order instanceof Order
+                ? $order
+                : Order::with([
+                    'organizationDetails',
+                    'contactDetails',
+                    'orderItems' => function ($query) {
+                        $query->with(['productDetails', 'statusDetails'])->where('is_studio_item', 0);
+                    },
+                ])->find($order);
+
+            if (!$orderModel) {
+                logger()->error('sendPaymentMailCustomerCheck: order not found', ['order' => $order]);
+                return false;
+            }
+
+            $orderModel->loadMissing(['organizationDetails', 'contactDetails']);
+
+            if (!$orderModel->relationLoaded('orderItems')) {
+                $orderModel->load([
+                    'orderItems' => function ($query) {
+                        $query->with(['productDetails', 'statusDetails'])->where('is_studio_item', 0);
+                    },
+                ]);
+            }
+
+            $organizationName = optional($orderModel->organizationDetails)->organization_name ?? '';
+            $customerName     = trim(
+                (optional($orderModel->contactDetails)->first_name ?? '') . ' ' .
+                (optional($orderModel->contactDetails)->last_name ?? '')
+            );
+
+            $orderItemsList = [];
+            foreach ($orderModel->orderItems as $item) {
+                $qty   = $item->quantity ?? $item->qty ?? 1;
+                $price = $item->price ?? $item->unit_price ?? 0;
+
+                $orderItemsList[] = [
+                    'product_name' => optional($item->productDetails)->product_name ?? ($item->product_name ?? 'Item'),
+                    'size'         => $item->size ?? '',
+                    'qty'          => $qty,
+                    'price'        => $price,
+                    'total'        => $item->total_price ?? $item->total ?? ($qty * $price),
+                ];
+            }
+
+            app(EmailNotificationBuilderService::class)->sendEmailFromTemplate('key_email_customer_payment_receipt_check', [
+                'custom_email'       => $mail,
+                'order_number'       => $orderModel->order_no,
+                'order_link'         => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
+                'organization_name'  => $organizationName,
+                'customer_name'      => $customerName,
+                'customer_email'     => $orderModel->email ?? optional($orderModel->contactDetails)->email ?? '',
+                'customer_phone'     => $orderModel->phone_no ?? '',
+                'customer_street'    => $orderModel->street ?? '',
+                'customer_city'      => $orderModel->city ?? '',
+                'customer_state'     => $orderModel->state ?? '',
+                'customer_postal'    => $orderModel->postal_code ?? '',
+                'customer_country'   => $orderModel->country ?? '',
+                'order_items'        => $orderItemsList,
+
+                // Check details
+                'check_front_url'    => $checkPayment->check_front ? url($checkPayment->check_front) : '',
+                'check_back_url'     => $checkPayment->check_back ? url($checkPayment->check_back) : '',
+                'transaction_id'     => $summaryAtPayment->transaction_id ?? ('CHK' . $checkPayment->id),
+                'paid_amount'        => number_format((float) ($checkPayment->customer_paid_amount ?? 0), 2),
+                'paid_date'          => optional($checkPayment->created_at)->format('m-d-Y') ?? now()->format('m-d-Y'),
+
+                // Payment summary
+                'order_total'        => number_format((float) ($orderModel->order_total ?? 0), 2),
+                'balance_remaining'  => number_format((float) str_replace(',', '', $summaryAtPayment->balancePayment ?? 0), 2),
+                'sub_total'          => number_format((float) ($orderModel->sub_total ?? 0), 2),
+                'discountType'       => $orderModel->discountType ?? '',
+                'discount'           => $orderModel->discount ?? '',
+                'artwork'            => number_format((float) ($orderModel->artwork ?? 0), 2),
+                'sales_tax_rate'     => $orderModel->sales_tax_rate ?? '',
+                'discount_hidation'  => $orderModel->discount_hidation ?? '',
+                'sale_tax'           => number_format((float) ($orderModel->sales_tax ?? 0), 2),
+                'shipping_fee'       => number_format((float) ($orderModel->shipping ?? 0), 2),
+            ]);
+
+            return true;
+
+        } catch (\Throwable $e) {
+            logger()->error('sendPaymentMailCustomerCheck failed: ' . $e->getMessage(), [
+                'order' => $order instanceof Order ? $order->id : $order,
+            ]);
+            return false;
+        }
+    }
+
+    /**
+     * SINGLE CHECK PAYMENT: build the receipt PDF.
+     */
+    private function prepareSingleCheckReceiptDownload($orderId, $checkPayment, $summaryAtPayment, $mail): ?array
+    {
+        try {
+            $pdfContent = $this->buildSingleCheckReceiptPdfContent($orderId, $checkPayment, $summaryAtPayment, $mail);
+
+            $orderNo  = Order::where('id', $orderId)->value('order_no') ?? $orderId;
+            $fileName = 'Check_Payment_Receipt_' . $orderNo . '_' . now()->format('Ymd_His') . '.pdf';
+
+            return [
+                'base64' => base64_encode($pdfContent),
+                'name'   => $fileName,
+            ];
+
+        } catch (\Throwable $e) {
+            logger()->error('prepareSingleCheckReceiptDownload failed: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Render the same email template (key_email_customer_payment_receipt_check) → PDF bytes.
+     */
+    private function buildSingleCheckReceiptPdfContent($orderId, $checkPayment, $summaryAtPayment, $mail): string
+    {
+        // 1) Same data as sendPaymentMailCustomerCheck()
+        $templateData = $this->buildSingleCheckReceiptData($orderId, $checkPayment, $summaryAtPayment, $mail);
+
+        // 2) Render the same email template
+        $template = EmailNotification::where('template_key', 'key_email_customer_payment_receipt_check')->first();
+        if (!$template || empty($template->body)) {
+            throw new \Exception('Template key_email_customer_payment_receipt_check not found.');
+        }
+
+        $html = Blade::render($template->body, array_merge(['order_items_Array' => ''], $templateData));
+
+        // 3) Check images → embedded from disk (DomPDF does not need to download them)
+        foreach (['check_front' => 'check_front_url', 'check_back' => 'check_back_url'] as $column => $urlKey) {
+            $url     = $templateData[$urlKey] ?? '';
+            $dataUri = $this->singleImageFileToDataUri($checkPayment->{$column} ?? '');
+
+            if ($url && $dataUri) {
+                $html = str_replace('src="' . e($url) . '"', 'src="' . $dataUri . '"', $html);
+                $html = str_replace('src="' . $url . '"', 'src="' . $dataUri . '"', $html);
+            }
+        }
+
+        // 4) Prepare for PDF (A4 width, remove outer wrapper)
+        $html = $this->prepareSingleReceiptHtmlForPdf($html);
+
+        // 5) NEW: footer → at the bottom of the page, rounded corners kept
+        $html = $this->movePdfFooterToFirstPageBottom($html);
+
+        // 6) PDF bytes
+        return \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'isRemoteEnabled' => true,   // logo images are https:// URLs
+                'defaultFont'     => 'Arial',
+            ])
+            ->output();
+    }
+
+    /**
+     * Same data as sendPaymentMailCustomerCheck() sends to the email template.
+     */
+    private function buildSingleCheckReceiptData($order, $checkPayment, $summaryAtPayment, $mail): array
+    {
         $orderModel = $order instanceof Order
             ? $order
             : Order::with([
@@ -401,8 +588,7 @@ class ChequePaymentController extends Controller
             ])->find($order);
 
         if (!$orderModel) {
-            logger()->error('sendPaymentMailCustomerCheck: order not found', ['order' => $order]);
-            return false;
+            throw new \Exception('buildSingleCheckReceiptData: order not found.');
         }
 
         if (!$orderModel->relationLoaded('orderItems')) {
@@ -427,30 +613,153 @@ class ChequePaymentController extends Controller
             ];
         }
 
-        app(EmailNotificationBuilderService::class)->sendEmailFromTemplate('key_email_customer_payment_receipt_check', [
-            'custom_email'       => $mail,
-            'order_number'       => $orderModel->order_no,
-            'order_link'         => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
-            'organization_name'  => $organizationName,
-            'customer_name'      => $customerName,
-            'customer_email'     => $orderModel->email ?? optional($orderModel->contactDetails)->email ?? '',
-            'customer_phone'     => $orderModel->phone_no ?? '',
-            'customer_street'    => $orderModel->street ?? '',
-            'customer_city'      => $orderModel->city ?? '',
-            'customer_state'     => $orderModel->state ?? '',
-            'customer_postal'    => $orderModel->postal_code ?? '',
-            'customer_country'   => $orderModel->country ?? '',
-            'order_items'        => $orderItemsList,
-            'check_front_url'    => url($checkPayment->check_front),
-            'check_back_url'     => url($checkPayment->check_back),
-            'transaction_id'     => $summaryAtPayment->transaction_id ?? ('CHK' . $checkPayment->id),
-            'paid_amount'        => number_format((float) ($checkPayment->customer_paid_amount ?? 0), 2),
-            'order_total'        => number_format((float) ($orderModel->order_total ?? 0), 2),
-            'balance_remaining'  => number_format((float) ($summaryAtPayment->balancePayment ?? 0), 2),
-            'paid_date'          => optional($checkPayment->created_at)->format('m-d-Y') ?? now()->format('m-d-Y'),
-        ]);
+        return [
+            'custom_email'      => $mail,
+            'order_number'      => $orderModel->order_no,
+            'order_link'        => url("customer_portal/order_view/{$orderModel->id}") . '?active_tab=order',
+            'organization_name' => $organizationName,
+            'customer_name'     => $customerName,
+            'customer_email'    => $orderModel->email ?? optional($orderModel->contactDetails)->email ?? '',
+            'customer_phone'    => $orderModel->phone_no ?? '',
+            'customer_street'   => $orderModel->street ?? '',
+            'customer_city'     => $orderModel->city ?? '',
+            'customer_state'    => $orderModel->state ?? '',
+            'customer_postal'   => $orderModel->postal_code ?? '',
+            'customer_country'  => $orderModel->country ?? '',
+            'order_items'       => $orderItemsList,
+            'check_front_url'   => url($checkPayment->check_front),
+            'check_back_url'    => url($checkPayment->check_back),
+            'transaction_id'    => $summaryAtPayment->transaction_id ?? ('CHK' . $checkPayment->id),
+            'paid_amount'       => number_format((float) ($checkPayment->customer_paid_amount ?? 0), 2),
+            'order_total'       => number_format((float) ($orderModel->order_total ?? 0), 2),
+            'balance_remaining' => number_format((float) ($summaryAtPayment->balancePayment ?? 0), 2),
+            'paid_date'         => optional($checkPayment->created_at)->format('m-d-Y') ?? now()->format('m-d-Y'),
+            'sub_total'         => number_format((float) ($orderModel->sub_total ?? 0), 2),
+            'discountType'      => $orderModel->discountType ?? '',
+            'discount'          => $orderModel->discount ?? '',
+            'artwork'           => number_format((float) ($orderModel->artwork ?? 0), 2),
+            'sales_tax_rate'    => $orderModel->sales_tax_rate ?? '',
+            'discount_hidation' => $orderModel->discount_hidation ?? '',
+            'sale_tax'          => number_format((float) ($orderModel->sales_tax ?? 0), 2),
+            'shipping_fee'      => number_format((float) ($orderModel->shipping ?? 0), 2),
+        ];
+    }
 
-        return true;
-        
+    /**
+     * Read an uploaded image from disk and return it as a data URI for DomPDF.
+     * Returns null if the file is missing or not an image.
+     */
+    private function singleImageFileToDataUri(?string $path): ?string
+    {
+        if (empty($path)) {
+            return null;
+        }
+
+        $clean = ltrim($path, '/');
+
+        $candidates = [
+            public_path($clean),                                                   // public/uploads/...
+            storage_path('app/public/' . preg_replace('#^storage/#', '', $clean)), // storage/app/public/...
+            base_path($clean),
+            $path,                                                                 // absolute path
+        ];
+
+        foreach ($candidates as $file) {
+            if (is_file($file) && is_readable($file)) {
+                $mime = mime_content_type($file) ?: '';
+
+                if (strpos($mime, 'image/') !== 0) {
+                    logger()->warning("Single receipt image is not an image: {$file} ({$mime})");
+                    return null;
+                }
+
+                return 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($file));
+            }
+        }
+
+        logger()->warning("Single receipt image not found for PDF: {$path}");
+        return null;
+    }
+
+    private function prepareSingleReceiptHtmlForPdf(string $html): string
+    {
+        // 1) Remove outer wrapper: <body><table width="100%"><tr><td align="center"> ... </td></tr></table></body>
+        $html = preg_replace(
+            '/(<body[^>]*>)\s*<table[^>]*width="100%"[^>]*>\s*<tr>\s*<td[^>]*align="center"[^>]*>/is',
+            '$1',
+            $html,
+            1
+        );
+        $html = preg_replace(
+            '/<\/td>\s*<\/tr>\s*<\/table>\s*(<\/body>)/is',
+            '$1',
+            $html,
+            1
+        );
+
+        // 2) width="880" → 100%. Small widths like the logos stay the same.
+        $html = preg_replace_callback('/width="(\d+)"/', function ($m) {
+            return ((int) $m[1] > 600) ? 'width="100%"' : $m[0];
+        }, $html);
+
+        $pdfCss = '<style>
+            @page { margin: 20px; }
+            body { background: #ffffff !important; margin: 0; padding: 0; }
+            tr { page-break-inside: avoid; }
+        </style>';
+
+        if (stripos($html, '</head>') !== false) {
+            return str_ireplace('</head>', $pdfCss . '</head>', $html);
+        }
+
+        return $pdfCss . $html;
+    }
+
+    /**
+     * PDF only: take the email footer out of the content and show it ONCE,
+     */
+    private function movePdfFooterToFirstPageBottom(string $html): string
+    {
+        $footerHeight = 105;   // height of the footer area (px)
+
+        // Find the footer row: <!-- FOOTER --> <tr>...</tr> right before </table></body>
+        if (!preg_match('/<!--\s*FOOTER\s*-->\s*(<tr>.*?<\/tr>)\s*(<\/table>\s*<\/body>)/is', $html, $match)) {
+            return $html;
+        }
+
+        $footerRow = $match[1];
+
+        // 1) Remove the footer from the main content
+        $html = str_replace($match[0], $match[2], $html);
+
+        // 2) Footer drawn ONCE (absolute = only on page 1), rounded bottom corners like the email
+        $firstPageFooter = '
+            <div class="pdf-first-page-footer">
+                <div style="background:#ECEBE5;border-radius:0 0 12px 12px;overflow:hidden;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                        style="border-collapse:collapse;">' . $footerRow . '</table>
+                </div>
+            </div>';
+
+        $html = preg_replace('/(<body[^>]*>)/i', '$1' . $firstPageFooter, $html, 1);
+
+        // 3) Reserve space at the bottom of PAGE 1 for the footer
+        $footerCss = '<style>
+            @page { margin: 20px; }
+            @page :first { margin-bottom: ' . ($footerHeight + 25) . 'px; }
+            .pdf-first-page-footer {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -' . ($footerHeight + 5) . 'px;
+                height: ' . $footerHeight . 'px;
+            }
+        </style>';
+
+        if (stripos($html, '</head>') !== false) {
+            return str_ireplace('</head>', $footerCss . '</head>', $html);
+        }
+
+        return $footerCss . $html;
     }
 }

@@ -128,9 +128,13 @@ class OrderItem extends Model implements Auditable
         return $this->hasMany('App\Models\ProductEmbellishmentType', 'product_id', 'product_id');
     }
     public function subProduct()
-{
-    return $this->belongsTo(\App\Models\SubProduct::class, 'sub_product_no', 'sub_product_no');
-}
+    {
+        return $this->belongsTo(\App\Models\SubProduct::class, 'sub_product_no', 'sub_product_no');
+    }
+
+    public function product() {
+        return $this->belongsTo(\App\Models\Product::class, 'product_id', 'id');
+    }
 
     public function orderItemProductDetails()
     {
@@ -183,5 +187,9 @@ class OrderItem extends Model implements Auditable
         }
 
         return '0.00';
+    }
+
+    public function organization() {
+        return $this->belongsTo(\App\Models\Organization::class, 'organization_id', 'id');
     }
 }

@@ -338,7 +338,7 @@
     } */
     .back_home_mobile {
         /* padding-bottom: 20px; */
-        display: block !important;
+        display: block;
     }
     .mobile_display_none {
         display: none;
@@ -390,6 +390,7 @@
     }
     .mobile_table_padding {
         padding: unset;
+        margin-top: unset !important;
     }
     .org-header {
         display: flex;
@@ -544,8 +545,7 @@
         grid-template-columns: 1fr 1fr !important;
 
         grid-template-areas:
-            "name name"
-            "title lead-source"
+            "name lead-source"
             "organization organization"
             "email email"
             "work personal"
@@ -703,7 +703,7 @@
         color: #999 !important;
 
         text-align: right !important;
-        top: -10px;
+        top: 10px;
     }
 
     #people_table tbody tr td.lead-source::before {
@@ -794,15 +794,26 @@
        ----------------------------------------------------- */
 
     #people_table tbody tr td.email::before {
-        content: "✉" !important;
+        content: "\f0e0" !important;
+        font-family: "Font Awesome 5 Free" !important;
+        font-weight: 900 !important;
 
-        flex: 0 0 auto !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
 
-        margin-right: 8px !important;
+        flex: 0 0 28px !important;
+        width: 28px !important;
+        height: 28px !important;
 
-        font-size: 15px !important;
+        margin-right: 9px !important;
 
-        color: #777 !important;
+        font-size: 13px !important;
+        color: #6a6a6a !important;
+        background: #edf3fa !important;
+
+        border-radius: 8px !important;
+        transition: all 0.2s ease !important;
     }
 
 
@@ -998,7 +1009,7 @@
        ===================================================== */
 
     #people_table tbody tr td {
-        z-index: 1 !important;
+        /* z-index: 1 !important; */
     }
 
     #people_table tbody tr td.first-name .info {
@@ -1058,6 +1069,107 @@
     }
 }
 
+
+
+@media screen and (max-width: 767.98px) {
+
+    /* Main row */
+    .mobile_filter_search_div_1 {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+    }
+
+    /* Rows per page wrapper */
+    .mobile_rows_per_page_2 {
+        display: flex !important;
+        flex: 0 0 auto !important;
+        width: auto !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Hide label only */
+    .mobile_rows_per_page_2 .mobile_per_row {
+        display: none !important;
+    }
+
+    /* Select box */
+    .mobile_rows_per_page_2 .selectbox-div {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        max-width: none !important;
+        padding: 0 4px !important;
+    }
+
+    .mobile_rows_per_page_2 #row_per_page {
+        width: 65px !important;
+        min-width: 65px !important;
+        height: 32px !important;
+        font-size: 12px !important;
+        padding: 4px !important;
+    }
+
+    /* Search area */
+    .mobile_filter_search_div_1 > .mobile_rows_per_page:not(.mobile_rows_per_page_2) {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 10px 0 !important;
+        padding: 0 5px !important;
+    }
+
+    /* Buttons area */
+    .mobile_main_buttons {
+        flex: 1 1 auto !important;
+        width: auto !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 5px !important;
+    }
+
+    .mobile_main_buttons .btn-inside-table {
+        width: 100% !important;
+        table-layout: auto !important;
+    }
+
+    /* Hide Table Layout */
+    .mobile_main_buttons .mobile_table_layout_btn {
+        display: none !important;
+    }
+
+    /* Keep CSV and ADD buttons visible */
+    .mobile_main_buttons .mobile_csv_btn,
+    .mobile_main_buttons td:last-child {
+        display: table-cell !important;
+        white-space: nowrap !important;
+        padding: 0 3px !important;
+    }
+
+    .mobile_main_buttons .mobile_csv,
+    .mobile_main_buttons .btn-green-filled {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+        font-size: 10px !important;
+        padding: 7px 6px !important;
+    }
+
+    /* Position rows-per-page selector on the right of ADD */
+    .mobile_rows_per_page_2 {
+        order: 3 !important;
+    }
+
+    .mobile_main_buttons {
+        order: 2 !important;
+    }
+    .header-layout {
+        margin-bottom: 15px !important;
+        background-color: transparent !important;
+    }
+}
 </style>
 
 <div class="container-fluid mb-5 contect-position">
@@ -1072,7 +1184,7 @@
     @endsection
 
      @section('back-btn-Mobile')
-        <a href="{{ route('home') }}" class="home-btn-color" title="Back to home">< BACK TO HOME</a>
+        <a href="{{ route('home') }}" class="home-btn-color" title="Back to home">< BACK </a>
     @endsection
 
     <div class="col-md-12 back_home_mobile">

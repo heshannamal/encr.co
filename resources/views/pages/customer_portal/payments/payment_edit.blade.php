@@ -312,24 +312,55 @@
     @if(session('payment_success'))
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Payment Submitted',
-                html: `
-                    <p>Your payment has been successfully submitted. Our account department will now proceed with the approval process.</p>
-                    <hr style="margin: 16px 0;">
-                    <div style="text-align: left; font-size: 0.875rem; color: #444;">
-                        <p style="font-weight: 700; margin-bottom: 10px;">⚠️ Important Order Information</p>
-                        <ul style="padding-left: 18px; margin: 0; line-height: 1.8;">
-                            <li><strong>Order Changes:</strong> AOnce payment is submitted, your order is considered final and is released to production. No changes or additions can be made after this point. If you have any questions or need additional items, please contact your sales representative.</li>
+            (function () {
+                var receiptBase64 = @json(session('receipt_pdf_base64'));
+                var receiptName   = @json(session('receipt_file_name')) || 'Payment_Receipt.pdf';
 
-                            <li><strong>Custom-Made Items:</strong>  All products are custom made to order. Once an order enters production, <strong>All sales are final</strong> No refunds, cancellations, or changes are permitted.</li>
-                        </ul>
-                    </div>
-                `,
-                confirmButtonText: 'I Understand',
-                width: '600px',
-            });
+                // Download the receipt PDF (base64 → file), the page stays here
+                function downloadReceipt() {
+                    if (!receiptBase64) {
+                        return;
+                    }
+                    var bytes = atob(receiptBase64);
+                    var arr   = new Uint8Array(bytes.length);
+                    for (var i = 0; i < bytes.length; i++) {
+                        arr[i] = bytes.charCodeAt(i);
+                    }
+                    var blob = new Blob([arr], { type: 'application/pdf' });
+                    var link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = receiptName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+
+                downloadReceipt();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Submitted',
+                    html: `
+                        <p>Your payment has been successfully submitted. Our account department will now proceed with the approval process.</p>
+                        ${receiptBase64 ? `
+                            <p style="margin-top:10px;font-size:0.875rem;color:#444;">
+                                Your payment receipt is downloading.
+                            </p>
+                        ` : ''}
+                        <hr style="margin: 16px 0;">
+                        <div style="text-align: left; font-size: 0.875rem; color: #444;">
+                            <p style="font-weight: 700; margin-bottom: 10px;">⚠️ Important Order Information</p>
+                            <ul style="padding-left: 18px; margin: 0; line-height: 1.8;">
+                                <li><strong>Order Changes:</strong> AOnce payment is submitted, your order is considered final and is released to production. No changes or additions can be made after this point. If you have any questions or need additional items, please contact your sales representative.</li>
+
+                                <li><strong>Custom-Made Items:</strong>  All products are custom made to order. Once an order enters production, <strong>All sales are final</strong> No refunds, cancellations, or changes are permitted.</li>
+                            </ul>
+                        </div>
+                    `,
+                    confirmButtonText: 'I Understand',
+                    width: '600px',
+                });
+            })();
         </script>
     @endif
     @if(session('po_order_success'))
@@ -1180,7 +1211,7 @@
                             <p class="fw-semi-bold">{{number_format(($orderDetails->sub_total + $orderDetails->artwork - $discountValue),2)}}</p>
                             </div>
                             <div class="d-flex justify-content-between">
-                            <p class="fw-semi-bold">Sales tax fee {{number_format(($orderDetails['organizationDetails']->sales_tax), 2)}}% ($) :</p>
+                            <p class="fw-semi-bold">Sales tax fee {{number_format(($orderDetails->sales_tax_rate ?? 0), 2)}}% ($) :</p>
                             <p class="fw-semi-bold">{{number_format($sales_tax, 2)}}</p>
                             </div>
                             <div class="d-flex justify-content-between">

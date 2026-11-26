@@ -137,6 +137,26 @@ Route::get('/pdt/models/{file}', function ($file) {
 });
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::prefix('pdt-design-settings')->name('pdt.design-settings.')->middleware('can:view pdt design settings')->group(function(){
+        Route::get('/',[\App\Http\Controllers\PdtDesignSettingsController::class,'index'])->name('index');
+        Route::get('/products/{product}',[\App\Http\Controllers\PdtDesignSettingsController::class,'index'])->name('product');
+        Route::patch('/designs/{template}',[\App\Http\Controllers\PdtDesignSettingsController::class,'update'])->name('update');
+        Route::delete('/designs/{template}',[\App\Http\Controllers\PdtDesignSettingsController::class,'destroy'])->name('destroy');
+        Route::post('/designs/{template}/restore',[\App\Http\Controllers\PdtDesignSettingsController::class,'restore'])->name('restore');
+    });
+
+    // Design Concept Requests
+    Route::prefix('marketing/pdt-design')->name('pdt.design-requests.')->middleware('can:view pdt design requests')->group(function(){
+        Route::get('/',[\App\Http\Controllers\PdtDesignRequestController::class,'index'])->name('index');
+        Route::post('/',[\App\Http\Controllers\PdtDesignRequestController::class,'store'])->name('store');
+        Route::get('/{designRequest}/workspace',[\App\Http\Controllers\PdtDesignRequestController::class,'workspace'])->name('workspace');
+    Route::get('/{designRequest}',[\App\Http\Controllers\PdtDesignRequestController::class,'show'])->name('show');
+        Route::get('/{designRequest}/products/{item}/designs',[\App\Http\Controllers\PdtDesignRequestController::class,'designs'])->name('designs');
+        Route::post('/{designRequest}/products/{item}/designs',[\App\Http\Controllers\PdtDesignRequestController::class,'addDesigns'])->name('add-designs');
+        Route::delete('/{designRequest}/products/{item}/designs/{template}',[\App\Http\Controllers\PdtDesignRequestController::class,'removeDesign'])->name('remove-design');
+        Route::patch('/{designRequest}/products/{item}/designs/{template}/redesign',[\App\Http\Controllers\PdtDesignRequestController::class,'redesign'])->name('redesign');
+        Route::patch('/{designRequest}/status',[\App\Http\Controllers\PdtDesignRequestController::class,'status'])->name('status');
+    });
 
     //PDT
     Route::get('/pdt',  [App\Http\Controllers\PdtController::class, 'index'])->name('pdt.index');
@@ -353,6 +373,51 @@ Route::post(
     Route::get('orders/organization_without_activities_export', [App\Http\Controllers\OrderController::class, 'organization_without_activities_export'])->name('orders.organization_without_activities_export');
 
 
+    // Studio Items page
+    Route::get('orders/studio', [App\Http\Controllers\StudioOrderController::class, 'index'])->name('studio.index');
+    Route::post('orders/studio/kits', [App\Http\Controllers\StudioOrderController::class, 'storeKit'])->name('studio.kits.store');
+    Route::post('orders/studio/kits/{kit}/items', [App\Http\Controllers\StudioOrderController::class, 'addItemsToKit'])->name('studio.kits.items');
+    Route::delete('orders/studio/kits/{kit}', [App\Http\Controllers\StudioOrderController::class, 'destroyKit'])->name('studio.kits.destroy');
+    Route::post('orders/studio/shoots', [App\Http\Controllers\StudioOrderController::class, 'storeShoot'])->name('studio.shoots.store');
+    Route::post('orders/studio/shoots/{shoot}/items', [App\Http\Controllers\StudioOrderController::class, 'addItemsToShoot'])->name('studio.shoots.items');
+    Route::delete('orders/studio/shoots/{shoot}', [App\Http\Controllers\StudioOrderController::class, 'destroyShoot'])->name('studio.shoots.destroy');
+
+    // Shoot Schedule
+    Route::get('orders/shoot-shedule', [App\Http\Controllers\StudioOrderController::class, 'shootSchedule'])->name('studio.shoot.schedule');
+    Route::patch('orders/shoot-shedule/{shoot}/date', [App\Http\Controllers\StudioOrderController::class, 'updateShootDate'])->name('studio.shoot.schedule.date');
+    Route::patch('orders/shoot-shedule/{shoot}/name', [App\Http\Controllers\StudioOrderController::class, 'updateShootName'])->name('studio.shoot.schedule.name');
+    Route::patch('orders/shoot-shedule/{shoot}/time', [App\Http\Controllers\StudioOrderController::class, 'updateShootTime'])->name('studio.shoot.schedule.time');
+    Route::patch('orders/shoot-shedule/{shoot}/note', [App\Http\Controllers\StudioOrderController::class, 'updateShootNote'])->name('studio.shoot.schedule.note');
+    Route::patch('orders/shoot-shedule/{shoot}/items/{item}/model', [App\Http\Controllers\StudioOrderController::class, 'updateShootItemModel'])->name('studio.shoot.schedule.item.model');
+    Route::delete('orders/shoot-shedule/{shoot}/items/{item}', [App\Http\Controllers\StudioOrderController::class, 'removeShootItem'])->name('studio.shoot.schedule.item.remove');
+
+
+    Route::get('orders/shoot-models-list', [App\Http\Controllers\StudioOrderController::class, 'shootModels'])->name('studio.shoot.models');
+    Route::get('orders/shoot-models/create', [App\Http\Controllers\StudioOrderController::class, 'shootModelCreate'])->name('studio.shoot.create');
+    Route::get('orders/shoot-models/{id}', [App\Http\Controllers\StudioOrderController::class, 'shootModelProfile'])->name('studio.shoot.models.profile');
+    Route::post('orders/shoot-models', [App\Http\Controllers\StudioOrderController::class, 'storeShootModel'])->name('studio.shoot.models.store');
+    Route::patch('orders/shoot-models/{fashionModel}', [App\Http\Controllers\StudioOrderController::class, 'updateShootModel'])->name('studio.shoot.models.update');
+    Route::delete('orders/shoot-models/{fashionModel}', [App\Http\Controllers\StudioOrderController::class, 'destroyShootModel'])->name('studio.shoot.models.destroy');
+    Route::patch('orders/shoot-models/{fashionModel}/measurements', [App\Http\Controllers\StudioOrderController::class, 'updateShootModelMeasurements'])->name('studio.shoot.models.measurements');
+
+    // Profile photo + model images
+    Route::post('orders/shoot-models/{fashionModel}/photo', [App\Http\Controllers\StudioOrderController::class, 'updateShootModelPhoto'])->name('studio.shoot.models.photo');
+    Route::post('orders/shoot-models/{fashionModel}/images/{side}', [App\Http\Controllers\StudioOrderController::class, 'storeShootModelImage'])->where('side', 'front|right|left|back')->name('studio.shoot.models.images.store');
+    Route::delete('orders/shoot-models/{fashionModel}/images/{side}', [App\Http\Controllers\StudioOrderController::class, 'destroyShootModelImage'])->where('side', 'front|right|left|back')->name('studio.shoot.models.images.destroy');
+
+    // Previous photoshoot photos
+    Route::post('orders/shoot-models/{fashionModel}/photoshoot-photos', [App\Http\Controllers\StudioOrderController::class, 'storeShootModelPhotos'])->name('studio.shoot.models.photos.store');
+    Route::delete('orders/shoot-models/{fashionModel}/photoshoot-photos', [App\Http\Controllers\StudioOrderController::class, 'clearShootModelPhotos'])->name('studio.shoot.models.photos.clear');
+    Route::delete('orders/shoot-models/{fashionModel}/photoshoot-photos/{photo}', [App\Http\Controllers\StudioOrderController::class, 'destroyShootModelPhoto'])->name('studio.shoot.models.photos.destroy');
+
+    Route::get('orders/shoot-past', [App\Http\Controllers\StudioOrderController::class, 'pastPhotoShoot'])->name('studio.past.photoshoot');
+
+    Route::get('orders/studio-chat/shoot/{shoot}', [App\Http\Controllers\StudioOrderController::class, 'shootChat'])->name('studio.chat.shoot');
+    Route::get('orders/studio-chat/item/{item}', [App\Http\Controllers\StudioOrderController::class, 'itemChat'])->name('studio.chat.item');
+
+    Route::get('orders/studio-settings', [App\Http\Controllers\StudioOrderController::class, 'studioSettings'])->name('studio.settings');
+    Route::get('orders/studio-settings/projects/{project}/sections', [App\Http\Controllers\StudioOrderController::class, 'studioSettingsSections'])->name('studio.settings.sections');
+    Route::post('orders/studio-settings', [App\Http\Controllers\StudioOrderController::class, 'updateStudioSettings'])->name('studio.settings.update');
 
 	Route::get('email', [App\Http\Controllers\AppsController::class, 'TestIndexEmails']);
 
@@ -405,6 +470,93 @@ Route::post(
 
 	// Organizations
 
+    Route::get('orders/temporary/unpaid-sales-tax', function (\App\Services\PaymentService $payments) {
+        $orders = collect();
+        \App\Models\Order::with('organizationDetails')
+            ->where('active', 1)->where('order_status_id', '<>', 7)
+            ->where('order_total', '>', 0)->where('order_no', 'not like', 'TSR%')
+            ->chunkById(200, function ($batch) use ($payments, $orders) {
+                foreach ($batch as $order) {
+                    if ($payments->getPaymentStatus($order->id)['payment_status'] !== \App\Services\PaymentService::STATUS_PAID) {
+                        $orders->push($order);
+                    }
+                }
+            });
+
+        return view('temporary-unpaid-order-sales-tax', compact('orders'));
+    })->middleware('can:view sales tax reports')->name('reports.unpaid_order_sales_tax');
+
+    Route::patch('orders/temporary/unpaid-sales-tax/{order}', function (
+        $order, \App\Services\PaymentService $payments
+    ) {
+        \Illuminate\Support\Facades\DB::transaction(function () use ($order, $payments) {
+            $record = \App\Models\Order::whereKey($order)->lockForUpdate()->firstOrFail();
+            abort_unless($record->active == 1 && $record->order_status_id != 7, 404);
+            abort_if($payments->getPaymentStatus($record->id)['payment_status'] === \App\Services\PaymentService::STATUS_PAID,
+                422, 'This order is already paid.');
+            abort_unless($record->organizationDetails, 422, 'This order has no organization.');
+            $record->syncOrganizationSalesTaxRate();
+            $record->save();
+        });
+
+        return redirect()->route('reports.unpaid_order_sales_tax')
+            ->with('tax_sync_status', 'Sales tax rate synced for order #'.$order.'.');
+    })->middleware(['can:view sales tax reports', 'can:edit organizations'])
+        ->name('reports.unpaid_order_sales_tax.sync');
+
+    Route::post('organizations/california-tax-details', function (\Illuminate\Http\Request $request) {
+        abort_unless(auth()->user()->can('edit organizations') || auth()->user()->can('add organizations'), 403);
+        $data = $request->validate([
+            'shipping_street' => 'required|string|max:255',
+            'shipping_city' => 'required|string|max:255',
+            'shipping_state' => 'required|string|max:255',
+            'shipping_postal_code' => 'required|string|max:255',
+            'shipping_country' => 'nullable|string|max:255',
+        ]);
+        $organization = new \App\Models\Organization($data);
+        abort_unless($organization->usesCaliforniaSalesTax(), 422, 'This lookup requires a California address.');
+
+        return response()->json(app(\App\Services\CaliforniaSalesTax::class)->detailsFor($organization));
+    })->name('organizations.california_tax_details');
+
+    // Temporary report for correcting missing or zero organization sales tax rates.
+    Route::get('organizations/temporary/active-sales-tax', function () {
+        $organizations = \App\Models\Organization::query()
+            ->where('active', 1)
+            ->where('sales_tax_active', 1)
+            ->has('orders')
+            ->where(function ($query) {
+                $query->whereNull('sales_tax')->orWhere('sales_tax', 0);
+            })
+            ->orderBy('organization_name')
+            ->get(['id', 'organization_name', 'shipping_street', 'shipping_city', 'shipping_state',
+                'shipping_postal_code', 'shipping_country', 'sales_tax', 'sales_tax_active']);
+
+        return view('temporary-active-sales-tax', compact('organizations'));
+    })->middleware('can:view sales tax reports')->name('reports.organization_sales_tax');
+
+    Route::patch('organizations/temporary/active-sales-tax/{organization}', function (
+        \Illuminate\Http\Request $request,
+        \App\Models\Organization $organization
+    ) {
+        abort_unless($organization->active == 1 && $organization->orders()->exists(), 404);
+
+        $data = $request->validate([
+            'shipping_street' => 'present|nullable|string|max:255',
+            'shipping_city' => 'present|nullable|string|max:255',
+            'shipping_state' => 'present|nullable|string|max:255',
+            'shipping_postal_code' => 'present|nullable|string|max:255',
+            'shipping_country' => 'present|nullable|string|max:255',
+            'sales_tax' => 'present|nullable|numeric|between:0,100',
+            'sales_tax_active' => 'required|boolean',
+        ]);
+
+        $organization->update($data);
+
+        return redirect()->route('reports.organization_sales_tax')
+            ->with('tax_report_status', 'Saved changes for '.$organization->organization_name.'.');
+    })->middleware(['can:view sales tax reports', 'can:edit organizations'])
+        ->name('reports.organization_sales_tax.update');
 	Route::get('organizations/{type?}', [App\Http\Controllers\OrganizationController::class, 'index'])->name('organizations');
 	Route::get('OrganizationExport', [App\Http\Controllers\OrganizationController::class, 'OrganizationExport'])->name('organizations.OrganizationExport');
 	Route::get('organizations/get_people_list', [App\Http\Controllers\OrganizationController::class, 'getPeopleList'])->name('organizations.get_people_list');
@@ -422,6 +574,7 @@ Route::post(
 	Route::get('organizations/delete/{organizationId}', [App\Http\Controllers\OrganizationController::class, 'delete'])->name('organizations.delete');
 	Route::get('organizations/export/export_csv', [App\Http\Controllers\OrganizationController::class, 'exportCsv'])->name('organizations.export_csv');
 	Route::post('organizations/layout', [App\Http\Controllers\OrganizationController::class, 'layout'])->name('organizations.layout');
+    // Route::get('organizations/details')
 
     Route::get('organizations/address/{organizationId}', [App\Http\Controllers\OrganizationController::class, 'address'])->name('organizations.address');
     Route::get('organizations/is_done/{id}/{status}', [App\Http\Controllers\OrganizationController::class, 'isDone'])->name('organizations.is_done');
@@ -574,6 +727,8 @@ Route::post(
     Route::post('store/delete_product_image', [App\Http\Controllers\StoreController::class, 'delete_product_image'])->name('store.delete_product_image');
     Route::post('store/add_new_coupon', [App\Http\Controllers\StoreController::class, 'add_new_coupon'])->name('store.add_new_coupon');
 
+    Route::post('store/{store}/coach-payment/prepare',[App\Http\Controllers\StoreCoachPaymentController::class, 'prepare'])->name('store.coach_payment.prepare');
+
     Route::post('store/updateStoreStatusEmailSettings', [App\Http\Controllers\StoreController::class, 'updateStoreStatusEmailSettings'])->name('store.updateStoreStatusEmailSettings');
 
     Route::post('store/update_store_theme', [App\Http\Controllers\StoreController::class, 'update_store_theme'])->name('store.update_store_theme');
@@ -594,9 +749,11 @@ Route::post(
     Route::post('usps/create_shipments', [App\Http\Controllers\USPSController::class, 'createShipmentsBulk'])->name('usps.create_shipments_bulk');
 
     // USPS import
-    Route::get('/admin/import-usps-labels', [App\Http\Controllers\USPSController::class, 'showImportForm'])->name('admin.usps-labels.import');
+    Route::get('/admin/import-usps-labels',[App\Http\Controllers\USPSController::class, 'showImportForm'])->name('admin.usps-labels.import');
 
-    Route::post('/admin/usps-labels/import', [App\Http\Controllers\USPSController::class, 'import'])->name('admin.usps-labels.import.store');
+    Route::post('/admin/usps-labels/import',[App\Http\Controllers\USPSController::class, 'import'])->name('admin.usps-labels.import.store');
+
+    Route::post('/admin/usps-labels/import/save',[App\Http\Controllers\USPSController::class, 'saveImportedLabels'])->name('admin.usps-labels.import.save');
 
     // USPS label management
     // IMPORTANT: label purchase is POST only.
@@ -631,6 +788,10 @@ Route::post(
     Route::get('usps/labels/manage-selected', [App\Http\Controllers\USPSController::class,'bulkLabelManagerPage'])->name('usps.label.bulk-manage');
 
     Route::post('usps/labels/{id}/quote', [App\Http\Controllers\USPSController::class,'quoteLabelPostage'])->name('usps.label.quote');
+
+    Route::post('usps/labels/{id}/review/recover',[App\Http\Controllers\USPSController::class,'recoverReviewRequiredLabel'])->name('usps.label.review-recover');
+
+    Route::post('usps/labels/{id}/review/cancel-refund',[App\Http\Controllers\USPSController::class,'cancelReviewRequiredLabel'])->name('usps.label.review-cancel-refund');
 
 //email templates
     Route::get('email/templates', [App\Http\Controllers\EmailTemplateController::class, 'index'])->name('email.templates');
@@ -1080,6 +1241,8 @@ Route::get(
     Route::post('/dopay/online', [App\Http\Controllers\PaymentController::class, 'handleonlinepay'])->name('dopay.online');
     // Route::post('payment/check', [App\Http\Controllers\PaymentController::class, 'check'])->name('payment.check');
 
+    Route::get('payment/receipt/{type}/{id}/download',[App\Http\Controllers\PaymentController::class, 'downloadPaymentReceiptPdf'])->name('payment.receipt.download');
+
     // Cheque Payment
     Route::post('payment/check', [App\Http\Controllers\ChequePaymentController::class, 'check'])->name('payment.check');
     Route::post('payment/check_approve', [App\Http\Controllers\ChequePaymentController::class, 'checkApprove'])->name('payment.check_approve');
@@ -1424,6 +1587,9 @@ Route::get('email/info-debugg/{id?}', [App\Http\Controllers\EmailController::cla
     Route::get('admin_product_catalog', [App\Http\Controllers\CustomerPortalController::class, 'portal'])->name('admin_product_catlog');
     Route::get('admin_product_catalog/products/{id}/{type}', [App\Http\Controllers\CustomerPortalController::class, 'portal_product'])->name('portal_product');
     Route::match(['get', 'post'],'adminProductFilter', [App\Http\Controllers\CustomerPortalController::class, 'adminProductFilter'])->name('adminProductFilter');
+    Route::match(['get', 'post'],'admin_product_catalog_product_filter1', [App\Http\Controllers\CustomerPortalController::class, 'admin_product_catalog_product_filter1'])->name('admin_product_catlog_product_filter1');
+    Route::match(['get', 'post'], 'admin_product_catalog_product_search', [App\Http\Controllers\CustomerPortalController::class, 'admin_product_catalog_product_search'])->name('admin_product_catalog_product_search.products');
+    Route::get('admin_product_catalog_product_productDetails/{id}', [App\Http\Controllers\CustomerPortalController::class, 'admin_product_catalog_product_productDetails'])->name('admin_product_catalog_product_productDetails.show');
     Route::get('productSearchAdminCatalog/search', [App\Http\Controllers\CustomerPortalController::class, 'productSearchAdminCatalog'])->name('productSearchAdminCatalog');
 
     Route::get('superadmin/enquiries-data', [App\Http\Controllers\HomeController::class, 'getEnquiriesData'])->name('superadmin.enquiries.data');
@@ -1455,13 +1621,24 @@ Route::get('email/info-debugg/{id?}', [App\Http\Controllers\EmailController::cla
     Route::post('get_canceled_order_report', [App\Http\Controllers\ReportController::class, 'get_canceled_order_report_data'])->name('get_canceled_order_report_data');
     Route::get('customer_sales', [App\Http\Controllers\ReportController::class, 'cu_sales_summary'])->name('reports.cu_sales_summary');
     Route::post('get_cu_sales_summary_data', [App\Http\Controllers\ReportController::class, 'get_cu_sales_summary_data'])->name('get_cu_sales_summary_data');
+    Route::get('remake_order_item_report', [App\Http\Controllers\ReportController::class, 'remake_order_item_report'])->name('reports.remake_order_item_report');
+    Route::post('get_remake_order_item_report_data', [App\Http\Controllers\ReportController::class, 'get_remake_order_item_report_data'])->name('get_remake_order_item_report_data');
     Route::get('compared_Reports', [App\Http\Controllers\ReportController::class, 'compared_Reports'])->name('reports.compared_Reports');
     Route::post('get_summary_report_data', [App\Http\Controllers\ReportController::class, 'get_summary_report_data'])->name('get_summary_report_data');
     Route::post('make_compare_report', [App\Http\Controllers\ReportController::class, 'make_compare_report'])->name('make_compare_report');
 
     Route::post('/sales-tax/export', function (\Illuminate\Http\Request $request) {
-        $fileName = 'Sales_Tax_Report_'.date('Y-m-d_H-i-s').'.xlsx';
-        return Excel::download(new SalesTaxReportExport($request->start_date, $request->end_date), $fileName);
+        $fileName = 'Sales_Tax_Report_' . date('Y-m-d_H-i-s') . '.xlsx';
+
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\SalesTaxReportExport(
+                $request->input('start_date'),
+                $request->input('end_date'),
+                $request->input('county'),
+                $request->input('city')
+            ),
+            $fileName
+        );
     })->name('sales.tax.export');
 
 	Route::get('Sales_Tax_Report', [App\Http\Controllers\ReportController::class, 'Sales_Tax_Report'])->name('reports.Sales_Tax_Report');
@@ -1890,6 +2067,13 @@ Route::middleware('auth')
     ->prefix('store-order-recovery')
     ->name('store-order-recovery.')
     ->group(function () {
-        Route::get('/', [App\Http\Controllers\StoreOrderRecoveryController::class, 'index'])->name('index');
-        Route::post('/{orderId}/restore', [App\Http\Controllers\StoreOrderRecoveryController::class, 'restore'])->name('restore');
+        Route::get('/', [App\Http\Controllers\StoreOrderRecoveryController::class, 'index'])
+            ->name('index');
+
+        Route::post('/{orderId}/cart/{cartId}/sync', [App\Http\Controllers\StoreOrderRecoveryController::class, 'syncCartItem'])
+            ->name('sync-cart-item');
+
+
+        Route::post('/{orderId}/create-first-receipt', [App\Http\Controllers\StoreOrderRecoveryController::class, 'createFirstReceipt'])
+            ->name('create-first-receipt');
     });

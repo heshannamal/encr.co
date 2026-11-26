@@ -137,6 +137,129 @@
         font-family: FontAwesome;
         right: .65rem !important;
     }
+    @media (max-width: 767px) {
+
+        /* ---------- Page: grey background, no big white wrapper ---------- */
+        #scrollTable { padding: 0 !important; margin-top: 10px !important; }
+        #scrollTable > .card { background: transparent !important; box-shadow: none !important; border: 0 !important; overflow: visible !important; }
+
+        /* ---------- Filter card ---------- */
+        #summary_filter_form {
+            display: flex; flex-wrap: wrap; align-items: center;
+            background: #fff; border-radius: 12px; padding: 12px;
+            box-shadow: 0 1px 6px rgba(0,0,0,.08); margin-bottom: 16px;
+        }
+        
+        /* flatten first row so every control can be ordered */
+        #summary_filter_form > .row:first-of-type { display: contents; }
+        #summary_filter_form > .row:last-of-type { order: 5; width: 100%; margin: 8px 0 !important; }
+        #summary_filter_form > .row:last-of-type table { width: auto; }
+        #summary_filter_form > .row:last-of-type label { margin: 0 !important; font-size: 13px; color: #000; }
+
+        /* line break after pills */
+        #summary_filter_form::before { content: ""; order: 2; flex-basis: 100%; height: 0; }
+
+        /* Date pills */
+        .row-for-date-options {
+            order: 1; width: auto; margin: 0 6px 8px 0 !important;
+            border-radius: 20px !important; background: #fff !important;
+            border: 1px solid #DEDEDE !important; padding: 5px 12px !important;
+        }
+        .row-for-date-options.ml-auto { margin-left: 0 !important; }
+        .row-for-date-options .date_p { font-size: 12px; color: #000; white-space: nowrap; }
+        .row-for-date-options:has(input:checked) { background: #000 !important; border-color: #000 !important; }
+        .row-for-date-options:has(input:checked) .date_p { color: #fff !important; }
+
+        /* Start / End side by side */
+        #summary_filter_form > .row:first-of-type > .filter_row:nth-child(2),
+        #summary_filter_form > .row:first-of-type > .filter_row:nth-child(3) {
+            order: 3; width: calc(50% - 4px); margin: 4px 0 !important; padding: 0 !important;
+            background: #F8F8F8; border: 1px solid #DEDEDE; border-radius: 8px;
+        }
+        #summary_filter_form > .row:first-of-type > .filter_row:nth-child(2) { margin-right: 8px !important; }
+        #summary_filter_form > .row:first-of-type > .filter_row:nth-child(2) .date_p,
+        #summary_filter_form > .row:first-of-type > .filter_row:nth-child(3) .date_p { display: none; }
+
+        /* Based on date */
+        #summary_filter_form > .row:first-of-type > .filter_row:nth-child(4) {
+            order: 4; width: 100%; margin: 4px 0 !important; padding: 0 !important;
+            background: #F8F8F8; border: 1px solid #DEDEDE; border-radius: 8px;
+        }
+
+        #summary_filter_form .filter_row .date_selection,
+        #summary_filter_form .filter_row .date_selection input,
+        #summary_filter_form .filter_row .date_selection select,
+        #summary_filter_form .select2.select2-container { width: 100% !important; }
+        #summary_filter_form .filter_row .date_selection { padding: 0 !important; }
+        #summary_filter_form .filter_row .date_selection input { border: 0 !important; background: transparent !important; padding: 0 10px; font-size: 13px; color: #777; }
+        #summary_filter_form .select2-selection--single { border: 0 !important; background: transparent !important; height: 40px !important; }
+        #summary_filter_form .select2-selection__rendered { line-height: 40px !important; font-size: 13px; color: #777 !important; }
+
+        /* Filter button: full width black */
+        #summary_filter_form > .row:first-of-type ~ * { }
+        #summary_filter_form > .row:first-of-type > div[style*="margin-left"] { order: 6; width: 100%; margin: 4px 0 0 !important; }
+        #summary_filter_form > .row:first-of-type > div[style*="margin-left"] .row { margin: 0 !important; }
+        .filter_btn { width: 100%; height: 42px !important; background: #000; border-radius: 8px; font-size: 13px; }
+
+        /* Per page: small, bottom of the card */
+        #summary_filter_form > .row:first-of-type > .filter_row:nth-child(1) {
+            order: 7; width: auto; margin: 10px 0 0 !important; padding: 2px 6px !important;
+            background: transparent; border: 0;
+        }
+        #page_length { color: #777; }
+
+        /* ---------- Table -> separate white cards on grey ---------- */
+        .order_sammary_table { padding: 0 !important; overflow: visible !important; background: transparent !important; }
+        .order_sammary_table .dataTables_wrapper,
+        .order_sammary_table .dataTables_scroll,
+        .order_sammary_table .dataTables_scrollBody {
+            width: 100% !important; overflow: visible !important; border: 0 !important; background: transparent !important;
+        }
+        .dataTables_scrollHead, #order_summary thead { display: none !important; }
+
+        /* remove 15px side padding from DataTables inner columns */
+        .dataTables_wrapper .row > [class*="col-"] { padding-left: 0 !important; padding-right: 0 !important; }
+        .dataTables_wrapper { padding: 0 !important; }
+
+        #order_summary { display: block; width: 100% !important; min-width: 0 !important; margin: 0 !important; background: transparent !important; }
+        #order_summary tbody { display: block; width: 100%; background: transparent !important; }
+        #order_summary tbody tr {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px 8px;
+            background: #fff !important; border-radius: 12px; padding: 14px;
+            margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.08);
+        }
+        #order_summary tbody td { display: block; border: 0 !important; padding: 0 !important; text-align: left !important; background: transparent; }
+
+        #order_summary tbody td:nth-child(1) { display: none; }
+        #order_summary tbody td:nth-child(2) { grid-column: 1 / 3; grid-row: 1; font-weight: 700; font-size: 15px; min-width: 0; word-break: break-word; padding-right: 8px !important; }
+        #order_summary tbody td:nth-child(4) { grid-column: 3; grid-row: 1; text-align: right !important; font-weight: 600; font-size: 13px; white-space: nowrap; }
+        #order_summary tbody td:nth-child(4)::after { content: " Orders"; }
+        #order_summary tbody td:nth-child(3) { grid-column: 1 / 4; grid-row: 2; color: #777; font-size: 13px; margin-bottom: 6px; }
+
+        #order_summary tbody td:nth-child(5),
+        #order_summary tbody td:nth-child(6),
+        #order_summary tbody td:nth-child(7) {
+            grid-row: 3; background: #F3F3F3 !important; border-radius: 6px; padding: 8px 10px !important;
+            font-size: 13px; font-weight: 600;
+        }
+        #order_summary tbody td:nth-child(5) { grid-column: 1; color: #000; }
+        #order_summary tbody td:nth-child(6) { grid-column: 2; color: #3aa335; }
+        #order_summary tbody td:nth-child(7) { grid-column: 3; color: #e0001a; }
+        #order_summary tbody td:nth-child(5)::before,
+        #order_summary tbody td:nth-child(6)::before,
+        #order_summary tbody td:nth-child(7)::before { display: block; color: #777; font-size: 12px; font-weight: 400; }
+        #order_summary tbody td:nth-child(5)::before { content: "Total"; }
+        #order_summary tbody td:nth-child(6)::before { content: "Paid"; }
+        #order_summary tbody td:nth-child(7)::before { content: "Balance"; }
+
+        /* ---------- Pagination: only < 1 > on the right ---------- */
+        .dataTables_wrapper .row { margin: 0 !important; }
+        .dataTables_paginate { float: none !important; width: 100%; margin: 0 !important; }
+        .dataTables_paginate .pagination { justify-content: flex-end !important; flex-wrap: nowrap; margin: 4px 0 16px !important; }
+        .dataTables_paginate .paginate_button:not(.active):not(.previous):not(.next) { display: none; }
+        .dataTables_paginate .page-link { border-radius: 6px !important; min-width: 34px; text-align: center; }
+        .dataTables_paginate .paginate_button.active .page-link { background: #000; color: #fff; border-color: #000; }
+    }
 </style>
 
 
@@ -330,25 +453,27 @@
 
         let hoverTimeout;
 
-        if ($('#minimize_icon').css('display') != 'none') {
-            $('#minimize_icon')[0].click();
-        }
-
-        $('#sidenav-main').hover(
-            function() {
-                hoverTimeout = setTimeout(function() {
-                    if ($('#maximize_icon').css('display') != 'none') {
-                        $('#maximize_icon').click();
-                    }
-                }, 500);
-            },
-            function() {
-                clearTimeout(hoverTimeout);
-                if ($('#minimize_icon').css('display') != 'none') {
-                    $('#minimize_icon')[0].click();
-                }
+        if ($(window).width() > 767) {
+            if ($('#minimize_icon').length && $('#minimize_icon').css('display') != 'none') {
+                $('#minimize_icon')[0].click();
             }
-        );
+
+            $('#sidenav-main').hover(
+                function() {
+                    hoverTimeout = setTimeout(function() {
+                        if ($('#maximize_icon').length && $('#maximize_icon').css('display') != 'none') {
+                            $('#maximize_icon').click();
+                        }
+                    }, 500);
+                },
+                function() {
+                    clearTimeout(hoverTimeout);
+                    if ($('#minimize_icon').length && $('#minimize_icon').css('display') != 'none') {
+                        $('#minimize_icon')[0].click();
+                    }
+                }
+            );
+        }
 
         $('input[name="dateFilter"]').on('click', function() {
             $('#start_date').val('');

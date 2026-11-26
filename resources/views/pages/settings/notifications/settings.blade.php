@@ -355,34 +355,830 @@
         background: #fff;
     }
 
+    /* =====================================================================
+       Notification Settings - mobile additions 
+       ===================================================================== */
+
+    /* Desktop: same values as the old inline styles */
+    .ns-page .ns-table-col { padding-right: 19px; }
+    .ns-link-blue  { color: #3a82ad; cursor: pointer; }
+    .ns-link-green { color: #3bad3a; cursor: pointer; }
+
+    /* Mobile-only pieces are hidden on desktop */
+    .ns-mobile-only,
+    .ns-more-info,
+    .ns-page .ns-full { display: none; }
+
     @media (max-width: 767.98px) {
+        /* Toggle desktop-only / mobile-only pieces */
+        .ns-desktop-only { display: none !important; }
+        .ns-mobile-only  { display: inline; }
+
+        /* ---------- Page spacing ----------
+           mb-5 (3rem, !important) leaves a big gap above the footer. */
+        .ns-page {
+            margin-bottom: 0 !important;
+            padding-bottom: 20px;
+        }
+
+        /* ---------- Header: Add Template button (right side) ----------
+           The page title is already shown by the layout, so it is not repeated. */
+        .ns-page .ns-mobile-header {
+            display: block;
+            padding-top: 4px;
+        }
+        .ns-page .ns-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        .ns-page .ns-add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            padding: 9px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.2;
+            white-space: nowrap;
+            color: #fff;
+            background-color: #45d4b8;
+            border: 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(69, 212, 184, .35);
+            cursor: pointer;
+        }
+        .ns-page .ns-add-btn:active {
+            background-color: #3cc4a9;
+        }
+        .ns-page .ns-add-btn svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* ---------- Outer wrappers ----------
+           The column sits directly in .container-fluid (no .row);
+           mt-4 uses !important. */
+        .ns-page .ns-outer-col {
+            margin-top: 14px !important;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .ns-page .ns-main-card {
+            background-color: transparent;
+            border: 0;
+            box-shadow: none;
+        }
+        .ns-page .ns-table-col {
+            margin-top: 0 !important;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        /* ---------- Search card ---------- */
+        .ns-page .ns-mobile-toolbar {
+            display: block;
+        }
+        .ns-page .ns-search-card {
+            padding: 12px;
+            background-color: #fff;
+            border: 1px solid #ececec;
+            border-radius: 12px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+        }
+        .ns-page .ns-search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: 40px;
+            padding: 0 12px;
+            background-color: #f5f6f7;
+            border: 1px solid #e3e3e3;
+            border-radius: 8px;
+        }
+        .ns-page .ns-search-box svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+            color: #333;
+        }
+        .ns-page .ns-search-input {
+            flex: 1 1 auto;
+            min-width: 0;
+            height: 100%;
+            padding: 0;
+            font-size: 14px;
+            color: #1d1d1f;
+            background: transparent;
+            border: 0;
+            outline: none;
+            box-shadow: none;
+        }
+        .ns-page .ns-search-input::placeholder {
+            color: #a3a3a3;
+        }
+
+        /* ---------- Show entries / Sort by row ---------- */
+        .ns-page .ns-filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px 12px;
+            margin: 14px 0 10px;
+        }
+        .ns-page .ns-filter-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            font-size: 13px;
+            font-weight: 400;
+            color: #8c8c8c;
+            white-space: nowrap;
+        }
+        .ns-page .ns-select {
+            height: 30px;
+            padding: 0 26px 0 10px;
+            font-size: 13px;
+            color: #1d1d1f;
+            background-color: #fff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23333' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 9px center;
+            background-size: 9px 6px;
+            border: 1px solid #dedede;
+            border-radius: 6px;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        /* The custom search / length / sort controls above replace these */
+        .ns-page .dataTables_length,
+        .ns-page .dataTables_filter {
+            display: none;
+        }
+
+        /* ---------- Table -> cards ----------
+           Several existing table rules use !important (padding, font-size,
+           colour, borders), so !important is needed here to override them. */
+        .ns-page .new-style-table table.dataTable,
+        .ns-page .new-style-table table.table-responsive {
+            display: block;
+            overflow: visible;
+            margin: 0 !important;
+            border: 0 !important;
+        }
+        .ns-page .new-style-table table thead {
+            display: none;
+        }
+        .ns-page .new-style-table table tbody {
+            display: block;
+        }
+        .ns-page .new-style-table .table tbody tr {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas:
+                "name   name   toggle"
+                "key    key    key"
+                "func   func   func"
+                "ctrl   ctrl   ctrl"
+                "users  edit   more"
+                "title  title  title"
+                "mtitle mtitle mtitle"
+                "body   body   body"
+                "desc   desc   desc";
+            align-items: start;
+            min-height: 0;
+            margin: 0 0 10px;
+            padding: 14px;
+            color: #1d1d1f;
+            background-color: #fff;
+            border: 1px solid #ececec !important;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+            overflow: hidden;
+        }
+        .ns-page .new-style-table .table tbody tr:hover {
+            background-color: #fff;
+        }
+        .ns-page .new-style-table .table tbody td {
+            display: block;
+            min-width: 0;
+            padding: 0 !important;
+            font-size: 12px !important;
+            line-height: 1.45;
+            color: #1d1d1f !important;
+            text-align: left !important;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            background: transparent;
+            border: 0 !important;
+        }
+
+        /* 1: status toggle */
+        .ns-page .new-style-table .table tbody tr > td:nth-child(1) {
+            grid-area: toggle;
+            justify-self: end;
+            margin-left: 10px;
+            line-height: 1;
+        }
+        /* 2: name */
+        .ns-page .new-style-table .table tbody tr > td:nth-child(2) {
+            grid-area: name;
+            align-self: center;
+            font-size: 14.5px !important;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+        /* 3: key */
+        .ns-page .new-style-table .table tbody tr > td:nth-child(3) {
+            grid-area: key;
+            margin-top: 4px;
+            font-size: 13px !important;
+            word-break: break-all;
+        }
+        /* 4: function name, 5: controller */
+        .ns-page .new-style-table .table tbody tr > td:nth-child(4) {
+            grid-area: func;
+            margin-top: 8px;
+            word-break: break-word;
+        }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(5) {
+            grid-area: ctrl;
+            margin-top: 3px;
+            word-break: break-word;
+        }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(4)::before,
+        .ns-page .new-style-table .table tbody tr > td:nth-child(5)::before {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 11px;
+            color: #8c8c8c;
+        }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(4)::before { content: 'Function Name'; }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(5)::before { content: 'Controller'; }
+
+        /* 6: View Users, 11: actions (Edit + More Info become grid items) */
+        .ns-page .new-style-table .table tbody tr > td:nth-child(6) {
+            grid-area: users;
+        }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(11) {
+            display: contents !important;
+        }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(6),
+        .ns-page .new-style-table .table tbody tr > td:nth-child(11) > .edit_template,
+        .ns-page .new-style-table .table tbody tr > td:nth-child(11) > .ns-more-info {
+            display: flex;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 10px !important;
+            border-top: 1px dashed #dcdcdc !important;
+            font-size: 12px;
+            white-space: nowrap;
+            color: #1d1d1f;
+        }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(11) > .edit_template {
+            grid-area: edit;
+            justify-content: center;
+        }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(11) > .ns-more-info {
+            grid-area: more;
+            justify-content: flex-end;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ns-page .new-style-table .view_users,
+        .ns-page .new-style-table .edit_template {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .ns-page .new-style-table .view_users i,
+        .ns-page .new-style-table .edit_template i {
+            font-size: 14px;
+            color: #1d1d1f;
+        }
+        .ns-page .new-style-table .ns-action-text {
+            display: none;
+        }
+        /* Labels are added with CSS so they don't change the table's search text */
+        .ns-page .new-style-table .view_users::after,
+        .ns-page .new-style-table .edit_template::after,
+        .ns-page .new-style-table .ns-more-info::before {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .ns-page .new-style-table .view_users::after    { content: 'View Users'; }
+        .ns-page .new-style-table .edit_template::after { content: 'Edit Notification'; }
+        .ns-page .new-style-table .ns-more-info::before { content: 'More Info'; }
+        .ns-page .new-style-table .ns-more-info::after {
+            content: '';
+            width: 7px;
+            height: 7px;
+            margin-left: 10px;
+            border-right: 1.6px solid #1d1d1f;
+            border-bottom: 1.6px solid #1d1d1f;
+            transform: rotate(-45deg);
+            transition: transform .15s ease;
+        }
+        .ns-page .new-style-table tr.ns-expanded .ns-more-info::after {
+            transform: translateY(-3px) rotate(45deg);
+        }
+
+        /* 7-10: details, shown when "More Info" is opened */
+        .ns-page .new-style-table .table tbody tr > td:nth-child(7),
+        .ns-page .new-style-table .table tbody tr > td:nth-child(8),
+        .ns-page .new-style-table .table tbody tr > td:nth-child(9),
+        .ns-page .new-style-table .table tbody tr > td:nth-child(10) {
+            display: none !important;
+            margin: 0 -14px;
+            padding: 0 14px 10px !important;
+            font-size: 12.5px !important;
+            word-break: break-word;
+            background-color: #f5f6f7;
+        }
+        .ns-page .new-style-table .table tbody tr.ns-expanded > td:nth-child(7),
+        .ns-page .new-style-table .table tbody tr.ns-expanded > td:nth-child(8),
+        .ns-page .new-style-table .table tbody tr.ns-expanded > td:nth-child(9),
+        .ns-page .new-style-table .table tbody tr.ns-expanded > td:nth-child(10) {
+            display: block !important;
+        }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(7) {
+            grid-area: title;
+            margin-top: 12px;
+            padding-top: 12px !important;
+        }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(8)  { grid-area: mtitle; }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(9)  { grid-area: body; }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(10) {
+            grid-area: desc;
+            margin-bottom: -14px;
+            padding-bottom: 14px !important;
+        }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(7)::before,
+        .ns-page .new-style-table .table tbody tr > td:nth-child(8)::before,
+        .ns-page .new-style-table .table tbody tr > td:nth-child(9)::before,
+        .ns-page .new-style-table .table tbody tr > td:nth-child(10)::before {
+            display: block;
+            margin-bottom: 2px;
+            font-size: 11px;
+            color: #8c8c8c;
+        }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(7)::before  { content: 'Title'; }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(8)::before  { content: 'Modal Title'; }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(9)::before  { content: 'Notification Body'; }
+        .ns-page .new-style-table .table tbody tr > td:nth-child(10)::before { content: 'Description'; }
+
+        /* Full text in the details (desktop keeps the short "..." text) */
+        .ns-page .ns-short { display: none; }
+        .ns-page .ns-full  { display: block; }
+        .ns-page .ns-full p { margin: 0; }
+
+        /* "No data available" row */
+        .ns-page .new-style-table .table tbody tr > td.dataTables_empty {
+            grid-area: auto;
+            grid-column: 1 / -1;
+            display: block !important;
+            padding: 16px 0 !important;
+            text-align: center !important;
+            color: #8c8c8c !important;
+        }
+        .ns-page .new-style-table .table tbody tr > td.dataTables_empty::before {
+            content: none;
+        }
+
+        /* Status toggle switch (bigger, teal) */
+        .ns-page .togelcheck {
+            width: 36px;
+            height: 20px;
+            margin: 0;
+            background: #d0d0d0;
+            box-shadow: none;
+            cursor: pointer;
+            appearance: none;
+            vertical-align: middle;
+        }
+        .ns-page .togelcheck:checked[type="checkbox"] {
+            background: #45d4b8;
+        }
+        .ns-page .togelcheck:before {
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            transform: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+        }
+        .ns-page .togelcheck:checked[type="checkbox"]:before {
+            left: 18px;
+        }
+
+        /* ---------- "Showing x to y" + pagination on one row ---------- */
+        .ns-page .dataTables_wrapper > .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .ns-page .dataTables_wrapper > .row > [class*="col-"] {
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .ns-page .dataTables_wrapper > .row:last-child {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 6px;
+        }
+        .ns-page .dataTables_wrapper > .row:last-child > [class*="col-"] {
+            flex: 0 1 auto;
+            width: auto;
+            max-width: none;
+        }
+        .ns-page .dataTables_wrapper .dataTables_info {
+            float: left;
+            margin: 0;
+            padding: 0 !important;
+            font-size: 12px;
+            color: #8c8c8c;
+            text-align: left;
+            white-space: normal;
+        }
+        .ns-page .dataTables_wrapper .dataTables_paginate {
+            float: right;
+            margin: 0 !important;
+            padding: 0 !important;
+            text-align: right;
+        }
+        .ns-page .dataTables_wrapper .dataTables_paginate .pagination {
+            justify-content: flex-end !important;
+            margin: 0;
+        }
+        /* Bootstrap-style pagination */
+        .ns-page .dataTables_paginate .page-item .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            min-width: 32px;
+            height: 32px;
+            margin: 0 0 0 6px;
+            padding: 0 8px;
+            font-size: 13px;
+            color: #333;
+            background-color: #fff;
+            border: 1px solid #e3e3e3;
+            border-radius: 6px !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+        }
+        .ns-page .dataTables_paginate .page-item.active .page-link {
+            color: #fff;
+            background-color: #1d1d1f;
+            border-color: #1d1d1f;
+        }
+        .ns-page .dataTables_paginate .page-item.disabled .page-link {
+            color: #c0c0c0;
+            background-color: #fff;
+        }
+        /* Default DataTables pagination (if Bootstrap styling is not used) */
+        .ns-page .dataTables_wrapper .dataTables_paginate a.paginate_button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+            margin: 0 0 0 6px !important;
+            padding: 0 8px !important;
+            font-size: 13px;
+            color: #333 !important;
+            background: #fff !important;
+            border: 1px solid #e3e3e3 !important;
+            border-radius: 6px;
+            box-shadow: none;
+        }
+        .ns-page .dataTables_wrapper .dataTables_paginate a.paginate_button.current {
+            color: #fff !important;
+            background: #1d1d1f !important;
+            border-color: #1d1d1f !important;
+        }
+        .ns-page .dataTables_wrapper .dataTables_paginate a.paginate_button.disabled {
+            color: #c0c0c0 !important;
+        }
+
+        /* ---------- Add / Edit Notification modals ----------
+           Header and footer stay visible, only the fields scroll. */
+        .ns-form-modal .modal-dialog {
+            display: flex;
+            align-items: center;
+            width: calc(100% - 40px);
+            max-width: 420px;
+            height: calc(100% - 40px);
+            min-height: 0;
+            margin: 20px auto;
+        }
+        .ns-form-modal .modal-dialog-centered::before {
+            display: none;
+        }
+        .ns-form-modal .modal-content {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-height: 100%;
+            overflow: hidden;
+            border: 0;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+        }
+        .ns-form-modal .modal-header {
+            flex-shrink: 0;
+            align-items: center;
+            margin: 0 16px;
+            padding: 16px 0 12px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+        .ns-form-modal .modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+        .ns-form-modal .modal-header .close {
+            margin: -4px -4px -4px auto;
+            padding: 4px;
+            font-size: 22px;
+            line-height: 1;
+            color: #333;
+            opacity: 1;
+            text-shadow: none;
+        }
+        .ns-form-modal .modal-body {
+            flex: 1 1 auto;
+            min-height: 0;
+            padding: 14px 16px 4px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        /* Label first, then the helper text, then the field (Figma order) */
+        .ns-form-modal .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 14px;
+        }
+        .ns-form-modal .form-group > * {
+            order: 2;
+        }
+        .ns-form-modal .form-group > label {
+            order: 0;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1d1d1f;
+        }
+        .ns-form-modal .form-group > small.form-text {
+            order: 1;
+            margin: -3px 0 6px;
+            font-size: 11px;
+            color: #8c8c8c !important; /* text-muted uses !important */
+        }
+        .ns-form-modal .form-control {
+            height: 38px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #1d1d1f;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            box-shadow: none;
+        }
+        .ns-form-modal textarea.form-control {
+            height: auto;
+        }
+        .ns-form-modal .form-control:focus {
+            border-color: #45d4b8;
+        }
+        .ns-form-modal .ql-toolbar.ql-snow {
+            padding: 6px;
+            border-color: #d9d9d9;
+            border-radius: 6px 6px 0 0;
+        }
+        .ns-form-modal .ql-container.ql-snow {
+            border-color: #d9d9d9;
+            border-radius: 0 0 6px 6px;
+        }
+        .ns-form-modal .modal-footer {
+            flex-shrink: 0;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 12px 16px 16px;
+            border-top: 0;
+        }
+
+        /* Footer buttons in all three modals */
+        .modal .modal-footer > .btn.ns-btn-cancel,
+        .modal .modal-footer > .btn.ns-btn-save {
+            min-width: 88px;
+            margin: 0;
+            padding: 9px 18px;
+            font-size: 13.5px;
+            font-weight: 600;
+            line-height: 1.3;
+            text-transform: none;
+            color: #fff;
+            border: 0;
+            border-radius: 6px;
+            box-shadow: none;
+            transform: none;
+        }
+        .modal .modal-footer > .btn.ns-btn-cancel,
+        .modal .modal-footer > .btn.ns-btn-cancel:hover,
+        .modal .modal-footer > .btn.ns-btn-cancel:focus,
+        .modal .modal-footer > .btn.ns-btn-cancel:active {
+            background-color: #b5b5b5;
+            box-shadow: none;
+        }
+        .modal .modal-footer > .btn.ns-btn-save,
+        .modal .modal-footer > .btn.ns-btn-save:hover,
+        .modal .modal-footer > .btn.ns-btn-save:focus,
+        .modal .modal-footer > .btn.ns-btn-save:active {
+            background-color: #45d4b8;
+            box-shadow: 0 4px 10px rgba(69, 212, 184, .3);
+        }
+
+        /* ---------- Notification Users modal ---------- */
         #EditTemplateusersModal .modal-dialog {
-            width: calc(100% - 20px);
-            margin: 10px auto;
+            width: calc(100% - 40px);
+            max-width: 420px;
+            margin: 20px auto;
         }
 
         #EditTemplateusersModal .modal-content {
-            max-height: calc(100vh - 20px);
+            max-height: calc(100vh - 40px);
+            max-height: calc(100dvh - 40px);
+            border-radius: 12px;
+        }
+
+        #EditTemplateusersModal .modal-header {
+            min-height: 0;
+            align-items: center;
+            margin: 0 16px;
+            padding: 16px 0 12px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        #EditTemplateusersModal .modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        #EditTemplateusersModal .modal-header .close {
+            margin: -4px -4px -4px auto;
+            padding: 4px;
+            color: #333;
+            opacity: 1;
         }
 
         #EditTemplateusersModal .modal-body {
-            max-height: calc(100vh - 78px);
-            padding-right: 12px;
-            padding-left: 12px;
+            max-height: calc(100vh - 95px);
+            max-height: calc(100dvh - 95px);
+            padding: 14px 16px 0;
+        }
+
+        /* Footer stays at the bottom of the scrolling area */
+        #EditTemplateusersModal .modal-footer {
+            position: sticky;
+            bottom: 0;
+            z-index: 2;
+            justify-content: flex-end;
+            gap: 10px;
+            margin: 6px -16px 0;
+            padding: 12px 16px 16px;
+            border-top: 0;
+            background: #fff;
         }
 
         #allSelectedUsersContainer {
             grid-template-columns: 1fr;
         }
 
-        .notification-user-card .card-header {
-            padding-left: 7px;
+        /* Existing card rules use !important, so !important is needed here */
+        #EditTemplateusersModal .notification-user-card {
+            margin-bottom: 10px !important;
+            border: 1px solid #e3e3e3 !important;
+            border-radius: 8px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+        }
+
+        #EditTemplateusersModal .notification-user-card .card-header {
+            min-height: 46px;
+            padding: 11px 12px;
+            background: #fff;
+        }
+
+        #EditTemplateusersModal .notification-user-card .card-header strong {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        #EditTemplateusersModal .notification-user-card .card-header label {
+            gap: 6px;
+            margin-right: 10px !important; /* mr-3 uses !important */
+            font-size: 12px;
+            color: #4a4a4a;
+        }
+
+        #EditTemplateusersModal .notification-user-card .card-header input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+        }
+
+        #EditTemplateusersModal .notification-user-card .card-body {
+            padding: 10px 12px;
+            border-top-color: #eef0f2;
+        }
+
+        #EditTemplateusersModal .notification-user-card .form-check-label {
+            font-size: 13px;
+            color: #1d1d1f;
+        }
+
+        /* "All selected" card: teal border, white header */
+        #EditTemplateusersModal .all-selected-users-card {
+            border-color: #45d4b8 !important;
+        }
+
+        #EditTemplateusersModal .all-selected-users-card .card-header {
+            background: #fff;
+        }
+
+        /* Count badges: small grey circles */
+        #EditTemplateusersModal .selected-recipient-count,
+        #EditTemplateusersModal .ns-role-count {
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1;
+            color: #333;
+            background: #e9e9e9;
+            border-radius: 999px;
+        }
+
+        #EditTemplateusersModal .ns-role-count {
+            display: none;
+        }
+
+        #EditTemplateusersModal .ns-role-count.ns-has-count {
+            display: inline-flex;
+        }
+
+        /* "+" / "−" becomes a chevron: > when closed, v when open */
+        #EditTemplateusersModal .toggle-notification-card .collapse-symbol {
+            display: none;
+        }
+
+        #EditTemplateusersModal .toggle-notification-card::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-right: 1.6px solid #333;
+            border-bottom: 1.6px solid #333;
+            transform: rotate(-45deg);
+            transition: transform .15s ease;
+        }
+
+        #EditTemplateusersModal .toggle-notification-card[aria-expanded="true"]::before {
+            transform: translateY(-2px) rotate(45deg);
+        }
+    }
+
+    /* Very small phones (320px): slightly smaller card action labels */
+    @media (max-width: 359.98px) {
+        .ns-page .new-style-table .table tbody tr > td:nth-child(6),
+        .ns-page .new-style-table .table tbody tr > td:nth-child(11) > .edit_template,
+        .ns-page .new-style-table .table tbody tr > td:nth-child(11) > .ns-more-info {
+            font-size: 11px;
+        }
+        .ns-page .new-style-table .view_users i,
+        .ns-page .new-style-table .edit_template i {
+            font-size: 13px;
         }
     }
 
 </style>
 
-<div class="container-fluid mb-5 content-position" >
+<div class="container-fluid mb-5 content-position ns-page" >
     <div class="se-pre-con"></div>
 
     @section('order-header')
@@ -393,9 +1189,19 @@
         <a href="{{ route('home') }}" class="home-btn-color" title="Back to home">BACK TO HOME</a>
     @endsection
 
-    <div class="col-md-12 mt-4">
-        <div class="card">
-            <div class="row m-1">
+    {{-- Mobile-only header (hidden on desktop) --}}
+    <div class="ns-mobile-only ns-mobile-header">
+        <div class="ns-title-row">
+            <button type="button" class="ns-add-btn" data-toggle="modal" data-target="#AddTemplateModal">
+                <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1v10M1 6h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                Add Template
+            </button>
+        </div>
+    </div>
+
+    <div class="col-md-12 mt-4 ns-outer-col">
+        <div class="card ns-main-card">
+            <div class="row m-1 ns-desktop-only">
                 <div class="col">
                         {{-- <div class="m-1">
                             <input type="checkbox" class="togelcheck" />
@@ -409,7 +1215,33 @@
 
             </div>
 
-            <div class="col-md-12 mt-2" style="padding-right: 19px;">
+            {{-- Mobile-only search, show entries and sort controls (linked to the table) --}}
+            <div class="ns-mobile-only ns-mobile-toolbar">
+                <div class="ns-search-card">
+                    <label class="ns-search-box mb-0" for="nsMobileSearch">
+                        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                        <input type="search" id="nsMobileSearch" class="ns-search-input" placeholder="Search by notification name" autocomplete="off">
+                    </label>
+                </div>
+                <div class="ns-filter-row">
+                    <label class="ns-filter-group" for="nsMobileLength">
+                        Show
+                        <select id="nsMobileLength" class="ns-select"></select>
+                        entries
+                    </label>
+                    <label class="ns-filter-group" for="nsMobileSort">
+                        Sort by
+                        <select id="nsMobileSort" class="ns-select">
+                            <option value="0">Default</option>
+                            <option value="1">Name</option>
+                            <option value="2">Key</option>
+                            <option value="4">Controller</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-12 mt-2 ns-table-col">
                 <div class=" new-style-table">
                     <table class="table align-items-center cell-border table-responsive" id="notification_groups_table" style="width:100%;">
                         <thead class="header-style">
@@ -437,7 +1269,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="AddTemplateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade ns-form-modal" id="AddTemplateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -515,9 +1347,9 @@
                 </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary ns-btn-cancel" data-dismiss="modal"><span class="ns-desktop-only">Close</span><span class="ns-mobile-only">Cancel</span></button>
           {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
-          <button type="submit" class="btn btn-primary">Create Template</button>
+          <button type="submit" class="btn btn-primary ns-btn-save">Create Template</button>
             </form>
         </div>
       </div>
@@ -526,7 +1358,7 @@
 
 
   <!-- Edit Template Modal -->
-<div class="modal fade" id="EditTemplateModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade ns-form-modal" id="EditTemplateModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -605,8 +1437,8 @@
               </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-success">Update Template</button>
+          <button type="button" class="btn btn-secondary ns-btn-cancel" data-dismiss="modal"><span class="ns-desktop-only">Close</span><span class="ns-mobile-only">Cancel</span></button>
+          <button type="submit" class="btn btn-success ns-btn-save">Update Template</button>
         </div>
         </form>
       </div>
@@ -629,8 +1461,8 @@
                 @csrf
             <div id="notificationUsersContainer"></div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-success">Update </button>
+            <button type="button" class="btn btn-secondary ns-btn-cancel" data-dismiss="modal"><span class="ns-desktop-only">Close</span><span class="ns-mobile-only">Cancel</span></button>
+            <button type="submit" class="btn btn-success ns-btn-save">Update </button>
             </div>
             </form>
         </div>
@@ -656,7 +1488,12 @@
         document.querySelector('#editTemplateForm').addEventListener('submit', function(e) {
             document.querySelector('#edit_notification_body').value = quill_edit.root.innerHTML;
         });
-        $('#notification_groups_table').DataTable({
+
+        // Is the screen mobile size?
+        var nsIsMobile = !!(window.matchMedia && window.matchMedia('(max-width: 767.98px)').matches);
+
+        // Same table options as before (desktop stays exactly the same)
+        var nsTableOptions = {
             paging: true,
             searching: true,
             ordering: true,
@@ -671,7 +1508,13 @@
                     targets: [6,7,8], // 6th column (0-based index)
                     render: function (data, type, row) {
                         if (typeof data === 'string' && data.length > 20) {
-                            return data.substring(0, 20) + '...';
+                            var shortText = data.substring(0, 20) + '...';
+                            if (type === 'display') {
+                                // Desktop shows only the short text (same as before).
+                                // The full text is used in the mobile "More Info" section.
+                                return '<div class="ns-full">' + data + '</div><span class="ns-short">' + shortText + '</span>';
+                            }
+                            return shortText;
                         }
                         return data;
                     }
@@ -679,7 +1522,104 @@
             ],
             pageLength: 10,
             lengthChange: true
+        };
+
+        // Mobile only: rows are shown as cards, so the Responsive extension
+        // (which hides columns) is turned off, and prev/next become arrows.
+        if (nsIsMobile) {
+            nsTableOptions.responsive = false;
+            nsTableOptions.language = {
+                paginate: {
+                    previous: '&lsaquo;',
+                    next: '&rsaquo;'
+                }
+            };
+        }
+
+        $('#notification_groups_table').DataTable(nsTableOptions);
+
+        /*
+         * Mobile toolbar: the search box, "Show entries" and "Sort by" controls
+         * use the same DataTable, so they work exactly like the desktop ones.
+         */
+        (function initNsMobileToolbar() {
+            var nsTable = $('#notification_groups_table').DataTable();
+            var $search = $('#nsMobileSearch');
+            var $length = $('#nsMobileLength');
+            var $sort = $('#nsMobileSort');
+
+            if (!$search.length) {
+                return;
+            }
+
+            // "Show entries" options come from the table's own length menu
+            var menu = nsTable.settings()[0].aLengthMenu || [10, 25, 50, 100];
+            var values = Array.isArray(menu[0]) ? menu[0] : menu;
+            var labels = Array.isArray(menu[0]) ? (menu[1] || menu[0]) : menu;
+
+            $length.empty();
+            values.forEach(function (item, i) {
+                var value = (item && typeof item === 'object') ? item.value : item;
+                var label = (item && typeof item === 'object') ? item.label : labels[i];
+                $length.append(
+                    $('<option>').val(String(value)).text(String(label === undefined ? value : label))
+                );
+            });
+            $length.val(String(nsTable.page.len()));
+
+            $length.on('change', function () {
+                nsTable.page.len(parseInt(this.value, 10)).draw();
+            });
+
+            $search.val(nsTable.search());
+            $search.on('input', function () {
+                if (nsTable.search() !== this.value) {
+                    nsTable.search(this.value).draw();
+                }
+            });
+
+            function syncSort() {
+                var order = nsTable.order();
+                if (order && order.length) {
+                    var column = String(order[0][0]);
+                    if ($sort.find('option[value="' + column + '"]').length) {
+                        $sort.val(column);
+                    }
+                }
+            }
+            syncSort();
+
+            $sort.on('change', function () {
+                nsTable.order([[parseInt(this.value, 10), 'asc']]).draw();
+            });
+
+            // Keep the mobile controls in sync if the table changes another way
+            $('#notification_groups_table')
+                .on('length.dt', function (e, settings, len) {
+                    $length.val(String(len));
+                })
+                .on('search.dt', function () {
+                    if (document.activeElement !== $search[0]) {
+                        $search.val(nsTable.search());
+                    }
+                })
+                .on('order.dt', syncSort);
+        })();
+
+        // Mobile only: "More Info" opens / closes the details of a card
+        $('#notification_groups_table').on('click keydown', '.ns-more-info', function (e) {
+            if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') {
+                return;
+            }
+            e.preventDefault();
+
+            var $row = $(this).closest('tr');
+            var isOpen = !$row.hasClass('ns-expanded');
+
+            $row.toggleClass('ns-expanded', isOpen);
+            $(this).attr('aria-expanded', isOpen ? 'true' : 'false');
         });
+
         get_template_data();
         function get_template_data(){
 
@@ -721,12 +1661,12 @@
                     template.template_key,
                     template.function_name,
                     template.controller,
-                    `<span class="view_users" data-id="${template.id}"><i class="fa-solid fa-users" style="color:#3a82ad;cursor:pointer"></i><span  class="mx-1" style="color:#3a82ad;cursor:pointer">view</span></span>`,
+                    `<span class="view_users" data-id="${template.id}"><i class="fa-solid fa-users ns-link-blue"></i><span class="mx-1 ns-link-blue ns-action-text">view</span></span>`,
                     template.title,
                     template.modal_title,
                     template.notification_body,
                     template.description,
-                    `<span class="edit_template" data-id="${template.id}"><i class="fa-solid fa-pen-to-square" style="color:#3bad3a;cursor:pointer"></i><span class="mx-1" style="color:#3bad3a;cursor:pointer">edit</span></span>`,
+                    `<span class="edit_template" data-id="${template.id}"><i class="fa-solid fa-pen-to-square ns-link-green"></i><span class="mx-1 ns-link-green ns-action-text">edit</span></span><span class="ns-more-info" role="button" tabindex="0" aria-expanded="false" aria-label="More info"></span>`,
                 ];
 
                 table.row.add(row);
@@ -883,7 +1823,7 @@
                         <div class="col-md-12">
                             <div class="card mb-3 notification-user-card role-users-card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <strong>${roleName}</strong>
+                                    <strong>${roleName}<span class="ns-mobile-only ns-role-count" data-role-count="${escapeNotificationHtml(roleId)}"></span></strong>
 
                                     <div class="d-flex align-items-center">
                                         <label class="mb-0 mr-3">
@@ -1064,6 +2004,11 @@
                 $(`.select-group[data-role-id="${roleId}"]`)
                     .prop('checked', allChecked)
                     .prop('indeterminate', checkedUsers > 0 && !allChecked);
+
+                // Mobile only: selected-user count badge next to the role name
+                $(`.ns-role-count[data-role-count="${roleId}"]`)
+                    .text(checkedUsers)
+                    .toggleClass('ns-has-count', checkedUsers > 0);
             }
 
             function updateAllRoleSelectCheckboxes() {

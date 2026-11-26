@@ -851,12 +851,12 @@ input:checked + .slider:before {
 @section('back-btn-Mobile')
     {{-- <a href="{{ route('home') }}" class="home-btn-color-mobile" title="Back to home">< BACK TO HOME</a> --}}
     @if ($orderTrait->isInventoryOrder($orders[0]->organization_id))
-        <a href="{{route('inventory_orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK TO ORDERS</a>
+        <a href="{{route('inventory_orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK</a>
     @else
         @if($orders[0]->plorder == 1)
-            <a href="{{route('plorders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK TO ORDERS</a>
+            <a href="{{route('plorders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK</a>
         @else
-        <a href="{{route('orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK TO ORDERS</a>
+        <a href="{{route('orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK</a>
         @endif
     @endif
 @endsection

@@ -211,6 +211,63 @@
     }
 }
 
+td.numseq-disabled-cell {
+    cursor: not-allowed;
+}
+td.numseq-disabled-cell input.numseq-input:disabled {
+    pointer-events: none;
+}
+@keyframes numseqBlinkHighlight {
+    0%, 100% {
+        box-shadow: none;
+    }
+    50% {
+        background-color: #ffe082;
+        border-color: #f59e0b;
+        color: #111827;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.45);
+    }
+}
+input.numseq-input.numseq-blink {
+    animation: numseqBlinkHighlight 0.55s ease-in-out 3;
+    position: relative;
+    z-index: 2;
+}
+.numseq-guide-tooltip {
+    position: fixed;
+    z-index: 9999;
+    background-color: #1f2937;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+}
+.numseq-guide-tooltip.show {
+    opacity: 1;
+}
+.numseq-guide-tooltip::after {
+    content: "";
+    position: absolute;
+    left: var(--arrow-left, 50%);
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+}
+.numseq-guide-tooltip.placement-top::after {
+    top: 100%;
+    border-color: #1f2937 transparent transparent transparent;
+}
+.numseq-guide-tooltip.placement-bottom::after {
+    bottom: 100%;
+    border-color: transparent transparent #1f2937 transparent;
+}
 
 </style>
 <!--breadcrumb-->
@@ -338,7 +395,166 @@
 <script>
 $(document).ready(function () {
     initPlayerNumberRoster(document);
+
+    $(document).on('change', 'input.numseq-input', function () {
+        const orderDetailId = $(this).attr('data-order-detail-id');
+        if (orderDetailId) {
+            updatePlayerNumberDisabledState(orderDetailId);
+        }
+        hideNumseqGuideTooltip();
+    });
+
+    // Highlight and guide user to the related enabled input when clicking a disabled player number cell
+    $(document).on('click', 'td.numseq-disabled-cell', function () {
+        const $disabledInput = $(this).find('input.numseq-input:disabled');
+        if (!$disabledInput.length) {
+            return;
+        }
+
+        const $table = $disabledInput.closest('.player-number-table');
+        if ($table.attr('data-locked') === '1') {
+            return;
+        }
+
+        const orderDetailId = $disabledInput.attr('data-order-detail-id');
+        if (!orderDetailId) {
+            return;
+        }
+
+        const $inputs = $table.find('input.numseq-input.num-input-count-' + orderDetailId);
+        const clickedIndex = $inputs.index($disabledInput);
+        let $targetInput = null;
+
+        // Find the nearest preceding enabled empty input in this sequence
+        for (let i = clickedIndex - 1; i >= 0; i--) {
+            const $candidate = $inputs.eq(i);
+            if (!$candidate.prop('disabled') && $.trim($candidate.val()) === '') {
+                $targetInput = $candidate;
+                break;
+            }
+        }
+
+        // Fallback: first enabled empty input in this sequence
+        if (!$targetInput) {
+            $inputs.each(function () {
+                if (!$(this).prop('disabled') && $.trim($(this).val()) === '') {
+                    $targetInput = $(this);
+                    return false;
+                }
+            });
+        }
+
+        if ($targetInput && $targetInput.length) {
+            highlightRequiredNumseqInput($targetInput);
+        }
+    });
+
+    $(window).on('scroll resize', function () {
+        hideNumseqGuideTooltip();
+    });
+
+    $(document).on('shown.bs.tab hide.bs.tab', function () {
+        hideNumseqGuideTooltip();
+    });
 });
+
+let numseqBlinkTimer = null;
+let numseqTooltipTimer = null;
+
+function hideNumseqGuideTooltip() {
+    if (numseqTooltipTimer) {
+        clearTimeout(numseqTooltipTimer);
+        numseqTooltipTimer = null;
+    }
+    const $tooltip = $('#numseq-guide-tooltip');
+    if ($tooltip.length) {
+        $tooltip.removeClass('show');
+    }
+}
+
+function showNumseqGuideTooltip($targetInput, message) {
+    let $tooltip = $('#numseq-guide-tooltip');
+    if (!$tooltip.length) {
+        $tooltip = $('<div id="numseq-guide-tooltip" class="numseq-guide-tooltip" role="tooltip"></div>').appendTo('body');
+    }
+
+    if (numseqTooltipTimer) {
+        clearTimeout(numseqTooltipTimer);
+    }
+
+    $tooltip.text(message).removeClass('placement-top placement-bottom show');
+
+    const rect = $targetInput[0].getBoundingClientRect();
+    const tooltipWidth = $tooltip.outerWidth();
+    const tooltipHeight = $tooltip.outerHeight();
+    const inputCenterX = rect.left + (rect.width / 2);
+
+    let left = inputCenterX - (tooltipWidth / 2);
+    left = Math.max(8, Math.min(left, window.innerWidth - tooltipWidth - 8));
+
+    let top = rect.top - tooltipHeight - 10;
+    let placementClass = 'placement-top';
+    if (top < 8) {
+        top = rect.bottom + 10;
+        placementClass = 'placement-bottom';
+    }
+
+    const arrowLeft = Math.max(10, Math.min(inputCenterX - left, tooltipWidth - 10));
+    $tooltip
+        .css({
+            left: left + 'px',
+            top: top + 'px',
+            '--arrow-left': arrowLeft + 'px'
+        })
+        .addClass(placementClass + ' show');
+
+    numseqTooltipTimer = setTimeout(function () {
+        hideNumseqGuideTooltip();
+    }, 2600);
+}
+
+function highlightRequiredNumseqInput($targetInput) {
+    if (numseqBlinkTimer) {
+        clearTimeout(numseqBlinkTimer);
+        numseqBlinkTimer = null;
+    }
+
+    $('input.numseq-input.numseq-blink').removeClass('numseq-blink');
+
+    $targetInput.focus();
+
+    // Force reflow so rapid consecutive clicks cleanly restart the blink animation
+    void $targetInput[0].offsetWidth;
+    $targetInput.addClass('numseq-blink');
+
+    showNumseqGuideTooltip($targetInput, 'Please fill this field first');
+
+    numseqBlinkTimer = setTimeout(function () {
+        $targetInput.removeClass('numseq-blink');
+        numseqBlinkTimer = null;
+    }, 1700);
+}
+
+function updatePlayerNumberDisabledState(OrderDetailId) {
+    const $inputs = $('input.numseq-input.num-input-count-' + OrderDetailId);
+    if (!$inputs.length) {
+        return;
+    }
+
+    const $table = $inputs.first().closest('.player-number-table');
+    if ($table.attr('data-locked') === '1') {
+        $inputs.closest('td').removeClass('numseq-disabled-cell');
+        return;
+    }
+
+    $inputs.each(function (index) {
+        const hasValue = $.trim($(this).val()) !== '';
+        const prevHasValue = index > 0 && $.trim($inputs.eq(index - 1).val()) !== '';
+        const shouldEnable = (index === 0) || hasValue || prevHasValue;
+        $(this).prop('disabled', !shouldEnable);
+        $(this).closest('td').toggleClass('numseq-disabled-cell', !shouldEnable);
+    });
+}
 
 function initPlayerNumberRoster(container) {
     const scope = container ? $(container) : $(document);
@@ -363,6 +579,7 @@ function initPlayerNumberRoster(container) {
         const OrderDetailId = detailClass.replace('num-input-count-', '');
 
         updatePlayerNumberRows(OrderDetailId);
+        updatePlayerNumberDisabledState(OrderDetailId);
     });
 }
 
@@ -374,6 +591,8 @@ function initPlayerNumberRoster(container) {
     $('#num-total-count-' + OrderDetailId).val(numQtyTotalCount);
 
     updatePlayerNumberRows(OrderDetailId);
+    updatePlayerNumberDisabledState(OrderDetailId);
+    hideNumseqGuideTooltip();
 
     updateNumQty(itemId);
 }
@@ -480,6 +699,7 @@ function isPlayerNumberRowHasValue(row) {
         $('#num-sum-qty-total-'+itemId).val(sum);
     }
     function submitOrderForm() {
+        $('.player-number-table[data-locked="0"] input.numseq-input:disabled').prop('disabled', false);
         document.getElementById('orderform').submit();
     }
     document.getElementById("approve-btn").addEventListener("click", function() {
@@ -607,6 +827,7 @@ $(document).ready(function () {
     // });
     $(document).on('click', '.order-tab', function (e) {
         e.preventDefault();
+        hideNumseqGuideTooltip();
 
         $('#detailsContainer').addClass('loading');
 

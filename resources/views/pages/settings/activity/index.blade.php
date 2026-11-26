@@ -286,9 +286,9 @@
             padding: unset;
             padding-top: 10px;
         }
-        .dataTables_length {
+        /* .dataTables_length {
             text-align: left !important;
-        }
+        } */
         .mobile_temp_buttons {
             padding-bottom: 15px;
         }
@@ -390,7 +390,7 @@
     }
     #activity_table tbody tr {
         position: relative;
-        padding: 45px 15px 15px 15px !important;
+        padding: 20px 15px 15px 15px !important;
     }
     #activity_table tbody td.activity-description {
         order: 2;
@@ -458,8 +458,328 @@
     .btn-grey-text {
         padding: .4rem !important;
     }
+    /* All mobile card labels in black */
+    #activity_table tbody tr td::before {
+        color: #000 !important;
+    }
+
+    #activity_table thead th.activity-done {
+        color: #000 !important;
+    }
+    #activity_table thead th.activity-done {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px;
+        color: #000 !important;
+    }
+
+    #activity_table thead th.activity-done::before {
+        content: "All Select";
+        display: inline-block;
+        color: #000;
+        font-weight: 600;
+        white-space: nowrap;
+        left: 50px !important;
+        position: absolute;
+        top: 13px;
+    }
+    /* Mobile activity card: Subject beside checkbox */
+    #activity_table tbody tr {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+    }
+
+    #activity_table tbody td.activity-done {
+        position: absolute !important;
+        top: 15px !important;
+        left: 15px !important;
+        width: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 !important;
+    }
+
+    #activity_table tbody td.activity-description {
+        order: 0 !important;
+        width: 100% !important;
+        padding-left: 32px !important;
+        padding-top: 0 !important;
+        min-height: 25px;
+    }
+
+    #activity_table tbody td.activity-description::before {
+        content: none !important;
+    }
+
+    #activity_table tbody td.activity-description a.activity-edit {
+        color: #000 !important;
+        font-weight: 600;
+        text-decoration: none;
+    }
 }
 
+
+@media (max-width: 678px) {
+
+    /* Dropdown: full available mobile width */
+    .mobile_search_div .dropdown-menu-custom {
+        width: calc(100vw - 24px) !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%) !important;
+        overflow: hidden !important;
+        top: 30px !important;
+    }
+
+    /* Tabs stay at the top in one horizontal row */
+    .mobile_search_div .custom-tab-bar {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+    }
+
+    .mobile_search_div .custom-tab {
+        flex: 1 0 auto !important;
+        white-space: nowrap !important;
+    }
+
+    /* Results appear UNDER the tabs, using full width */
+    .mobile_search_div .custom-tab-content {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        clear: both !important;
+    }
+
+    .mobile_search_div .custom-tab-pane {
+        display: none;
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .mobile_search_div .custom-tab-pane.active {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    /* Result list occupies the full content area */
+    .mobile_search_div .custom-tab-pane .list-group {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 55vh !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile_search_div .custom-tab-pane ul.list-group {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 6px 8px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Prevent result content from overflowing horizontally */
+    .mobile_search_div .custom-tab-pane li,
+    .mobile_search_div .custom-tab-pane .list-group-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        overflow-wrap: anywhere !important;
+        white-space: normal !important;
+    }
+}
+
+@media (max-width: 678px) {
+
+    /* Dropdown container */
+    .mobile_search_div .dropdown-menu-custom {
+        height: auto !important;
+        max-height: 75vh !important;
+        overflow: hidden !important;
+        /* display: block !important; */
+    }
+
+    /* Tabs wrapper */
+    .mobile_search_div .custom-tabs {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: hidden !important;
+    }
+
+    /* Tabs row - fixed 40px height */
+    .mobile_search_div .custom-tab-bar {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+
+        width: 100% !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        max-height: 40px !important;
+
+        padding: 0 5px !important;
+        margin: 0 !important;
+
+        align-items: stretch !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+
+        flex: 0 0 40px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Each tab */
+    .mobile_search_div .custom-tab {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        height: 40px !important;
+        min-height: 40px !important;
+        max-height: 40px !important;
+
+        padding: 0 10px !important;
+        margin: 0 !important;
+
+        flex: 0 0 auto !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Filtered data container - directly below tabs */
+    .mobile_search_div .custom-tab-content {
+        display: block !important;
+        position: relative !important;
+
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+        clear: both !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Hide inactive data panes */
+    .mobile_search_div .custom-tab-pane {
+        display: none !important;
+        position: static !important;
+        float: none !important;
+
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Show only selected tab data */
+    .mobile_search_div .custom-tab-pane.active {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Scrollable results area */
+    .mobile_search_div .custom-tab-pane .list-group {
+        display: block !important;
+
+        width: 100% !important;
+        height: auto !important;
+        max-height: calc(75vh - 40px) !important;
+
+        margin: 0 !important;
+        padding: 5px 8px !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        box-sizing: border-box !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Results list */
+    .mobile_search_div .custom-tab-pane ul.list-group {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Individual results */
+    .mobile_search_div .custom-tab-pane li,
+    .mobile_search_div .custom-tab-pane .list-group-item {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        height: auto !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        box-sizing: border-box !important;
+    }
+    #activity_table_length {
+    text-align: left;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* Default font size - 12px */
+    input,
+    textarea,
+    select,
+    .form-control,
+    .invoice-inputs,
+    .select2-selection__rendered,
+    .select2-selection,
+    .select2-container .select2-search__field,
+    .select2-search__field {
+        font-size: 12px !important;
+    }
+
+    /* Focused input - 16px */
+    input:focus,
+    textarea:focus,
+    select:focus,
+    .form-control:focus,
+    .invoice-inputs:focus,
+    .select2-container--focus .select2-selection,
+    .select2-container--open .select2-selection,
+    .select2-container .select2-search__field:focus,
+    .select2-search__field:focus {
+        font-size: 16px !important;
+    }
+
+    /* Select2 selected text */
+    .select2-container--focus .select2-selection__rendered,
+    .select2-container--open .select2-selection__rendered {
+        font-size: 16px !important;
+    }
+}
 
 </style>
 <div class="container-fluid mb-5 content-position">
@@ -1131,6 +1451,39 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).on('click', '#activity_table tbody tr', function (e) {
+
+    // Mobile screen only
+    if (!window.matchMedia('(max-width: 678px)').matches) {
+        return;
+    }
+
+    // Do not open the modal when clicking the organization link
+    if ($(e.target).closest('td.activity-organization a').length) {
+        return;
+    }
+
+    // Do not interfere with checkbox interactions
+    if ($(e.target).closest('input, label, button, select, textarea').length) {
+        return;
+    }
+
+    // If Subject link itself was clicked, its existing handler will run
+    if ($(e.target).closest('td.activity-description a.activity-edit').length) {
+        return;
+    }
+
+    // Find the Subject link in the clicked card
+    var $subjectLink = $(this).find('td.activity-description a.activity-edit').first();
+
+    if ($subjectLink.length) {
+        $subjectLink.trigger('click');
+    }
+
+});
+</script>
 <script>
     $(document).ready(function() {
             $('.bulk_edit_change').change(function() {

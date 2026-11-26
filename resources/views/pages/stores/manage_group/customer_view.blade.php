@@ -494,7 +494,7 @@
                                                                     </div>
                                                                 @endif
                                                             </td>
-                                                                <td class="text-center">{{ $OrderItemDetail->SizeDetails->size_name }}</td>
+                                                                <td class="text-center">{{ $OrderItemDetail->SizeDetails->size_name ?? '-' }}</td>
                                                                 <td class="text-center">{{ $OrderItemDetail->qty }}</td>
                                                                 <td class="text-end">{{ $OrderItemDetail->paid_amount }}</td>
                                                             </tr>

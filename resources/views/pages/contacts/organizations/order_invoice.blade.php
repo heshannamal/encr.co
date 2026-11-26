@@ -76,7 +76,7 @@
             </div>
 
             <div class="row mt-1">
-                <div class="col-md-12">
+                <div class="col-md-12 invoice-items-wrapper">
                     <table class="table" id="invoice_items" style="table-layout: fixed; width: 100%;">
                         <thead>
                             <tr>
@@ -152,7 +152,7 @@
                                 <td><h5 class="text-right">{{number_format($order->sub_total, 2)}}</h5></td>
                             </tr>
                             <tr>
-                                <th class="text-left">SALES TAX ($) {{$order->organizationDetails['sales_tax']}}% RATE :</th>
+                                <th class="text-left">SALES TAX ($) {{ $order->sales_tax_rate ?? 0 }}% RATE :</th>
                                 <td><h5 class="text-right">{{number_format($order->sales_tax, 2)}}</h5></td>
                             </tr>
                             <tr>
@@ -270,10 +270,10 @@
                                 </td>
                             </tr>
                             <tr style="color: #717070;font-weight:100">
-                                <th style="font-weight: 100">Sales Tax ($) <span id="sales_tax_display">{{ $order->organizationDetails['sales_tax'] }}</span>%  RATE </th>
+                                <th style="font-weight: 100">Sales Tax ($) <span id="sales_tax_display">{{ $order->sales_tax_rate ?? 0 }}</span>%  RATE </th>
                                 <td>
                                     <input type="hidden" id="sales_tax_percentage item-table-border"
-                                        value="{{ $order->organizationDetails['sales_tax'] }}" />
+                                        value="{{ $order->sales_tax_rate ?? 0 }}" />
                                     <input class="invoice-inputs text-right item-table-border invoicein0001" type='text' name="sales_tax"
                                         id="sales_tax" style="color: #717070" value='{{ number_format($order->sales_tax, 2) }}'
                                         readonly />

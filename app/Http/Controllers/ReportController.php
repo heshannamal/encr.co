@@ -1528,7 +1528,7 @@ class ReportController extends Controller
 
     public function get_ar_report_data(Request $request){
 
-        $orders = Order::where('active', 1)->where('organization_id', '!=', 1377)->with('organizationDetails', 'userDetails', 'orderItems');
+        $orders = Order::where('active', 1)->where('organization_id', '!=', 1377)->with('organizationDetails', 'userDetails', 'orderItems', 'statusDetails');
         $orders->where(function ($query) {
             $query->where('order_no', 'NOT LIKE', 'TSR%')
                 ->orWhere(function ($subQuery) {
@@ -1851,6 +1851,225 @@ class ReportController extends Controller
         // dd($summaryData);
         $sortedSummaryData = collect($summaryData)->sortByDesc('totalamount')->values()->toArray();
         return response()->json(['orders'=>$sortedSummaryData, 'total_sale'=>$total_sale, 'number_of_sale'=>$number_of_sale]);
+    }
+
+    public function remake_order_item_report(){
+        $users = User::where('active', 1)->where('role_id', 'like', '%"3"%')->get();
+        $sports = Sport::where('active', 1)->get();
+        $products = Product::where('active', 1)->get();
+        $lead_sources = LeadSource::where('active', 1)->get();
+        $organization_countries = Organization::where('active',1)->pluck('shipping_country')->toArray();
+
+        $uppercase_countries = array_map(function($country) {return strtoupper(trim($country));}, $organization_countries);
+
+        $unique_uppercase_countries = array_unique($uppercase_countries);
+
+        $organization_countries = $unique_uppercase_countries;
+
+        return view('pages.reports.remake_order_item_report.index', ['users' => $users, 'sports' => $sports, 'products'=>$products, 'lead_sources'=>$lead_sources, 'organization_countries'=>$organization_countries]);
+    }
+
+    public function get_remake_order_item_report_data(Request $request){
+        $filterColumn = $request->filtercolumn ?: 'created_at';
+        if (!in_array($filterColumn, ['created_at', 'est_delivery_date', 'ex_factory_date'], true)) {
+            $filterColumn = 'created_at';
+        }
+        $internal_team_status = filter_var($request->Internal_team_status, FILTER_VALIDATE_BOOLEAN);
+
+        $query = \App\Models\OrderItem::where('active', 1)
+                    ->where('remake_status', 1)
+                    ->whereHas('order', function ($q) use ($internal_team_status) {
+                        $q->where('active', 1)
+                          ->where('organization_id', '!=', 1377)
+                          ->when(!$internal_team_status, function ($subQ) {
+                              $subQ->whereDoesntHave('organizationDetails', function ($orgQ) {
+                                  $orgQ->where('internal_team', 1);
+                              });
+                          });
+                    })
+                    ->with([
+                        'order.organizationDetails',
+                        'statusDetails',
+                        'productDetails',
+                        'subProduct',
+                        'orderItemDetails.sizeDetails',
+                    ]);
+
+        if ($filterColumn === 'created_at') {
+            $query->whereNotNull('created_at');
+            if (!empty($request->start_date) && !empty($request->end_date)) {
+                $startDate = \DateTime::createFromFormat('m/d/Y', $request->start_date)->format('Y-m-d');
+                $endDate = \DateTime::createFromFormat('m/d/Y', $request->end_date)->format('Y-m-d');
+
+                $query->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+            }
+        } else {
+            $query->whereNotNull($filterColumn)->where($filterColumn, '!=', '')->where($filterColumn, '!=', '0000-00-00');
+            if (!empty($request->start_date) && !empty($request->end_date)) {
+                $startDate = \DateTime::createFromFormat('m/d/Y', $request->start_date)->format('Y-m-d');
+                $endDate = \DateTime::createFromFormat('m/d/Y', $request->end_date)->format('Y-m-d');
+
+                $query->whereRaw("COALESCE(STR_TO_DATE($filterColumn, '%m/%d/%Y'), STR_TO_DATE($filterColumn, '%Y-%m-%d')) BETWEEN ? AND ?", [$startDate, $endDate]);
+            }
+        }
+
+        $items = $query->orderBy('id', 'desc')->get();
+
+        $orderIds = $items->pluck('order_id')->unique()->filter()->values()->toArray();
+
+        $parentItemsByOrder = !empty($orderIds)
+            ? \App\Models\OrderItem::withTrashed()
+                ->whereIn('order_id', $orderIds)
+                ->where('has_remake_item', 1)
+                ->get(['id', 'order_id', 'sub_product_no', 'product_id'])
+                ->groupBy('order_id')
+            : collect();
+
+        $remakesByOrder = !empty($orderIds)
+            ? \App\Models\remake_order_item::whereIn('order_id', $orderIds)
+                ->get()
+                ->groupBy('order_id')
+            : collect();
+
+        $userIds = $remakesByOrder->flatten(1)->pluck('user_id')->unique()->filter()->values()->toArray();
+        $usersMap = !empty($userIds)
+            ? User::whereIn('id', $userIds)->pluck('name', 'id')
+            : collect();
+
+        $sizeIds = $remakesByOrder->flatten(1)->pluck('size_id')->unique()->filter()->values()->toArray();
+        $sizesMap = !empty($sizeIds)
+            ? \App\Models\Size::whereIn('id', $sizeIds)->pluck('size_name', 'id')
+            : collect();
+
+        $rows = [];
+
+        foreach ($items as $item) {
+            $order = $item->order;
+            $org = $order ? $order->organizationDetails : null;
+
+            $orderParentItems = $parentItemsByOrder->get($item->order_id, collect());
+            $matchingParentIds = $orderParentItems
+                ->filter(function ($parentItem) use ($item) {
+                    if (!empty($item->sub_product_no) && !empty($parentItem->sub_product_no)) {
+                        return $parentItem->sub_product_no == $item->sub_product_no;
+                    }
+                    return $parentItem->product_id == $item->product_id;
+                })
+                ->pluck('id')
+                ->toArray();
+
+            $orderRemakes = $remakesByOrder->get($item->order_id, collect());
+            $itemRemakes = !empty($matchingParentIds)
+                ? $orderRemakes->whereIn('order_item_id', $matchingParentIds)
+                : $orderRemakes;
+
+            if ($itemRemakes->isEmpty()) {
+                $itemRemakes = $orderRemakes;
+            }
+
+            $itemName = $item->display_name
+                ?: (optional($item->subProduct)->product_name
+                    ?: (optional($item->productDetails)->product_name ?: ($item->item_no ?? '-')));
+
+            $remakeDate = $item->created_at ? $item->created_at->format('m/d/Y') : ($item->open_date ?: '-');
+            $statusName = optional($item->statusDetails)->status_name ?? '-';
+
+            $details = $item->orderItemDetails->filter(function ($d) {
+                return ((int) $d->qty + (int) $d->blanks) > 0;
+            });
+
+            if ($details->isNotEmpty()) {
+                foreach ($details as $detail) {
+                    $sizeRemakes = $itemRemakes->where('size_id', $detail->size_id);
+                    if ($sizeRemakes->isEmpty()) {
+                        $sizeRemakes = $itemRemakes;
+                    }
+
+                    $matchedRemake = $sizeRemakes->sortBy(function ($r) use ($item) {
+                        $rTime = $r->updated_at ? $r->updated_at->timestamp : ($r->created_at ? $r->created_at->timestamp : 0);
+                        $iTime = $item->created_at ? $item->created_at->timestamp : 0;
+                        return abs($rTime - $iTime);
+                    })->first();
+
+                    $estDeliveryDate = $item->est_delivery_date ?: ($matchedRemake->est_delivery_date ?? '-');
+                    if ($estDeliveryDate === '0000-00-00' || empty($estDeliveryDate)) {
+                        $estDeliveryDate = '-';
+                    }
+                    $exFactoryDate = $item->ex_factory_date ?: ($matchedRemake->ex_factory_date ?? '-');
+                    if ($exFactoryDate === '0000-00-00' || empty($exFactoryDate)) {
+                        $exFactoryDate = '-';
+                    }
+
+                    $remakeBy = ($matchedRemake && $matchedRemake->user_id && isset($usersMap[$matchedRemake->user_id]))
+                        ? $usersMap[$matchedRemake->user_id]
+                        : '-';
+
+                    $rows[] = [
+                        'order_id'          => $order ? $order->id : $item->order_id,
+                        'order_item_id'     => $item->id,
+                        'order_no'          => $order ? $order->order_no : '-',
+                        'organization_id'   => $org ? $org->id : null,
+                        'organization_name' => $org ? $org->organization_name : '-',
+                        'remake_date'       => $remakeDate,
+                        'item_name'         => $itemName,
+                        'size'              => optional($detail->sizeDetails)->size_name ?? ($sizesMap[$detail->size_id] ?? '-'),
+                        'qty'               => (int) $detail->qty + (int) $detail->blanks,
+                        'est_delivery_date' => $estDeliveryDate,
+                        'ex_factory_date'   => $exFactoryDate,
+                        'status'            => $statusName,
+                        'reason'            => ($matchedRemake && !empty($matchedRemake->reason)) ? $matchedRemake->reason : '-',
+                        'remake_by'         => $remakeBy,
+                    ];
+                }
+            } else {
+                $matchedRemake = $itemRemakes->sortBy(function ($r) use ($item) {
+                    $rTime = $r->updated_at ? $r->updated_at->timestamp : ($r->created_at ? $r->created_at->timestamp : 0);
+                    $iTime = $item->created_at ? $item->created_at->timestamp : 0;
+                    return abs($rTime - $iTime);
+                })->first();
+
+                $estDeliveryDate = $item->est_delivery_date ?: ($matchedRemake->est_delivery_date ?? '-');
+                if ($estDeliveryDate === '0000-00-00' || empty($estDeliveryDate)) {
+                    $estDeliveryDate = '-';
+                }
+                $exFactoryDate = $item->ex_factory_date ?: ($matchedRemake->ex_factory_date ?? '-');
+                if ($exFactoryDate === '0000-00-00' || empty($exFactoryDate)) {
+                    $exFactoryDate = '-';
+                }
+
+                $remakeBy = ($matchedRemake && $matchedRemake->user_id && isset($usersMap[$matchedRemake->user_id]))
+                    ? $usersMap[$matchedRemake->user_id]
+                    : '-';
+
+                $sizeName = ($matchedRemake && $matchedRemake->size_id && isset($sizesMap[$matchedRemake->size_id]))
+                    ? $sizesMap[$matchedRemake->size_id]
+                    : '-';
+
+                $rows[] = [
+                    'order_id'          => $order ? $order->id : $item->order_id,
+                    'order_item_id'     => $item->id,
+                    'order_no'          => $order ? $order->order_no : '-',
+                    'organization_id'   => $org ? $org->id : null,
+                    'organization_name' => $org ? $org->organization_name : '-',
+                    'remake_date'       => $remakeDate,
+                    'item_name'         => $itemName,
+                    'size'              => $sizeName,
+                    'qty'               => (int) $item->qty,
+                    'est_delivery_date' => $estDeliveryDate,
+                    'ex_factory_date'   => $exFactoryDate,
+                    'status'            => $statusName,
+                    'reason'            => ($matchedRemake && !empty($matchedRemake->reason)) ? $matchedRemake->reason : '-',
+                    'remake_by'         => $remakeBy,
+                ];
+            }
+        }
+
+        return response()->json([
+            'orders' => $rows,
+            'items' => $rows,
+            'number_of_sale' => count($rows),
+            'total_qty' => array_sum(array_column($rows, 'qty')),
+        ]);
     }
 
 
@@ -2777,92 +2996,385 @@ public function org_wise_product_report_export(Request $request)
 
 public function Sales_Tax_Report_getData(Request $request)
 {
-    // Base query with relationships
-    $query = Order::with(['organizationDetails', 'userDetails', 'statusDetails']);
+    $service = app(\App\Services\SalesTaxReportDataService::class);
 
-    // DATE FILTER (optional)
-    if ($request->start_date && $request->end_date) {
-        $start = Carbon::createFromFormat('m/d/Y', $request->start_date)->startOfDay();
-        $end   = Carbon::createFromFormat('m/d/Y', $request->end_date)->endOfDay();
-        $query->whereRaw(
-        "STR_TO_DATE(production_date, '%m/%d/%Y') BETWEEN ? AND ?",
-        [$start, $end]
-    );
-    }
+    try {
+        $dateRows = collect(
+            $service->rows(
+                $request->input('start_date'),
+                $request->input('end_date')
+            )
+        )->map(function ($row) {
+            $cityKey = \Illuminate\Support\Str::slug(
+                trim((string) ($row['city'] ?? ''))
+            );
 
-    // Filter: order status, active orders, non-null & >0 order_total, organization with sales tax
-    $filteredOrders = $query->whereIn('order_status_id', [3, 4, 8])
-        ->where('active', 1)
-        ->whereNotNull('sub_total')
-        ->where('sub_total', '>', 0)
-        ->whereNotNull('sales_tax')
-        ->where('sales_tax', '>', 0);
+            $orderNo = trim(
+                (string) ($row['order_no'] ?? '')
+            );
 
-    // Check TSR orders exist in store_orders
-    $filteredOrders = $filteredOrders->where(function ($q) {
-        $q->where('order_no', 'not like', 'TSR%') // normal orders
-          ->orWhere(function ($sub) {
-              $sub->where('order_no', 'like', 'TSR%')
-                  ->whereExists(function ($existQuery) {
-                      $existQuery->select(\DB::raw(1))
-                          ->from('store_orders')
-                          ->whereColumn('store_orders.system_order_no', 'orders.order_no');
-                  });
-          });
-    });
+            if (
+                $cityKey === 'san-rafael'
+                && stripos($orderNo, 'TSR') === 0
+            ) {
+                $useTax = (float) ($row['use_tax'] ?? 0);
 
-    // Total records (for DataTables)
-    $totalRecords = $filteredOrders->count();
+                if ($useTax > 0) {
+                    $row['sales_tax'] = round(
+                        (float) ($row['sales_tax'] ?? 0)
+                        + $useTax,
+                        2
+                    );
 
-    // Calculate total sales tax for all filtered orders
-    $totalSalesTax = $filteredOrders
-        ->get()
-        ->sum(function ($order) {
-            $rate = $order->organizationDetails->sales_tax ?? 0;
-            $total = $order->sales_tax ?? 0;
-            return ($total );
+                    $row['use_tax'] = 0.00;
+                }
+            }
+
+            return $row;
         });
 
-    // Pagination parameters from DataTables
-    $start  = $request->input('start', 0);
-    $length = $request->input('length', 10);
+        $county = trim(
+            (string) $request->input('county', '')
+        );
 
-    // Get paginated orders
-    $orders = $filteredOrders
-        ->orderBy('created_at', 'desc')
-        ->skip($start)
-        ->take($length)
-        ->get();
+        $city = trim(
+            (string) $request->input('city', '')
+        );
 
-    // Map orders for DataTables
-    $data = $orders->map(function ($row) {
-        $rate  = $row->organizationDetails->sales_tax ?? 0;
-        $total = $row->sub_total ?? 0;
-        $salesTax = $row->sales_tax;
+        $rows = $service->filterRows(
+            $dateRows,
+            $county,
+            $city
+        );
 
-        return [
-            'order_no'           => $row->order_no,
-            'organization_name'  => $row->organizationDetails->organization_name ?? '-',
-            'state'              => $row->organizationDetails->shipping_state ?? '-',
-            'sales_person'       => $row->userDetails->name ?? '-',
-            'production_date'    => $row->production_date
-                                    ? \Carbon\Carbon::parse($row->production_date)->format('m/d/Y')
-                                    : '-',
-            'order_status'       => ucfirst($row->statusDetails->status_name ?? '-'),
-            'order_total'        => number_format($total, 2),
-            'sales_tax_rate'     => $rate,
-            'sales_tax'          => number_format($salesTax, 2),
-        ];
-    });
+        $summary = $service->summary($rows);
 
-    // Return JSON for DataTables
-    return response()->json([
-        'draw'            => intval($request->draw),
-        'recordsTotal'    => $totalRecords,
-        'recordsFiltered' => $totalRecords,
-        'total_sales_tax' => number_format($totalSalesTax, 2),
-        'data'            => $data,
-    ]);
+        $rawHierarchy = collect(
+            $service->countyHierarchy($rows)
+        );
+
+        $organizationIds = $rawHierarchy
+            ->pluck('cities')
+            ->flatten(1)
+            ->pluck('orders')
+            ->flatten(1)
+            ->pluck('organization_id')
+            ->filter()
+            ->map(function ($id) {
+                return (int) $id;
+            })
+            ->unique()
+            ->values();
+
+        $organizationTaxRates = \App\Models\Organization::query()
+            ->whereIn('id', $organizationIds)
+            ->pluck('sales_tax', 'id');
+
+        $hierarchy = $rawHierarchy
+            ->map(function ($countyGroup) use ($organizationTaxRates) {
+                $countyGroup['order_total'] = number_format(
+                    (float) $countyGroup['order_total'],
+                    2
+                );
+
+                $countyGroup['sales_tax'] =
+                    (float) $countyGroup['sales_tax'] > 0
+                        ? number_format(
+                            (float) $countyGroup['sales_tax'],
+                            2
+                        )
+                        : '-';
+
+                $countyGroup['use_tax'] =
+                    (float) $countyGroup['use_tax'] > 0
+                        ? number_format(
+                            (float) $countyGroup['use_tax'],
+                            2
+                        )
+                        : '-';
+
+                $countyGroup['total_sales_tax'] = number_format(
+                    (float) $countyGroup['total_sales_tax'],
+                    2
+                );
+
+                $countyGroup['tax_rate'] =
+                    $countyGroup['tax_rate'] === null
+                        ? null
+                        : rtrim(
+                            rtrim(
+                                number_format(
+                                    (float) $countyGroup['tax_rate'],
+                                    4,
+                                    '.',
+                                    ''
+                                ),
+                                '0'
+                            ),
+                            '.'
+                        );
+
+                $countyGroup['cities'] = collect(
+                    $countyGroup['cities'] ?? []
+                )
+                    ->map(function ($cityGroup) use ($organizationTaxRates) {
+                        $cityTaxRate = $cityGroup['tax_rate'] ?? null;
+
+                        if (
+                            $cityTaxRate === null
+                            || $cityTaxRate === ''
+                            || (float) $cityTaxRate <= 0
+                        ) {
+                            $firstOrganizationRate = collect(
+                                $cityGroup['orders'] ?? []
+                            )
+                                ->map(function ($order) use ($organizationTaxRates) {
+                                    $organizationId = (int) (
+                                        $order['organization_id'] ?? 0
+                                    );
+
+                                    if (
+                                        $organizationId <= 0
+                                        || !$organizationTaxRates->has(
+                                            $organizationId
+                                        )
+                                    ) {
+                                        return null;
+                                    }
+
+                                    $rate = (float) $organizationTaxRates->get(
+                                        $organizationId
+                                    );
+
+                                    return $rate > 0
+                                        ? $rate
+                                        : null;
+                                })
+                                ->filter(function ($rate) {
+                                    return $rate !== null;
+                                })
+                                ->first();
+
+                            if ($firstOrganizationRate !== null) {
+                                $cityTaxRate = $firstOrganizationRate;
+                            }
+                        }
+
+                        $cityGroup['order_total'] = number_format(
+                            (float) $cityGroup['order_total'],
+                            2
+                        );
+
+                        $cityGroup['sales_tax'] =
+                            (float) $cityGroup['sales_tax'] > 0
+                                ? number_format(
+                                    (float) $cityGroup['sales_tax'],
+                                    2
+                                )
+                                : '-';
+
+                        $cityGroup['use_tax'] =
+                            (float) $cityGroup['use_tax'] > 0
+                                ? number_format(
+                                    (float) $cityGroup['use_tax'],
+                                    2
+                                )
+                                : '-';
+
+                        $cityGroup['total_sales_tax'] = number_format(
+                            (float) $cityGroup['total_sales_tax'],
+                            2
+                        );
+
+                        $cityGroup['tax_rate'] =
+                            $cityTaxRate === null
+                            || $cityTaxRate === ''
+                                ? null
+                                : rtrim(
+                                    rtrim(
+                                        number_format(
+                                            (float) $cityTaxRate,
+                                            4,
+                                            '.',
+                                            ''
+                                        ),
+                                        '0'
+                                    ),
+                                    '.'
+                                );
+
+                        $cityGroup['orders'] = collect(
+                            $cityGroup['orders'] ?? []
+                        )
+                            ->map(function ($order) {
+                                return [
+                                    'order_no' =>
+                                        $order['order_no'],
+
+                                    'order_url' =>
+                                        route(
+                                            'orders.info',
+                                            [
+                                                'id' =>
+                                                    $order['order_id'],
+                                                'type' =>
+                                                    'order',
+                                            ]
+                                        )
+                                        . '?active_tab=order',
+
+                                    'organization_name' =>
+                                        $order['organization_name'],
+
+                                    'organization_url' =>
+                                        $order['organization_id']
+                                            ? route(
+                                                'organizations.info',
+                                                [
+                                                    'id' =>
+                                                        $order['organization_id'],
+                                                ]
+                                            )
+                                            : null,
+
+                                    'sales_person' =>
+                                        $order['sales_person'],
+
+                                    'production_date' =>
+                                        $order['production_date'],
+
+                                    'order_status' =>
+                                        $order['order_status'],
+
+                                    'order_total' =>
+                                        number_format(
+                                            (float) $order['taxable_total'],
+                                            2
+                                        ),
+
+                                    'sales_tax' =>
+                                        (float) $order['sales_tax'] > 0
+                                            ? number_format(
+                                                (float) $order['sales_tax'],
+                                                2
+                                            )
+                                            : '-',
+
+                                    'use_tax' =>
+                                        (float) $order['use_tax'] > 0
+                                            ? number_format(
+                                                (float) $order['use_tax'],
+                                                2
+                                            )
+                                            : '-',
+                                ];
+                            })
+                            ->values()
+                            ->all();
+
+                        return $cityGroup;
+                    })
+                    ->values()
+                    ->all();
+
+                return $countyGroup;
+            })
+            ->values();
+
+        $marinCounties = $hierarchy->filter(
+            function ($countyGroup) {
+                return strcasecmp(
+                    trim(
+                        (string) (
+                            $countyGroup['name'] ?? ''
+                        )
+                    ),
+                    'Marin County'
+                ) === 0;
+            }
+        );
+
+        $otherCounties = $hierarchy->reject(
+            function ($countyGroup) {
+                return strcasecmp(
+                    trim(
+                        (string) (
+                            $countyGroup['name'] ?? ''
+                        )
+                    ),
+                    'Marin County'
+                ) === 0;
+            }
+        );
+
+        $hierarchy = $marinCounties
+            ->concat($otherCounties)
+            ->values();
+
+        return response()->json([
+            'success' => true,
+            'recordsFiltered' => $rows->count(),
+
+            'summary' => [
+                'order_count' =>
+                    $summary['order_count'],
+
+                'taxable_total_sales' =>
+                    number_format(
+                        $summary['taxable_total_sales'],
+                        2
+                    ),
+
+                'total_sales_tax' =>
+                    number_format(
+                        $summary['total_sales_tax'],
+                        2
+                    ),
+
+                'sales_tax_total' =>
+                    number_format(
+                        $summary['sales_tax_total'],
+                        2
+                    ),
+
+                'use_tax_total' =>
+                    number_format(
+                        $summary['use_tax_total'],
+                        2
+                    ),
+            ],
+
+            'filters' =>
+                $service->filterOptions(
+                    $dateRows,
+                    $county
+                ),
+
+            'groups' =>
+                $hierarchy,
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage(),
+
+            'summary' => [
+                'order_count' => 0,
+                'taxable_total_sales' => '0.00',
+                'total_sales_tax' => '0.00',
+                'sales_tax_total' => '0.00',
+                'use_tax_total' => '0.00',
+            ],
+
+            'filters' => [
+                'counties' => [],
+                'cities' => [],
+                'cities_by_county' => [],
+            ],
+
+            'groups' => [],
+        ], 422);
+    }
 }
 
 public function weeklyOrderProductionSummary(Request $request)

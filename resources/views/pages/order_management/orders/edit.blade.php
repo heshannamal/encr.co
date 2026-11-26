@@ -347,7 +347,7 @@ tr .select2-selection__rendered {
         }
 
 .remake_items_bg{
-        background-color: #f8ff90
+        background-color: #f8ff90 !important;
     }
 .select2-container--default .select2-selection--single{
     background-color: unset;
@@ -605,12 +605,12 @@ body {
     .ui-datepicker,
     .datepicker-dropdown {
         z-index: 999999 !important;
-        top: 55% !important;
+        /* top: 55% !important; */
         right: 10% !important;
         transform: translateY(5px) !important;
     }
     .datepicker-dropdown {
-        top: auto !important;
+        /* top: auto !important; */
         left: 0 !important;
         transform: translateY(5px) !important;
     }
@@ -708,9 +708,124 @@ body {
         .flatpickr-calendar {
             width: 320px;
             /* left: 2.5% !important; */
+        /* top: 55% !important; */
         }
     /* } */
 }
+@media (max-width: 767.98px) { .mobile-order-cards .mobile-item-card.studio-item-row { background-color: #d4e9ff !important; border: 1px solid #b5d7f5 !important; border-radius: 8px !important; } .mobile-order-cards .mobile-item-card.studio-item-row .mobile-item-header, .mobile-order-cards .mobile-item-card.studio-item-row .mobile-item-body { background-color: transparent !important; } }
+
+
+@media (max-width: 767.98px) {
+
+    .mobile-action-buttons {
+        /* padding: 0 10px !important; */
+        margin-bottom: 12px !important;
+    }
+
+    .mobile-action-buttons .mobile_card_div {
+        background: #ffffff !important;
+        /* border-radius: 14px !important; */
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06) !important;
+        overflow: hidden;
+    }
+
+    .mobile-action-buttons-row {
+        padding: 12px !important;
+        margin: 0 !important;
+    }
+
+    .mobile-action-buttons-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        text-align: left !important;
+    }
+
+    .mobile-action-buttons-container .toggle-studio-items-btn,
+    .mobile-action-buttons-container #add_item {
+        width: 100% !important;
+        min-height: 46px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 9px !important;
+        padding: 12px 16px !important;
+        margin: 0 !important;
+        border-radius: 10px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        line-height: 1.3 !important;
+        box-sizing: border-box !important;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    /* Studio toggle button */
+    .mobile-action-buttons-container .toggle-studio-items-btn {
+
+        box-shadow: none !important;
+    }
+
+    /* Add Item primary button */
+    .mobile-action-buttons-container #add_item {
+        box-shadow: 0 4px 9px rgba(37, 99, 235, 0.20) !important;
+    }
+
+    .mobile-action-buttons-container .toggle-studio-items-btn i,
+    .mobile-action-buttons-container #add_item i {
+        font-size: 15px !important;
+    }
+
+    .mobile-action-buttons-container .toggle-studio-items-btn:active,
+    .mobile-action-buttons-container #add_item:active {
+        transform: scale(0.98);
+    }
+}
+
+@media (max-width: 767.98px) {
+
+    /* Order card එක positioning reference එක කරගන්න */
+    .mobile_card_div {
+        position: relative;
+    }
+
+    /* Order heading එක */
+    .mobile_card_header {
+        position: relative;
+        padding-right: 150px !important;
+    }
+
+    /* Action row එකේ elements සඳහා positioning */
+    .mobile-action-row {
+        position: relative;
+    }
+
+    /* Show as Upcoming label */
+    .mobile-action-row > div:first-child {
+        position: absolute;
+        top: 110px;
+        left: 160%;
+        margin: 0 !important;
+        z-index: 5;
+    }
+
+    /* Upcoming switch */
+    .mobile-action-row > div:nth-child(2) {
+        position: absolute;
+        top: 103px;
+        right: 10%;
+        margin: 0 !important;
+        z-index: 5;
+    }
+
+    .mobile-action-row .p-tag-clz {
+        white-space: nowrap;
+        font-size: 11px;
+    }
+}
+
 </style>
 {{-- <script src="https://code.jquery.com/jquery-3.3.1.min.js" id="jquery"></script> --}}
 
@@ -839,6 +954,7 @@ body {
                                                     {{ $organization->organization_name }}</option>
                                             @endforeach
                                         </select>
+                                        @include('pages.order_management.organization_address_warning')
                                     </div>
                                     <div class="col-2 col-md-2" style="padding:0px">
                                         {{-- <button class="visit-button" type="button" onclick="window.open('{{ route('organizations.info', ['id' => $order->organizationDetails['id']]) }}', '_blank');">VISIT <i class="fa fa-external-link" aria-hidden="true"></i></button> --}}
@@ -1044,17 +1160,46 @@ body {
                                     <i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;&nbsp;<span id="email_text_1"></span>
                                 </div> --}}
 
-                                            {{-- Defaul address --}}
+                                            {{-- Default address --}}
+
+                                @php
+                                    $defaultReceiverName = html_entity_decode(
+                                        trim(($order->contactDetails->first_name ?? '') . ' ' . ($order->contactDetails->last_name ?? '')),
+                                        ENT_QUOTES | ENT_HTML5,
+                                        'UTF-8'
+                                    );
+
+                                    $primaryReceiverName = !empty(trim($order->contactDetails->receiver_name ?? ''))
+                                        ? $order->contactDetails->receiver_name
+                                        : $defaultReceiverName;
+
+                                    $secondaryReceiverName = !empty(trim($order->contactDetails->receiver_name2 ?? ''))
+                                        ? $order->contactDetails->receiver_name2
+                                        : $defaultReceiverName;
+
+                                    $primaryReceiverName = preg_replace(
+                                        '/\s+/',
+                                        ' ',
+                                        trim(html_entity_decode((string) $primaryReceiverName, ENT_QUOTES | ENT_HTML5, 'UTF-8'))
+                                    );
+
+                                    $secondaryReceiverName = preg_replace(
+                                        '/\s+/',
+                                        ' ',
+                                        trim(html_entity_decode((string) $secondaryReceiverName, ENT_QUOTES | ENT_HTML5, 'UTF-8'))
+                                    );
+                                @endphp
 
                                 <div class="col-md-12 default-address">
-                                    <label for="receiver_name" class="form-label ml-1">Receiver name</label>
-                                    <input class="invoice-inputs light-border light-font border-style" id="receiver_name" type='text'
-                                            @if ($order->is_new_shipping_address == 3)
-                                                value="{{ !empty(trim($order->contactDetails->receiver_name2 ?? '')) ? $order->contactDetails->receiver_name2 : trim(($order->contactDetails->first_name ?? '') . ' ' . ($order->contactDetails->last_name ?? '')) }}"
-                                            @else
-                                                value="{{ !empty(trim($order->contactDetails->receiver_name ?? '')) ? $order->contactDetails->receiver_name : trim(($order->contactDetails->first_name ?? '') . ' ' . ($order->contactDetails->last_name ?? '')) }}"
-                                            @endif
-                                            readonly style="border: none !important" />
+                                    <label for="receiver_name_display" class="form-label ml-1">Receiver name</label>
+                                    <input
+                                        class="invoice-inputs light-border light-font border-style"
+                                        id="receiver_name_display"
+                                        type="text"
+                                        value="{{ $order->is_new_shipping_address == 3 ? $secondaryReceiverName : $primaryReceiverName }}"
+                                        readonly
+                                        style="border: none !important"
+                                    />
                                 </div>
                                 <div class="col-md-12 default-address">
                                     <input class="invoice-inputs light-border light-font border-style" id="shipping_address1" type='text'
@@ -1122,17 +1267,21 @@ body {
                                 <div class="col-md-12 new-address">
                                     <label for="receiver_name" class="form-label ml-1">Receiver name</label>
                                     @php
-                                        $defaultReceiverName = trim(($order->contactDetails->first_name ?? '') . ' ' . ($order->contactDetails->last_name ?? ''));
                                         if ($order->is_new_shipping_address == 1 && !empty(trim($order->receiver_name ?? ''))) {
                                             $receiverNameVal = $order->receiver_name;
-                                        } elseif ($order->is_new_shipping_address == 3 && !empty(trim($order->contactDetails->receiver_name2 ?? ''))) {
-                                            $receiverNameVal = $order->contactDetails->receiver_name2;
-                                        } elseif ($order->is_new_shipping_address == 2 && !empty(trim($order->contactDetails->receiver_name ?? ''))) {
-                                            $receiverNameVal = $order->contactDetails->receiver_name;
+                                        } elseif ($order->is_new_shipping_address == 3) {
+                                            $receiverNameVal = $secondaryReceiverName;
+                                        } elseif ($order->is_new_shipping_address == 2) {
+                                            $receiverNameVal = $primaryReceiverName;
                                         } else {
                                             $receiverNameVal = $defaultReceiverName;
                                         }
-                                        $receiverNameVal = preg_replace('/\s+/', ' ', trim($receiverNameVal));
+
+                                        $receiverNameVal = preg_replace(
+                                            '/\s+/',
+                                            ' ',
+                                            trim(html_entity_decode((string) $receiverNameVal, ENT_QUOTES | ENT_HTML5, 'UTF-8'))
+                                        );
                                     @endphp
                                     <input class="invoice-inputs light-border light-font placeholder-color border-style" id="receiver_name" name="receiver_name" type='text'
                                         value="{{ $receiverNameVal }}"
@@ -1279,10 +1428,10 @@ body {
                         </div>
                     </div>
 
-                    <div class="col-lg-12 mb-2 mobile_add_item_btn" style="padding: 0px;">
+                    <div class="col-lg-12 mb-2 mobile_add_item_btn mobile-action-buttons" style="padding: 0px;">
                         <div class="card-updated card mobile_card_div mobile_description_div" style="border-radius: 0rem; border:none">
-                            <div class="row" style="padding: 1rem;">
-                                <div class="col-md-12 mb-2 text-right">
+                            <div class="row mobile-action-buttons-row" style="padding: 1rem;">
+                                <div class="col-md-12 mb-2 text-right mobile-action-buttons-container">
                                     @can('view studio item')
                                         <button type="button" class="swal2-confirm toggle-studio-items-btn" onclick="toggleStudioItems()">
                                             <i class="fa fa-eye-slash toggle-studio-icon" aria-hidden="true"></i>&nbsp;&nbsp;<span class="toggle-studio-text">Hide Studio Items</span>
@@ -1297,6 +1446,30 @@ body {
                             </div>
                         </div>
                     </div>
+
+                    {{-- <div class="col-lg-12 mb-2 mobile_add_item_btn mobile-action-buttons" style="padding: 0px;">
+                        <div class="card-updated card mobile_card_div mobile_description_div" style="border-radius: 0rem; border:none">
+                            <div class="row mobile-action-buttons-row" style="padding: 1rem;">
+                                <div class="col-md-12 mb-2 text-right mobile-action-buttons-container">
+
+                                    @can('view studio item')
+                                        <button type="button" class="swal2-confirm toggle-studio-items-btn">
+                                            <i class="fa fa-eye-slash toggle-studio-icon" aria-hidden="true"></i>
+                                            <span class="toggle-studio-text">Hide Studio Items</span>
+                                        </button>
+                                    @endcan
+
+                                    @can('add item to order')
+                                        <button type="button" class="swal2-confirm" id="add_item" data-target="#add_item_modal">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                            <span>Add Item</span>
+                                        </button>
+                                    @endcan
+
+                                </div>
+                            </div>
+                        </div>
+                    </div> --}}
 
                     <div class="col-lg-12 mb-2" style="padding: 0px;">
                         <div class="card-updated card mobile_card_div mobile_description_div" style="border-radius: 0rem; border:none">
@@ -1571,7 +1744,7 @@ body {
 
                                                             <td>
                                                                 <button type="button" @if($Order_item_product) onclick="edit_saved_items('{{$Order_item_product->id}}' , {{$orderItem}})" @endif title="Edit" @if(auth()->user()->can('edit_saved_item_directly'))  style="border: none;color: black;background-color: transparent;outline: unset;cursor:pointer" @else  style="border: none;color: #e3e1e1;background-color: transparent;outline: unset;cursor:pointer" disabled  @endif><i class="fas fa-edit"></i></button>
-                                                                <button type="button" title="Remake as Studio Item" onclick="remake_as_studio_item({{$orderItem->id}})" @if(auth()->user()->can('edit_saved_item_directly')) style="border: none;color: #17a2b8;background-color: transparent;outline: unset;cursor:pointer" @else style="border: none;color: #e3e1e1;background-color: transparent;outline: unset;cursor:pointer" disabled @endif><i class="fas fa-store"></i></button>
+                                                                <button type="button" title="Remake as Studio Item" onclick="remake_as_studio_item({{$orderItem->id}})" class="no-disable" @if(auth()->user()->can('create studio item')) style="border: none;color: #17a2b8;background-color: transparent;outline: unset;cursor:pointer" @else style="border: none;color: #e3e1e1;background-color: transparent;outline: unset;cursor:pointer" disabled @endif><i class="fas fa-store"></i></button>
                                                                 <button type="button" title="Delete" onclick="delete_saved_item({{$orderItem}})" @if(auth()->user()->can('edit_saved_item_directly'))  style="border: none;color: black;background-color: transparent;outline: unset;cursor:pointer" @else  style="border: none;color: #e3e1e1;background-color: transparent;outline: unset;cursor:pointer" disabled  @endif><i class="fas fa-trash-alt"></i></button>
                                                             </td>
 
@@ -1835,7 +2008,7 @@ body {
 
                                                                 <td>
                                                                     <button type="button" @if($Order_item_product) onclick="edit_saved_items('{{$Order_item_product->id}}' , {{$orderItem}})" @endif title="Edit" @if(auth()->user()->can('edit_saved_item_directly'))  style="border: none;color: black;background-color: transparent;outline: unset;cursor:pointer" @else  style="border: none;color: #e3e1e1;background-color: transparent;outline: unset;cursor:pointer" disabled  @endif><i class="fas fa-edit"></i></button>
-                                                                    <button type="button" title="Remake as Studio Item" onclick="remake_as_studio_item({{$orderItem->id}})" @if(auth()->user()->can('edit_saved_item_directly')) style="border: none;color: #17a2b8;background-color: transparent;outline: unset;cursor:pointer" @else style="border: none;color: #e3e1e1;background-color: transparent;outline: unset;cursor:pointer" disabled @endif><i class="fas fa-store"></i></button>
+                                                                    <button type="button" title="Remake as Studio Item" onclick="remake_as_studio_item({{$orderItem->id}})" class="no-disable" @if(auth()->user()->can('create studio item')) style="border: none;color: #17a2b8;background-color: transparent;outline: unset;cursor:pointer" @else style="border: none;color: #e3e1e1;background-color: transparent;outline: unset;cursor:pointer" disabled @endif><i class="fas fa-store"></i></button>
                                                                     <button type="button" title="Delete" onclick="delete_saved_item({{$orderItem}})" @if(auth()->user()->can('edit_saved_item_directly'))  style="border: none;color: black;background-color: transparent;outline: unset;cursor:pointer" @else  style="border: none;color: #e3e1e1;background-color: transparent;outline: unset;cursor:pointer" disabled  @endif><i class="fas fa-trash-alt"></i></button>
                                                                 </td>
 
@@ -1929,8 +2102,18 @@ body {
 
                                         @endphp
 
-                                        <div class="mobile-item-card @if(isset($orderItem->is_studio_item) && $orderItem->is_studio_item == 1) studio-item-row @endif" @if(isset($orderItem->is_studio_item) && $orderItem->is_studio_item == 1) style="display: none;" @endif>
+                                        {{-- <div class="mobile-item-card @if(isset($orderItem->is_studio_item) && $orderItem->is_studio_item == 1) studio-item-row @endif" @if(isset($orderItem->is_studio_item) && $orderItem->is_studio_item == 1) style="display: none;" @endif> --}}
 
+                                            @php
+                                                $class_remake = str_ends_with($product_name, '- Remake')
+                                                    ? 'remake_items_bg'
+                                                    : '';
+                                            @endphp
+
+                                            <div class="mobile-item-card {{ $class_remake }} @if(isset($orderItem->is_studio_item) && $orderItem->is_studio_item == 1) studio-item-row @endif"
+                                                @if(isset($orderItem->is_studio_item) && $orderItem->is_studio_item == 1)
+                                                    style="display: none;"
+                                                @endif>
                                             <div class="mobile-item-header">
                                                 <div>
                                                     @can('view order items')
@@ -1970,7 +2153,8 @@ body {
 
                                                         <button type="button"
                                                             title="Remake as Studio Item"
-                                                            onclick="remake_as_studio_item({{ $orderItem->id }})">
+                                                            onclick="remake_as_studio_item({{ $orderItem->id }})"
+                                                            style="color: #17a2b8;">
                                                             <i class="fas fa-store"></i>
                                                         </button>
 
@@ -2474,10 +2658,10 @@ body {
                                                             </td>
                                                         </tr>
                                                         <tr style="color: #717070;font-weight:100">
-                                                            <th style="font-weight: 100">Sales Tax ($) <span id="sales_tax_display">{{ $order->organizationDetails['sales_tax'] }}</span>%  RATE </th>
+                                                            <th style="font-weight: 100">Sales Tax ($) <span id="sales_tax_display">{{ $order->sales_tax_rate ?? 0 }}</span>%  RATE </th>
                                                             <td>
                                                                 <input type="hidden" id="sales_tax_percentage"
-                                                                    value="{{ $order->organizationDetails['sales_tax'] }}" />
+                                                                    value="{{ $order->sales_tax_rate ?? 0 }}" />
                                                                 <input class="invoice-inputs text-right item-table-border invoicein0001" type='text' name="sales_tax"
                                                                     id="sales_tax" style="color: #717070" value='{{ number_format($order->sales_tax, 2) }}'
                                                                      />
@@ -3346,7 +3530,7 @@ document.addEventListener('change', function (e) {
         $('#customer_address_type').change(function () {
             var addressType = $(this).val();
             if (addressType == 2) {
-                $('#receiver_name').val('{{ !empty(trim($order->contactDetails->receiver_name ?? '')) ? $order->contactDetails->receiver_name : trim(($order->contactDetails->first_name ?? '') . ' ' . ($order->contactDetails->last_name ?? '')) }}');
+                $('#receiver_name_display').val(@json($primaryReceiverName));
                 $('#shipping_address2').val('{{ $order->contactDetails['shipping_street'] ?? '--' }}');
                 $('#shipping_address1').val('{{ $order->contactDetails['apartment'] ?? '--' }}');
                 $('#shipping_address3').val('{{ $order->contactDetails['shipping_city'] ?? '' }} {{ $order->contactDetails['shipping_state'] ?? '' }} {{ $order->contactDetails['shipping_zip'] ?? '' }}');
@@ -3356,7 +3540,7 @@ document.addEventListener('change', function (e) {
                 // $('#shipping_address3').val('{{ trim(($order->contactDetails->shipping_city ?? '') . ' ' . ($order->contactDetails->shipping_state ?? '') . ' ' . ($order->contactDetails->shipping_zip ?? '')) }}');
                 // $('#shipping_address4').val('{{ $order->contactDetails->shipping_country ?? '--' }}');
             } else if (addressType == 3) {
-                $('#receiver_name').val('{{ !empty(trim($order->contactDetails->receiver_name2 ?? '')) ? $order->contactDetails->receiver_name2 : trim(($order->contactDetails->first_name ?? '') . ' ' . ($order->contactDetails->last_name ?? '')) }}');
+                $('#receiver_name_display').val(@json($secondaryReceiverName));
                 $('#shipping_address2').val('{{ $order->contactDetails['shipping_street_2'] ?? '--' }}');
                 $('#shipping_address1').val('{{ $order->contactDetails['apartment2'] ?? '--' }}');
                 $('#shipping_address3').val('{{ $order->contactDetails['shipping_city_2'] ?? '' }} {{ $order->contactDetails['shipping_state_2'] ?? '' }} {{ $order->contactDetails['shipping_zip_2'] ?? '' }}');
@@ -3840,6 +4024,7 @@ document.addEventListener('change', function (e) {
         }
 
         $('#organization_id').on('change', function() {
+            showOrderOrganizationAddressWarning(null, true);
             var organizationId = $(this).val();
             var selectedOption = $('#organization_id option:selected');
             var plstatus = selectedOption.data('plstatus'); // Retrieve the plstatus attribute
@@ -4083,7 +4268,6 @@ document.addEventListener('change', function (e) {
                 $('#customer_address_type').attr('disabled', 'disabled');
                 $('.default-address').hide();
                 $('.new-address').show();
-                $('#receiver_name').removeAttr('readonly');
                 var button = document.getElementById("address_save_btn");
                 button.style.display = "block";
                 //mynewscripy();
@@ -4104,7 +4288,6 @@ document.addEventListener('change', function (e) {
                 $('#customer_address_type').removeAttr('disabled');
                 $('.default-address').show();
                 $('.new-address').hide();
-                $('#receiver_name').attr('readonly', true);
                 var button = document.getElementById("address_save_btn");
                 button.style.display = "none";
             }
@@ -4506,6 +4689,15 @@ document.addEventListener('change', function (e) {
         });
     });
 
+    function setOrderTimelineDate($input, date) {
+        const picker = $input[0]._flatpickr;
+        if (picker) {
+            picker.setDate(date, false);
+        } else {
+            $input.val(date);
+        }
+    }
+
     $('body').on('change', '#due_date', function () {
         var atrDeuDate = $(this);
         var new_due_date = $(this).val();
@@ -4558,24 +4750,26 @@ document.addEventListener('change', function (e) {
                                     title: 'Apologies',
                                     text: 'The email address you entered is not correct. Please check your email address!'
                                 });
-                                atrDeuDate.val(pre_due_date);
+                                setOrderTimelineDate(atrDeuDate, pre_due_date);
                             } else if(authresponse == 'user_error'){
                                 Swal.fire({
                                     type: 'error',
                                     title: 'Apologies',
                                     text: 'You do not possess the required authorization to carry out this action.'
                                 });
-                                atrDeuDate.val(pre_due_date);
+                                setOrderTimelineDate(atrDeuDate, pre_due_date);
                             } else if(authresponse == 'password_error'){
                                 Swal.fire({
                                     type: 'error',
                                     title: 'Apologies',
                                     text: 'The password you entered is not correct!'
                                 });
-                                atrDeuDate.val(pre_due_date);
+                                setOrderTimelineDate(atrDeuDate, pre_due_date);
                             }
                         }
                     });
+                } else {
+                    setOrderTimelineDate(atrDeuDate, pre_due_date);
                 }
             })()
         }
@@ -4618,9 +4812,12 @@ document.addEventListener('change', function (e) {
                                     title: 'Apologies',
                                     text: 'You do not possess the required authorization to carry out this action.'
                                 });
-                            atrDeuDate.val(pre_due_date);
+                            setOrderTimelineDate(atrDeuDate, pre_due_date);
                             return;
                         }
+
+                        atrDeuDate.attr('data-AlradySaved', new_due_date);
+                        $('#ex_factory_date').attr('data-AlradySaved', data[0]);
 
                         Swal.fire({
                             title: "Done!",
@@ -4630,18 +4827,18 @@ document.addEventListener('change', function (e) {
                         })
 
                         if(order_type == 0 || (order_type == 1 && address_type == 2)){
-                            $('#ex_factory_date').val(data[0]);
-                            $('#due_date').val(new_due_date);
-                            $('#est_delivery_date').val(data[1]);
+                            setOrderTimelineDate($('#ex_factory_date'), data[0]);
+                            setOrderTimelineDate($('#due_date'), new_due_date);
+                            setOrderTimelineDate($('#est_delivery_date'), data[1]);
 
                             $('.item-ex-factory-date').val(data[0]);
                             $('.item-in-hand-due-date').val(new_due_date);
                             $('.est-delivery-date').val(new_due_date);
                         }else if(order_type == 1){
-                            $('#ex_factory_date').val(data[0]);
-                            $('#est_delivery_date').val(data[1]);
+                            setOrderTimelineDate($('#ex_factory_date'), data[0]);
+                            setOrderTimelineDate($('#est_delivery_date'), data[1]);
                             $('#encore_packing_date').val(data[2]);
-                            $('#due_date').val(new_due_date);
+                            setOrderTimelineDate($('#due_date'), new_due_date);
 
                             $('.item-ex-factory-date').val(data[0]);
                             $('.item-encore-packing-date').val(data[2]);
@@ -4673,9 +4870,12 @@ document.addEventListener('change', function (e) {
                                     title: 'Apologies',
                                     text: 'You do not possess the required authorization to carry out this action.'
                                 });
-                            atrDeuDate.val(pre_due_date);
+                            setOrderTimelineDate(atrDeuDate, pre_due_date);
                             return;
                         }
+
+                        atrDeuDate.attr('data-AlradySaved', new_due_date);
+                        $('#ex_factory_date').attr('data-AlradySaved', data[0]);
 
                         Swal.fire({
                             title: "Done!",
@@ -4684,14 +4884,14 @@ document.addEventListener('change', function (e) {
                             allowOutsideClick: false,
                         })
                         if(order_type == 0 || (order_type == 1 && address_type == 2)){
-                            $('#ex_factory_date').val(data[0]);
-                            $('#est_delivery_date').val(data[1]);
-                            $('#due_date').val(new_due_date);
+                            setOrderTimelineDate($('#ex_factory_date'), data[0]);
+                            setOrderTimelineDate($('#est_delivery_date'), data[1]);
+                            setOrderTimelineDate($('#due_date'), new_due_date);
                         }else if(order_type == 1){
-                            $('#ex_factory_date').val(data[0]);
-                            $('#est_delivery_date').val(data[1]);
+                            setOrderTimelineDate($('#ex_factory_date'), data[0]);
+                            setOrderTimelineDate($('#est_delivery_date'), data[1]);
                             $('#encore_packing_date').val(data[2]);
-                            $('#due_date').val(new_due_date);
+                            setOrderTimelineDate($('#due_date'), new_due_date);
                         }
                     },
                     complete: function () {
@@ -4833,7 +5033,7 @@ document.addEventListener('change', function (e) {
                 $('#shipping_address4').val(data.shipping_country);
                 $('#shipping_address5').val(data.phone_no);
                 $('#shipping_address6').val(data.email);
-                $('#receiver_name').val(decodeHtml(data.first_name + ' ' + data.last_name).replace(/\s+/g, ' ').trim());
+                $('#receiver_name_display').val(decodeHtml(data.first_name + ' ' + data.last_name).replace(/\s+/g, ' ').trim());
             },
             complete: function () {
                 $(".se-pre-con").fadeOut('slow');
@@ -4864,7 +5064,7 @@ document.addEventListener('change', function (e) {
                 $('#shipping_address4').val(data.shipping_country);
                 $('#shipping_address5').val(data.phone_no);
                 $('#shipping_address6').val(data.email);
-                $('#receiver_name').val(decodeHtml(data.first_name + ' ' + data.last_name).replace(/\s+/g, ' ').trim());
+                $('#receiver_name_display').val(decodeHtml(data.first_name + ' ' + data.last_name).replace(/\s+/g, ' ').trim());
             },
             complete: function () {
                 $(".se-pre-con").fadeOut('slow');
@@ -4886,7 +5086,20 @@ document.addEventListener('change', function (e) {
             },
             success: function(data, textStatus, jqXHR) {
                 console.log(data);
+                if (!data || String($('#organization_id').val()) !== String(organizationId)) {
+                    return;
+                }
+                var rate = String(organizationId) === String(@json($order->organization_id))
+                    ? @json($order->sales_tax_rate ?? 0)
+                    : (data.sales_tax_active == 1 ? (data.sales_tax ?? 0) : 0);
+                $('#sales_tax_display').text(rate);
+                $('#sales_tax_percentage').val(rate);
                 var contactList = data.contact_organizations;
+                var organizationSelect = $('#organization_id');
+                if (String(organizationSelect.val()) === String(organizationId)) {
+                    var changedOrganization = String(organizationId) !== organizationSelect.attr('data-AlradySaved').trim();
+                    showOrderOrganizationAddressWarning(organizationId, !changedOrganization || data.has_shipping_address);
+                }
                 if (contactList.length > 0) {
                     var organization = data.contact_organizations[0].organizations[0];
 
@@ -4938,20 +5151,14 @@ document.addEventListener('change', function (e) {
 
 
 
-                    if (organization.sales_tax_active == 1) {
-                        $('#sales_tax_display').html(organization.sales_tax);
-                        $('#sales_tax_percentage').val(organization.sales_tax);
-                    } else {
-                        $('#sales_tax_display').html(0);
-                        $('#sales_tax_percentage').val(0);
-                    }
+
 
                 } else {
                     $('#customer_id').html('');
                     $('<option value="">No Customers</option>').appendTo($('#customer_id'));
                 }
 
-                $('#receiver_name').val('');
+                $('#receiver_name_display').val('');
                 $('#shipping_address2').val('');
                 $('#shipping_address1').val('');
                 $('#shipping_address3').val('');

@@ -789,12 +789,12 @@
 @section('back-btn-Mobile')
     {{-- <a href="{{ route('home') }}" class="home-btn-color-mobile" title="Back to home">< BACK TO HOME</a> --}}
     @if ($orderTrait->isInventoryOrder($orders[0]->organization_id))
-        <a href="{{route('inventory_orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK TO ORDERS</a>
+        <a href="{{route('inventory_orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK</a>
     @else
         @if($orders[0]->plorder == 1)
-            <a href="{{route('plorders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK TO ORDERS</a>
+            <a href="{{route('plorders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK</a>
         @else
-        <a href="{{route('orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK TO ORDERS</a>
+        <a href="{{route('orders')}}" class="home-btn-color home-btn-color-mobile unsave_event_class" title="Back to Orders">< BACK</a>
         @endif
     @endif
 @endsection
@@ -1520,7 +1520,7 @@
                 var orderId = $(this).val();
 
                 $('#link_container').html('');
-                $('#link_container').html('<input type="text" id="customer_roster_link" class="invoice-inputs" value="https://encr.co/roster/'+orderId+'" style="width: 80%; background-color: white;" />');
+                $('#link_container').html('<input type="text" id="customer_roster_link" class="invoice-inputs" value="https://encr.co/customer_portal/order_view/'+orderId+'" style="width: 80%; background-color: white;" />');
                 // $('#link_container').html('<input type="text" class="invoice-inputs" value="http://localhost/roster/'+orderId+'" style="width: 50%;" />');
                 //$('#copy_link_btn').show();
                 // $('html, body').animate({ scrollTop: $('#link_container').offset().top }, 'slow');

@@ -201,9 +201,134 @@
         box-shadow: none !important;
         outline: none !important;
     }
+.back_home_mobile_2 {
+    display: none !important;
+}
 
+@media (max-width: 768px) {
 
+    .header1 {
+        position: relative !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        gap: 4px !important;
+        text-align: center !important;
+        height: 40px;
+    }
 
+    /* Topic එක full width එකේ center කරන්න - padding නැහැ */
+    .header1 > strong {
+        display: block !important;
+        order: 1 !important;
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+    }
+
+    #header {
+        display: inline-block !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        text-align: center !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    /* BACK button */
+    .back_home_mobile_2 {
+        display: block !important;
+        position: absolute !important;
+        left: 20px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        z-index: 2;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .back_home_mobile_2 a {
+        display: inline-block !important;
+        white-space: nowrap !important;
+        font-size: 11px !important;
+        text-decoration: none !important;
+    }
+
+    /* Long topic එකක් නම් BACK පහළ row එකට */
+    .header1.header-long {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .header1.header-long > strong {
+        order: 1 !important;
+        flex: 0 0 100% !important;
+        width: 100% !important;
+    }
+
+    .header1.header-long .back_home_mobile_2 {
+        position: static !important;
+        order: 2 !important;
+        transform: none !important;
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        margin-top: 4px !important;
+        padding: 0 0 0 20px !important;
+        text-align: left !important;
+        box-sizing: border-box !important;
+    }
+
+    .header1.header-long .back_home_mobile_2 strong {
+        display: block !important;
+        text-align: left !important;
+    }
+
+    .back_home_mobile {
+        display: none !important;
+    }
+
+    .second-nav-place {
+        margin-top: var(--header-dynamic-gap, 70px) !important;
+    }
+}
+@media (max-width: 768px) {
+
+    .header1.header-long.back-inline .back_home_mobile_2 {
+        display: block !important;
+        position: absolute !important;
+        left: 20px !important;
+        top: auto !important;
+        bottom: 0 !important;
+        transform: none !important;
+        width: auto !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        z-index: 2;
+    }
+
+    .header1.header-long.back-next-row .back_home_mobile_2 {
+        display: block !important;
+        position: static !important;
+        order: 2 !important;
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        max-width: none !important;
+        transform: none !important;
+        margin-top: 4px !important;
+        padding: 0 0 0 20px !important;
+        text-align: left !important;
+        box-sizing: border-box !important;
+    }
+}
 </style>
 
 {{-- Top navbar --}}
@@ -229,6 +354,11 @@
                                 </strong>
                             </div>
                             <div class="col-md-6 header1">
+                                <div class="back_home_mobile_2">
+                                    <strong>
+                                        @yield('back-btn-Mobile')
+                                    </strong>
+                                </div>
                                 <strong><span class="hFont headder_size" id="header">
                                     @yield('order-header')
                                 </span ></strong>
@@ -302,6 +432,160 @@
     </div>
 
 </div>
+
+
+<script>
+(function () {
+
+    function updateHeaderLayout() {
+        const header = document.querySelector('.header1');
+        const title = document.querySelector('#header');
+        const secondNav = document.querySelector('.second-nav-place');
+
+        if (!header || !title) return;
+
+        if (window.innerWidth > 768) {
+            header.classList.remove(
+                'header-long',
+                'back-inline',
+                'back-next-row'
+            );
+
+            if (secondNav) {
+                secondNav.style.removeProperty('--header-dynamic-gap');
+            }
+
+            return;
+        }
+
+        requestAnimationFrame(function () {
+
+            // Measure the topic's natural, unwrapped width
+            const measure = title.cloneNode(true);
+            measure.removeAttribute('id');
+
+            measure.style.setProperty('position', 'absolute', 'important');
+            measure.style.setProperty('visibility', 'hidden', 'important');
+            measure.style.setProperty('white-space', 'nowrap', 'important');
+            measure.style.setProperty('width', 'max-content', 'important');
+            measure.style.setProperty('max-width', 'none', 'important');
+            measure.style.setProperty('overflow-wrap', 'normal', 'important');
+            measure.style.setProperty('display', 'inline-block', 'important');
+            measure.style.setProperty('padding', '0', 'important');
+
+            header.appendChild(measure);
+
+            const naturalWidth = measure.getBoundingClientRect().width;
+            measure.remove();
+
+            // Topic available width = header width - 100px
+            const availableWidth = header.clientWidth - 120;
+            const isLong = naturalWidth > availableWidth;
+
+            header.classList.remove(
+                'header-long',
+                'back-inline',
+                'back-next-row'
+            );
+
+            header.classList.toggle('header-long', isLong);
+
+            requestAnimationFrame(function () {
+
+                if (isLong) {
+
+                    // Get the actual text rectangles for each line
+                    const range = document.createRange();
+                    range.selectNodeContents(title);
+
+                    const rects = Array.from(range.getClientRects())
+                        .filter(rect => rect.width > 0 && rect.height > 0)
+                        .sort((a, b) => {
+                            if (Math.abs(a.top - b.top) > 2) {
+                                return a.top - b.top;
+                            }
+                            return a.left - b.left;
+                        });
+
+                    // Group text rectangles by their line position
+                    const lines = [];
+
+                    rects.forEach(function (rect) {
+                        let line = lines.find(item =>
+                            Math.abs(item.top - rect.top) <= 2
+                        );
+
+                        if (!line) {
+                            line = {
+                                top: rect.top,
+                                left: rect.left,
+                                right: rect.right
+                            };
+
+                            lines.push(line);
+                        } else {
+                            line.left = Math.min(line.left, rect.left);
+                            line.right = Math.max(line.right, rect.right);
+                        }
+                    });
+
+                    lines.sort((a, b) => a.top - b.top);
+
+                    if (lines.length >= 2) {
+
+                        // Actual free space before the second line
+                        const headerLeft =
+                            header.getBoundingClientRect().left;
+
+                        const secondLineLeft = lines[1].left;
+
+                        const leftFreeSpace =
+                            secondLineLeft - headerLeft;
+
+                        // More than 60px: BACK can fit beside line 2
+                        if (leftFreeSpace > 60) {
+                            header.classList.add('back-inline');
+                        } else {
+                            header.classList.add('back-next-row');
+                        }
+
+                    } else {
+                        // If the second line cannot be measured safely,
+                        // put BACK on its own row
+                        header.classList.add('back-next-row');
+                    }
+                }
+
+                // Recalculate the following content position
+                requestAnimationFrame(function () {
+
+                    if (!secondNav) return;
+
+                    const headerHeight =
+                        header.getBoundingClientRect().height;
+
+                    const dynamicGap = 15 + headerHeight;
+
+                    secondNav.style.setProperty(
+                        '--header-dynamic-gap',
+                        dynamicGap + 'px'
+                    );
+                });
+            });
+        });
+    }
+
+    window.addEventListener('load', updateHeaderLayout);
+    window.addEventListener('resize', updateHeaderLayout);
+
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(updateHeaderLayout);
+    }
+
+    document.addEventListener('DOMContentLoaded', updateHeaderLayout);
+
+})();
+</script>
 
 
 <script>

@@ -372,6 +372,25 @@
 
     }
 
+    .label-order-link {
+        color: #32325d !important;
+        text-decoration: none !important;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .label-order-link:hover {
+        color: #17a589 !important;
+        text-decoration: underline !important;
+    }
+
+    .label-order-link:focus {
+        color: #17a589 !important;
+        outline: none;
+    }
+
 
 
     .label-shipment {
@@ -1171,7 +1190,15 @@
 
                         <div>
 
-                            <div class="label-order">Order #{{ $shipment->store_order_no }}</div>
+                            <div class="label-order">
+                                <a href="{{ route('store.individual_player', ['id' => $shipment->store_order_no]) }}"
+                                   class="label-order-link"
+                                   target="_blank"
+                                   title="Open order #{{ $shipment->store_order_no }}">
+                                    Order #{{ $shipment->store_order_no }}
+                                    <i class="fa fa-external-link" style="font-size:10px;"></i>
+                                </a>
+                            </div>
 
                         </div>
 
@@ -1721,11 +1748,34 @@
 
 
 
-                            @if(in_array($status, ['review_required', 'edit_review', 'creating'], true))
+                            @if(in_array($status, ['review_required', 'creating'], true))
 
                                 <div class="label-danger-note">
 
-                                    This label requires review. Verify the USPS transaction before another purchase attempt.
+                                    <strong>USPS transaction result is uncertain.</strong><br>
+
+                                    Do not create this label again yet. First use
+                                    <strong>Verify / Recover USPS Label</strong>.
+                                    It asks USPS for the original label using the
+                                    request UUID already saved for this purchase and
+                                    does not intentionally buy a second label.
+
+                                    <br><br>
+
+                                    If you want to abandon the uncertain USPS purchase,
+                                    use <strong>Cancel / Refund Original Request</strong>.
+                                    After USPS accepts that action, use the existing
+                                    <strong>Prepare Replacement</strong> option.
+
+                                </div>
+
+                            @elseif($status === 'edit_review')
+
+                                <div class="label-danger-note">
+
+                                    The USPS package-edit result requires review.
+                                    Do not purchase another label for this shipment
+                                    until the existing USPS transaction has been checked.
 
                                 </div>
 
@@ -2010,6 +2060,62 @@
 
 
                             <div class="label-form-actions">
+
+                                @if(!empty($record['can_review_recover']))
+
+                                    <form method="POST"
+
+                                          action="{{ route('usps.label.review-recover', ['id' => $shipment->id]) }}"
+
+                                          class="label-inline-form js-usps-confirm"
+
+                                          data-title="Verify / Recover USPS Label"
+
+                                          data-message="Ask USPS for the original label using the saved request UUID? This will use the USPS reprint/recovery API and will not intentionally purchase a second label.">
+
+                                        @csrf
+
+                                        <button type="submit"
+
+                                                class="label-btn label-btn-primary">
+
+                                            <i class="fa fa-search"></i>
+                                            Verify / Recover USPS Label
+
+                                        </button>
+
+                                    </form>
+
+                                @endif
+
+
+                                @if(!empty($record['can_review_cancel_refund']))
+
+                                    <form method="POST"
+
+                                          action="{{ route('usps.label.review-cancel-refund', ['id' => $shipment->id]) }}"
+
+                                          class="label-inline-form js-usps-confirm"
+
+                                          data-title="Cancel / Refund Original USPS Request"
+
+                                          data-message="Ask USPS to cancel or refund the uncertain original label request by its saved UUID? Use this only if you want to abandon the original label before preparing a replacement.">
+
+                                        @csrf
+
+                                        <button type="submit"
+
+                                                class="label-btn label-btn-danger">
+
+                                            <i class="fa fa-ban"></i>
+                                            Cancel / Refund Original Request
+
+                                        </button>
+
+                                    </form>
+
+                                @endif
+
 
                                 @if($record['has_saved_pdf'])
 
@@ -2357,10 +2463,11 @@
 
     $(document).on('click', '.label-card-header.bulk-collapsible', function (e) {
 
-        if ($(e.target).closest('.bulk-record-select').length) {
-
+        if (
+            $(e.target).closest('.bulk-record-select').length ||
+            $(e.target).closest('.label-order-link').length
+        ) {
             return;
-
         }
 
 
@@ -2377,10 +2484,11 @@
 
         if (e.key === 'Enter' || e.key === ' ') {
 
-            if ($(e.target).is('.bulk-record-select')) {
-
+            if (
+                $(e.target).is('.bulk-record-select') ||
+                $(e.target).closest('.label-order-link').length
+            ) {
                 return;
-
             }
 
 

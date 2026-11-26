@@ -99,6 +99,7 @@
                 .select2-search__field {
                     font-size: 16px !important;
                 }
+                #mobileScrollDownBtn { position: fixed; z-index: 99999; touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; } #mobileScrollDownBtn:active { cursor: grabbing; } #mobileScrollDownBtn.hide-scroll-btn { display: none !important; }
 
             }
         </style>
@@ -170,150 +171,378 @@
         </script>
 
 
+<script>
+$(document).ready(function () {
 
-        <script>
-            $(document).ready(function () {
+    const scrollBtn = $('#mobileScrollDownBtn');
 
-                const scrollBtn = $('#mobileScrollDownBtn');
+    if (!scrollBtn.length) {
+        return;
+    }
 
-                scrollBtn.on('click', function () {
+    /* =====================================================
+       SCROLL BUTTON
+       Normal click = scroll to bottom
+       Hold 2 seconds = enable dragging
+       ===================================================== */
 
-                    $('html, body').animate({
-                        scrollTop: $(document).height()
-                    }, 700);
+    let holdTimer = null;
+    let holdReady = false;
+    let dragging = false;
+    let moved = false;
+    let pointerId = null;
 
-                });
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
 
-                $(window).on('scroll', function () {
+    let suppressClick = false;
 
-                    const scrollTop = $(window).scrollTop();
-                    const windowHeight = $(window).height();
-                    const documentHeight = $(document).height();
+    scrollBtn.css({
+        position: 'fixed',
+        zIndex: 99999,
+        touchAction: 'none',
+        userSelect: 'none',
+        webkitUserSelect: 'none',
+        cursor: 'pointer'
+    });
 
-                    if (scrollTop + windowHeight >= documentHeight - 80) {
-                        scrollBtn.addClass('hide-scroll-btn');
-                    } else {
-                        scrollBtn.removeClass('hide-scroll-btn');
-                    }
+    // Scroll to bottom on a normal click
+    scrollBtn.on('click', function (e) {
+        if (suppressClick) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            suppressClick = false;
+            return false;
+        }
 
-                });
+        $('html, body').stop().animate({
+            scrollTop: $(document).height()
+        }, 700);
+    });
 
-            });
+    // Hide button when close to the bottom
+    function updateScrollButton() {
+        const scrollTop = $(window).scrollTop();
+        const windowHeight = $(window).height();
+        const documentHeight = $(document).height();
 
-            function copyToClipboard(text, btnElement) {
-                var $btn = null;
+        if (scrollTop + windowHeight >= documentHeight - 80) {
+            scrollBtn.addClass('hide-scroll-btn');
+        } else {
+            scrollBtn.removeClass('hide-scroll-btn');
+        }
+    }
 
-                if (btnElement && (btnElement instanceof Element || btnElement.jquery)) {
-                    $btn = $(btnElement);
-                } else if (text && (text instanceof Element || text.nodeType || text.jquery)) {
-                    $btn = $(text);
-                    text = null;
-                } else if (window.event && window.event.target) {
-                    $btn = $(window.event.target).closest('.copy-to-clipboard-btn, #copySampleTrackingLink, button');
-                }
+    $(window).on('scroll resize', updateScrollButton);
 
-                var linkToCopy = '';
+    // Begin the 2-second hold
+    scrollBtn.on('pointerdown', function (e) {
 
-                if (typeof text === 'string') {
-                    var trimmed = text.trim();
-                    if (trimmed && trimmed !== '{tracking_link}') {
-                        linkToCopy = trimmed;
-                    }
-                }
+        clearTimeout(holdTimer);
 
-                if (!linkToCopy && $btn && $btn.length) {
-                    linkToCopy = ($btn.attr('data-url') || $btn.attr('data-link') || $btn.data('url') || $btn.data('link') || '').toString().trim();
+        const rect = this.getBoundingClientRect();
 
-                    if (!linkToCopy || linkToCopy === '{tracking_link}') {
-                        var $nearbyLink = $btn.closest('div').find('a');
-                        if ($nearbyLink.length) {
-                            var href = ($nearbyLink.attr('href') || '').trim();
-                            var textContent = ($nearbyLink.text() || '').trim();
-                            if (href && href !== '#' && !href.startsWith('javascript:') && href !== '{tracking_link}') {
-                                linkToCopy = href;
-                            } else if (textContent && textContent !== '{tracking_link}') {
-                                linkToCopy = textContent;
-                            }
-                        }
-                    }
-                }
+        startX = e.clientX;
+        startY = e.clientY;
+        startLeft = rect.left;
+        startTop = rect.top;
 
-                if (!linkToCopy || linkToCopy === '{tracking_link}') {
-                    linkToCopy = ($('#sample_tracking_link').val() || '').trim();
-                }
+        pointerId = e.pointerId;
+        holdReady = false;
+        dragging = false;
+        moved = false;
+        suppressClick = false;
 
-                if (!linkToCopy || linkToCopy === '{tracking_link}') {
-                    if (typeof showSampleAlert === 'function') {
-                        showSampleAlert('Tracking link is empty.', 'error');
-                    } else if (typeof swal === 'function') {
-                        swal('Warning', 'Tracking link is empty.', 'warning');
-                    } else if (typeof Swal !== 'undefined' && Swal.fire) {
-                        Swal.fire({ icon: 'warning', title: 'Warning', text: 'Tracking link is empty.' });
-                    }
-                    return;
-                }
+        const btn = this;
 
-                var originalHtml = '';
-                if ($btn && $btn.length) {
-                    originalHtml = $btn.data('original-html') || $btn.html();
-                    if (!$btn.data('original-html')) {
-                        $btn.data('original-html', originalHtml);
-                    }
-                }
+        holdTimer = setTimeout(function () {
 
-                function doCopy(textVal) {
-                    if (navigator.clipboard && window.isSecureContext) {
-                        return navigator.clipboard.writeText(textVal);
-                    } else {
-                        return new Promise(function (resolve, reject) {
-                            try {
-                                var $temp = $('<textarea>');
-                                $temp.css({ position: 'fixed', left: '-9999px', top: '0', opacity: '0' });
-                                $('body').append($temp);
-                                $temp.val(textVal).select();
-                                var successful = document.execCommand('copy');
-                                $temp.remove();
-                                if (successful) {
-                                    resolve();
-                                } else {
-                                    reject(new Error('Copy failed'));
-                                }
-                            } catch (err) {
-                                reject(err);
-                            }
-                        });
-                    }
-                }
+            holdReady = true;
+            btn.style.cursor = 'grab';
 
-                doCopy(linkToCopy).then(function () {
-                    if ($btn && $btn.length) {
-                        $btn.html('<i class="fa fa-check mr-1"></i> Copied!').addClass('copied');
-                        setTimeout(function () {
-                            $btn.html(originalHtml).removeClass('copied');
-                        }, 2000);
-                    }
-                }).catch(function (err) {
-                    console.error('Failed to copy: ', err);
-                    if (typeof showSampleAlert === 'function') {
-                        showSampleAlert('Failed to copy tracking link to clipboard.', 'error');
-                    } else if (typeof swal === 'function') {
-                        swal('Error', 'Failed to copy tracking link to clipboard.', 'error');
-                    } else if (typeof Swal !== 'undefined' && Swal.fire) {
-                        Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to copy tracking link to clipboard.' });
-                    }
-                });
+            // Capture pointer after the hold succeeds
+            if (btn.setPointerCapture) {
+                try {
+                    btn.setPointerCapture(pointerId);
+                } catch (err) {}
             }
 
-            window.copyToClipboard = copyToClipboard;
+        }, 500);
+    });
 
-            $(document).on('click', '.copy-to-clipboard-btn, #copySampleTrackingLink', function (e) {
-                var $btn = $(this);
-                if ($btn.hasClass('copied')) {
-                    return;
+    // Move only after the 2-second hold
+    scrollBtn.on('pointermove', function (e) {
+
+        if (!holdReady) {
+            // Cancel the hold if the pointer moves too soon
+            if (
+                Math.abs(e.clientX - startX) > 8 ||
+                Math.abs(e.clientY - startY) > 8
+            ) {
+                clearTimeout(holdTimer);
+            }
+
+            return;
+        }
+
+        dragging = true;
+        moved = true;
+        suppressClick = true;
+
+        const maxLeft = window.innerWidth - this.offsetWidth;
+        const maxTop = window.innerHeight - this.offsetHeight;
+
+        const newLeft = Math.max(
+            0,
+            Math.min(maxLeft, startLeft + (e.clientX - startX))
+        );
+
+        const newTop = Math.max(
+            0,
+            Math.min(maxTop, startTop + (e.clientY - startY))
+        );
+
+        this.style.left = newLeft + 'px';
+        this.style.top = newTop + 'px';
+        this.style.right = 'auto';
+        this.style.bottom = 'auto';
+        this.style.cursor = 'grabbing';
+
+        e.preventDefault();
+    });
+
+    function stopDragging() {
+
+        clearTimeout(holdTimer);
+
+        if (dragging && moved) {
+            suppressClick = true;
+        }
+
+        dragging = false;
+        holdReady = false;
+        pointerId = null;
+
+        scrollBtn.css('cursor', 'pointer');
+
+        // Allow the next intentional click after the drag ends
+        if (suppressClick) {
+            setTimeout(function () {
+                suppressClick = false;
+            }, 350);
+        }
+    }
+
+    scrollBtn.on(
+        'pointerup pointercancel lostpointercapture',
+        stopDragging
+    );
+
+    updateScrollButton();
+
+});
+
+
+/* =========================================================
+   COPY TO CLIPBOARD
+   ========================================================= */
+
+function copyToClipboard(text, btnElement) {
+
+    var $btn = null;
+
+    if (btnElement && (btnElement instanceof Element || btnElement.jquery)) {
+        $btn = $(btnElement);
+
+    } else if (text && (text instanceof Element || text.nodeType || text.jquery)) {
+        $btn = $(text);
+        text = null;
+
+    } else if (window.event && window.event.target) {
+        $btn = $(window.event.target).closest(
+            '.copy-to-clipboard-btn, #copySampleTrackingLink, button'
+        );
+    }
+
+    var linkToCopy = '';
+
+    if (typeof text === 'string') {
+        var trimmed = text.trim();
+
+        if (trimmed && trimmed !== '{tracking_link}') {
+            linkToCopy = trimmed;
+        }
+    }
+
+    if (!linkToCopy && $btn && $btn.length) {
+
+        linkToCopy = (
+            $btn.attr('data-url') ||
+            $btn.attr('data-link') ||
+            $btn.data('url') ||
+            $btn.data('link') ||
+            ''
+        ).toString().trim();
+
+        if (!linkToCopy || linkToCopy === '{tracking_link}') {
+
+            var $nearbyLink = $btn.closest('div').find('a');
+
+            if ($nearbyLink.length) {
+
+                var href = ($nearbyLink.attr('href') || '').trim();
+                var textContent = ($nearbyLink.text() || '').trim();
+
+                if (
+                    href &&
+                    href !== '#' &&
+                    !href.startsWith('javascript:') &&
+                    href !== '{tracking_link}'
+                ) {
+                    linkToCopy = href;
+
+                } else if (
+                    textContent &&
+                    textContent !== '{tracking_link}'
+                ) {
+                    linkToCopy = textContent;
                 }
-                copyToClipboard(null, this);
+            }
+        }
+    }
+
+    if (!linkToCopy || linkToCopy === '{tracking_link}') {
+        linkToCopy = ($('#sample_tracking_link').val() || '').trim();
+    }
+
+    if (!linkToCopy || linkToCopy === '{tracking_link}') {
+
+        if (typeof showSampleAlert === 'function') {
+            showSampleAlert('Tracking link is empty.', 'error');
+
+        } else if (typeof swal === 'function') {
+            swal('Warning', 'Tracking link is empty.', 'warning');
+
+        } else if (typeof Swal !== 'undefined' && Swal.fire) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning',
+                text: 'Tracking link is empty.'
             });
-        </script>
+        }
+
+        return;
+    }
+
+    var originalHtml = '';
+
+    if ($btn && $btn.length) {
+        originalHtml = $btn.data('original-html') || $btn.html();
+
+        if (!$btn.data('original-html')) {
+            $btn.data('original-html', originalHtml);
+        }
+    }
+
+    function doCopy(textVal) {
+
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(textVal);
+
+        } else {
+            return new Promise(function (resolve, reject) {
+
+                try {
+                    var $temp = $('<textarea>');
+
+                    $temp.css({
+                        position: 'fixed',
+                        left: '-9999px',
+                        top: '0',
+                        opacity: '0'
+                    });
+
+                    $('body').append($temp);
+                    $temp.val(textVal).select();
+
+                    var successful = document.execCommand('copy');
+
+                    $temp.remove();
+
+                    if (successful) {
+                        resolve();
+                    } else {
+                        reject(new Error('Copy failed'));
+                    }
+
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+    }
+
+    doCopy(linkToCopy).then(function () {
+
+        if ($btn && $btn.length) {
+
+            $btn.html('<i class="fa fa-check mr-1"></i> Copied!')
+                .addClass('copied');
+
+            setTimeout(function () {
+                $btn.html(originalHtml).removeClass('copied');
+            }, 2000);
+        }
+
+    }).catch(function (err) {
+
+        console.error('Failed to copy: ', err);
+
+        if (typeof showSampleAlert === 'function') {
+            showSampleAlert(
+                'Failed to copy tracking link to clipboard.',
+                'error'
+            );
+
+        } else if (typeof swal === 'function') {
+            swal(
+                'Error',
+                'Failed to copy tracking link to clipboard.',
+                'error'
+            );
+
+        } else if (typeof Swal !== 'undefined' && Swal.fire) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to copy tracking link to clipboard.'
+            });
+        }
+    });
+}
+
+window.copyToClipboard = copyToClipboard;
+
+$(document).on(
+    'click',
+    '.copy-to-clipboard-btn, #copySampleTrackingLink',
+    function () {
+
+        var $btn = $(this);
+
+        if ($btn.hasClass('copied')) {
+            return;
+        }
+
+        copyToClipboard(null, this);
+    }
+);
+</script>
+
+
+
 
         <script src="{{ asset('argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -325,6 +554,7 @@
         <script src="{{ asset('argon') }}/js/plugins/dataTables.colReorder.min.js"></script>
 
         @stack('js')
+        @include('layouts.california_sales_tax')
 
         <!-- Argon JS -->
         <script src="{{ asset('argon') }}/js/argon.js?v=1.0.0"></script>

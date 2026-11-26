@@ -54,7 +54,7 @@
                 <div style="color: #333;">{{ number_format($order->sub_total, 2) }}</div>
             </div>
             <div style="display: flex; justify-content: space-between; padding: 5px 0;">
-                <div style="font-weight: bold; color: #555;">Sales Tax ({{ $order->organizationDetails['sales_tax'] }}%) ($):</div>
+                <div style="font-weight: bold; color: #555;">Sales Tax ({{ $order->sales_tax_rate ?? 0 }}%) ($):</div>
                 <div style="color: #333;">{{ number_format($order->sales_tax, 2) }}</div>
             </div>
             <div style="display: flex; justify-content: space-between; padding: 5px 0;">

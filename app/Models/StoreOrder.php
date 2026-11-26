@@ -54,6 +54,14 @@ class StoreOrder extends Model implements Auditable
     {
         return $this->hasMany(StoreOrderItem::class, 'store_order_id', 'id')->with('OrderItemDetails','productDetails','orderDetails');
     }
+    public function OrderItemsWithTrashed()
+    {
+        return $this->hasMany(StoreOrderItem::class, 'store_order_id', 'id')
+            ->withTrashed()
+            ->with(['OrderItemDetails' => function ($query) {
+                $query->withTrashed();
+            }]);
+    }
     public function playerDetails()
     {
         return $this->hasMany(StoreOrderItem::class, 'store_order_id', 'id')->with('OrderItemDetails');

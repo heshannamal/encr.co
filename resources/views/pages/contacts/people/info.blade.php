@@ -233,7 +233,7 @@
         }
         .back_home_mobile {
             /* padding-bottom: 20px; */
-            display: block !important;
+            display: block ;
         }
         .content-position {
             top: 0px;
@@ -956,7 +956,7 @@
     @endsection
 
     @section('back-btn-Mobile')
-        <a href="{{ route('people') }}" class="home-btn-color" title="Back to home"> < BACK TO PEOPLES</a>
+        <a href="{{ route('people') }}" class="home-btn-color" title="Back to home"> < BACK</a>
     @endsection
 
     <div class="col-md-12 back_home_mobile">

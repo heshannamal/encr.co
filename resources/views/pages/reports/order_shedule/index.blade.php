@@ -135,6 +135,849 @@
         cursor: pointer;
         color: white !important;
     }
+
+/* Mobile View CSS*/
+@media (max-width: 767.98px) {
+
+    /* Prevents horizontal scrolling on the whole page in mobile view. */
+    html, body {
+        overflow-x: hidden !important;
+    }
+
+    /* ── Top Header ── */
+
+    /* Makes the top header compact and removes its desktop background, shadow and border. */
+    .bg-box.container-fluid.fix-nav.header-layout {
+        height: auto !important;
+        padding: 10px 15px !important;
+        margin-bottom: 15px !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    /* Stacks the "back" link and page title vertically instead of absolute positioning. */
+    .div_nav_top {
+        position: static !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 0 !important;
+    }
+
+    /* Shows the back button wrapper above the title with a small gap. */
+    .back-home-btn {
+        display: block !important;
+        margin-bottom: 4px !important;
+    }
+
+    /* Styles the "BACK TO HOME" link as small grey text. */
+    .home-btn-color {
+        font-size: 11px !important;
+        color: #64748b !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.5px !important;
+        text-decoration: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    /* Adds a small left-chevron icon before the back link text. */
+    .home-btn-color::before {
+        content: "\f053" !important;
+        font-family: "Font Awesome 5 Free", "FontAwesome" !important;
+        font-weight: 900 !important;
+        font-size: 9px !important;
+        margin-right: 6px !important;
+    }
+
+    /* Makes sure the title wrapper is visible on mobile. */
+    .header1 {
+        display: block !important;
+    }
+
+    /* Styles the page title ("Encore Order Schedule") as bold dark text. */
+    .header1 #header {
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        color: #1e293b !important;
+        font-family: inherit !important;
+        line-height: 1.2 !important;
+    }
+
+    /* ── Main Container ── */
+
+    /* Sets side padding and transparent background for the main content area. */
+    .content-position {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+        background-color: transparent !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* Removes the default column padding so cards sit flush inside the container. */
+    .content-position > .col-md-12 {
+        padding: 0 !important;
+    }
+
+    /* ── Row 1: Year Select & Status Legends Card ── */
+
+    /* Turns the first row (year + legends) into a white rounded card with stacked content. */
+    .content-position .col-md-12 > .row:nth-of-type(1) {
+        margin: 0 0 15px 0 !important;
+        padding: 14px !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 16px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    /* Makes the year select column take the full card width. */
+    .content-position .col-md-12 > .row:nth-of-type(1) > .col-md-2 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Styles the year dropdown as a full-width rounded input. */
+    #yearSelect {
+        width: 100% !important;
+        height: 42px !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        background-color: #ffffff !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: #1e293b !important;
+        padding: 0 12px !important;
+        box-sizing: border-box !important;
+        outline: none !important;
+    }
+
+    /* Makes the legend wrapper full width and removes its auto left margin. */
+    .content-position .col-md-12 > .row:nth-of-type(1) .ml-auto {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Lays out the status legends in a wrapping row inside a light grey box. */
+    .content-position .col-md-12 > .row:nth-of-type(1) .ml-auto > .row {
+        margin: 0 !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 8px 12px !important;
+        padding: 10px 12px !important;
+        background: #f8fafc !important;
+        border-radius: 10px !important;
+        border: 1px solid #f1f5f9 !important;
+    }
+
+    /* Styles each legend label as small grey text. */
+    .production_text {
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        color: #475569 !important;
+        padding-left: 4px !important;
+        margin: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    /* Makes all legend color boxes small rounded squares with no margins. */
+    .today_color, .past_color, .thisWeek_color, .fulfilled_color, .cancel_color {
+        width: 10px !important;
+        height: 10px !important;
+        border-radius: 3px !important;
+        margin: 0 !important;
+        flex-shrink: 0 !important;
+        display: inline-block !important;
+    }
+
+    /* Sets the legend color for today's orders (green). */
+    .today_color { background-color: #10b981 !important; }
+    /* Sets the legend color for orders past the ex-factory date (red). */
+    .past_color { background-color: #ef4444 !important; }
+    /* Sets the legend color for this week's shipments (blue). */
+    .thisWeek_color { background-color: #0ea5e9 !important; }
+    /* Sets the legend color for fulfilled orders (grey). */
+    .fulfilled_color { background-color: #94a3b8 !important; }
+    /* Sets the legend color for canceled orders (amber). */
+    .cancel_color { background-color: #f59e0b !important; }
+
+    /* ── Row 2: Filters Card ── */
+
+    /* Turns the filter row into a white rounded card with a 2-column grid. */
+    .content-position .col-md-12 > .row:nth-of-type(2) {
+        margin: 0 0 15px 0 !important;
+        padding: 14px !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 16px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+    }
+
+    /* Styles each filter (Factory, Status, Test Print, Rep) as a small grey box filling its grid cell. */
+    .content-position .col-md-12 > .row:nth-of-type(2) .filter_row {
+        margin: 0 !important;
+        padding: 4px 8px !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        height: 40px !important;
+        display: flex !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+    }
+
+    /* Styles the filter label text (e.g. "Factory |") as small grey text on one line. */
+    .content-position .col-md-12 > .row:nth-of-type(2) .filter_row p {
+        font-size: 11px !important;
+        color: #64748b !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+    }
+
+    /* Makes the filter dropdowns borderless, transparent and full width inside their box. */
+    .content-position .col-md-12 > .row:nth-of-type(2) .filter_row select,
+    .content-position .col-md-12 > .row:nth-of-type(2) .filter_row .date_selection {
+        font-size: 11px !important;
+        color: #1e293b !important;
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        width: 100% !important;
+    }
+
+    /* Makes the Filter button wrapper span both grid columns. */
+    .content-position .col-md-12 > .row:nth-of-type(2) > div:has(#pin-filter) {
+        grid-column: 1 / -1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Removes the inner row margin so the Filter button fills the full width. */
+    .content-position .col-md-12 > .row:nth-of-type(2) > div:has(#pin-filter) .row {
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Styles the Filter button as a full-width dark rounded button with white text. */
+    #pin-filter {
+        width: 100% !important;
+        height: 42px !important;
+        background: #111827 !important;
+        border: none !important;
+        border-radius: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 14px !important;
+        box-sizing: border-box !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #ffffff !important;
+        text-decoration: none !important;
+    }
+
+    /* Makes the filter icon white with a small gap before the text. */
+    #pin-filter i {
+        color: #ffffff !important;
+        margin-right: 6px !important;
+    }
+
+    /* ── Row 3: Month Tabs (Pills with Scroll) ── */
+
+    /* Removes the desktop bottom border and spacing from the month tabs row. */
+    .content-position .col-md-12 > .row:nth-of-type(3) {
+        margin: 0 0 15px 0 !important;
+        padding: 0 !important;
+        border-bottom: none !important;
+        display: block !important;
+    }
+
+    /* Allows the month tabs wrapper to scroll horizontally with smooth touch scrolling. */
+    .content-position .col-md-12 > .row:nth-of-type(3) > div {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+    }
+
+    /* Hides the scrollbar of the month tabs in WebKit browsers. */
+    .content-position .col-md-12 > .row:nth-of-type(3) > div::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    /* Lays out the month tabs in a single non-wrapping row so they can be scrolled. */
+    #myTabs {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
+        border-bottom: none !important;
+        padding: 2px 0 6px 0 !important;
+        margin: 0 !important;
+        width: max-content !important;
+    }
+
+    /* Prevents each tab item from shrinking or growing. */
+    #myTabs .nav-item {
+        margin: 0 !important;
+        flex: 0 0 auto !important;
+    }
+
+    /* Styles each month tab as a rounded pill and hides the full month name (font-size 0). */
+    #myTabs .nav-link {
+        border-radius: 20px !important;
+        padding: 6px 16px !important;
+        font-size: 0 !important;
+        font-weight: 500 !important;
+        color: #64748b !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-width: 52px !important;
+        height: 32px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Highlights the active month pill with a dark background and white text. */
+    #myTabs .nav-link.active {
+        background-color: #111827 !important;
+        border-color: #111827 !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    /* Applies the shared font size and color to the short month labels (Jan–Dec). */
+    #tab-1::after, #tab-2::after, #tab-3::after, #tab-4::after,
+    #tab-5::after, #tab-6::after, #tab-7::after, #tab-8::after,
+    #tab-9::after, #tab-10::after, #tab-11::after, #tab-12::after {
+        font-size: 12px !important;
+        color: inherit !important;
+    }
+
+    /* Shows "Jan" instead of the full month name. */
+    #tab-1::after { content: "Jan" !important; }
+    /* Shows "Feb" instead of the full month name. */
+    #tab-2::after { content: "Feb" !important; }
+    /* Shows "Mar" instead of the full month name. */
+    #tab-3::after { content: "Mar" !important; }
+    /* Shows "Apr" instead of the full month name. */
+    #tab-4::after { content: "Apr" !important; }
+    /* Shows "May" instead of the full month name. */
+    #tab-5::after { content: "May" !important; }
+    /* Shows "Jun" instead of the full month name. */
+    #tab-6::after { content: "Jun" !important; }
+    /* Shows "Jul" instead of the full month name. */
+    #tab-7::after { content: "Jul" !important; }
+    /* Shows "Aug" instead of the full month name. */
+    #tab-8::after { content: "Aug" !important; }
+    /* Shows "Sep" instead of the full month name. */
+    #tab-9::after { content: "Sep" !important; }
+    /* Shows "Oct" instead of the full month name. */
+    #tab-10::after { content: "Oct" !important; }
+    /* Shows "Nov" instead of the full month name. */
+    #tab-11::after { content: "Nov" !important; }
+    /* Shows "Dec" instead of the full month name. */
+    #tab-12::after { content: "Dec" !important; }
+
+    /* ── Orders Summary Card Top Controls (Title, Select Color, Search, Export) ── */
+
+    /* Removes the desktop card look so the summary section blends into the page. */
+    .card.orders_summary {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Arranges the title, color picker and search/export into a 2-row grid. */
+    .card.orders_summary > .row:first-child {
+        padding: 0 !important;
+        margin: 0 0 15px 0 !important;
+        display: grid !important;
+        grid-template-columns: 1fr auto !important;
+        grid-template-areas:
+            "title color"
+            "search search" !important;
+        align-items: center !important;
+        gap: 12px !important;
+    }
+
+    /* Places the "Order Schedule Sheet" title in the top-left grid area. */
+    .card.orders_summary > .row:first-child > div:nth-child(1) {
+        grid-area: title !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Styles the section title as bold dark text. */
+    .bargraph_header {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+    }
+
+    /* Places the color picker block in the top-right grid area. */
+    .card.orders_summary > .row:first-child > div:nth-child(2) {
+        grid-area: color !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Aligns the "Select a Color" label and picker in one line. */
+    .card.orders_summary > .row:first-child > div:nth-child(2) .row {
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    /* Styles the "Select a Color" label as small grey text on one line. */
+    .card.orders_summary > .row:first-child > div:nth-child(2) label {
+        margin: 0 !important;
+        font-size: 12px !important;
+        color: #64748b !important;
+        white-space: nowrap !important;
+    }
+
+    /* Makes the color picker wrapper a small bordered square. */
+    .color_div {
+        width: 22px !important;
+        height: 22px !important;
+        margin: 0 !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 4px !important;
+        overflow: hidden !important;
+    }
+
+    /* Enlarges the color input so it fills (and is clipped by) its small wrapper. */
+    #favcolor {
+        width: 30px !important;
+        height: 30px !important;
+        border: none !important;
+        background: transparent !important;
+        cursor: pointer !important;
+    }
+
+    /* Places the search and export block in the full-width bottom grid area. */
+    .card.orders_summary > .row:first-child > .ml-auto.print_btn {
+        grid-area: search !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Puts the search input and export button side by side with a gap. */
+    .print_btn .row {
+        margin: 0 !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    /* Styles the order search input as a flexible rounded white field. */
+    #searchOrder {
+        flex: 1 1 auto !important;
+        width: auto !important;
+        height: 42px !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        padding: 0 12px !important;
+        font-size: 13px !important;
+        color: #1e293b !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Styles the export button as a green rounded button that keeps its own width. */
+    .download_btn.export_btn {
+        flex: 0 0 auto !important;
+        height: 42px !important;
+        background-color: #36D7B7 !important;
+        border: none !important;
+        color: #ffffff !important;
+        border-radius: 10px !important;
+        padding: 0 14px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        white-space: nowrap !important;
+        text-decoration: none !important;
+    }
+
+    /* Removes the desktop margin from the download icon inside the export button. */
+    .download_btn.export_btn i {
+        margin: 0 !important;
+    }
+
+    /* Adds the "Export Report" text after the download icon. */
+    .download_btn.export_btn::after {
+        content: "Export Report" !important;
+    }
+
+    /* ── Order Schedule Cards (Table transformation) ── */
+
+    /* Removes the horizontal scroll and padding of the table wrapper since rows become cards. */
+    .order_shedule_table {
+        width: 100% !important;
+        overflow-x: visible !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Hides the table header because each card labels its own fields. */
+    #order_shedule_table thead {
+        display: none !important;
+    }
+
+    /* Converts the table and tbody into plain full-width blocks. */
+    #order_shedule_table,
+    #order_shedule_table tbody {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+        background: transparent !important;
+    }
+
+        /* Turns each table row into a rounded grid card, with the 3 dates sharing one row on a 6-column grid. */
+    #order_shedule_table tbody tr {
+        display: grid !important;
+        grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+        grid-template-areas:
+            "orderno orderno orderno orderno status status"
+            "org org org org org org"
+            "conf_date conf_date req_date req_date due_date due_date"
+            "type_box type_box type_box qty_box qty_box qty_box"
+            "rep_box rep_box rep_box tp_need tp_need tp_need"
+            "tp_due tp_due tp_due rec_date rec_date rec_date"
+            "comment comment comment comment comment comment" !important;
+        gap: 6px 8px !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 14px !important;
+        margin-bottom: 12px !important;
+        /* padding: 14px 44px 14px 18px !important; */
+        padding: 14px 2px 2px 10px !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        cursor: pointer !important;
+        background-color: #ffffff;
+    }
+
+    /* Uses a wider 3-column card layout on larger phones (480px and up). */
+    /* @media (min-width: 480px) and (max-width: 767.98px) {
+        #order_shedule_table tbody tr {
+            grid-template-columns: 1fr 1fr 1fr !important;
+            grid-template-areas:
+                "orderno orderno status"
+                "org org org"
+                "conf_date req_date due_date"
+                "type_box qty_box rep_box"
+                "tp_need tp_due rec_date"
+                "comment comment comment" !important;
+        }
+    } */
+
+    /* Covers the card with a white layer that leaves the left 4px of the row status color visible. */
+    #order_shedule_table tbody tr::before {
+        content: "" !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 4px !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background: #ffffff !important;
+        border-radius: 0 14px 14px 0 !important;
+        z-index: 0 !important;
+    }
+
+    /* Pins a right-chevron icon to the top right of each card to show it can be expanded. */
+    #order_shedule_table tbody tr::after {
+        content: "\f054" !important;
+        font-family: "Font Awesome 5 Free", "FontAwesome" !important;
+        font-weight: 900 !important;
+        font-size: 13px !important;
+        color: #64748b !important;
+        position: absolute !important;
+        top: 18px !important;
+        right: 16px !important;
+        z-index: 5 !important;
+    }
+
+    /* Switches the chevron to a down-arrow when the card is expanded. */
+    #order_shedule_table tbody tr.expanded::after,
+    #order_shedule_table tbody tr:focus-within::after {
+        content: "\f078" !important;
+    }
+
+    /* Resets every cell to a plain block placed above the white card layer. */
+    #order_shedule_table tbody tr td {
+        display: block !important;
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        text-align: left !important;
+        position: relative !important;
+        z-index: 1 !important;
+        box-sizing: border-box !important;
+        min-width: 0 !important;
+    }
+
+    /* Hides the checkbox/flag cell (column 1) on mobile. */
+    #order_shedule_table tbody tr td:nth-child(1) {
+        display: none !important;
+    }
+
+    /* Shows the order number (column 2) as the bold card title, cut with ellipsis if long. */
+    #order_shedule_table tbody tr td:nth-child(2) {
+        grid-area: orderno !important;
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+        align-self: center !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    /* Styles the order number link as bold dark text without underline. */
+    #order_shedule_table tbody tr td:nth-child(2) a {
+        color: #0f172a !important;
+        text-decoration: none !important;
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        display: block !important;
+    }
+
+    /* Hides the factory cell (column 3) on mobile. */
+    #order_shedule_table tbody tr td:nth-child(3) {
+        display: none !important;
+    }
+
+    /* Shows the organization name (column 4) under the order number, cut with ellipsis if long. */
+    #order_shedule_table tbody tr td:nth-child(4) {
+        grid-area: org !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #334155 !important;
+        margin-top: -2px !important;
+        margin-bottom: 4px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    /* Places the Confirmed Ex-Factory date (column 5) in its grid area. */
+    #order_shedule_table tbody tr td:nth-child(5) { grid-area: conf_date !important; }
+    /* Places the Requested Ex-Factory date (column 6) in its grid area. */
+    #order_shedule_table tbody tr td:nth-child(6) { grid-area: req_date !important; }
+    /* Places the In Hand Due date (column 7) in its grid area. */
+    #order_shedule_table tbody tr td:nth-child(7) { grid-area: due_date !important; }
+
+    /* Styles the three date values (columns 5, 6, 7) as small bold dark text. */
+    #order_shedule_table tbody tr td:nth-child(5),
+    #order_shedule_table tbody tr td:nth-child(6),
+    #order_shedule_table tbody tr td:nth-child(7) {
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        color: #1e293b !important;
+        white-space: normal !important;
+        overflow-wrap: break-word !important;
+    }
+
+    /* Styles the Order Status cell (column 10) as a blue badge pinned to the top right. */
+    #order_shedule_table tbody tr td:nth-child(10) {
+        grid-area: status !important;
+        justify-self: end !important;
+        align-self: center !important;
+        /* margin-right: 0 !important; */
+        margin-right: 34px !important;
+        background: #dbeafe !important;
+        color: #2563eb !important;
+        border-radius: 12px !important;
+        padding: 3px 10px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+        z-index: 3 !important;
+    }
+
+    /* Switches the status badge to grey for fulfilled (grey) rows. */
+    #order_shedule_table tbody tr[style*="205, 205, 205"] td:nth-child(10) {
+        background: #f1f5f9 !important;
+        color: #475569 !important;
+    }
+
+    /* ── Detail Fields (Shown in expanded state) ── */
+
+    /* Places Order Type (column 11) in its grid area. */
+    #order_shedule_table tbody tr td:nth-child(11) { grid-area: type_box !important; }
+    /* Places Order Qty (column 14) in its grid area. */
+    #order_shedule_table tbody tr td:nth-child(14) { grid-area: qty_box !important; }
+    /* Places Sales Rep (column 12) in its grid area. */
+    #order_shedule_table tbody tr td:nth-child(12) { grid-area: rep_box !important; }
+    /* Places Test Print Needed (column 8) in its grid area. */
+    #order_shedule_table tbody tr td:nth-child(8)  { grid-area: tp_need !important; }
+    /* Places Test Print Due Date (column 9) in its grid area. */
+    #order_shedule_table tbody tr td:nth-child(9)  { grid-area: tp_due !important; }
+    /* Places Received Date (column 13) in its grid area. */
+    #order_shedule_table tbody tr td:nth-child(13) { grid-area: rec_date !important; }
+
+    /* Styles the six detail cells as small light-grey boxes with ellipsis for long text. */
+    #order_shedule_table tbody tr td:nth-child(11),
+    #order_shedule_table tbody tr td:nth-child(14),
+    #order_shedule_table tbody tr td:nth-child(12),
+    #order_shedule_table tbody tr td:nth-child(8),
+    #order_shedule_table tbody tr td:nth-child(9),
+    #order_shedule_table tbody tr td:nth-child(13) {
+        background: #f8fafc !important;
+        border: 1px solid #f1f5f9 !important;
+        border-radius: 8px !important;
+        padding: 6px 8px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        color: #1e293b !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    /* ── Field Labels (shared style for every small label shown above a value) ── */
+
+    /* Styles all field labels as tiny grey text on their own line above the value. */
+    #order_shedule_table tbody tr td:nth-child(5)::before,
+    #order_shedule_table tbody tr td:nth-child(6)::before,
+    #order_shedule_table tbody tr td:nth-child(7)::before,
+    #order_shedule_table tbody tr td:nth-child(11)::before,
+    #order_shedule_table tbody tr td:nth-child(14)::before,
+    #order_shedule_table tbody tr td:nth-child(12)::before,
+    #order_shedule_table tbody tr td:nth-child(8)::before,
+    #order_shedule_table tbody tr td:nth-child(9)::before,
+    #order_shedule_table tbody tr td:nth-child(13)::before {
+        white-space: pre-wrap !important;
+        display: block !important;
+        font-size: 10px !important;
+        font-weight: 400 !important;
+        color: #94a3b8 !important;
+        margin-bottom: 2px !important;
+    }
+
+    /* Adds the "Confirmed Ex-Factory" label above column 5. */
+    #order_shedule_table tbody tr td:nth-child(5)::before  { content: "Confirmed Ex-Factory\A" !important; }
+    /* Adds the "Requested Ex-Factory" label above column 6. */
+    #order_shedule_table tbody tr td:nth-child(6)::before  { content: "Requested Ex-Factory\A" !important; }
+    /* Adds the "In Hand Due" label above column 7. */
+    #order_shedule_table tbody tr td:nth-child(7)::before  { content: "In Hand Due\A" !important; }
+    /* Adds the "Order Type" label above column 11. */
+    #order_shedule_table tbody tr td:nth-child(11)::before { content: "Order Type\A" !important; }
+    /* Adds the "Order Qty" label above column 14. */
+    #order_shedule_table tbody tr td:nth-child(14)::before { content: "Order Qty\A" !important; }
+    /* Adds the "Sales Rep" label above column 12. */
+    #order_shedule_table tbody tr td:nth-child(12)::before { content: "Sales Rep\A" !important; }
+    /* Adds the "Test Print Need?" label above column 8. */
+    #order_shedule_table tbody tr td:nth-child(8)::before  { content: "Test Print Need?\A" !important; }
+    /* Adds the "Test Print Due Date" label above column 9. */
+    #order_shedule_table tbody tr td:nth-child(9)::before  { content: "Test Print Due Date\A" !important; }
+    /* Adds the "Received Date" label above column 13. */
+    #order_shedule_table tbody tr td:nth-child(13)::before { content: "Received Date\A" !important; }
+
+    /* ── Expand / Collapse ── */
+
+    /* Hides the detail boxes and special comment while the card is collapsed. */
+    #order_shedule_table tbody tr:not(.expanded) td:nth-child(11),
+    #order_shedule_table tbody tr:not(.expanded) td:nth-child(14),
+    #order_shedule_table tbody tr:not(.expanded) td:nth-child(12),
+    #order_shedule_table tbody tr:not(.expanded) td:nth-child(8),
+    #order_shedule_table tbody tr:not(.expanded) td:nth-child(9),
+    #order_shedule_table tbody tr:not(.expanded) td:nth-child(13),
+    #order_shedule_table tbody tr:not(.expanded) td:nth-child(15) {
+        display: none !important;
+    }
+
+    /* Shows the detail boxes when the card is tapped and gets the "expanded" class. */
+    #order_shedule_table tbody tr.expanded td:nth-child(11),
+    #order_shedule_table tbody tr.expanded td:nth-child(14),
+    #order_shedule_table tbody tr.expanded td:nth-child(12),
+    #order_shedule_table tbody tr.expanded td:nth-child(8),
+    #order_shedule_table tbody tr.expanded td:nth-child(9),
+    #order_shedule_table tbody tr.expanded td:nth-child(13) {
+        display: block !important;
+    }
+
+    /* ── Special Comments (column 15) ── */
+
+    /* Places the special comment at the bottom of the card with a dotted divider above it. */
+    #order_shedule_table tbody tr td:nth-child(15) {
+        grid-area: comment !important;
+        border-top: 1px dotted #e2e8f0 !important;
+        margin-top: 8px !important;
+        padding-top: 8px !important;
+        font-size: 11px !important;
+        color: #475569 !important;
+        font-weight: 500 !important;
+        text-align: left !important;
+        align-items: center !important;
+    }
+
+    /* Shows the special comment as a flex row only when the card is expanded. */
+    #order_shedule_table tbody tr.expanded td:nth-child(15) {
+        display: flex !important;
+    }
+
+    /* Adds a small comment icon before the special comment text. */
+    #order_shedule_table tbody tr td:nth-child(15)::before {
+        content: "\f075" !important;
+        font-family: "Font Awesome 5 Free", "FontAwesome" !important;
+        font-weight: 400 !important;
+        font-size: 12px !important;
+        color: #475569 !important;
+        margin-right: 6px !important;
+    }
+
+    /* Styles the special comment link as small grey text without underline. */
+    #order_shedule_table tbody tr td:nth-child(15) a {
+        color: #475569 !important;
+        text-decoration: none !important;
+        font-size: 11px !important;
+        font-weight: 500 !important;
+    }
+
+    /* Adds the "View Special Comment" text after the add-comment icon link. */
+    #order_shedule_table tbody tr td:nth-child(15) a.specialComment::after {
+        content: " View Special Comment" !important;
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        color: #475569 !important;
+    }
+}
 </style>
 
 @if ($errors->any())
@@ -638,7 +1481,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         // Function to toggle active class for tabs
         function toggleActiveTab(tabId) {
-            var tabs = document.querySelectorAll('.nav-link');
+            var tabs = document.querySelectorAll('#myTabs .nav-link');
             tabs.forEach(function (tab) {
                 tab.classList.remove('active');
             });
@@ -1134,6 +1977,16 @@
         $(document).ready(function(){
             $(".se-pre-con").fadeOut('slow');
             $('.panel').css('display', 'block');
+        });
+
+        // Mobile row card click expansion toggle
+        $("body").on("click", "#order_shedule_table tbody tr", function(e) {
+            if ($(window).width() <= 767.98) {
+                if ($(e.target).is('a') || $(e.target).closest('a').length || $(e.target).is('input') || $(e.target).closest('.order_checkbox').length) {
+                    return;
+                }
+                $(this).toggleClass('expanded');
+            }
         });
 
 </script>

@@ -209,6 +209,588 @@
     .dataTables_scrollHeadInner{
         min-width: 100%;
     }
+
+    /* =====================================================================
+       GENERATED INVOICE — MOBILE LAYOUT
+       ===================================================================== */
+    .gi-m-only { display: none; }
+
+    @media (max-width: 767px) {
+
+        /* ---------- Page shell ---------- */
+        .content-position {
+            top: 0;                                  /* desktop: top -25px */
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+        }
+        .content-position > .col-md-12 { padding-left: 0; padding-right: 0; }
+        /* Layout's generic title strip / desktop top bar: replaced by the page header */
+        .main-content #header,
+        .main-content .header1,
+        .main-content > .navbar-top,
+        .main-content > #navbar-main { display: none !important; }
+
+        /* One shared outer card: drop its box so the inner cards sit on the grey page */
+        .content-position > .col-md-12 > .card {
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+            border-radius: 0;
+        }
+        .content-position > .col-md-12 > .card > .col-md-12 {
+            margin: 0 !important;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .content-position .new-style-table .table-responsive { overflow: visible; }
+
+        /* ---------- Page header ---------- */
+        .gi-m-header {
+            display: block;
+            margin: 4px 0 18px;
+        }
+        .gi-m-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 6px 0 14px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1.2px;
+            color: #4b5563;
+            text-decoration: none;
+        }
+        .gi-m-back i { font-size: 11px; }
+        .gi-m-title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #111827;
+        }
+
+        /* ---------- DataTables wrapper ---------- */
+        #generated_invoice_wrapper > .row { margin-left: 0; margin-right: 0; }
+        #generated_invoice_wrapper > .row > [class*="col-"] { padding-left: 0; padding-right: 0; }
+        #generated_invoice_wrapper .dataTables_length { display: none !important; }
+        /* scrollX: hide the cloned header, let the body flow as cards */
+        #generated_invoice_wrapper .dataTables_scrollHead { display: none !important; }
+        #generated_invoice_wrapper .dataTables_scroll,
+        #generated_invoice_wrapper .dataTables_scrollBody {
+            overflow: visible !important;
+            width: 100% !important;
+            height: auto !important;
+            border: none !important;
+        }
+
+        /* ---------- Search card ---------- */
+        #generated_invoice_wrapper .dataTables_filter {
+            float: none;
+            width: 100%;
+            margin: 0 0 14px;
+            padding: 14px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(17, 24, 39, 0.06);
+            text-align: left;
+        }
+        #generated_invoice_wrapper .dataTables_filter label {
+            position: relative;
+            display: block;
+            width: 100%;
+            margin: 0;
+            font-size: 0;                            /* only the icon + input are shown */
+        }
+        #generated_invoice_wrapper .dataTables_filter label i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 15px;
+            color: #111827;
+            pointer-events: none;
+        }
+        #generated_invoice_wrapper .dataTables_filter input {
+            display: block;
+            width: 100% !important;
+            height: 44px;
+            margin: 0 !important;
+            padding: 0 12px 0 40px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f5f6f7;
+            color: #111827;
+            font-size: 15px;
+            box-shadow: none;
+            outline: none;
+        }
+        #generated_invoice_wrapper .dataTables_filter input::placeholder { color: #9ca3af; }
+
+        /* ---------- "Select All" / "Show [20] entries" ---------- */
+        .gi-m-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 0 0 4px;
+            padding: 0 4px 0 16px;
+        }
+        .gi-m-selectall {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            font-size: 14px;
+            color: #6b7280;
+            cursor: pointer;
+        }
+        .gi-m-show {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #6b7280;
+            white-space: nowrap;
+        }
+        .gi-m-show select {
+            height: 34px;
+            padding: 0 28px 0 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%23374151' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 9px center / 11px 11px;
+            color: #111827;
+            font-size: 14px;
+            font-weight: 500;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        /* Checkboxes (design): square, teal when checked */
+        #gi-m-select-all,
+        #generated_invoice > tbody > tr .checkbox_of_invoice {
+            -webkit-appearance: none;
+            appearance: none;
+            flex: 0 0 auto;
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            border: 1.5px solid #d1d5db;
+            border-radius: 4px;
+            background: #fff no-repeat center / 14px 14px;
+            cursor: pointer;
+        }
+        #gi-m-select-all:checked,
+        #generated_invoice > tbody > tr .checkbox_of_invoice:checked {
+            border-color: #47D6B6;
+            background-color: #47D6B6;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+
+        /* ---------- Table -> invoice cards ---------- */
+        #generated_invoice {
+            display: block;
+            width: 100% !important;
+            min-width: 0 !important;
+            margin: 10px 0 0 !important;
+            border: none;
+        }
+        #generated_invoice > thead { display: none; }
+        #generated_invoice > tbody { display: block; width: 100%; }
+
+        #generated_invoice > tbody > tr {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            column-gap: 10px;
+            min-height: 0;
+            margin-bottom: 14px;
+            padding: 16px 16px 14px;
+            background: #fff !important;
+            border: 1px solid #f0f1f3 !important;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(17, 24, 39, 0.06);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #generated_invoice > tbody > tr:hover { background: #fff !important; }
+        /* Selected card */
+        #generated_invoice > tbody > tr.gi-selected {
+            background: #f2fbf8 !important;
+            border: 1.5px solid #47D6B6 !important;
+        }
+        #generated_invoice > tbody > tr > td {
+            display: block;
+            box-sizing: border-box;                  /* DataTables sets content-box */
+            min-width: 0;
+            padding: 0 !important;
+            border: none !important;
+            text-align: left !important;
+            font-size: 13px !important;              /* page rule: .9rem !important */
+            color: #111827 !important;
+            white-space: normal;                     /* theme tables use nowrap */
+            overflow-wrap: anywhere;
+        }
+        #generated_invoice > tbody > tr > td a { padding: 0 !important; }       /* page rule: .4rem 1rem !important */
+
+        /* Checkbox: first item of line 1, before the invoice number.
+           Everything below starts at the card's left edge. */
+        #generated_invoice > tbody > tr > td:nth-child(1) {
+            order: 0;
+            flex: 0 0 auto;
+            align-self: center;
+            margin-right: 2px;
+            line-height: 0;
+        }
+        /* Line 1: invoice number + amount */
+        #generated_invoice > tbody > tr > td:nth-child(2) { order: 1; flex: 1 1 auto; }
+        #generated_invoice > tbody > tr > td:nth-child(2),
+        #generated_invoice > tbody > tr > td:nth-child(2) a {
+            font-size: 18px !important;
+            font-weight: 700;
+            line-height: 1.3;
+            color: #111827 !important;
+            text-decoration: none;
+        }
+        #generated_invoice > tbody > tr > td:nth-child(6) {
+            order: 2;
+            flex: 0 0 auto;
+            font-size: 17px !important;
+            font-weight: 700;
+        }
+        #generated_invoice > tbody > tr > td:nth-child(6)::before { content: "$"; }
+        /* Line 2: "Order ID - #002580" */
+        #generated_invoice > tbody > tr > td:nth-child(3) { order: 3; flex: 0 0 100%; margin-top: 2px; }
+        #generated_invoice > tbody > tr > td:nth-child(3),
+        #generated_invoice > tbody > tr > td:nth-child(3) a {
+            font-size: 15px !important;
+            font-weight: 400;
+            color: #111827 !important;
+            text-decoration: none;
+        }
+        #generated_invoice > tbody > tr > td:nth-child(3)::before { content: "Order ID - #"; }
+        /* Line 3: Organization (left) / Embellishment (right) */
+        #generated_invoice > tbody > tr > td:nth-child(4) { order: 4; flex: 1 1 0; align-self: flex-start; margin-top: 10px; }
+        #generated_invoice > tbody > tr > td:nth-child(5) {
+            order: 5;
+            flex: 0 1 auto;
+            align-self: flex-start;
+            margin-top: 10px;
+            text-align: right !important;
+        }
+        #generated_invoice > tbody > tr > td:nth-child(4)::before,
+        #generated_invoice > tbody > tr > td:nth-child(5)::before {
+            display: block;
+            margin-bottom: 1px;
+            font-size: 12px;
+            color: #8a8f98;
+        }
+        #generated_invoice > tbody > tr > td:nth-child(4)::before { content: "Organization"; }
+        #generated_invoice > tbody > tr > td:nth-child(5)::before { content: "Embellishment"; }
+        #generated_invoice > tbody > tr > td:nth-child(5) .badge {        /* Yes / No as plain text (design) */
+            padding: 0;
+            background: transparent !important;
+            color: #111827 !important;
+            font-size: 13px;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+        /* Dashed divider, then Created At / Updated At */
+        #generated_invoice > tbody > tr::after {
+            content: "";
+            order: 6;
+            flex: 0 0 100%;
+            height: 0;
+            margin-top: 12px;
+            border-top: 1px dashed #e5e7eb;
+        }
+        #generated_invoice > tbody > tr > td:nth-child(7) { order: 7; flex: 1 1 auto; margin-right: -10px; }
+        #generated_invoice > tbody > tr > td:nth-child(8) { order: 8; flex: 0 0 auto; margin-left: auto; }
+        #generated_invoice > tbody > tr > td:nth-child(7),
+        #generated_invoice > tbody > tr > td:nth-child(8) {
+            margin-top: 10px;
+            font-size: clamp(11px, 3vw, 12.5px) !important;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        #generated_invoice > tbody > tr > td:nth-child(7)::before,
+        #generated_invoice > tbody > tr > td:nth-child(8)::before {
+            margin-right: 5px;
+            font-weight: 400;
+            color: #8a8f98;
+        }
+        #generated_invoice > tbody > tr > td:nth-child(7)::before { content: "Created At"; }
+        #generated_invoice > tbody > tr > td:nth-child(8)::before { content: "Updated At"; }
+
+        /* "No data available" row */
+        #generated_invoice > tbody > tr > td.dataTables_empty {
+            position: static;
+            display: block;
+            flex: 1 1 100%;
+            padding: 6px 0 !important;
+            font-size: 14px !important;
+            text-align: center !important;
+            color: #6b7280 !important;
+        }
+        #generated_invoice > tbody > tr:has(> td.dataTables_empty) { padding-left: 16px; cursor: default; }
+        #generated_invoice > tbody > tr:has(> td.dataTables_empty)::after { display: none; }
+
+        /* ---------- Pager ---------- */
+        #generated_invoice_wrapper > .row:last-child {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 6px;
+        }
+        #generated_invoice_wrapper > .row:last-child > [class*="col-"] {
+            flex: 0 1 auto;
+            width: auto;
+            max-width: none;
+        }
+        #generated_invoice_wrapper .dataTables_info {
+            padding: 0 !important;
+            font-size: 13px;
+            color: #9ca3af;
+            white-space: normal;
+        }
+        #generated_invoice_wrapper .dataTables_paginate { margin: 0 !important; }
+        #generated_invoice_wrapper .pagination {
+            flex-wrap: wrap;
+            justify-content: flex-end !important;
+            gap: 6px;
+            margin: 0 !important;
+        }
+        #generated_invoice_wrapper .page-item .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            margin: 0;
+            padding: 0 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px !important;
+            background: #fff;
+            color: #111827;
+            font-size: 14px;
+            box-shadow: none;
+        }
+        #generated_invoice_wrapper .page-item.active .page-link {
+            background: #111827;
+            border-color: #111827;
+            color: #fff;
+        }
+        #generated_invoice_wrapper .page-item.disabled .page-link { color: #9ca3af; }
+        #generated_invoice_wrapper .page-item.previous .page-link,
+        #generated_invoice_wrapper .page-item.next .page-link { font-size: 0; }
+        #generated_invoice_wrapper .page-item.previous .page-link::before,
+        #generated_invoice_wrapper .page-item.next .page-link::before {
+            font-size: 20px;
+            line-height: 1;
+        }
+        #generated_invoice_wrapper .page-item.previous .page-link::before { content: "\2039"; }
+        #generated_invoice_wrapper .page-item.next .page-link::before     { content: "\203A"; }
+
+        /* ---------- Bottom selection bar: "7 Selected" + Request Payment ----------
+           This IS the existing desktop button #request_multiple, restyled.
+           The existing code already shows it when invoices are ticked, hides it
+           when none are, writes the count into #invoice_checked_count, and opens
+           the "Request payment for Multiple Invoices" popup on click. So the
+           mobile bar works exactly like desktop, with no extra JavaScript. */
+        #request_multiple:not([style*="display:none"]):not([style*="display: none"]) {
+            display: flex !important;
+        }
+        #request_multiple {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9990;                           /* above any layout footer / floating button */
+            align-items: center;
+            width: 100%;
+            min-height: 72px;
+            margin: 0 !important;
+            padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+            background: #1f2328 !important;          /* inline: green */
+            color: #fff !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: 0 -4px 16px rgba(17, 24, 39, 0.18) !important;
+            text-transform: none;
+            letter-spacing: 0;
+            transform: none !important;
+        }
+        /* While a popup is open, go under its dark backdrop (1040) like the design */
+        body.modal-open #request_multiple { z-index: 1039; }
+        #request_multiple > i { display: none; }
+        #request_multiple > small {                  /* "Request payment selected (7)" */
+            display: flex;
+            align-items: center;
+            width: 100%;
+            font-size: 0;                            /* hides the desktop wording */
+            line-height: 1;
+        }
+        #invoice_checked_count {                     /* -> "7 Selected" */
+            font-size: 16px;
+            font-weight: 400;
+            color: #fff;
+        }
+        #invoice_checked_count::after { content: "\00a0Selected"; }
+        #request_multiple > small::after {           /* -> teal "Request Payment" */
+            content: "Request Payment";
+            margin-left: auto;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: #47D6B6;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 16px;
+            white-space: nowrap;
+        }
+        /* Room under the last card so the bar never covers it */
+        .content-position { padding-bottom: 80px; }
+        /* The layout's floating "scroll down" button would sit on top of the bar */
+        body:has(#request_multiple:not([style*="display:none"]):not([style*="display: none"])) #mobileScrollDownBtn,
+        body.gi-has-selbar #mobileScrollDownBtn { display: none !important; }
+        /* Darker page behind the request popup (design) */
+        body.gi-req-open .modal-backdrop.show { opacity: .5; }
+
+        /* =================================================================
+           "Request payment for multiple Invoices" popup
+           ================================================================= */
+        #requestMultipleModal .modal-dialog {
+            display: flex;
+            align-items: center;
+            max-width: none;
+            min-height: calc(100% - 32px);
+            margin: 16px;
+        }
+        #requestMultipleModal .modal-content {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        #requestMultipleModal .modal-header {
+            align-items: flex-start;
+            margin: 0 18px;
+            padding: 18px 0 14px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        #requestMultipleModal .modal-title {
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: #111827;
+        }
+        #requestMultipleModal .modal-header .close { margin: 0 0 0 12px; padding: 0 2px; opacity: 1; }
+        #requestMultipleModal .modal-header .close span { font-size: 26px; font-weight: 300; color: #111827; }
+        #requestMultipleModal .modal-body {
+            max-height: calc(100vh - 230px);
+            overflow-y: auto;
+            padding: 14px 18px 4px !important;
+        }
+        #requestMultipleModal .modal-body > .table { display: block; margin: 0; }
+        #requestMultipleModal .modal-body > .table > thead { display: none; }
+        #requestMultipleModal #selectedInvoiceTr { display: block; }
+        #selectedInvoiceTr > tr {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            column-gap: 10px;
+            margin-bottom: 12px;
+            padding: 12px 14px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(17, 24, 39, 0.05);
+        }
+        #selectedInvoiceTr > tr > td {
+            display: block;
+            min-width: 0;
+            padding: 0 !important;
+            border: none !important;
+            text-align: left !important;
+            font-size: 14px;
+            color: #111827;
+            white-space: normal;                     /* theme tables use nowrap */
+            overflow-wrap: anywhere;
+        }
+        #selectedInvoiceTr > tr > td:nth-child(1) { order: 1; flex: 1 1 auto; font-size: 17px; font-weight: 700; }
+        #selectedInvoiceTr > tr > td:nth-child(4) { order: 2; flex: 0 0 auto; display: flex; font-size: 16px; font-weight: 700; }  /* flex: no space after "$" */
+        #selectedInvoiceTr > tr > td:nth-child(4)::before { content: "$"; }
+        #selectedInvoiceTr > tr > td:nth-child(2) { order: 3; flex: 0 0 100%; margin-top: 2px; font-size: 15px; }
+        #selectedInvoiceTr > tr > td:nth-child(2)::before { content: "Order ID - #"; }
+        #selectedInvoiceTr > tr > td:nth-child(3) { order: 4; flex: 0 0 100%; margin-top: 4px; font-size: 13px; }
+        #selectedInvoiceTr > tr > td:nth-child(3)::before { content: "Organization"; margin-right: 10px; color: #8a8f98; }
+        /* Last row = Total */
+        #selectedInvoiceTr > tr:last-child {
+            justify-content: space-between;
+            margin-bottom: 4px;
+            padding: 6px 4px;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+        #selectedInvoiceTr > tr:last-child > td:nth-child(1),
+        #selectedInvoiceTr > tr:last-child > td:nth-child(2) { display: none; }
+        #selectedInvoiceTr > tr:last-child > td:nth-child(3) {
+            order: 1;
+            flex: 1 1 auto;
+            margin: 0;
+            font-size: 14px;
+            font-weight: 400 !important;
+            color: #6b7280;
+        }
+        #selectedInvoiceTr > tr:last-child > td:nth-child(3)::before { content: none; }
+        #selectedInvoiceTr > tr:last-child > td:nth-child(4) { order: 2; }
+        #requestMultipleModal .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 12px 18px 18px;
+            border-top: none;
+        }
+        #requestMultipleModal .modal-footer .btn {
+            flex: 0 0 auto;
+            min-width: 100px;
+            height: 44px;
+            margin: 0 !important;
+            padding: 0 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0;                            /* mobile labels below */
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: 0;
+            box-shadow: 0 4px 12px rgba(17, 24, 39, 0.08);
+        }
+        #requestMultipleModal .modal-footer .btn-secondary { background: #b3b3b3; color: #fff; }
+        #requestMultipleModal .modal-footer .btn-primary   { background: #47D6B6; color: #fff; }
+        #requestMultipleModal .modal-footer .btn-secondary::after { content: "Close"; font-size: 16px; }
+        #requestMultipleModal .modal-footer .btn-primary::after   { content: "Request Payment"; font-size: 16px; }
+    }
+
+    /* Very small phones (320px - 359px) */
+    @media (max-width: 359px) {
+        .content-position {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+        .gi-m-selectall, .gi-m-show { font-size: 13px; }
+        #generated_invoice > tbody > tr { padding: 14px 12px 12px; column-gap: 8px; }
+        #generated_invoice > tbody > tr > td:nth-child(2), #generated_invoice > tbody > tr > td:nth-child(2) a { font-size: 16px !important; }
+        #generated_invoice > tbody > tr > td:nth-child(6) { font-size: 15px !important; }
+        #generated_invoice > tbody > tr > td:nth-child(7), #generated_invoice > tbody > tr > td:nth-child(8) { font-size: 11px !important; }
+        #requestMultipleModal .modal-dialog { margin: 10px; min-height: calc(100% - 20px); }
+        #requestMultipleModal .modal-header { margin: 0 14px; }
+        #requestMultipleModal .modal-body { padding-left: 14px !important; padding-right: 14px !important; }
+    }
 </style>
 
 @if ($errors->any())
@@ -227,6 +809,31 @@
     @section('back-btn')
         <a href="{{ route('home') }}" class="home-btn-color" title="Back to home">BACK TO HOME</a>
     @endsection
+
+    {{-- Mobile only: page header --}}
+    <div class="gi-m-only gi-m-header">
+        {{-- <a href="{{ route('home') }}" class="gi-m-back"><i class="fa fa-chevron-left"></i> BACK TO HOME</a> --}}
+        <h1 class="gi-m-title">Generated Invoice</h1>
+    </div>
+
+    {{-- Mobile only: "Select All" + "Show [n] entries" (moved under the search box by JS) --}}
+    <div class="gi-m-only gi-m-toolbar" id="gi-m-toolbar">
+        <label class="gi-m-selectall"><input type="checkbox" id="gi-m-select-all"> Select All</label>
+        <div class="gi-m-show">
+            <span>Show</span>
+            <select id="gi-m-entries">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="300">300</option>
+                <option value="500">500</option>
+            </select>
+            <span>entries</span>
+        </div>
+    </div>
+
 
 
     <div class="col-md-12">
@@ -384,6 +991,7 @@ $(document).ready(function () {
     });
 
 
+
     var orderNumberHasBeenSet = false;
     function reset(){
         $('#invoice_no').val('');
@@ -502,6 +1110,97 @@ $(document).ready(function () {
             });
         });
 
+    /* ---------------- MOBILE-ONLY HELPERS ----------------*/
+    try {
+        var giMobileQuery = window.matchMedia('(max-width: 767px)');
+        var isGiMobile = function () { return giMobileQuery.matches; };
+
+        if (isGiMobile()) {
+            // Toolbar right under the search card; design placeholder; 20 rows like the design
+            $('#gi-m-toolbar').insertAfter($('#generated_invoice_wrapper .dataTables_filter'));
+            $('#generated_invoice_filter input').attr('placeholder', 'Search by invoice number');
+            generated_invoice.page.len(20).draw();
+        }
+        (function () {
+            var len = String(generated_invoice.page.len());
+            if (!$('#gi-m-entries option[value="' + len + '"]').length) {
+                $('#gi-m-entries').append($('<option>', { value: len, text: len }));
+            }
+            $('#gi-m-entries').val(len);
+        })();
+        $('#gi-m-entries').on('change', function () {
+            generated_invoice.page.len(parseInt(this.value, 10)).draw();
+        });
+
+        // Select All (mobile) -> the existing header "select all" checkbox + its handler
+        $('#gi-m-select-all').on('change', function () {
+            $('#checkbox_of_invoice_all').prop('checked', this.checked).trigger('change');
+        });
+
+        // Card highlight + "Select All" state. (The bottom bar itself is the
+        // existing #request_multiple button, shown/hidden by the code above.)
+        var updateGiSelectionUi = function () {
+            var $boxes = $('#generated_invoice .checkbox_of_invoice');
+            $boxes.each(function () {
+                $(this).closest('tr').toggleClass('gi-selected', this.checked);
+            });
+            $('#gi-m-select-all').prop('checked', $boxes.length > 0 && $boxes.filter(':checked').length === $boxes.length);
+            $('body').toggleClass('gi-has-selbar', isGiMobile() && $('#request_multiple').is(':visible'));
+        };
+        $('body').on('change', '.checkbox_of_invoice, #checkbox_of_invoice_all', updateGiSelectionUi);
+        generated_invoice.on('draw', updateGiSelectionUi);
+        if (giMobileQuery.addEventListener) { giMobileQuery.addEventListener('change', updateGiSelectionUi); }
+        else if (giMobileQuery.addListener) { giMobileQuery.addListener(updateGiSelectionUi); }
+        updateGiSelectionUi();
+
+        // Tapping a card (not its links / checkbox) selects it
+        $('#generated_invoice tbody').on('click', 'tr', function (e) {
+            if (!isGiMobile()) return;
+            if ($(e.target).closest('a, input, label, .dataTables_empty').length) return;
+            var $box = $(this).find('.checkbox_of_invoice');
+            if ($box.length) {
+                $box.prop('checked', !$box.prop('checked')).trigger('change');
+            }
+        });
+
+        $('#requestMultipleModal')
+            .on('show.bs.modal', function () { $('body').addClass('gi-req-open'); })
+            .on('hidden.bs.modal', function () { $('body').removeClass('gi-req-open'); });
+
+        // Place the page header 16px below the layout's fixed mobile bar(s).
+        // The space above comes from the layout, so it is measured, not guessed.
+        var fixGiHeaderOffset = function () {
+            var top = document.querySelector('.gi-m-header');
+            var nav = document.getElementById('sidenav-main');
+            if (!top) return;
+            top.style.marginTop = '';
+            if (!isGiMobile() || !nav || getComputedStyle(nav).position !== 'fixed') return;
+            var barBottom = nav.getBoundingClientRect().bottom;
+            $('.main-content nav, .main-content .navbar').each(function () {
+                var cs = getComputedStyle(this), r = this.getBoundingClientRect();
+                if (cs.position === 'fixed' && cs.display !== 'none' && cs.visibility !== 'hidden' && r.height > 0 && r.top <= 5) {
+                    barBottom = Math.max(barBottom, r.bottom);
+                }
+            });
+            for (var i = 0; i < 5; i++) {     // margins can collapse: adjust, re-measure, correct
+                var diff = Math.round(barBottom + 16 - (top.getBoundingClientRect().top + window.pageYOffset));
+                if (Math.abs(diff) <= 1) break;
+                top.style.marginTop = (parseFloat(getComputedStyle(top).marginTop) + diff) + 'px';
+            }
+        };
+        fixGiHeaderOffset();
+        setTimeout(fixGiHeaderOffset, 350);
+        setTimeout(fixGiHeaderOffset, 1300);
+        $(window).on('load', fixGiHeaderOffset);
+        var giResizeTimer;
+        $(window).on('resize', function () {
+            clearTimeout(giResizeTimer);
+            giResizeTimer = setTimeout(fixGiHeaderOffset, 150);
+        });
+    } catch (giErr) {
+        if (window.console) console.error('Generated invoice mobile view:', giErr);
+    }
+    /* -------------------------------------------------------------------- */
     function get_invoice_data(invoiceId) {
         $.ajax({
             url: `{{ url('invoice/edit') }}/${invoiceId}`,

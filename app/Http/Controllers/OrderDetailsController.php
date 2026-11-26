@@ -1689,16 +1689,11 @@ class OrderDetailsController extends Controller
 
 
                 // $order = Order::find($orderItem->order_id);
-                $organization = Organization::find($order->organization_id);
                 $orderSubTotal = OrderItem::where('order_id', $orderItem->order_id)->where('active', 1)->where('is_studio_item', 0)->sum('total');
                 $orderSubTotalStudio = OrderItem::where('order_id', $orderItem->order_id)->where('active', 1)->where('is_studio_item', 1)->sum('total');
 
 
-                if ($organization->sales_tax_active == 1) {
-                    $salesTax = $organization->sales_tax;
-                } else {
-                    $salesTax = 0;
-                }
+                $salesTax = $order->sales_tax_rate ?? 0;
                 // $orderSalesTax = ($orderSubTotal / 100) * $salesTax;
                 // $orderShipping = $order->shipping ?? 0.00;
                 // $orderArtwork = $order->artwork ?? 0.00;
@@ -2544,12 +2539,7 @@ class OrderDetailsController extends Controller
         $subtotal = $order_update->sub_total;
         $orderSalesTax = $order_update->sales_tax ?? 0.00;
 
-        $organization = Organization::find($order_update->organization_id);
-        if ($organization->sales_tax_active == 1) {
-            $salesTax = $organization->sales_tax;
-        } else {
-            $salesTax = 0;
-        }
+        $salesTax = $order_update->sales_tax_rate ?? 0;
 
         $orderShipping = $order_update->shipping ?? 0.00;
         $orderArtwork = $order_update->artwork ?? 0.00;
@@ -5574,13 +5564,8 @@ class OrderDetailsController extends Controller
             $orderItem->update();
 
             $order = Order::find($request->order_id);
-            $organization = Organization::find($order->organization_id);
             $orderSubTotal = OrderItem::where('order_id', $request->order_id)->sum('total');
-            if ($organization->sales_tax_active == 1) {
-                $salesTax = $organization->sales_tax;
-            } else {
-                $salesTax = 0;
-            }
+            $salesTax = $order->sales_tax_rate ?? 0;
             $orderSalesTax = ($orderSubTotal / 100) * $salesTax;
             $orderShipping = $order->shipping ?? '';
             $orderArtwork = $order->artwork ?? '';
@@ -5949,12 +5934,7 @@ class OrderDetailsController extends Controller
             $subtotal = $order->sub_total;
             $orderSalesTax = $order->sales_tax ?? 0.00;
 
-            $organization = Organization::find($order->organization_id);
-            if ($organization->sales_tax_active == 1) {
-                $salesTax = $organization->sales_tax;
-            } else {
-                $salesTax = 0;
-            }
+            $salesTax = $order->sales_tax_rate ?? 0;
 
             $OrderPaymentUpdateLog->tax_rate = $salesTax ?? 0.00;
             $OrderPaymentUpdateLog->save();

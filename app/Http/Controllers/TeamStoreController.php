@@ -234,7 +234,6 @@ class TeamStoreController extends Controller{
     public function TotalCalPart(Request $request){
 
         $totalQty = $request->totalQty;
-        $organization = Organization::find($request->organization_id);
         $totalAmount = $request->totalAmount;
         $teamStore_id = $request->teamStore_id;
         $newOrder_id = $request->newOrderId;
@@ -247,14 +246,10 @@ class TeamStoreController extends Controller{
             $shippingFee = 35;
         }
 
-        if ($organization->sales_tax_active == 1) {
-            $salesTax = $organization->sales_tax;
-        } else {
-            $salesTax = 0;
-        }
+        $existingOrder = Order::find($newOrder_id);
+        $salesTax = $existingOrder->sales_tax_rate ?? 0;
         $orderSalesTax = ($totalAmount / 100) * $salesTax;
 
-        $existingOrder = Order::find($newOrder_id);
         $existingOrder->sub_total = $totalAmount;
         $existingOrder->sales_tax = $orderSalesTax;
         $existingOrder->shipping = $shippingFee;
@@ -860,13 +855,8 @@ class TeamStoreController extends Controller{
 
         }
         $order = Order::find($orderNo);
-        $organization = Organization::find($order->organization_id);
         $orderSubTotal = OrderItem::where('order_id', $orderNo)->sum('total');
-        if ($organization->sales_tax_active == 1) {
-            $salesTax = $organization->sales_tax;
-        } else {
-            $salesTax = 0;
-        }
+        $salesTax = $order->sales_tax_rate ?? 0;
         $orderSalesTax = ($orderSubTotal / 100) * $salesTax;
         $orderShipping = $order->shipping ?? 0;
 

@@ -1380,7 +1380,7 @@ class StoreController extends Controller
             $store_product->product_default_name = $sub_product->product_name;
             $store_product->product_name = $store->product_prefix.' - '.($sub_product->show_in_catalog_name ?? $sub_product->product_name);
             $store_product->default_price = $sub_product->default_price;
-            $store_product->shipping_weight = $sub_product->weight;
+            $store_product->shipping_weight = round(($sub_product->weight * 16), 2);
             $store_product->size_type_id = $main_product->size_id;
             $store_product->product_id = $request->product_id;
             $store_product->category_id = $request->category_id;
@@ -2151,7 +2151,7 @@ class StoreController extends Controller
             'sales_rep' => optional($store->userDetails)->name ?? '—',
             'store_link'        => $direct_access_url
         ]);
-           
+
 
 
         app(EmailNotificationBuilderService::class)->sendEmailFromTemplate('key_send_admin_store_closed_email', [
@@ -2165,7 +2165,7 @@ class StoreController extends Controller
             'order_count' => $store->StoreOrders->count(),
             'subject' => 'Store Closed: ' . $store->store_name,
         ]);
-        
+
 
         return response()->json(['success' => true]);
     }
@@ -2611,9 +2611,12 @@ class StoreController extends Controller
             $totalQty = 0;
             $totalPrice = 0;
 
+            $sumOfPriceAddition = StoreProductPriceAddition::where('store_product_id', $storeProduct->id)->sum('addition_amount');
+            $unitPriceWithFees = $storeProduct->default_price + $sumOfPriceAddition;
+
             foreach ($productItemStore as $orderItemStore) {
                 $qty = $orderItemStore->qty ?? 1;
-                $price = $storeProduct->default_price;
+                $price = $unitPriceWithFees;
                 $totalQty += $qty;
                 $totalPrice += $qty * $price;
             }
@@ -2649,7 +2652,7 @@ class StoreController extends Controller
             $orderItem->gender = $product->gender;
 
             $orderItem->qty = $totalQty;
-            $orderItem->unit_price = $storeProduct->default_price;
+            $orderItem->unit_price = $unitPriceWithFees;
             $orderItem->total = $totalPrice;
             $orderItem->sub_product_no = $sub_product->sub_product_no;
             $orderItem->active = 1;
@@ -2852,9 +2855,12 @@ class StoreController extends Controller
                     $totalQty = 0;
                     $totalPrice = 0;
 
+                    $sumOfPriceAddition = StoreProductPriceAddition::where('store_product_id', $storeProduct->id)->sum('addition_amount');
+                    $unitPriceWithFees = $storeProduct->default_price + $sumOfPriceAddition;
+
                     foreach ($productItemStore as $orderItemStore) {
                         $qty = $orderItemStore->qty ?? 1;
-                        $price = $storeProduct->default_price;
+                        $price = $unitPriceWithFees;
                         $totalQty += $qty;
                         $totalPrice += $qty * $price;
                     }
@@ -2872,7 +2878,7 @@ class StoreController extends Controller
                         $orderItemIdsNotToDelete[] = $orderItem->id;
 
                         $orderItem->qty = $totalQty;
-                        $orderItem->unit_price = $storeProduct->default_price;
+                        $orderItem->unit_price = $unitPriceWithFees;
                         $orderItem->total = $totalPrice;
                         $orderItem->save();
 
@@ -3137,7 +3143,7 @@ class StoreController extends Controller
         $this->updateStoreStatus($id);
 
         $store = Store::with('StoreAddedCustomInformations', 'organizationDetails', 'StoreAddedCoupons','StoreAddedShippingMethods')->where('id' , $id)->first();
-        $orders = StoreOrder::with('StatusDetails', 'ShipmentDetails', 'paymentDetails', 'OrderItems')->where('store_id', $id)->where('active', 1)->where('is_payment_success', 1)->get();
+        $orderQry = StoreOrder::with('StatusDetails', 'ShipmentDetails', 'paymentDetails', 'OrderItems', 'OrderItemsWithTrashed', 'OrderReceipts')->where('store_id', $id)->where('active', 1)->where('is_payment_success', 1);
         $store_order_statuses = StoreOrderStatus::where('active', 1)->get();
         $attributes = Attribute::where('active', 1)->get();
         $users = User::where('active', 1)->get();
@@ -3146,6 +3152,28 @@ class StoreController extends Controller
         $tsr_order_no = NULL;
         $TSRorderCanUpdate = true;
         $TSRorderID = NULL;
+
+        if(request()->has('shipping_method') && request()->input('shipping_method') !== 'all'){
+            $orderQry->where('shipping_method', request()->input('shipping_method'));
+        }
+
+        if(request()->has('refunded_order') && request()->input('refunded_order') == 1){
+            $orderQry->where(function ($q) {
+                $q->whereHas('OrderItemsWithTrashed', function ($itemQry) {
+                    $itemQry->whereIn('id', function ($sub) {
+                        $sub->select('store_order_item_id')
+                            ->from('store_order_player_details')
+                            ->where('is_refunded', 1)
+                            ->whereNotNull('deleted_at');
+                    });
+                })->orWhereHas('paymentDetails', function ($qr) {
+                    $qr->where('is_success', 1)
+                        ->where('is_refund', 1);
+                }, '>=', 1);
+            });
+        }
+
+        $orders = $orderQry->get();
 
         if ($orders->where('system_order_no', '!=', NULL)->count() > 0) {
             $tsr_order_no = $orders->where('system_order_no', '!=', NULL)->first()->system_order_no;
@@ -3163,10 +3191,6 @@ class StoreController extends Controller
                     }
                 }
             }
-        }
-
-        if(request()->has('shipping_method')){
-            $orders = $orders->where('shipping_method', request()->input('shipping_method'));
         }
 
         $pendingOrdersCount = $orders->whereNull('system_order_no')->where('active', 1)->count();
@@ -3298,7 +3322,7 @@ class StoreController extends Controller
         $store = Store::where('id' , $order->store_id)->first();
         $sizes = Size::where('active', 1)->get();
         $store_order_statuses = StoreOrderStatus::where('active', 1)->get();
-        $storeProducts = StoreProduct::with('images')->where('store_id', $order->store_id)->where('active', 1)->get();
+        $storeProducts = StoreProduct::with('images','priceAdditions')->where('store_id', $order->store_id)->where('active', 1)->get();
         $addedShippingMethods = StoreAddedShippingMethod::where('store_id', $order->store_id)->pluck('shipping_method')->toArray();
         $shippingMethods = StoreShippingMethod::whereIn('id', $addedShippingMethods)->get();
         if (!empty($order->system_order_no)) {
@@ -3362,15 +3386,57 @@ class StoreController extends Controller
 
         return view('pages.stores.packing_slip.index', ['store'=>$store, 'order_start_date'=>$order_start_date, 'order_end_date'=>$order_end_date]);
     }
-    public function store_shipping($id){
-
+    public function store_shipping($id)
+    {
         $this->updateStoreStatus($id);
 
-        $store = Store::where('id' , $id)->first();
+        $store = Store::with('contactCoachesDetails')->where('id', $id)->first();
+        $shipments = StoreShipment::where('store_id', $id)->get();
 
-        $shipments = StoreShipment::where('store_id' , $id)->get();
+        $coachOrderList = StoreOrder::with('OrderItems')
+            ->where('store_id', $id)
+            ->where('shipping_method', 2)
+            ->where('active', 1)
+            ->where('is_payment_success', 1)
+            ->get();
 
-        return view('pages.stores.shipping.index', ['store'=>$store, 'shipments'=>$shipments]);
+        $coachItemCount = $coachOrderList->sum(function ($order) {
+            return $order->OrderItems->sum('qty');
+        });
+
+        if ($coachItemCount > 70) {
+            $coachRequiredAmount = round(0.50 * $coachItemCount, 2);
+        } elseif ($coachItemCount > 0) {
+            $coachRequiredAmount = 35.00;
+        } else {
+            $coachRequiredAmount = 0.00;
+        }
+
+        $coachPaidAmount = 0.00;
+        $coachPaymentUnderReview = false;
+
+        if (\Illuminate\Support\Facades\Schema::hasTable('store_coach_payments')) {
+            $coachPaidAmount = (float) \App\Models\StoreCoachPayment::where('store_id', $id)
+                ->where('is_success', 1)
+                ->sum('payment_amount');
+
+            $coachPaymentUnderReview = \App\Models\StoreCoachPayment::where('store_id', $id)
+                ->where('is_success', 0)
+                ->whereIn('status', ['under_review', 'review_required', 'processing'])
+                ->exists();
+        }
+
+        $coachAmount = max(0, round($coachRequiredAmount - $coachPaidAmount, 2));
+
+        return view('pages.stores.shipping.index', [
+            'store' => $store,
+            'shipments' => $shipments,
+            'coachItemCount' => $coachItemCount,
+            'coachRequiredAmount' => $coachRequiredAmount,
+            'coachPaidAmount' => $coachPaidAmount,
+            'coachAmount' => $coachAmount,
+            'coachPaymentUnderReview' => $coachPaymentUnderReview,
+        ]);
     }
     public function name_not_for_printing($id){
 
@@ -3407,7 +3473,7 @@ class StoreController extends Controller
 
         $store = Store::where('id' , $id)->first();
 
-        $store_orders = StoreOrder::with('OrderItems')
+        $store_orders = StoreOrder::with('OrderItems', 'OrderItemsWithTrashed', 'OrderReceipts', 'paymentDetails')
             ->where('store_id', $id)
             ->where('active', 1)
             ->where('is_payment_success', 1)
@@ -3436,7 +3502,7 @@ class StoreController extends Controller
 
         $totalFundraising = collect($FundraisingSumArray)->sum('total_fundraising');
 
-        return view('pages.stores.accounting_report.index', ['store'=>$store, 'totalFundraising' => $totalFundraising,]);
+        return view('pages.stores.accounting_report.index', ['store' => $store, 'store_orders' => $store_orders, 'totalFundraising' => $totalFundraising]);
     }
     public function fundraising_report($id)
     {
@@ -3446,21 +3512,37 @@ class StoreController extends Controller
             ->where('id', $id)
             ->first();
 
-        $store_orders = StoreOrder::with('OrderItems')
+        $store_orders = StoreOrder::with('OrderItemsWithTrashed')
             ->where('store_id', $id)
             ->where('active', 1)
             ->where('is_payment_success', 1)
             ->get();
 
-        $orderItems = $store_orders->pluck('OrderItems')->flatten();
+        $orderItems = $store_orders->pluck('OrderItemsWithTrashed')->flatten();
 
         $FundraisingSumArray = $orderItems->map(function ($item) {
             $fundraisingSum = 0;
+            $fundraisingRefundQty = 0;
+            $fundraisingRefundSum = 0;
 
             if (!empty($item->productDetails->priceAdditions)) {
                 foreach ($item->productDetails->priceAdditions as $addition) {
                     if (!empty($addition['is_fundraising']) && $addition['is_fundraising'] == 1) {
                         $fundraisingSum += (float)$addition['addition_amount'];
+                    }
+                }
+                foreach ($item->OrderItemDetails as $itemDetail) {
+                    if($itemDetail->is_refunded == 1){
+                        $fundraisingRefundQty += (int)$itemDetail->qty;
+                        $fundraisingRefundItem = 0;
+                        if ($itemDetail->productDetails) {
+                            foreach ($itemDetail->productDetails->priceAdditions as $addition) {
+                                if (!empty($addition['is_fundraising']) && $addition['is_fundraising'] == 1) {
+                                    $fundraisingRefundItem += (float)$addition['addition_amount'];
+                                }
+                            }
+                        }
+                        $fundraisingRefundSum += (float)$fundraisingRefundItem * $itemDetail->qty;
                     }
                 }
             }
@@ -3470,14 +3552,21 @@ class StoreController extends Controller
                 'qty'                => $item['qty'],
                 'sum_of_fundraising' => $fundraisingSum,
                 'total_fundraising' => $fundraisingSum * $item['qty'],
+                'total_fundraising_refunded_qty' => $fundraisingRefundQty,
+                'total_fundraising_refunded_amount' => $fundraisingRefundSum,
             ];
         })->toArray();
 
-        $totalFundraising = collect($FundraisingSumArray)->sum('total_fundraising');
+        $FundraisingSumCollect = collect($FundraisingSumArray);
+        $totalFundraisingQty = $FundraisingSumCollect->sum('qty');
+        $totalFundraising = $FundraisingSumCollect->sum('total_fundraising');
+        $totalRefundedFundraising = $FundraisingSumCollect->sum('total_fundraising_refunded_amount');
 
         return view('pages.stores.fundraising_report.index', [
             'store' => $store,
             'totalFundraising' => $totalFundraising,
+            'totalFundraisingQty' => $totalFundraisingQty,
+            'totalRefundedFundraising' => $totalRefundedFundraising
         ]);
     }
     public function receipts($id){
@@ -3740,6 +3829,7 @@ class StoreController extends Controller
                     ];
                     // ==== END NEW ====
 
+                    $record->update(['is_refunded'=> 1]);
                     $record->delete();
                 }
             }
@@ -3882,8 +3972,11 @@ class StoreController extends Controller
         foreach ($storeOrder->OrderItems as $orderItem) {
             $product = $orderItem->productDetails;
 
+            $sumOfPriceAddition = StoreProductPriceAddition::where('store_product_id', $product->id)->sum('addition_amount');
+            $unitPriceWithFees = $product->default_price + $sumOfPriceAddition;
+
             $qty = $orderItem->qty;
-            $price = $product->default_price;
+            $price = $unitPriceWithFees;
             $total_price = $qty * $price;
 
             $itemSizes = [];
@@ -3984,7 +4077,7 @@ class StoreController extends Controller
                 'receipt_id' => $receipt->id,
             ]);
         }
-        
+
 
         return redirect()->back();
 
@@ -4028,7 +4121,7 @@ class StoreController extends Controller
             'item_change_log' => $itemChangeLog,
         ]);
 
-        
+
         StoreOrderReceipt::where('id', $receipt->id)->update(['is_sent' => 1]);
 
         return true;
@@ -4293,7 +4386,7 @@ class StoreController extends Controller
             return false;
         }
 
-   
+
         app(EmailNotificationBuilderService::class)->sendEmailFromTemplate('key_email_manage_group_access', [
             'custom_email' => $email,
             'store_name'   => $store_name,
@@ -4301,7 +4394,7 @@ class StoreController extends Controller
         ]);
 
         return true;
-       
+
     }
 
     public function get_coupon_details(Request $request)
@@ -5064,6 +5157,8 @@ class StoreController extends Controller
                 }
             }
 
+            $totalWeightLb = floor($totalWeightOz / 16);
+
             $rows[] = [
                 $order->order_no,
                 '',
@@ -5111,7 +5206,7 @@ class StoreController extends Controller
                 'USPS Ground Advantage',
                 'my own package',
                 1,
-                5,
+                $totalWeightLb,
                 10,
                 10,
                 1,

@@ -71,13 +71,13 @@
 
 
         <script src="https://cdn.tailwindcss.com"></script>
-        <style>
+        {{-- <style>
             .body_class {
                 /* background-color: rgb(239, 239, 239); */
             }
             body {
                 /* font-family: "SF Pro Text","Myriad Set Pro","SF Pro Icons","Apple Legacy Chevron","Helvetica Neue","Helvetica","Arial",sans-serif; */
-                font-family: 'Mollen Personal Use', cursive !important;
+                /* font-family: 'Mollen Personal Use', cursive !important; */
             }
 
               @font-face {
@@ -101,7 +101,7 @@
                 font-family: 'Mollen Personal Use', cursive !important;
             }
 
-        </style>
+        </style> --}}
     </head>
 
     <body class="body_class" style=" background-size: cover;">

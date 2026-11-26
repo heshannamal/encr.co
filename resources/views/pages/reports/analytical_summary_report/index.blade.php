@@ -182,6 +182,789 @@
         color: #000000 !important;
         padding: 3px 20px 3px 20px !important;
     }
+
+    /* Mobile View CSS */
+    @media (max-width: 767.98px) {
+        #scrollTable {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            padding-bottom: 0 !important;
+            position: relative !important;
+        }
+
+        #scrollTable .card {
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .card > .row {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            position: relative !important;
+        }
+
+        /* Mobile Export Report Button */
+        .row.align-items-start:has(#export_button) {
+            display: block !important;
+            position: absolute !important;
+            top: 10px !important;
+            right: 12px !important;
+            width: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            z-index: 20 !important;
+        }
+
+        #export_button {
+            background-color: #36D7B7 !important;
+            border: none !important;
+            color: #ffffff !important;
+            border-radius: 10px !important;
+            height: 40px !important;
+            padding: 0 14px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 2px 4px rgba(54, 215, 183, 0.25) !important;
+            white-space: nowrap !important;
+            text-transform: none !important;
+            margin: 0 !important;
+        }
+
+        #export_button i {
+            color: #ffffff !important;
+            font-size: 13px !important;
+            margin-right: 6px !important;
+        }
+
+        /* Hide desktop arrow / separator text nodes in mobile filter grid */
+        .col-10.d-flex.flex-wrap > .row:has(.charIco) {
+            display: none !important;
+        }
+
+        /* Filter form container */
+        .col-10.d-flex.flex-wrap {
+            width: calc(100% - 24px) !important;
+            max-width: calc(100% - 24px) !important;
+            flex: none !important;
+            margin-top: 58px !important;
+            margin-left: 12px !important;
+            margin-right: 12px !important;
+            margin-bottom: 16px !important;
+            padding: 12px !important;
+            background: #ffffff !important;
+            border-radius: 16px !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+            box-sizing: border-box !important;
+        }
+
+        .col-10.d-flex.flex-wrap > .filter_row {
+            margin: 0 !important;
+            width: calc(50% - 4px) !important;
+            box-sizing: border-box !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+            height: 42px !important;
+            padding: 0 6px !important;
+            display: flex !important;
+            align-items: center !important;
+            position: relative !important;
+            overflow: visible !important;
+        }
+
+        .multiselect-container.dropdown-menu {
+            position: absolute !important;
+            top: 100% !important;
+            left: 0 !important;
+            min-width: 180px !important;
+            z-index: 1050 !important;
+            max-height: 250px !important;
+            overflow-y: auto !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+            border-radius: 8px !important;
+            border: 1px solid #e2e8f0 !important;
+            background: #ffffff !important;
+        }
+
+        .col-10.d-flex.flex-wrap > .filter_row .date_p {
+            font-size: 11px !important;
+            color: #64748b !important;
+            font-weight: 500 !important;
+            margin: 0 !important;
+            white-space: nowrap !important;
+            padding-left: 0 !important;
+        }
+
+        .col-10.d-flex.flex-wrap > .filter_row .paymen_type_div {
+            padding-left: 2px !important;
+            flex: 1 !important;
+            min-width: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .col-10.d-flex.flex-wrap > .filter_row .summary-datepicker {
+            width: 100% !important;
+            border: none !important;
+            background: transparent !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            color: #0f172a !important;
+            outline: none !important;
+            padding: 0 !important;
+            height: auto !important;
+            box-shadow: none !important;
+        }
+
+        .col-10.d-flex.flex-wrap > .filter_row select.date_selection {
+            width: 100% !important;
+            border: none !important;
+            background: transparent !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            color: #0f172a !important;
+            outline: none !important;
+            padding: 0 !important;
+            cursor: pointer !important;
+        }
+
+        .filter_row .select2-container,
+        .multiselect-native-select,
+        .multiselect-native-select .btn-group,
+        .multiselect-native-select .btn-group > button.multiselect {
+            width: 100% !important;
+        }
+
+        /* Select2 dropdown is appended to body - don't stretch it */
+        body > .select2-container {
+            width: auto !important;
+        }
+
+        .select2-dropdown {
+            min-width: 200px !important;
+            max-width: calc(100vw - 30px) !important;
+        }
+
+        .select2-results__option {
+            white-space: nowrap !important;
+            font-size: 13px !important;
+            padding: 8px 12px !important;
+        }
+
+        .multiselect-native-select .btn-group > button.multiselect {
+            text-align: left !important;
+            color: #0f172a !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            height: auto !important;
+            line-height: normal !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+        }
+
+        .multiselect-selected-text {
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+            max-width: 100% !important;
+            display: block !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: none !important;
+            background: transparent !important;
+            height: auto !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #0f172a !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            padding-left: 0 !important;
+            line-height: normal !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 100% !important;
+            right: 0 !important;
+        }
+
+        /* Filter Button row alignment */
+        .col-10.d-flex.flex-wrap > .filter_row:has(#filterButton) {
+            background: #18181b !important;
+            border: none !important;
+            border-radius: 8px !important;
+            height: 42px !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        #filterButton {
+            width: 100% !important;
+            height: 100% !important;
+            background: transparent !important;
+            border: none !important;
+            color: #ffffff !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 6px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        #filterButton i {
+            color: #ffffff !important;
+            padding-right: 0 !important;
+        }
+
+        /* Summary Cards Container (Total Orders & Total Revenue) */
+        #scrollTable2 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        #scrollTable2 .card {
+            background: transparent !important;
+            border: none !important;
+        }
+
+        #Reporthedding {
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            margin-bottom: 16px !important;
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+
+        #scrollTable2 > .card > .row:first-child {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        #scrollTable2 .row.justify-content-end {
+            background-color: transparent !important;
+            padding: 0 !important;
+            margin-top: 0 !important;
+            margin-bottom: 16px !important;
+            margin-left: 12px !important;
+            margin-right: 12px !important;
+            width: calc(100% - 24px) !important;
+            justify-content: flex-start !important;
+        }
+
+        #scrollTable2 .row.justify-content-end > .col-4 {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: none !important;
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+            gap: 10px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        #scrollTable2 .row.justify-content-end table {
+            min-width: 0 !important;
+            width: 100% !important;
+            padding: 10px !important;
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 16px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+            display: block !important;
+            box-sizing: border-box !important;
+        }
+
+        #scrollTable2 .row.justify-content-end table tbody {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        /* Top row: Icon (td 1) + Title (td 2) side-by-side */
+        #scrollTable2 .row.justify-content-end table tr:first-child {
+            display: flex !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin-bottom: 8px !important;
+        }
+
+        #scrollTable2 .row.justify-content-end table tr:first-child td:first-child {
+            background: #f8fafc !important;
+            border-radius: 10px !important;
+            padding: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            min-width: 36px !important;
+            box-sizing: border-box !important;
+            margin-right: 10px !important;
+        }
+
+        #scrollTable2 .row.justify-content-end table tr:first-child td:last-child h5 {
+            font-size: 13px !important;
+            color: #475569 !important;
+            font-weight: 500 !important;
+            margin: 0 !important;
+            white-space: nowrap !important;
+        }
+
+        /* Bottom row: Number (td) full width across bottom */
+        #scrollTable2 .row.justify-content-end table tr:last-child {
+            display: flex !important;
+            width: 100% !important;
+        }
+
+        #scrollTable2 .row.justify-content-end table tr:last-child td {
+            width: 100% !important;
+            background: #f8fafc !important;
+            border-radius: 10px !important;
+            padding: 8px 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            box-sizing: border-box !important;
+        }
+
+        #scrollTable2 .row.justify-content-end table tr:last-child td p {
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            margin: 0 !important;
+            line-height: 1.2 !important;
+            white-space: nowrap !important;
+        }
+
+        /* Table Card Container */
+        #rep_order_summary_table_div {
+            margin: 0 12px !important;
+        }
+
+        #rep_order_summary_table_div .col-12 {
+            padding: 0 !important;
+        }
+
+        /* Disable horizontal scrollbar in mobile view */
+        .dataTables_scroll,
+        .dataTables_scrollHead,
+        .dataTables_scrollBody,
+        .dataTables_wrapper,
+        .tablediv,
+        .order_rep_sammary_table,
+        .order_sport_sammary_table,
+        .order_lead_sammary_table,
+        .order_factory_sammary_table,
+        .order_geoChart_sammary_table {
+            overflow: visible !important;
+            overflow-x: hidden !important;
+        }
+
+        .dataTables_scrollBody table {
+            width: 100% !important;
+            min-width: 100% !important;
+        }
+
+        /* Hide desktop table header */
+        .tablediv table thead {
+            display: none !important;
+        }
+
+        .tablediv table,
+        .tablediv table tbody,
+        .tablediv table tr {
+            display: block !important;
+            width: 100% !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        /* Card Row Design for Sales Reps / Sports / Lead Source / Factory Tables */
+        .tablediv table tbody tr {
+            background: #ffffff !important;
+            border: 1px solid #f1f5f9 !important;
+            border-radius: 16px !important;
+            margin-bottom: 12px !important;
+            padding: 16px !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03) !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+            display: flow-root !important;
+        }
+
+        .tablediv table tbody tr td {
+            display: block !important;
+            padding: 0 !important;
+            border: none !important;
+            text-align: left !important;
+            white-space: normal !important;
+        }
+
+        /* Column 1: Expand/Collapse Arrow Icon (Interactive click target) */
+        .tablediv table tbody tr td:nth-child(1) {
+            display: block !important;
+            position: absolute !important;
+            right: 14px !important;
+            top: 22px !important;
+            font-size: 18px !important;
+            color: #94a3b8 !important;
+            cursor: pointer !important;
+            z-index: 10 !important;
+            padding: 8px !important;
+            margin-top: -8px !important;
+            margin-right: -8px !important;
+        }
+
+        .tablediv table tbody tr td:nth-child(1) i.arrow-toggle {
+            font-size: 20px !important;
+            color: #94a3b8 !important;
+        }
+
+        /* Column 3: Name (Sales Rep / Sport / Lead Source / Factory) */
+        .tablediv table tbody tr td:nth-child(3) {
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            line-height: 1.3 !important;
+            margin-bottom: 4px !important;
+            padding-right: 120px !important;
+            width: 100% !important;
+            float: left !important;
+        }
+
+        /* Column 8: Total Orders Count + Total Revenue placed on right top area */
+        .tablediv table tbody tr td:nth-child(8) {
+            position: absolute !important;
+            top: 14px !important;
+            right: 42px !important;
+            text-align: right !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+        }
+
+        .tablediv table tbody tr td:nth-child(8)::after {
+            content: " Total Orders" !important;
+            font-weight: 500 !important;
+            color: #64748b !important;
+            font-size: 12px !important;
+        }
+
+        /* Column 9: Revenue ($) displayed underneath Total Orders */
+        .tablediv table tbody tr td:nth-child(9) {
+            position: absolute !important;
+            top: 34px !important;
+            right: 42px !important;
+            text-align: right !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: #10b981 !important;
+        }
+
+        /* Sub-details breakdown row 1: TS, Bulk, WL, Inter */
+        .tablediv table > tbody > tr > td:nth-child(4),
+        .tablediv table > tbody > tr > td:nth-child(5),
+        .tablediv table > tbody > tr > td:nth-child(6),
+        .tablediv table > tbody > tr > td:nth-child(7) {
+            float: left !important;
+            font-size: 12px !important;
+            color: #64748b !important;
+            margin-right: 8px !important;
+        }
+
+        /* Sub-details breakdown row 2: New Orders & Percentage (forced onto a clean new row below) */
+        .tablediv table > tbody > tr > td:nth-child(10) {
+            clear: left !important;
+            float: left !important;
+            font-size: 12px !important;
+            color: #64748b !important;
+            margin-right: 8px !important;
+            margin-top: 3px !important;
+        }
+
+        .tablediv table > tbody > tr > td:nth-child(11) {
+            float: left !important;
+            font-size: 12px !important;
+            color: #64748b !important;
+            margin-right: 8px !important;
+            margin-top: 3px !important;
+        }
+
+        /* Target ONLY main card table cells using table.align-items-center, preventing subtable inheritance */
+        .tablediv table.align-items-center > tbody > tr > td:nth-child(4)::before { content: "TS "; }
+        .tablediv table.align-items-center > tbody > tr > td:nth-child(5)::before { content: "• Bulk "; }
+        .tablediv table.align-items-center > tbody > tr > td:nth-child(6)::before { content: "• WL "; }
+        .tablediv table.align-items-center > tbody > tr > td:nth-child(7)::before { content: "• Inter "; }
+        .tablediv table.align-items-center > tbody > tr > td:nth-child(10)::before { content: "New Orders "; }
+        .tablediv table.align-items-center > tbody > tr > td:nth-child(11)::before { content: "• Revenue Percentage "; }
+
+        .tablediv table > tbody > tr > td:nth-child(11) .progress {
+            display: none !important;
+        }
+
+        /* Expanded Main Card Container Styling */
+        .tablediv table tbody tr.shown {
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+            margin-bottom: 0 !important;
+            border-bottom: 1px dashed #cbd5e1 !important;
+        }
+
+        /* Expanded Subtable Container Row directly under main card */
+        .tablediv table tbody tr.shown + tr {
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-top: none !important;
+            border-radius: 0 0 16px 16px !important;
+            padding: 10px 8px !important;
+            margin-bottom: 12px !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02) !important;
+            box-sizing: border-box !important;
+        }
+
+        .tablediv table tbody tr.shown + tr > td {
+            display: block !important;
+            width: 100% !important;
+            padding: 0 !important;
+            position: static !important;
+            background: transparent !important;
+            border: none !important;
+            overflow: visible !important;
+        }
+
+        .tablediv table tbody tr.shown + tr table.table-bordered {
+            display: block !important;
+            width: 100% !important;
+            min-width: 100% !important;
+            margin-top: 4px !important;
+            margin-bottom: 0 !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        .tablediv table tbody tr.shown + tr table.table-bordered thead {
+            display: none !important;
+        }
+
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        /* Sub-Card Box Styling */
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr {
+            display: block !important;
+            width: 100% !important;
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            padding: 10px 12px !important;
+            margin-bottom: 8px !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+            display: flow-root !important;
+        }
+
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        /* Order ID (Col 1) */
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr td:nth-child(1) {
+            display: block !important;
+            float: left !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: #007bff !important;
+            border: none !important;
+            padding: 0 !important;
+            text-align: left !important;
+            background: transparent !important;
+        }
+
+        /* Organization Name (Col 2) */
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr td:nth-child(2) {
+            display: block !important;
+            clear: both !important;
+            float: left !important;
+            width: calc(100% - 90px) !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            color: #1e293b !important;
+            margin-top: 4px !important;
+            margin-bottom: 4px !important;
+            border: none !important;
+            padding: 0 !important;
+            text-align: left !important;
+            background: transparent !important;
+        }
+
+        /* Items QTY (Col 3) */
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr td:nth-child(3) {
+            display: block !important;
+            clear: both !important;
+            float: left !important;
+            font-size: 11px !important;
+            color: #64748b !important;
+            margin-right: 6px !important;
+            border: none !important;
+            padding: 0 !important;
+            text-align: left !important;
+            background: transparent !important;
+        }
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr td:nth-child(3)::before {
+            content: "Qty: " !important;
+            font-weight: 500 !important;
+        }
+
+        /* Amount ($) (Col 4) */
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr td:nth-child(4) {
+            display: block !important;
+            position: absolute !important;
+            top: 35px !important;
+            right: 1px !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: #10b981 !important;
+            border: none !important;
+            padding: 0 !important;
+            text-align: right !important;
+            background: transparent !important;
+        }
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr td:nth-child(4)::before {
+            content: "$" !important;
+        }
+
+        /* In-hand Due Date (Col 5) */
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr td:nth-child(5) {
+            display: block !important;
+            float: left !important;
+            font-size: 11px !important;
+            color: #64748b !important;
+            margin-right: 6px !important;
+            border: none !important;
+            padding: 0 !important;
+            text-align: left !important;
+            background: transparent !important;
+        }
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr td:nth-child(5)::before {
+            content: "• Due: " !important;
+            font-weight: 500 !important;
+        }
+
+        /* Status (Col 6) */
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr td:nth-child(6) {
+            display: block !important;
+            float: left !important;
+            font-size: 11px !important;
+            color: #64748b !important;
+            border: none !important;
+            padding: 0 !important;
+            text-align: left !important;
+            background: transparent !important;
+        }
+        .tablediv table tbody tr.shown + tr table.table-bordered tbody tr td:nth-child(6)::before {
+            content: "• Status: " !important;
+            font-weight: 500 !important;
+        }
+
+        /* Hide row index column */
+        .tablediv table > tbody > tr > td:nth-child(2) {
+            display: none !important;
+        }
+
+            /* ==========================================
+       Mobile No Data Available State (Pure CSS)
+       ========================================== */
+    
+    /* Reset parent tr styling for the empty row to allow full-width clean card */
+    .tablediv table tbody tr:has(td.dataTables_empty) {
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Style the DataTables empty cell as a beautiful card */
+    .tablediv table tbody tr td.dataTables_empty {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 48px 24px !important;
+        background: #ffffff !important;
+        border-radius: 16px !important;
+        border: 1px dashed #cbd5e1 !important;
+        margin: 12px !important;
+        /* min-height: 260px !important; */
+        text-align: center !important;
+        position: relative !important;
+        font-size: 0 !important; /* Hides the default ugly DataTables text */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04) !important;
+        width: 85% !important;
+    }
+
+    /* Inject Icon using existing FontAwesome */
+    .tablediv table tbody tr td.dataTables_empty::before {
+        content: "\f119" !important; /* FontAwesome inbox/archive icon */
+        font-family: "FontAwesome" !important;
+        font-size: 36px !important;
+        color: #94a3b8 !important;
+        background: #f8fafc !important;
+        width: 80px !important;
+        height: 80px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-bottom: 20px !important;
+        border: 2px solid #e2e8f0 !important;
+    }
+
+    /* Inject Title & Description Text */
+    .tablediv table tbody tr td.dataTables_empty::after {
+        content: "No data available\ATry adjusting the date range or filters." !important;
+        white-space: pre-wrap !important; /* Allows line break with \A */
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #475569 !important;
+        display: block !important;
+        line-height: 1.6 !important;
+        max-width: 280px !important;
+    }
+    }
 </style>
 <script src="https://unpkg.com/feather-icons"></script>
 <div class=" mb-5 content-position">

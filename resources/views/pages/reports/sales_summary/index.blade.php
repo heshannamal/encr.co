@@ -169,6 +169,779 @@
         color: #000000 !important;
     }
 
+    /* Mobile View CSS */
+    @media (max-width: 767.98px) {
+        .content-position {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+            background-color: transparent !important;
+        }
+
+        .content-position .card {
+            background-color: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        #scrollTable {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            padding-bottom: 0 !important;
+            position: relative !important;
+        }
+
+        /* Reset filter_row base styles in mobile — prevents double-border */
+        #summary_filter_form .filter_row {
+            border: none !important;
+            background-color: transparent !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* Filter Form Container */
+        #summary_filter_form {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            position: relative !important;
+        }
+
+        /* Top Filter Card (Row 1) */
+        #summary_filter_form > div:nth-of-type(1) {
+            background: #ffffff !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 16px !important;
+            padding: 14px !important;
+            margin: 0 !important;
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 10px !important;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
+        }
+
+        /* Start Date — half width */
+        #summary_filter_form > div:nth-of-type(1) > div:has(#start_date) {
+            flex: 0 0 calc(50% - 5px) !important;
+            width: calc(50% - 5px) !important;
+            max-width: calc(50% - 5px) !important;
+            margin: 0 !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            padding: 6px 10px !important;
+            height: 42px !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        /* End Date — half width */
+        #summary_filter_form > div:nth-of-type(1) > div:has(#end_date) {
+            flex: 0 0 calc(50% - 5px) !important;
+            width: calc(50% - 5px) !important;
+            max-width: calc(50% - 5px) !important;
+            margin: 0 !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            padding: 6px 10px !important;
+            height: 42px !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        /* Search Query Row — full width */
+        #summary_filter_form > div:nth-of-type(1) > div:has(#search_query) {
+            flex: 0 0 100% !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            padding: 6px 12px !important;
+            height: 44px !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        #search_query {
+            width: 100% !important;
+            border: none !important;
+            background: transparent !important;
+            font-size: 13px !important;
+            color: #334155 !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Date filter pills — unselected state */
+        #summary_filter_form > div:nth-of-type(1) > .row-for-date-options {
+            flex: 0 0 auto !important;
+            width: auto !important;
+            margin: 0 !important;
+            padding: 5px 14px !important;
+            border-radius: 20px !important;
+            height: 34px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            white-space: nowrap !important;
+            background-color: #f1f5f9 !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        /* Date filter pills — text color for unselected */
+        #summary_filter_form > div:nth-of-type(1) > .row-for-date-options .date_p {
+            color: #475569 !important;
+        }
+
+        /* Date filter pills — selected/active state (has a checked radio inside) */
+        #summary_filter_form > div:nth-of-type(1) > .row-for-date-options:has(input[type="radio"]:checked) {
+            background-color: #36D7B7 !important;
+            border-color: #36D7B7 !important;
+        }
+
+        /* Date filter pills — text color for selected */
+        #summary_filter_form > div:nth-of-type(1) > .row-for-date-options:has(input[type="radio"]:checked) .date_p {
+            color: #ffffff !important;
+        }
+
+        /* Date inputs inside Start/End rows */
+        #summary_filter_form > div:nth-of-type(1) .summary-datepicker {
+            width: 100% !important;
+            border: none !important;
+            background: transparent !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            color: #334155 !important;
+            outline: none !important;
+            padding: 0 !important;
+            height: auto !important;
+        }
+
+        /* Label text in filter rows */
+        #summary_filter_form .date_p {
+            font-size: 12px !important;
+            /* color: #94a3b8 !important; */
+            font-weight: 400 !important;
+            margin: 0 !important;
+            white-space: nowrap !important;
+        }
+
+        /* Filter Row 2 (Dropdown filters area) */
+        #summary_filter_form > div:nth-of-type(2) {
+            margin: 0 !important;
+            background: #ffffff !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 16px !important;
+            padding: 14px !important;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 10px !important;
+        }
+
+        /* Single border fix: override the base filter_row border inside grid containers */
+        #summary_filter_form > div:nth-of-type(2) > .filter_row,
+        #summary_filter_form > div:nth-of-type(3) > .filter_row {
+            width: 100% !important;
+            margin: 0 !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            height: 42px !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            padding: 6px 10px !important;
+            overflow: hidden !important;
+            min-width: 0 !important;
+        }
+
+        /* Label "p" inside Row 2 filter_rows — shrink to fit, don't push select out */
+        #summary_filter_form > div:nth-of-type(2) > .filter_row > p,
+        #summary_filter_form > div:nth-of-type(2) > .filter_row > .date_p {
+            flex: 0 0 auto !important;
+            white-space: nowrap !important;
+            font-size: 11px !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+
+        /* Select2 wrapper inside Row 2 filter_rows — take remaining space */
+        #summary_filter_form > div:nth-of-type(2) > .filter_row .paymen_type_div,
+        #summary_filter_form > div:nth-of-type(2) > .filter_row .select-width-style {
+            flex: 1 1 auto !important;
+            min-width: 0 !important;
+            width: auto !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* Select2 container inside Row 2 filter_rows — fill available space */
+        #summary_filter_form > div:nth-of-type(2) > .filter_row .select2-container {
+            width: 100% !important;
+            min-width: 0 !important;
+        }
+
+        #summary_filter_form > div:nth-of-type(2) > .filter_row .select2-selection {
+            border: none !important;
+            background: transparent !important;
+            min-height: unset !important;
+        }
+
+        /* ── Select2 dropdown popup — clean full-width picker on mobile ── */
+        .select2-container--open {
+            left: 12px !important;
+            right: 12px !important;
+            width: calc(100vw - 24px) !important;
+        }
+
+        .select2-container--open .select2-dropdown {
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Prevent horizontal page scroll — set on html & body */
+        html, body {
+            overflow-x: hidden !important;
+        }
+
+        .select2-results__option {
+            font-size: 14px !important;
+            padding: 9px 14px !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+            overflow: hidden !important;
+            color: #334155 !important;
+            line-height: 1.4 !important;
+        }
+
+        .select2-results__option--highlighted {
+            background-color: #36D7B7 !important;
+            color: #ffffff !important;
+        }
+
+        .select2-search--dropdown .select2-search__field {
+            font-size: 13px !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 6px !important;
+            /* padding: 6px 10px !important; */
+            box-sizing: border-box !important;
+            width: 100% !important;
+        }
+
+        /* ── Row 3 card — 2-column grid with explicit child placement ── */
+        #summary_filter_form > div:nth-of-type(3) {
+            margin: 0 !important;
+            background: #ffffff !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 16px !important;
+            padding: 14px !important;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            grid-template-rows: auto !important;
+            gap: 10px !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+        }
+
+        /* Reset ALL 9 direct children — override inline margin-left:45px etc. */
+        #summary_filter_form > div:nth-of-type(3) > * {
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+        }
+
+        /* Child 1: Items filter_row  → col 1, row 1 */
+        #summary_filter_form > div:nth-of-type(3) > *:nth-child(1) {
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            height: 42px !important;
+            display: flex !important;
+            align-items: center !important;
+            padding: 6px 10px !important;
+            overflow: visible !important;
+        }
+
+        /* Child 2: Order Types  → col 2, row 1 */
+        #summary_filter_form > div:nth-of-type(3) > *:nth-child(2) {
+            grid-column: 2 !important;
+            grid-row: 1 !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            height: 42px !important;
+            display: flex !important;
+            align-items: center !important;
+            padding: 6px 10px !important;
+            overflow: visible !important;
+        }
+
+        /* Child 3: Based on Production Date → full width, row 2 */
+        #summary_filter_form > div:nth-of-type(3) > *:nth-child(3) {
+            grid-column: 1 / -1 !important;
+            grid-row: 2 !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            height: 42px !important;
+            display: flex !important;
+            align-items: center !important;
+            padding: 6px 10px !important;
+            overflow: visible !important;
+        }
+
+        /* Child 4: Filter button wrapper → col 2, row 4 */
+        #summary_filter_form > div:nth-of-type(3) > *:nth-child(4) {
+            grid-column: 2 !important;
+            grid-row: 4 !important;
+            background: transparent !important;
+            border: none !important;
+            height: 42px !important;
+        }
+
+        /* Child 4 inner .row wrapper */
+        #summary_filter_form > div:nth-of-type(3) > *:nth-child(4) > .row {
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            height: 42px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        /* Child 5: Table Layout button wrapper → col 1, row 4 */
+        #summary_filter_form > div:nth-of-type(3) > *:nth-child(5) {
+            grid-column: 1 !important;
+            grid-row: 4 !important;
+            background: transparent !important;
+            border: none !important;
+            height: 42px !important;
+        }
+
+        /* Child 5 inner .row wrapper */
+        #summary_filter_form > div:nth-of-type(3) > *:nth-child(5) > .row {
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            height: 42px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        /* Child 6: Number of sale → col 2, row 3 */
+        #summary_filter_form > div:nth-of-type(3) > *:nth-child(6) {
+            grid-column: 2 !important;
+            grid-row: 3 !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            padding: 8px 10px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            min-height: 42px !important;
+            height: auto !important;
+            overflow: visible !important;
+        }
+
+        /* Child 7: Total ($) → col 1, row 3 */
+        #summary_filter_form > div:nth-of-type(3) > *:nth-child(7) {
+            grid-column: 1 !important;
+            grid-row: 3 !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            padding: 8px 10px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            min-height: 42px !important;
+            height: auto !important;
+            overflow: visible !important;
+        }
+
+        /* Child 8: Save button wrapper → col 1, row 5 */
+        #summary_filter_form > div:nth-of-type(3) > *:nth-child(8) {
+            grid-column: 1 !important;
+            grid-row: 5 !important;
+            background: transparent !important;
+            border: none !important;
+            display: flex !important;
+            align-items: center !important;
+            height: 42px !important;
+        }
+
+        /* Child 9: Export button wrapper → col 2, row 5 */
+        #summary_filter_form > div:nth-of-type(3) > *:nth-child(9) {
+            grid-column: 2 !important;
+            grid-row: 5 !important;
+            background: transparent !important;
+            border: none !important;
+            display: flex !important;
+            align-items: center !important;
+            height: 42px !important;
+        }
+
+        /* Filter button */
+        #pin-filter {
+            width: 100% !important;
+            height: 42px !important;
+            border-radius: 10px !important;
+            background-color: #111827 !important;
+            border: none !important;
+            color: #ffffff !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        /* Table Layout button */
+        [data-target="#layout_modal"] {
+            width: 100% !important;
+            height: 42px !important;
+            border-radius: 10px !important;
+            background-color: #e2e8f0 !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #475569 !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        /* Stat value text */
+        #number_of_sale, #total_sale {
+            background-color: transparent !important;
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            text-align: left !important;
+            height: auto !important;
+        }
+
+        /* Save & Export buttons */
+        #save-report, #export-report {
+            width: 100% !important;
+            height: 42px !important;
+            border-radius: 10px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin: 0 !important;
+        }
+
+        #export-report {
+            background-color: #36D7B7 !important;
+            color: #ffffff !important;
+            border: none !important;
+        }
+
+        #save-report {
+            background-color: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #475569 !important;
+        }
+
+        /* Page length — remove the filter_row double-border and style cleanly */
+        #summary_filter_form > div:nth-of-type(1) > .filter_row:has(#page_length) {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            height: 42px !important;
+            display: flex !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 0 !important;
+        }
+
+        #summary_filter_form > div:nth-of-type(1) > .filter_row:has(#page_length) .paymen_type_div {
+            width: 100% !important;
+            height: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        #page_length {
+            width: 100% !important;
+            height: 42px !important;
+            border: 1px solid #36D7B7 !important;
+            background: #ffffff !important;
+            border-radius: 10px !important;
+            color: #36D7B7 !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            outline: none !important;
+            text-align: center !important;
+            cursor: pointer !important;
+            appearance: auto !important;
+            -webkit-appearance: auto !important;
+            padding: 0 10px !important;
+            box-sizing: border-box !important;
+        }
+
+        .select-width-style .select2.select2-container.select2-container--default,
+        .select-width-style-item .select2.select2-container.select2-container--default {
+            width: 100% !important;
+        }
+
+        /* --- DataTable card transformation --- */
+        .order_sammary_table {
+            padding: 0 !important;
+            overflow-x: visible !important;
+        }
+
+        #order_summary thead {
+            display: none !important;
+        }
+
+        #order_summary,
+        #order_summary tbody {
+            display: block !important;
+            width: 100% !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        /* ── Each data row becomes a clean white mobile card ── */
+        #order_summary tbody tr {
+            display: flex !important;
+            flex-direction: column !important;
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 14px !important;
+            margin-bottom: 12px !important;
+            margin-top: 6px !important;
+            padding: 14px 16px !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04) !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            position: relative !important;
+            cursor: pointer !important;
+        }
+
+        #order_summary tbody tr td {
+            display: none !important; /* hidden by default if hidden by DataTables */
+            padding: 0 !important;
+            border: none !important;
+            text-align: left !important;
+            float: none !important;
+            width: 100% !important;
+            white-space: normal !important;
+            background: transparent !important;
+            box-sizing: border-box !important;
+        }
+
+        /* ── Summary Header Fields (Always visible in summary view if checked in Table Layout) ── */
+        #order_summary tbody tr td.order-no:not([style*="display: none"]) {
+            display: block !important;
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            order: 1 !important;
+            margin-bottom: 2px !important;
+        }
+
+        #order_summary tbody tr td.order-no a {
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            text-decoration: none !important;
+        }
+
+        #order_summary tbody tr td.order-no a::before {
+            content: "Order#" !important;
+        }
+
+        #order_summary tbody tr td.organization-name:not([style*="display: none"]) {
+            display: block !important;
+            font-size: 13.5px !important;
+            font-weight: 600 !important;
+            color: #475569 !important;
+            order: 2 !important;
+            margin-bottom: 4px !important;
+        }
+
+        #order_summary tbody tr td.total-value:not([style*="display: none"]) {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            order: 3 !important;
+            margin-bottom: 4px !important;
+        }
+
+        #order_summary tbody tr td.total-value::before {
+            content: "Total ($)" !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            color: #64748b !important;
+        }
+
+        #order_summary tbody tr td.order-status:not([style*="display: none"]) {
+            display: inline-block !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            color: #2563eb !important;
+            background: #dbeafe !important;
+            padding: 3px 10px !important;
+            border-radius: 12px !important;
+            width: fit-content !important;
+            order: 4 !important;
+            margin-bottom: 6px !important;
+        }
+
+        /* ── Detail Fields (Hidden when collapsed, shown when .expanded) ── */
+        #order_summary tbody tr:not(.expanded) td.sales-rep,
+        #order_summary tbody tr:not(.expanded) td.item-qty,
+        #order_summary tbody tr:not(.expanded) td.created-date,
+        #order_summary tbody tr:not(.expanded) td.production-date,
+        #order_summary tbody tr:not(.expanded) td.in-hand-date,
+        #order_summary tbody tr:not(.expanded) td.order-description,
+        #order_summary tbody tr:not(.expanded) td.order-sub-total,
+        #order_summary tbody tr:not(.expanded) td.order-sales-tax,
+        #order_summary tbody tr:not(.expanded) td.order-shipping,
+        #order_summary tbody tr:not(.expanded) td.order-artwork,
+        #order_summary tbody tr:not(.expanded) td.order-processing-fee {
+            display: none !important;
+        }
+
+        #order_summary tbody tr.expanded td.sales-rep:not([style*="display: none"]),
+        #order_summary tbody tr.expanded td.item-qty:not([style*="display: none"]),
+        #order_summary tbody tr.expanded td.created-date:not([style*="display: none"]),
+        #order_summary tbody tr.expanded td.production-date:not([style*="display: none"]),
+        #order_summary tbody tr.expanded td.in-hand-date:not([style*="display: none"]),
+        #order_summary tbody tr.expanded td.order-description:not([style*="display: none"]),
+        #order_summary tbody tr.expanded td.order-sub-total:not([style*="display: none"]),
+        #order_summary tbody tr.expanded td.order-sales-tax:not([style*="display: none"]),
+        #order_summary tbody tr.expanded td.order-shipping:not([style*="display: none"]),
+        #order_summary tbody tr.expanded td.order-artwork:not([style*="display: none"]),
+        #order_summary tbody tr.expanded td.order-processing-fee:not([style*="display: none"]) {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 6px 0 !important;
+            font-size: 12.5px !important;
+            color: #1e293b !important;
+            border-top: 1px dashed #e2e8f0 !important;
+            order: 10 !important;
+        }
+
+        /* Detail field labels via ::before */
+        #order_summary tbody tr td.sales-rep::before { content: "Sales Lead"; font-weight: 500; color: #64748b; }
+        #order_summary tbody tr td.item-qty::before { content: "Item Qty"; font-weight: 500; color: #64748b; }
+        #order_summary tbody tr td.created-date::before { content: "Created Date"; font-weight: 500; color: #64748b; }
+        #order_summary tbody tr td.production-date::before { content: "Production Date"; font-weight: 500; color: #64748b; }
+        #order_summary tbody tr td.in-hand-date::before { content: "In Hand Due Date"; font-weight: 500; color: #64748b; }
+        #order_summary tbody tr td.order-description::before { content: "Description"; font-weight: 500; color: #64748b; }
+        #order_summary tbody tr td.order-sub-total::before { content: "Sub total ($)"; font-weight: 500; color: #64748b; }
+        #order_summary tbody tr td.order-sales-tax::before { content: "Sales Tax"; font-weight: 500; color: #64748b; }
+        #order_summary tbody tr td.order-shipping::before { content: "Shipping"; font-weight: 500; color: #64748b; }
+        #order_summary tbody tr td.order-artwork::before { content: "Artwork"; font-weight: 500; color: #64748b; }
+        #order_summary tbody tr td.order-processing-fee::before { content: "Processing Fee"; font-weight: 500; color: #64748b; }
+
+        /* "Show details ▾" / "Hide details ▴" toggle pill generated via ::after */
+        #order_summary tbody tr::after {
+            content: "Show details ▾" !important;
+            order: 99 !important;
+            text-align: center !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            color: #36D7B7 !important;
+            background: #f0fdf4 !important;
+            border: 1px solid #bbf7d0 !important;
+            border-radius: 8px !important;
+            padding: 5px 0 !important;
+            margin-top: 8px !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            width: 100% !important;
+            transition: all 0.2s ease !important;
+        }
+
+        #order_summary tbody tr.expanded::after {
+            content: "Hide details ▴" !important;
+            color: #64748b !important;
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        /* DataTables empty state */
+        #order_summary tbody tr:has(td.dataTables_empty) {
+            display: block !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            border: none !important;
+            background: transparent !important;
+            width: 100% !important;
+        }
+
+        #order_summary tbody tr:has(td.dataTables_empty)::after {
+            display: none !important;
+        }
+
+        #order_summary tbody tr td.dataTables_empty {
+            display: block !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            text-align: center !important;
+            color: #94a3b8 !important;
+            padding: 30px 15px !important;
+            font-size: 14px !important;
+            background: #ffffff !important;
+            border-radius: 14px !important;
+            border: 1px solid #e5e7eb !important;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04) !important;
+        }
+
+        .dataTables_scrollHead,
+        .dataTables_scrollHeadInner {
+            display: none !important;
+        }
+
+        .dataTables_scrollBody {
+            overflow: visible !important;
+            width: 100% !important;
+            border: none !important;
+        }
+    }
+
 </style>
 
 
@@ -606,25 +1379,27 @@
 
         let hoverTimeout;
 
-        if ($('#minimize_icon').css('display') != 'none') {
-            $('#minimize_icon')[0].click();
-        }
-
-        $('#sidenav-main').hover(
-            function() {
-                hoverTimeout = setTimeout(function() {
-                    if ($('#maximize_icon').css('display') != 'none') {
-                        $('#maximize_icon').click();
-                    }
-                }, 500);
-            },
-            function() {
-                clearTimeout(hoverTimeout);
-                if ($('#minimize_icon').css('display') != 'none') {
-                    $('#minimize_icon')[0].click();
-                }
+        if ($(window).width() > 767) {
+            if ($('#minimize_icon').length && $('#minimize_icon').css('display') != 'none') {
+                $('#minimize_icon')[0].click();
             }
-        );
+
+            $('#sidenav-main').hover(
+                function() {
+                    hoverTimeout = setTimeout(function() {
+                        if ($('#maximize_icon').length && $('#maximize_icon').css('display') != 'none') {
+                            $('#maximize_icon').click();
+                        }
+                    }, 500);
+                },
+                function() {
+                    clearTimeout(hoverTimeout);
+                    if ($('#minimize_icon').length && $('#minimize_icon').css('display') != 'none') {
+                        $('#minimize_icon')[0].click();
+                    }
+                }
+            );
+        }
 
         $('input[name="dateFilter"]').on('click', function() {
             if ($(this).is(':checked')) {
@@ -1094,6 +1869,14 @@
         });
 
         make_summary_table();
+
+        // Mobile card expand/collapse toggle
+        $(document).on('click', '#order_summary tbody tr', function(e) {
+            if ($(window).width() <= 767.98) {
+                if ($(e.target).closest('a').length) return; // allow clicking Order# link without toggling
+                $(this).toggleClass('expanded');
+            }
+        });
     });
 
 

@@ -1436,13 +1436,15 @@ public function newGetPaginatedMyTasks(array $filters = [], int $perPage = 20)
 
             // discussion permission
             $discussion->can_delete_discussion =
-                auth()->user()->can('delete-discussion', $discussion);
+                auth()->user()->can('delete-discussion', $discussion)
+                && !$this->isStudioTask($discussion);
 
             foreach ($discussion->subDiscussions as $subDiscussion) {
 
                 // sub discussion permission
                 $subDiscussion->can_delete_sub_discussion =
-                    auth()->user()->can('delete-sub-discussion', $subDiscussion);
+                    auth()->user()->can('delete-sub-discussion', $subDiscussion)
+                    && !$this->isStudioTask($subDiscussion);
             }
         }
 
@@ -1499,10 +1501,14 @@ public function newGetPaginatedMyTasks(array $filters = [], int $perPage = 20)
             ])
             ->find($id);
 
+        if (!$discussionData) {
+            abort(404, 'This task no longer exists.');
+        }
+
         foreach ($discussionData->comments as $comment) {
 
             $comment->can_delete_comment = auth()->user()->can('delete-comment', $comment);
-            $comment->can_edit_comment = auth()->user()->can('edit-comment', $comment);
+            $comment->can_edit_comment = auth()->user()->can('edit-comment', $comment) || auth()->id() == $comment->user_id;
             $comment->reactions_grouped = $comment->reactions_grouped;
             $comment->user_reaction = $comment->user_reaction;
         }
@@ -1565,7 +1571,8 @@ public function newGetPaginatedMyTasks(array $filters = [], int $perPage = 20)
         foreach ($discussion->subDiscussions as $subDiscussion) {
 
             $subDiscussion->can_delete_sub_discussion =
-                auth()->user()->can('delete-sub-discussion', $subDiscussion);
+                auth()->user()->can('delete-sub-discussion', $subDiscussion)
+                && !$this->isStudioTask($subDiscussion);
         }
 
         return $discussion;
@@ -1605,7 +1612,8 @@ public function newGetPaginatedMyTasks(array $filters = [], int $perPage = 20)
                 auth()->user()->can('delete-comment', $comment);
 
             $comment->can_edit_comment =
-                auth()->user()->can('edit-comment', $comment);
+                auth()->user()->can('edit-comment', $comment)
+                || auth()->id() == $comment->user_id;
 
             $comment->reactions_grouped =
                 $comment->reactions_grouped;
@@ -2753,6 +2761,12 @@ public function newGetPaginatedMyTasks(array $filters = [], int $perPage = 20)
 
         return $html;
     }
+
+    private function isStudioTask($task)
+    {
+        return $task && (int) ($task->studio_status ?? 0) === 1;
+    }
+
 
 
 

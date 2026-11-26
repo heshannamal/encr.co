@@ -75,11 +75,67 @@
     }
     .account_summary_div {
         padding-bottom: 5px;
-        width: 11rem;
+        width: 19rem;
     }
     .account_summary_details_div {
         width: 5rem;
         text-align: right;
+    }
+
+    .refund-info-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        margin-left: 8px;
+    }
+
+    .refund-info-icon {
+        color: #eb7b1a;
+        font-size: 13px;
+        cursor: pointer;
+        transition: color 0.15s ease;
+    }
+
+    .refund-info-icon:hover,
+    .refund-info-wrapper.active .refund-info-icon {
+        color: #d34646;
+    }
+
+    .refund-tooltip-text {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #32325d;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 500;
+        padding: 5px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        z-index: 1050;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+        transition: opacity 0.15s ease, visibility 0.15s ease;
+        pointer-events: none;
+    }
+
+    .refund-tooltip-text::after {
+        content: "";
+        position: absolute;
+        right: 100%;
+        top: 50%;
+        margin-top: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent #32325d transparent transparent;
+    }
+
+    .refund-info-wrapper:hover .refund-tooltip-text,
+    .refund-info-wrapper.active .refund-tooltip-text {
+        visibility: visible;
+        opacity: 1;
     }
 
     @media (max-width: 767px) {
@@ -139,20 +195,52 @@
             </div>
             <div class="col-lg-12">
                     <div class="" style="padding-top: 5px; padding-bottom: 5px;">
-                        <p>You are currently collected a total fundraising amount of ${{number_format($totalFundraising,2)}} from all {{$store->StoreOrders->where('is_payment_success', 1)->where('active', 1)->count()}} order(s) to-date. <br>
-                        Your net fundraising is ${{number_format($totalFundraising * 97/100,2)}}</p>
+                        {{-- <p>You are currently collected a total fundraising amount of ${{number_format($totalFundraising,2)}} from all {{$store->StoreOrders->where('is_payment_success', 1)->where('active', 1)->count()}} order(s) to-date. <br>
+                        Your net fundraising is ${{number_format($totalFundraising * 97/100,2)}}</p> --}}
+                        <p>Your current fundraising total is detailed below.</p>
                     </div>
 
-                    <div class="row timeline_row">
+                    <div class="row timeline_row p-1">
                         <div class="account_summary_div" >
-                            <p class="account_topic">Fundraising Collected ($) </p>
+                            <p class="timeline_topic">Total Fundraising Items</p>
+                        </div>
+                        <div class="account_summary_details_div">
+                            <p class="timeline_details">{{$totalFundraisingQty}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row timeline_row p-1">
+                        <div class="account_summary_div" >
+                            <p class="timeline_topic">Total Fundraising Collected ($)</p>
+                        </div>
+                        <div class="account_summary_details_div">
+                            <p class="timeline_details">{{number_format($totalFundraising + $totalRefundedFundraising,2)}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row timeline_row p-1">
+                        <div class="account_summary_div" >
+                            <p class="timeline_topic">Fundraising Refunded ($)</p>
+                        </div>
+                        <div class="account_summary_details_div">
+                            <p class="timeline_details">{{number_format($totalRefundedFundraising,2)}}</p>
+                        </div>
+                        <div class="refund-info-wrapper" id="refund_info_tooltip">
+                            <i class="fa fa-info-circle refund-info-icon" aria-label="Due to cancelled & refunded orders"></i>
+                            <span class="refund-tooltip-text">Due to cancelled &amp; refunded orders</span>
+                        </div>
+                    </div>
+
+                    <div class="row timeline_row p-1">
+                        <div class="account_summary_div" >
+                            <p class="account_topic">Current Fundraising Amount ($) </p>
                         </div>
                         <div class="account_summary_details_div">
                             <p class="account_details">{{number_format($totalFundraising,2)}}</p>
                         </div>
                     </div>
 
-                    <div class="row timeline_row">
+                    <div class="row timeline_row p-1">
                         <div class="account_summary_div" >
                             <p class="timeline_topic">Card Processing Fees ($)</p>
                         </div>
@@ -161,7 +249,7 @@
                         </div>
                     </div>
 
-                    <div class="row timeline_row">
+                    <div class="row timeline_row p-1">
                         <div class="account_summary_div" >
                             <p class="account_topic" style="font-size: 17px">Net Fundraising ($)</p>
                         </div>
@@ -222,6 +310,15 @@
 
 <script>
     $(document).ready(function() {
+    $(document).on('click', '#refund_info_tooltip', function(e) {
+        e.stopPropagation();
+        $(this).toggleClass('active');
+    });
+
+    $(document).on('click', function() {
+        $('#refund_info_tooltip').removeClass('active');
+    });
+
     $('#export_fundraising').on('click', function() {
         $('#exportModal').modal('show');
     });

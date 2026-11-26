@@ -30,8 +30,6 @@
                     <thead>
                         <tr>
                             <th>Item</th>
-                            <th>Size</th>
-                            <th>Color</th>
                             <th>Qty</th>
                             <th class="text-right">Unit Price ($)</th>
                         </tr>
@@ -40,8 +38,6 @@
                         @foreach ($order->orderItems as $orderItem)
                             <tr>
                                 <td>{{ $orderItem->subProduct->product_name ?? '' }}</td>
-                                <td></td>
-                                <td></td>
                                 <td>{{ $orderItem->qty }}</td>
                                 <td class="text-right">{{ number_format($orderItem->unit_price, 2) }}</td>
                             </tr>

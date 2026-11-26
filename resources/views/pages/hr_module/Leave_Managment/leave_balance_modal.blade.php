@@ -54,7 +54,7 @@
             </div>
 
             <div class="modal-footer" style="background-color:#f8f8f8;padding:8px 15px;">
-                <small class="text-muted mr-auto" style="font-size:11px;">
+                <small class="text-muted mr-auto" style="font-size:12px;">
                     <i class="fa fa-info-circle"></i>
                     Counts approved leaves only. Short leaves do not deduct days.
                 </small>
@@ -75,32 +75,434 @@
      * Auto-called on page load for all .leave-balance-badge elements.
      */
     function loadLeaveBalanceBadge(userId, targetSelector) {
-        // Show spinner while loading
-        $(targetSelector).html(
-            '<i class="fa fa-spinner fa-spin" style="font-size:11px;"></i>'
+
+        var $target = $(targetSelector);
+
+        // Loading
+        $target.html(
+            '<div style="font-size:12px;color:#94a3b8;padding:5px 0;">' +
+                '<i class="fa fa-spinner fa-spin" style="font-size:12px;"></i> Loading...' +
+            '</div>'
         );
 
         $.ajax({
-            url: '{{ url("/leave-Manage/getLeaveBalance") }}/' + userId, // ← fixed
+
+            url: '{{ url("/leave-Manage/getLeaveBalance") }}/' + userId,
+
             method: 'GET',
+
             success: function(res) {
-                if (!res.success) {
-                    $(targetSelector).html('No group assigned');
+
+                if (
+                    !res.success ||
+                    !res.balances ||
+                    res.balances.length === 0
+                ) {
+
+                    $target.html(
+                        '<div style="font-size:12px;color:#94a3b8;padding:5px 0;">' +
+                            'No leave balance data' +
+                        '</div>'
+                    );
+
                     return;
                 }
-                var parts = res.balances.map(function(item) {
-                    return item.leave_type_name.toUpperCase() + ' - ' + item.remaining;
-                });
-                let html = '';
-                for (let i = 0; i < parts.length; i += 3) {
-                    const chunk = parts.slice(i, i + 3).join(', ');
-                    html += `<div style="margin-bottom:2px;">${chunk}</div>`;
+
+
+                /*
+                * Format number
+                * 14.00 => 14
+                * 4.50  => 4.5
+                */
+                function formatNumber(value) {
+
+                    var number = parseFloat(value);
+
+                    if (isNaN(number)) {
+                        return 0;
+                    }
+
+                    return Number.isInteger(number)
+                        ? number
+                        : parseFloat(number.toFixed(2));
                 }
-                $(targetSelector).html(html);
+
+
+                /*
+                * Escape leave name
+                */
+                function escapeHtml(value) {
+
+                    return $('<div>')
+                        .text(value == null ? '' : value)
+                        .html();
+                }
+
+
+                /*
+                * Leave type colours
+                */
+                function getCardStyle(leaveName, index) {
+
+                    var name = String(
+                        leaveName || ''
+                    ).toLowerCase();
+
+
+                    // Annual
+                    if (
+                        name.indexOf('annual') !== -1
+                    ) {
+
+                        return {
+                            color: '#1677ff',
+                            background: '#f5f9ff',
+                            border: '#dbeafe'
+                        };
+                    }
+
+
+                    // Casual
+                    if (
+                        name.indexOf('casual') !== -1
+                    ) {
+
+                        return {
+                            color: '#0ca765',
+                            background: '#f3fbf7',
+                            border: '#d8f0e3'
+                        };
+                    }
+
+
+                    // Sick
+                    if (
+                        name.indexOf('sick') !== -1
+                    ) {
+
+                        return {
+                            color: '#ff8a00',
+                            background: '#fff9f0',
+                            border: '#fde7bf'
+                        };
+                    }
+
+
+                    // Other leave types
+                    var fallback = [
+
+                        {
+                            color: '#8b5cf6',
+                            background: '#faf7ff',
+                            border: '#ede9fe'
+                        },
+
+                        {
+                            color: '#ec4899',
+                            background: '#fff7fb',
+                            border: '#fce7f3'
+                        },
+
+                        {
+                            color: '#06b6d4',
+                            background: '#f3fcfd',
+                            border: '#cffafe'
+                        },
+
+                        {
+                            color: '#f97316',
+                            background: '#fff8f3',
+                            border: '#ffedd5'
+                        }
+
+                    ];
+
+
+                    return fallback[
+                        index % fallback.length
+                    ];
+                }
+
+
+                var html = '';
+
+
+                /*
+                * Heading - same style as Employee Details
+                */
+                html +=
+                    '<div style="' +
+
+                        'font-size:12px;' +
+                        'font-weight:600;' +
+                        'color:#94a3b8;' +
+                        'letter-spacing:.06em;' +
+                        'text-transform:uppercase;' +
+                        'margin-bottom:8px;' +
+
+                    '">' +
+
+                        'Remaining Leave' +
+
+                    '</div>';
+
+
+                /*
+                * Cards wrapper
+                */
+                html +=
+                    '<div style="' +
+
+                        'display:grid;' +
+                        'grid-template-columns:repeat(3,minmax(0,1fr));' +
+                        'gap:7px;' +
+                        'width:100%;' +
+
+                    '">';
+
+
+                res.balances.forEach(
+                    function(item, index) {
+
+                        var leaveName =
+                            item.leave_type_name || 'Leave';
+
+                        var safeName =
+                            escapeHtml(leaveName);
+
+                        var style =
+                            getCardStyle(
+                                leaveName,
+                                index
+                            );
+
+                        var remaining =
+                            formatNumber(
+                                item.remaining
+                            );
+
+                        var used =
+                            formatNumber(
+                                item.used
+                            );
+
+                        var allocated =
+                            formatNumber(
+                                item.allocated
+                            );
+
+
+                        /*
+                        * Card
+                        */
+                        html +=
+                            '<div style="' +
+
+                                'display:flex;' +
+                                'align-items:center;' +
+                                'min-width:0;' +
+                                'height:50px;' +
+                                'padding:6px 8px;' +
+
+                                'border:1px solid ' +
+                                    style.border + ';' +
+
+                                'border-radius:7px;' +
+
+                                'background:' +
+                                    style.background + ';' +
+
+                                'box-sizing:border-box;' +
+
+                            '">';
+
+
+                        /*
+                        * Left side
+                        */
+                        html +=
+                            '<div style="' +
+
+                                'flex:1 1 auto;' +
+                                'min-width:0;' +
+                                'padding-right:7px;' +
+
+                            '">';
+
+
+                        /*
+                        * Leave name
+                        */
+                        html +=
+                            '<div style="' +
+
+                                'font-size:12px;' +
+                                'font-weight:600;' +
+                                'line-height:1.15;' +
+                                'color:#172033;' +
+
+                                'white-space:nowrap;' +
+                                'overflow:hidden;' +
+                                'text-overflow:ellipsis;' +
+
+                            '">' +
+
+                                safeName +
+
+                            '</div>';
+
+
+                        /*
+                        * Remaining
+                        */
+                        html +=
+                            '<div style="' +
+
+                                'display:flex;' +
+                                'align-items:baseline;' +
+                                'gap:3px;' +
+                                'margin-top:4px;' +
+                                'white-space:nowrap;' +
+
+                            '">';
+
+
+                        html +=
+                            '<span style="' +
+
+                                'font-size:18px;' +
+                                'font-weight:700;' +
+                                'line-height:1;' +
+
+                                'color:' +
+                                    style.color + ';' +
+
+                            '">' +
+
+                                remaining +
+
+                            '</span>';
+
+
+                        html +=
+                            '<span style="' +
+
+                                'font-size:8px;' +
+                                'font-weight:500;' +
+                                'color:#64748b;' +
+
+                            '">' +
+
+                                'days left' +
+
+                            '</span>';
+
+
+                        html += '</div>';
+
+                        html += '</div>';
+
+
+                        /*
+                        * Separator
+                        */
+                        html +=
+                            '<div style="' +
+
+                                'width:1px;' +
+                                'height:29px;' +
+                                'background:#d8dee8;' +
+                                'margin-right:7px;' +
+                                'flex-shrink:0;' +
+
+                            '"></div>';
+
+
+                        /*
+                        * Used
+                        */
+                        html +=
+                            '<div style="' +
+
+                                'flex:0 0 auto;' +
+                                'min-width:34px;' +
+                                'white-space:nowrap;' +
+
+                            '">';
+
+
+                        html +=
+                            '<div style="' +
+
+                                'font-size:12px;' +
+                                'font-weight:700;' +
+                                'line-height:1.15;' +
+                                'color:#172033;' +
+
+                            '">' +
+
+                                used +
+                                ' / ' +
+                                allocated +
+
+                            '</div>';
+
+
+                        html +=
+                            '<div style="' +
+
+                                'font-size:12px;' +
+                                'font-weight:500;' +
+                                'color:#64748b;' +
+                                'margin-top:4px;' +
+
+                            '">' +
+
+                                'used' +
+
+                            '</div>';
+
+
+                        html += '</div>';
+
+                        html += '</div>';
+
+                    }
+                );
+
+
+                html += '</div>';
+
+
+                $target.html(html);
             },
-            error: function() {
-                $(targetSelector).html('Error loading');
+
+
+            error: function(xhr) {
+
+                console.error(
+                    'Leave balance error:',
+                    xhr.status,
+                    xhr.responseText
+                );
+
+
+                $target.html(
+                    '<div style="' +
+
+                        'font-size:12px;' +
+                        'color:#dc2626;' +
+                        'padding:5px 0;' +
+
+                    '">' +
+
+                        'Unable to load leave balance' +
+
+                    '</div>'
+                );
+
             }
+
         });
     }
 

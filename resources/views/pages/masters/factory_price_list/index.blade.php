@@ -222,6 +222,697 @@
             justify-content: flex-start;
         }
     }
+    
+    .filter_toggle { display: none; }
+
+    .card-save-btn { display: none !important; }
+    
+   /* MOBILE VIEW (max-width: 768px) */
+    @media only screen and (max-width: 768px) {
+
+        /* Main page spacing */
+        .container-fluid.content-position {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+            padding-top: 10px !important;
+        }
+
+        .row.col-md-12 {
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* Mobile page heading */
+        .order-header,
+        .content-position .table_header_text {
+            font-size: 17px !important;
+        }
+
+        /* Search bar - moved visually to the top */
+        .orders_summary {
+            position: relative !important;
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        .orders_summary > .row {
+            display: block !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .orders_summary > .row > div:first-child {
+            display: none !important;
+        }
+
+        /* Pricing filter - full width */
+        .filter_div > .row > div:nth-child(3) {
+            grid-column: 1 / -1 !important;
+        }
+         
+        .row.col-md-12 {
+            position: relative !important;
+        }
+
+        .row.col-md-12 .filter_div {
+            position: relative !important;
+            margin-top: 62px !important;
+        }
+
+        /* Export - left half, above the card */
+        .row.col-md-12 .filter_div > .row > .buttonDiv {
+            position: absolute !important;
+            top: -62px !important;
+            left: 0 !important;
+            right: auto !important;
+            width: calc(50% - 6px) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            grid-column: auto !important;
+        }
+
+        #display_csv::before {
+            content: "\f019";
+            font-family: 'Font Awesome 5 Free', 'FontAwesome';
+            font-weight: 900;
+            margin-right: 8px;
+        }
+
+        /* Filters toggle - right half, above the card */
+        .row.col-md-12 > .filter_toggle {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: absolute !important;
+            top: 0 !important;
+            right: 0 !important;
+            left: auto !important;
+            width: calc(50% - 6px) !important;
+            height: 48px;
+            border: 1px solid #dfe5ed;
+            border-radius: 12px;
+            background: #fff;
+            color: #526176;
+            font-size: 15px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            outline: none;
+            /* z-index: 2; */
+        }
+
+        .filter_toggle_arrow {
+            /* font-size: 11px; */
+            transition: transform 0.2s ease;
+        }
+
+        /* .filter_div.filters-collapsed ~ .filter_toggle .filter_toggle_arrow {
+            transform: rotate(180deg);
+        } */
+
+        /* Collapsed: hide filters card, keep the two buttons */
+        /* .row.col-md-12 .filter_div.filters-collapsed {
+            padding: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            margin-bottom: 15px !important;
+        } */
+
+        /* .filter_div.filters-collapsed > .row > div:not(.buttonDiv) {
+            display: none !important;
+        } */
+
+        /* Export box no longer the positioning parent for the Save button */
+        .row.col-md-12 .filter_div > .row > .buttonDiv {
+            position: static !important;
+        }
+
+        /* Export button itself is pinned above the card instead */
+        .row.col-md-12 .filter_div #display_csv {
+            position: absolute !important;
+            top: -62px !important;
+            left: 0 !important;
+            width: calc(50% - 6px) !important;
+            margin: 0 !important;
+        }
+
+        /* Save button: hidden on mobile (mobile uses individual per-card Save buttons) */
+        .row.col-md-12 .filter_div .submit-changes-icon,
+        .submit-changes-icon {
+            display: none !important;
+        }
+
+        /* Default = collapsed (page load). Class "filters-collapsed" now means OPEN after a tap. */
+        .row.col-md-12 .filter_div:not(.filters-collapsed) {
+            padding: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .row.col-md-12 .filter_div:not(.filters-collapsed) > .row > div:not(.buttonDiv) {
+            display: none !important;
+        }
+
+        /* Arrow: down when closed, up when open */
+        .filter_toggle .filter_toggle_arrow {
+            transform: rotate(180deg);
+        }
+
+        .filter_div.filters-collapsed ~ .filter_toggle .filter_toggle_arrow {
+            transform: none;
+        }
+        .print_btn {
+            display: block !important;
+            width: 100% !important;
+            margin: 0 0 15px 0 !important;
+            padding: 0 !important;
+        }
+
+        #searchOrder {
+            width: 100% !important;
+            height: 52px !important;
+            padding: 0 18px 0 45px !important;
+            border: 1px solid #e1e5eb !important;
+            border-radius: 17px !important;
+            background-color: #fff !important;
+            font-size: 16px !important;
+            color: #343a40 !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04) !important;
+        }
+
+        #searchOrder::placeholder {
+            color: #a6acb4 !important;
+            opacity: 1;
+        }
+
+        /* Filters card */
+        .filter_div {
+            width: 100% !important;
+            /* margin: 0 0 20px 0 !important; */
+            padding: 18px 14px !important;
+            border: none !important;
+            border-radius: 13px !important;
+            background: #fff !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
+        }
+
+        .filter_div > .row {
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 18px 12px !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* Individual filter columns */
+        .filter_div > .row > div {
+            width: 100% !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .filter_row {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            width: 100% !important;
+            min-height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            gap: 8px !important;
+            border: none !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+        }
+
+        .filter_row p {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            color: #343a40 !important;
+        }
+
+        .paymen_type_div {
+            width: 100% !important;
+            min-width: 0 !important;
+        }
+
+        .filter_row select,
+        .date_selection {
+            width: 100% !important;
+            height: 48px !important;
+            padding: 0 8px !important;
+            /* border: 1px solid #e0e3e8 !important; */
+            border-radius: 12px !important;
+            background-color: #f3f4f6 !important;
+            color: #10bd91 !important;
+            font-size: 15px !important;
+            outline: none !important;
+        }
+
+        /* Save & Filter button */
+        .filter_div > .row > div:nth-child(4) {
+            grid-column: 1 / -1 !important;
+            width: 100% !important;
+            margin-top: 0 !important;
+        }
+
+        .save_filter {
+            width: 100% !important;
+            height: 48px !important;
+            margin: 0 !important;
+            padding: 0 12px !important;
+            border: 1px solid #dfe5ed !important;
+            border-radius: 12px !important;
+            background: #fff !important;
+            color: #526176 !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.07) !important;
+        }
+
+        /* Export button */
+        .filter_div > .row > .buttonDiv {
+            grid-column: 1 / -1 !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .buttonDiv {
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        #display_csv {
+            width: 100% !important;
+            height: 48px !important;
+            margin: 0 !important;
+            padding: 0 15px !important;
+            border: 1px solid #dfe5ed !important;
+            border-radius: 12px !important;
+            background: #fff !important;
+            color: #526176 !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+        }
+
+        /* Save changes button */
+        .submit-changes-icon {
+            display: none !important;
+            width: 100% !important;
+            margin: 0 0 10px 0 !important;
+            text-align: center !important;
+        }
+
+        .save_btn {
+            width: 100% !important;
+            height: 45px !important;
+            border-radius: 12px !important;
+            font-size: 15px !important;
+        }
+
+        /* Product summary section */
+        .order_sammary_table {
+            width: 100% !important;
+            overflow: visible !important;
+            padding: 0 !important;
+        }
+
+        #order_sammary_table {
+            display: block !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            background: transparent !important;
+        }
+
+        /* Hide desktop table heading */
+        #order_sammary_table thead {
+            display: none !important;
+        }
+
+        #order_sammary_table tbody {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 16px !important;
+            width: 100% !important;
+        }
+
+        /* Individual product card */
+        #order_sammary_table tbody tr {
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 13px 12px !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 16px 14px !important;
+            /* padding-left: 78px !important; */
+            border: 1px solid #e5e8ed !important;
+            border-radius: 20px !important;
+            background: #fff !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+            position: relative !important;
+            cursor: pointer !important;
+        }
+
+        /* Shirt icon thumbnail on top-left */
+        /* #order_sammary_table tbody tr::before {
+            content: "" !important;
+            position: absolute !important;
+            left: 14px !important;
+            top: 16px !important;
+            width: 52px !important;
+            height: 52px !important;
+            border: 1px solid #e5e8ed !important;
+            border-radius: 12px !important;
+            background-color: #ffffff !important;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='30' height='30' fill='%23b8c0cc'><path d='M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z'/></svg>") !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            background-size: 30px 30px !important;
+            pointer-events: none !important;
+            z-index: 1 !important;
+        } */
+
+        /* Dropdown chevron on top-right */
+        #order_sammary_table tbody tr::after {
+            content: "\f077" !important; /* chevron-up (expanded) */
+            font-family: 'Font Awesome 5 Free', 'FontAwesome' !important;
+            font-weight: 900 !important;
+            position: absolute !important;
+            right: 18px !important;
+            top: 17px !important;
+            font-size: 13px !important;
+            color: #4b5563 !important;
+            pointer-events: none !important;
+        }
+
+        #order_sammary_table tbody tr.is-collapsed::after {
+            content: "\f078" !important; /* chevron-down (collapsed) */
+        }
+
+        #order_sammary_table tbody td {
+            display: block !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            background: transparent !important;
+            white-space: normal !important;
+            overflow-wrap: anywhere !important;
+            color: #343a40 !important;
+            font-size: 14px !important;
+            text-align: left !important;
+        }
+
+        /* ── HEADER ORDER: 1) Product Name, 2) PRO Code, 3) Pattern Code ── */
+
+        /* 1. Product Name: top line, bold dark */
+        #order_sammary_table tbody td:nth-child(2) {
+            order: 1 !important;
+            grid-column: 1 / -1 !important;
+            font-size: 14.5px !important;
+            font-weight: 700 !important;
+            line-height: 1.3 !important;
+            color: #292e35 !important;
+            padding-right: 30px !important;
+        }
+
+        /* 2. Product Number (PRO-x): green, under Name */
+        #order_sammary_table tbody td:nth-child(1) {
+            order: 2 !important;
+            grid-column: 1 / -1 !important;
+            color: #10bd91 !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            line-height: 1.4 !important;
+            margin-top: -6px !important;
+        }
+
+        /* 3. Pattern Code (DWC0120): grey, under PRO */
+        #order_sammary_table tbody td:nth-child(3) {
+            order: 3 !important;
+            grid-column: 1 / -1 !important;
+            padding-bottom: 12px !important;
+            border-bottom: 1px solid #e0e3e8 !important;
+            color: #737d8c !important;
+            font-size: 13px !important;
+            line-height: 1.4 !important;
+            margin-top: -6px !important;
+        }
+
+        /* Price labels and Weight label */
+        #order_sammary_table tbody td:has(input[type="number"]) {
+            order: 4 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+            min-width: 0 !important;
+        }
+
+        #order_sammary_table tbody td:has(input.weight)::before {
+            content: "Weight(lbs)";
+        }
+
+        #order_sammary_table tbody td:has(input.Manufacturer_price)::before {
+            content: "Manufacturer price";
+        }
+
+        #order_sammary_table tbody td:has(input.General_price)::before {
+            content: "General price";
+        }
+
+        #order_sammary_table tbody td:has(input.Platinum_price)::before {
+            content: "Platinum price";
+        }
+
+        #order_sammary_table tbody td:has(input.Gold_price)::before {
+            content: "Gold price";
+        }
+
+        #order_sammary_table tbody td:has(input.Silver_price)::before {
+            content: "Silver price";
+        }
+
+        #order_sammary_table tbody td:has(input[type="number"])::before {
+            display: block;
+            color: #657080;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        /* Editable price inputs */
+        #order_sammary_table tbody input[type="number"] {
+            display: block !important;
+            width: 100% !important;
+            height: 48px !important;
+            padding: 10px 12px !important;
+            border: 1px solid #e0e4e9 !important;
+            border-radius: 12px !important;
+            background: #f7f8fa !important;
+            color: #343a40 !important;
+            font-size: 14px !important;
+            text-align: left !important;
+            box-shadow: none !important;
+        }
+
+        #order_sammary_table tbody input[type="number"]:focus {
+            border-color: #20bd91 !important;
+            background: #fff !important;
+            outline: none !important;
+        }
+
+        /* Save confirmation icon and card save button on bottom line */
+        #order_sammary_table tbody td.check-icon {
+            order: 5 !important;
+            grid-column: 1 / -1 !important;
+            position: relative !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            min-height: 48px !important;
+            padding-top: 10px !important;
+            border-top: none !important;
+            background-color: transparent !important;
+        }
+
+        /* Icon pinned to the right, doesn't affect button position */
+        #order_sammary_table tbody td.check-icon i.fa-circle-check,
+        #order_sammary_table tbody td.check-icon i.fa-check-circle {
+            position: absolute !important;
+            right: 4px !important;
+            top: 50% !important;
+            transform: translateY(-30%) !important;
+            font-size: 20px !important;
+            color: #05d34e !important;
+            margin: 0 !important;
+        }
+
+        /* Save button - default disabled state */
+        .card-save-btn {
+            background-color: #e5e7eb !important;
+            color: #9ca3af !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 12px !important;
+            padding: 9px 24px !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            cursor: not-allowed !important;
+            box-shadow: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 6px !important;
+            height: 44px !important;
+            /* min-width: 80% !important; */
+            min-width: 0 !important;
+            width: calc(100% - 60px) !important;
+            opacity: 1 !important;
+        }
+
+        /* Active Save button after editing */
+        .card-save-btn.active {
+            background-color: #1AA05A !important;
+            color: #ffffff !important;
+            border: none !important;
+            cursor: pointer !important;
+            box-shadow: 0 2px 6px rgba(5, 211, 78, 0.25) !important;
+        }
+
+        .card-save-btn.active:hover {
+            background-color: #148c4e !important;
+        }
+
+        .card-save-btn.active:active {
+            transform: scale(0.97) !important;
+        }
+
+        /* Saving state */
+        .card-save-btn:disabled {
+            cursor: not-allowed !important;
+        }
+
+        .card-save-btn:hover {
+            background-color: #04b844 !important;
+            color: #ffffff !important;
+        }
+
+        .card-save-btn:active {
+            transform: scale(0.97) !important;
+        }
+
+        #order_sammary_table tbody td.check-icon i.fa-circle-check,
+        #order_sammary_table tbody td.check-icon i.fa-check-circle {
+            font-size: 20px !important;
+            color: #05d34e !important;
+            margin: 0 !important;
+        }
+
+        /* ── Collapsible State (is-collapsed) ── */
+        #order_sammary_table tbody tr.is-collapsed td:has(input[type="number"]),
+        #order_sammary_table tbody tr.is-collapsed td.check-icon {
+            display: none !important;
+        }
+
+        #order_sammary_table tbody tr.is-collapsed td:nth-child(3) {
+            border-bottom: none !important;
+            padding-bottom: 0 !important;
+        }
+
+        /* Pagination */
+        #paginationbar {
+            width: 100% !important;
+            margin: 16px 0 !important;
+            padding: 0 !important;
+            overflow-x: auto !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        #paginationbar .pagination {
+            display: flex !important;
+            justify-content: center !important;
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+            margin: 0 !important;
+        }
+
+        #paginationbar .page-item .page-link,
+        #paginationbar .page-item span,
+        #paginationbar .page-link {
+            border-radius: 8px !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #475569 !important;
+            font-size: 13px !important;
+            padding: 6px 12px !important;
+            background: #ffffff !important;
+        }
+
+        #paginationbar .page-item.active .page-link {
+            background-color: #14B8A6 !important;
+            border-color: #14B8A6 !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+        }
+
+        /* Remove unnecessary desktop spacing */
+        .orders_summary > div {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+    }
+
+    /* Smaller phones */
+    @media only screen and (max-width: 380px) {
+
+        .filter_div {
+            padding: 14px 10px !important;
+        }
+
+        .filter_div > .row {
+            gap: 15px 8px !important;
+        }
+
+        #order_sammary_table tbody tr {
+            /* padding: 15px 11px !important; */
+            /* padding-left: 72px !important; */
+            gap: 11px 9px !important;
+        }
+
+        #order_sammary_table tbody tr::before {
+            left: 11px !important;
+            width: 48px !important;
+            height: 48px !important;
+            background-size: 26px 26px !important;
+        }
+
+        #order_sammary_table tbody input[type="number"] {
+            height: 44px !important;
+        }
+
+        #order_sammary_table tbody td:has(input[type="number"])::before {
+            font-size: 12px !important;
+        }
+    }
+
 </style>
 
 <div class="container-fluid mb-5 content-position">
@@ -297,6 +988,9 @@
             </div>
         </div>
 
+        <button type="button" class="filter_toggle">
+            <i class="fas fa-sliders-h"></i> Filters <i class="fas fa-chevron-up filter_toggle_arrow"></i>
+        </button>
 
         <div class="card orders_summary print_content" style="border: unset; padding: 10px; width: 100%;">
 
@@ -478,12 +1172,23 @@ $(function () {
     function attachInputListeners(row, subProductNo) {
         let checkIconCell = row.querySelector('.check-icon');
 
+        // Initially show a disabled Save button
+        checkIconCell.innerHTML = `
+            <button type="button" class="styled-button card-save-btn"title="No changes to save"disabled>Save</button>`;
+
         row.querySelectorAll('input[type="number"]').forEach(input => {
             let priceType = input.dataset.type;
 
             input.addEventListener('input', function () {
-                checkIconCell.innerHTML = `<i class="fa fas fa-circle-check"
-                                             style="color: lime; font-size: 18px; cursor: pointer;"></i>`;
+                // checkIconCell.innerHTML = `<i class="fa fas fa-circle-check"
+                //                              style="color: lime; font-size: 18px; cursor: pointer;"></i>`;
+                // checkIconCell.innerHTML = `
+                //     <button type="button" class="styled-button card-save-btn" title="Save this item">Save</button>
+                //     <i class="fa fa-check-circle" style="color: #05d34e; font-size: 20px; cursor: pointer;"></i>`;
+
+                checkIconCell.innerHTML = `
+                    <button type="button" class="styled-button card-save-btn active" title="Save this item">Save</button>
+                    <i class="fa fa-check-circle" style="color: #05d34e; font-size: 20px;"></i>`;
 
                 let newPrice = this.value.trim();
                 let existingIndex = changedPrices.findIndex(change => change.sub_product_no === subProductNo);
@@ -499,10 +1204,69 @@ $(function () {
                 ensureSaveButton();
             });
         });
+
+        // Click handler for this card's Save button
+        checkIconCell.addEventListener('click', function (e) {
+            let saveBtn = e.target.closest('.card-save-btn');
+            if (!saveBtn) return;
+            e.stopPropagation();
+
+            let itemChange = changedPrices.find(change => change.sub_product_no === subProductNo);
+            if (!itemChange) {
+                // If not in changedPrices yet, read from inputs on this row
+                let collected = { sub_product_no: subProductNo };
+                let hasValue = false;
+                row.querySelectorAll('input[type="number"]').forEach(input => {
+                    let val = input.value.trim();
+                    if (val !== '') {
+                        collected[input.dataset.type] = val;
+                        hasValue = true;
+                    }
+                });
+                if (hasValue) {
+                    itemChange = collected;
+                }
+            }
+
+            if (!itemChange) {
+                alert('No changes have been made for this item.');
+                return;
+            }
+
+            saveBtn.disabled = true;
+            saveBtn.innerText = 'Saving...';
+
+            $.ajax({
+                url: 'manufacturerPrice',
+                method: 'POST',
+                data: {
+                    changes: [itemChange],
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function () {
+                    // Remove saved item from global changedPrices
+                    changedPrices = changedPrices.filter(c => c.sub_product_no !== subProductNo);
+                    if (changedPrices.length === 0) {
+                        let topSubmit = document.querySelector('.submit-changes-icon');
+                        if (topSubmit) topSubmit.remove();
+                    }
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerText = 'Save';
+                    console.error('Error sending data:', error);
+                    alert('Error saving prices. Please try again.');
+                }
+            });
+        });
     }
 
     // ----------- Save Button -----------
     function ensureSaveButton() {
+        if (window.innerWidth <= 768) {
+            return; // Do not show top save-all button on mobile
+        }
         let existingSubmitIcon = document.querySelector('.submit-changes-icon');
         if (!existingSubmitIcon) {
             let submitIcon = document.createElement('div');
@@ -708,6 +1472,58 @@ $(function () {
     // Initial render
     showOrders(currentPage, orderArray, pricetype);
 });
+</script>
+
+<!-- Mobile collapse/expand for factory price list cards -->
+<script>
+$(function () {
+    var isMobile = function () {
+        return window.innerWidth <= 768;
+    };
+
+    // Collapse newly rendered rows on mobile
+    function setupMobileCards() {
+        if (!isMobile()) return;
+        $('#order_sammary_table tbody tr:not(.toggle-init)').each(function () {
+            $(this).addClass('is-collapsed toggle-init');
+        });
+    }
+
+    // Observe dynamic rows added to table body
+    var tableBody = document.getElementById('table_body');
+    if (tableBody) {
+        var observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.addedNodes.length > 0) {
+                    setupMobileCards();
+                }
+            });
+        });
+        observer.observe(tableBody, { childList: true });
+    }
+
+    setupMobileCards();
+
+    // Toggle expand / collapse on card click, ignoring input and button interactions
+    $(document).on('click', '#order_sammary_table tbody tr', function (e) {
+        if (!isMobile()) return;
+        if ($(e.target).is('input, button, a') || $(e.target).closest('input, button, a, .card-save-btn, .check-icon').length) return;
+        $(this).toggleClass('is-collapsed');
+    });
+
+    $(window).on('resize', function () {
+        if (isMobile()) {
+            setupMobileCards();
+        } else {
+            $('#order_sammary_table tbody tr').removeClass('is-collapsed');
+        }
+    });
+});
+
+$('.filter_toggle').on('click', function () {
+    $('.filter_div').toggleClass('filters-collapsed');
+});
+
 </script>
 
 

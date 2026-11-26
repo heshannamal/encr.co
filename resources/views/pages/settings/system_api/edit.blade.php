@@ -1,4 +1,4 @@
-<div class="modal fade" id="EditAPIModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade api-modal" id="EditAPIModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -50,8 +50,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success">Update API</button>
+                    <button type="button" class="btn btn-secondary api-btn-cancel" data-dismiss="modal"><span class="api-desktop-only">Close</span><span class="api-mobile-only">Cancel</span></button>
+                    <button type="submit" class="btn btn-success api-btn-save">Update API</button>
                 </div>
             </form>
         </div>
