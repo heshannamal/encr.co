@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\Auth\AdminRememberPolicy;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -55,11 +56,16 @@ class LoginController extends Controller
             ->where('active', 1)
             ->first();
 
-        $remember = $user && (int) ($user->id === 5 || $user->id === 1);
+        $policy = new AdminRememberPolicy(
+            config('admin_auth.remember_user_ids', [1, 5]),
+            (int) config('admin_auth.remember_duration_minutes', 43200)
+        );
+
+        $remember = $user !== null && $policy->shouldRemember((int) $user->id);
 
         if ($remember) {
             // 30 days in minutes
-            $this->guard()->setRememberDuration(43200);
+            $this->guard()->setRememberDuration($policy->durationMinutes());
         }
 
         return $this->guard()->attempt(
