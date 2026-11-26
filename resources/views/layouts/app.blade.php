@@ -543,6 +543,8 @@ $(document).on(
         <script src="{{ asset('argon') }}/js/plugins/dataTables.responsive.min.js"></script>
         <script src="{{ asset('argon') }}/js/plugins/dataTables.colReorder.min.js"></script>
 
+        <script src="{{ asset('js/encore/components.js') }}" defer></script>
+
         @stack('js')
         @include('layouts.california_sales_tax')
 
