@@ -1,0 +1,19 @@
+{
+    "name": "encore/cloud-modernization-tools",
+    "type": "project",
+    "require": {
+        "php": "~8.4.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.0",
+        "phpstan/phpstan": "^2.0"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {}
+    },
+    "scripts": {
+        "lint": "pint --test --config=../../pint.json ../../app/Services/Modernization",
+        "format": "pint --config=../../pint.json ../../app/Services/Modernization"
+    }
+}
