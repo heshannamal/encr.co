@@ -3,15 +3,20 @@
 
     function initialize(root = document) {
         const $ = window.jQuery;
-        if (!$ || !$.fn.select2) return;
+        if (!$) return;
 
-        root.querySelectorAll('select[data-encore-select]').forEach(element => {
+        if ($.fn.select2) root.querySelectorAll('select[data-encore-select]').forEach(element => {
             const field = $(element);
             if (field.data('select2')) return;
             const modal = field.closest('.modal');
             const options = { width: '100%' };
             if (modal.length) options.dropdownParent = modal;
             field.select2(options);
+        });
+
+        if ($.fn.DataTable) root.querySelectorAll('table[data-encore-table]').forEach(element => {
+            if ($.fn.dataTable.isDataTable(element)) return;
+            $(element).DataTable({ pageLength: 25, autoWidth: false, order: [] });
         });
     }
 
