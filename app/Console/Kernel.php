@@ -29,29 +29,47 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->call('App\Http\Controllers\EmailController@getNewInboxCount')->everyMinute();
-        $schedule->call('App\Http\Controllers\EmailController@getNewSpamCount')->everyMinute();
-        $schedule->call('App\Http\Controllers\EmailController@getNewDraftCount')->everyMinute();
-        $schedule->call('App\Http\Controllers\OrderController@changeFlagByCroneJob')->daily();
-        $schedule->command('stores:update-status')->hourly();
-        $schedule->call('App\Http\Controllers\ProjectController@notifyOverdueTasksByCroneJob')->daily();
-        $schedule->command('discussion:due-email')->daily();
-        $schedule->command('subdiscussion:due-email')->daily();
-        $schedule->command('discussion:reminder-email')->daily();
-        $schedule->command('subdiscussion:reminder-email')->daily();
-        $schedule->command('discussion:assign-email')->everyMinute();
-        $schedule->command('subdiscussion:assign-email')->everyMinute();
-        $schedule->command('comments:send-mention-emails')->everyMinute();
+        // $schedule->call('App\Http\Controllers\EmailController@getNewInboxCount')->everyMinute();
+        // $schedule->call('App\Http\Controllers\EmailController@getNewSpamCount')->everyMinute();
+        // $schedule->call('App\Http\Controllers\EmailController@getNewDraftCount')->everyMinute();
+        // $schedule->call('App\Http\Controllers\OrderController@changeFlagByCroneJob')->daily();
+        // $schedule->command('stores:update-status')->hourly();
+        // $schedule->call('App\Http\Controllers\ProjectController@notifyOverdueTasksByCroneJob')->daily();
+        // $schedule->command('discussion:due-email')->daily();
+        // $schedule->command('subdiscussion:due-email')->daily();
+        // $schedule->command('discussion:reminder-email')->daily();
+        // $schedule->command('subdiscussion:reminder-email')->daily();
+        // $schedule->command('discussion:assign-email')->everyMinute();
+        // $schedule->command('subdiscussion:assign-email')->everyMinute();
+        // $schedule->command('comments:send-mention-emails')->everyMinute();
+
         // $schedule->command('notification:create-weekly')->weeklyOn(1, '00:00')->timezone('America/Los_Angeles');
         // $schedule->command('notification:create-weekly')->everyFiveMinutes();
-        $schedule->command('notification:create-weekly')->mondays()->at('00:10')->timezone('America/Los_Angeles')->withoutOverlapping();
-        $schedule->command('email:customer-payment-reminder')->mondays()->at('00:10')->timezone('America/Los_Angeles')->withoutOverlapping();
-        $schedule->command('email:d-hudson-payment-reminder')->mondays()->at('00:10')->timezone('America/Los_Angeles')->withoutOverlapping();
-        $schedule->command('email:d-hudson-weekly-report')->fridays()->at('12:00')->timezone('America/Los_Angeles')->withoutOverlapping();
+
+        // $schedule->command('notification:create-weekly')->mondays()->at('00:10')->timezone('America/Los_Angeles')->withoutOverlapping();
+        // $schedule->command('email:customer-payment-reminder')->mondays()->at('00:10')->timezone('America/Los_Angeles')->withoutOverlapping();
+        // $schedule->command('email:d-hudson-payment-reminder')->mondays()->at('00:10')->timezone('America/Los_Angeles')->withoutOverlapping();
+        // $schedule->command('email:d-hudson-weekly-report')->fridays()->at('12:00')->timezone('America/Los_Angeles')->withoutOverlapping();
+
         // $schedule->command('quickbooks:auto-sync')->daily()->at('00:10')->timezone('America/Los_Angeles')->withoutOverlapping();
-        $schedule->command('studio_item_order:create_billing_order')->lastDayOfMonth()->at('23:55')->timezone('America/Los_Angeles')->withoutOverlapping();
-        $schedule->command('quickbooks:auto-sync')->daily()->at('00:10')->timezone('America/Los_Angeles')->withoutOverlapping();
-        $schedule->command('inhandfollowup:due-date')->daily();
+
+        // $schedule->command('studio_item_order:create_billing_order')->lastDayOfMonth()->at('23:55')->timezone('America/Los_Angeles')->withoutOverlapping();
+        // $schedule->command('quickbooks:auto-sync')->daily()->at('00:10')->timezone('America/Los_Angeles')->withoutOverlapping();
+        // $schedule->command('inhandfollowup:due-date')->daily();
+
+        $schedule->call(function () {
+            $message = now()->format('Y-m-d H:i:s')
+                . ' | Laravel scheduler executed successfully'
+                . PHP_EOL;
+
+            file_put_contents(
+                storage_path('logs/cron-test.log'),
+                $message,
+                FILE_APPEND | LOCK_EX
+            );
+
+            echo $message;
+        })->everyMinute();
 
     }
 
