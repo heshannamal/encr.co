@@ -36,17 +36,7 @@ use App\Services\EcommerceNotificationService;
 
 class InventoryOrderController extends Controller
 {
-    // private $smptEncryption = 'TLS';
-    // private $smptPort = '587';
-    // private $smptHost = 'smtp-mail.outlook.com';
-    // private $mailUsername = 'info@encorebrand.com';
-    // private $mailPassword = 'EncoreCus!0077';
 
-    private $smptEncryption = 'SSL';
-    private $smptPort = '465';
-    private $smptHost = 'server.encr.co';
-    private $mailUsername = 'info@encr.co';
-    private $mailPassword = 'Encr.co@ec123';
 
     use \App\Http\Controllers\Concerns\LoadsInventoryOrganizationIds;
 
@@ -1094,17 +1084,6 @@ class InventoryOrderController extends Controller
                                             })->where('active', 1)->get();
 
                 foreach($users as $user){
-                    config(['mail.host' => $this->smptHost]);
-                    config(['mail.port' => $this->smptPort]);
-                    config(['mail.encryption' => $this->smptEncryption]);
-                    config(['mail.username' => $this->mailUsername]); //logged user email
-                    config(['mail.password' => $this->mailPassword]); //logged user email pass
-
-                    $fromSettings = [
-                        'address' => $this->mailUsername,
-                        'name' => 'Encore Custom',
-                    ];
-                    config(['mail.from' => $fromSettings]);
 
                     $orderItems = OrderItem::where('order_id', $orderId)->where('factory_id', $factory_id)->get();
                     $orderItemArray = '';
@@ -1177,17 +1156,6 @@ class InventoryOrderController extends Controller
                                             })->where('active', 1)->get();
 
                 foreach($users as $user){
-                    config(['mail.host' => $this->smptHost]);
-                    config(['mail.port' => $this->smptPort]);
-                    config(['mail.encryption' => $this->smptEncryption]);
-                    config(['mail.username' => $this->mailUsername]); //logged user email
-                    config(['mail.password' => $this->mailPassword]); //logged user email pass
-
-                    $fromSettings = [
-                        'address' => $this->mailUsername,
-                        'name' => 'Encore Custom',
-                    ];
-                    config(['mail.from' => $fromSettings]);
 
                     $orderItemArray = '';
                     foreach ($newOrderItems as $orderItem) {
