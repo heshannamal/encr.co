@@ -119,55 +119,63 @@ class UserController extends Controller
     }
     public function impersonateUser($userId)
     {
-        if (!auth()->user() || !auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
-        }
+        $actor = auth()->user();
+        abort_unless($actor && $actor->isAdmin() && (int) $actor->active === 1, 403);
+        abort_if(session()->has('original_user_id'), 403);
+
         $user = User::findOrFail($userId);
+        $protection = app(\App\Services\Users\AccountProtection::class);
+        abort_if((int) $user->active !== 1 || $protection->privileged($user), 403);
+        abort_if((int) $actor->id === (int) $user->id, 403);
 
-        // Store the original user ID to allow reverting later
-        session(['original_user_id' => auth()->id()]);
-
-        // Log in as the selected user
+        session(['original_user_id' => $actor->id]);
         Auth::login($user);
+        session()->regenerate();
 
-
-        return redirect('/')->with('success', 'You are now logged in as ' . $user->name);
-
-
+        return redirect('/')->with('success', 'You are now logged in as '.$user->name);
     }
+
     public function revertImpersonation()
     {
-        if (session()->has('original_user_id')) {
-            $originalUser = User::find(session('original_user_id'));
-            Auth::login($originalUser);
-            session()->forget('original_user_id');
+        $originalId = session()->pull('original_user_id');
+        abort_unless(auth()->check() && $originalId, 403);
+
+        $originalUser = User::find($originalId);
+        if (! $originalUser || ! $originalUser->isAdmin() || (int) $originalUser->active !== 1) {
+            Auth::logout();
+            session()->invalidate();
+            session()->regenerateToken();
+
+            return redirect()->route('login')->with('error', 'The original administrator account is unavailable.');
         }
+
+        Auth::login($originalUser);
+        session()->regenerate();
 
         return redirect('/')->with('success', 'You are back as Admin');
     }
+
     public function updateUserStatus(Request $request)
     {
-        $request->validate([
+        $this->authorize('edit users');
+        $data = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'status' => 'required|boolean'
+            'status' => 'required|boolean',
         ]);
 
-        $user = User::find($request->user_id);
-
-        if ($user) {
-            $user->active = $request->status; // Assuming 'active' is the column name
-            $user->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'User status updated successfully.'
-            ]);
+        $user = User::findOrFail($data['user_id']);
+        $protection = app(\App\Services\Users\AccountProtection::class);
+        $protection->assertCanEdit($request->user(), $user);
+        if (! (bool) $data['status']) {
+            $protection->assertCanDeactivate($request->user(), $user);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'User not found.'
-        ], 404);
-    }
+        $user->active = (bool) $data['status'];
+        $user->save();
 
+        return response()->json([
+            'success' => true,
+            'message' => 'User status updated successfully.',
+        ]);
+    }
 }
