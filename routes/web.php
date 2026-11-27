@@ -878,11 +878,10 @@ Route::post(
 
     Route::get('activities/add', [App\Http\Controllers\ActivityController::class, 'add'])->name('activities.add');
     Route::get('activities/filter_by_order/{id}', [App\Http\Controllers\ActivityController::class, 'filterByOrder']);
-    Route::get('activities/filter_by_organization/{id}', [App\Http\Controllers\ActivityController::class, 'filterByOrganization']);
+    Route::get('activities/filter_by_organization/{id}', [App\Http\Controllers\ActivityController::class, 'getActivitiesByOrganization']);
 	Route::get('activities/filter_by_contact/{id}', [App\Http\Controllers\ActivityController::class, 'filterByContact']);
 	Route::get('activities/edit_by_organization/{activityId}/{organizationId}', [App\Http\Controllers\ActivityController::class, 'editByOrganization']);
-	Route::get('activities/edit/{activityId}', [App\Http\Controllers\ActivityController::class, 'edit']);
-	Route::post('activities/update', [App\Http\Controllers\ActivityController::class, 'update'])->name('activities.update');
+	Route::get('activities/edit/{activityId}', [App\Http\Controllers\ActivityController::class, 'getActivityById']);
 	Route::get('activities/delete/{activityId}', [App\Http\Controllers\ActivityController::class, 'delete'])->name('activities.delete');
 	Route::post('activities/done', [App\Http\Controllers\ActivityController::class, 'done'])->name('activities.done');
 	Route::get('activity/by_alphabet/{id}', [App\Http\Controllers\ActivityController::class, 'sortApphabet'])->name('activity.by_alphabet');
