@@ -74,6 +74,18 @@ class LoginController extends Controller
         );
     }
 
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+        $request->session()->forget([
+            'customer_portal_admin', 'original_user_id', 'url.intended',
+            'password_hash_web', 'auth.password_confirmed_at',
+        ]);
+        $request->session()->regenerate(true);
+
+        return redirect('/');
+    }
+
     /**
      * Optional custom redirect after login.
      */
