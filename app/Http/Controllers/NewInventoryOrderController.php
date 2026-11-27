@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-require 'vendor/Carbon/autoload.php';
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
@@ -41,15 +40,10 @@ use App\Services\NotificationBuilderService;
 
 class NewInventoryOrderController extends Controller
 {
-    protected $inventoryOrgIds;
-
-    public function __construct()
-    {
-        $this->inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
-    }
+    use \App\Http\Controllers\Concerns\LoadsInventoryOrganizationIds;
 
     public function index(){
-        $organizations = Organization::select('id', 'organization_name')->whereIn('id', $this->inventoryOrgIds)->where('active', 1)->orderBy('organization_name')->get();
+        $organizations = Organization::select('id', 'organization_name')->whereIn('id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('organization_name')->get();
 
         $maxId = Order::max('id');
         $orderNo = str_pad(($maxId+1), 6, "0", STR_PAD_LEFT);
