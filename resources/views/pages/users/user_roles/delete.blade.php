@@ -75,12 +75,11 @@
                     data-dismiss="modal"
                 >Cancel</button>
 
-                <a
+                <button type="button" disabled
                     id="delete_confirm_btn"
-                    href="#"
                     class="btn btn-danger btn-sm text-uppercase px-3 disabled"
                     style="pointer-events: none; opacity: 0.65;"
-                >Delete Employee Group</a>
+                >Delete Employee Group</button>
             </div>
         </div>
     </div>
@@ -93,10 +92,16 @@
         var $btn = $('#delete_confirm_btn');
 
         if (val === 'delete employee group') {
-            $btn.removeClass('disabled').css({ 'pointer-events': 'auto', 'opacity': '1' });
+            $btn.prop('disabled', false).removeClass('disabled').css({ 'pointer-events': 'auto', 'opacity': '1' });
         } else {
-            $btn.addClass('disabled').css({ 'pointer-events': 'none', 'opacity': '0.65' });
+            $btn.prop('disabled', true).addClass('disabled').css({ 'pointer-events': 'none', 'opacity': '0.65' });
         }
+    });
+
+    $('#delete_confirm_btn').on('click', function () {
+        if ($('#delete_confirm_input').val().trim().toLowerCase() !== 'delete employee group') return;
+        var url = $(this).data('deleteUrl');
+        if (url) window.EncoreComponents.submitDelete(url);
     });
 
     // Trigger delete modal from trash icon
@@ -110,6 +115,7 @@
         $('#delete_user_role_id').val(userRoleId);
         $('#delete_confirm_input').val('');
         $('#delete_confirm_btn')
+            .prop('disabled', true)
             .addClass('disabled')
             .css({ 'pointer-events': 'none', 'opacity': '0.65' });
 
@@ -133,7 +139,7 @@
         // Set delete URL
         var deleteUrl = "{{ route('user_roles.delete', ['id' => ':id']) }}";
         deleteUrl = deleteUrl.replace(':id', userRoleId);
-        $('#delete_confirm_btn').attr('href', deleteUrl);
+        $('#delete_confirm_btn').data('deleteUrl', deleteUrl);
 
         $('#userrole_delete_modal').modal('show');
     });
