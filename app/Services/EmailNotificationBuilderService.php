@@ -20,23 +20,8 @@ use Illuminate\Support\Facades\Blade;
 
 class EmailNotificationBuilderService{
 
-    var $smptEncryption = 'SSL';
-    var $smptPort = '465';
-    var $smptHost = 'mail.encr.co';
-    var $username = 'info@encr.co';
-    var $password = 'Encr.co@ec123';
     public function sendEmailFromTemplate(string $templateId, array $replacements, array $options = []): bool
     {
-        config(['mail.mailers.smtp.transport' => 'smtp']);
-        config(['mail.mailers.smtp.host' => $this->smptHost]);
-        config(['mail.mailers.smtp.port' => $this->smptPort]);
-        config(['mail.mailers.smtp.encryption' => $this->smptEncryption]);
-
-        config(['mail.mailers.smtp.username' => $this->username]);
-        config(['mail.mailers.smtp.password' => $this->password]);
-
-        config(['mail.from.address' => $this->username]);
-        config(['mail.from.name' => 'Encore Custom']);
         $template = EmailNotification::where('template_key', $templateId)->first();
         if (!$template) {
             \Log::warning("Email template ID {$templateId} not found.");

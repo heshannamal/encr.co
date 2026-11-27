@@ -9,16 +9,9 @@ use App\Models\Order;
 use App\Models\StoreOrder;
 use App\Models\User;
 use Carbon\Carbon;
-use domainencore\Facades\OrdersCommenFacade\OrdersCommenFacade;
 
 class OrderApiController extends Controller
 {
-    protected $inventoryOrgIds;
-
-    public function __construct()
-    {
-        $this->inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
-    }
     /**
      * Get order details by order ID
      *

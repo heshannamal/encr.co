@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-require 'vendor/Carbon/autoload.php';
 
 use App\Models\CheckPayment;
 use App\Models\OtherPayment;
@@ -99,24 +98,9 @@ class OrderDetailsController extends Controller
     use OrderCommenHelper;
     use ProjectHelper;
 
-    // private $smptEncryption = 'TLS';
-    // private $smptPort = '587';
-    // private $smptHost = 'smtp-mail.outlook.com';
-    // private $mailUsername = 'info@encorebrand.com';
-    // private $mailPassword = 'EncoreCus!0077';
 
-    private $smptEncryption = 'SSL';
-    private $smptPort = '465';
-    private $smptHost = 'mail.encr.co';
-    private $mailUsername = 'info@encr.co';
-    private $mailPassword = 'Encr.co@ec123';
 
-    protected $inventoryOrgIds;
-
-    public function __construct()
-    {
-        $this->inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
-    }
+    use \App\Http\Controllers\Concerns\LoadsInventoryOrganizationIds;
 
     public function index(){
         $newOrders = Order::select('id', 'order_no')->where('order_status_id', 1)->where('active', 1)->get();
@@ -221,9 +205,9 @@ class OrderDetailsController extends Controller
 
         $organizationQuery = Organization::select('id', 'organization_name','pl_status');
             if($this->isInventoryOrder($orders[0]->organization_id)){
-                $organizationQuery->whereIn('id', $this->inventoryOrgIds);
+                $organizationQuery->whereIn('id', $this->inventoryOrganizationIds());
             } else {
-                $organizationQuery->whereNotIn('id', $this->inventoryOrgIds);
+                $organizationQuery->whereNotIn('id', $this->inventoryOrganizationIds());
             }
         $organizations = $organizationQuery->where('active', 1)->orderBy('organization_name')->get();
 
@@ -679,9 +663,9 @@ class OrderDetailsController extends Controller
 
         $organizationQuery = Organization::select('id', 'organization_name');
             if($this->isInventoryOrder($orders->organization_id)){
-                $organizationQuery->whereIn('id', $this->inventoryOrgIds);
+                $organizationQuery->whereIn('id', $this->inventoryOrganizationIds());
             } else {
-                $organizationQuery->whereNotIn('id', $this->inventoryOrgIds);
+                $organizationQuery->whereNotIn('id', $this->inventoryOrganizationIds());
             }
 
         $orderStatuses = OrderStatus::select('id', 'status_name')->where('active', 1)->orderBy('id')->get();
@@ -3420,17 +3404,6 @@ class OrderDetailsController extends Controller
                     </span>
                 </div>';
             }
-            config(['mail.host' => $this->smptHost]);
-            config(['mail.port' => $this->smptPort]);
-            config(['mail.encryption' => $this->smptEncryption]);
-            config(['mail.username' => $this->mailUsername]); //logged user email
-            config(['mail.password' => $this->mailPassword]); //logged user email pass
-
-            $fromSettings = [
-              'address' => $this->mailUsername,
-              'name' => 'Encore Custom',
-            ];
-            config(['mail.from' => $fromSettings]);
 
             $organizationalName = $organizationalDetails->organization_name;
             $data["subject"] = $request->subject_email;
@@ -4046,17 +4019,6 @@ class OrderDetailsController extends Controller
             foreach($users as $user){
 
 
-                config(['mail.host' => $this->smptHost]);
-                config(['mail.port' => $this->smptPort]);
-                config(['mail.encryption' => $this->smptEncryption]);
-                config(['mail.username' => $this->mailUsername]); //logged user email
-                config(['mail.password' => $this->mailPassword]); //logged user email pass
-
-                $fromSettings = [
-                    'address' => $this->mailUsername,
-                    'name' => 'Encore Custom',
-                ];
-                config(['mail.from' => $fromSettings]);
 
                 $teamName = '<p style="margin-top: 0.1rem;">Team Name: '.$orderDetails->organizationDetails->organization_name.'</p>';
                 $exFactDate = '<p style="margin-top: 0.1rem;">Ex Factory Date: '.$orderDetails->ex_factory_date.'</p>';
@@ -4177,17 +4139,6 @@ class OrderDetailsController extends Controller
             foreach($users as $user){
 
 
-                config(['mail.host' => $this->smptHost]);
-                config(['mail.port' => $this->smptPort]);
-                config(['mail.encryption' => $this->smptEncryption]);
-                config(['mail.username' => $this->mailUsername]); //logged user email
-                config(['mail.password' => $this->mailPassword]); //logged user email pass
-
-                $fromSettings = [
-                    'address' => $this->mailUsername,
-                    'name' => 'Encore Custom',
-                ];
-                config(['mail.from' => $fromSettings]);
 
                 $teamName = '<p style="margin-top: 0.1rem;">Team Name: '.$orderDetails->organizationDetails->organization_name.'</p>';
                 $exFactDate = '<p style="margin-top: 0.1rem;">Ex Factory Date: '.$orderDetails->ex_factory_date.'</p>';
@@ -4411,17 +4362,6 @@ class OrderDetailsController extends Controller
                                             })->where('active', 1)->get();
 
                 foreach($users as $user){
-                    config(['mail.host' => $this->smptHost]);
-                    config(['mail.port' => $this->smptPort]);
-                    config(['mail.encryption' => $this->smptEncryption]);
-                    config(['mail.username' => $this->mailUsername]); //logged user email
-                    config(['mail.password' => $this->mailPassword]); //logged user email pass
-
-                    $fromSettings = [
-                        'address' => $this->mailUsername,
-                        'name' => 'Encore Custom',
-                    ];
-                    config(['mail.from' => $fromSettings]);
 
                     $orderItems = OrderItem::where('order_id', $orderId)->where('factory_id', $factory_id)->get();
                     $orderItemArray = '';

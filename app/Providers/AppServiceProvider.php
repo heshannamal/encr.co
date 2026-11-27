@@ -32,11 +32,11 @@ class AppServiceProvider extends ServiceProvider
     {
         ActivityLogs::observe(ActivityLogsObserver::class);
 
-        try {
+        $shippoKey = config('services.shippo.key');
+
+        if (is_string($shippoKey) && trim($shippoKey) !== '') {
             $shippoAuth = new ShippoService();
-            $shippoAuth->setApiKey(config('services.shippo.key'));
-        } catch (\Exception $e) {
-            logger()->error('Failed to set Shippo API key: ' . $e->getMessage());
+            $shippoAuth->setApiKey($shippoKey);
         }
 
         View::composer('*', function ($view) {

@@ -1,0 +1,110 @@
+name: Framework compatibility
+
+on:
+  push:
+    branches:
+      - modernization/laravel-9
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-local-only
+          MYSQL_DATABASE: encore_ci_refactor
+          MYSQL_USER: encore_ci
+          MYSQL_PASSWORD: ci-local-only
+        ports:
+          - 3306/tcp
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, curl, dom, fileinfo, gd, imap, intl, pdo_sqlite, pdo_mysql, zip, bcmath
+          tools: composer:v2
+          coverage: none
+      - name: Validate manifest
+        run: composer validate --no-check-lock
+      - name: PHP syntax checks
+        run: find app config routes database/seeders tests -type f -name '*.php' -print0 | xargs -0 -n 1 php -l
+      - name: Resolve candidate dependencies
+        run: composer update --with-all-dependencies --no-interaction --no-scripts --prefer-dist
+      - name: Verify platform
+        run: composer check-platform-reqs
+      - name: Run isolated unit tests
+        run: vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php tests/Unit
+      - name: Audit resolved dependencies
+        run: composer audit --locked
+      - name: Save candidate lock file
+        uses: actions/upload-artifact@v4
+        with:
+          name: laravel-13-candidate-lock
+          path: composer.lock
+      - name: Prepare isolated application environment
+        run: |
+          rm -f .env bootstrap/cache/*.php
+          mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs
+          printf '%s\n' 'APP_ENV=testing' 'APP_DEBUG=false' 'APP_URL=http://localhost' 'DB_CONNECTION=sqlite' 'DB_DATABASE=:memory:' 'CACHE_DRIVER=array' 'CACHE_STORE=array' 'SESSION_DRIVER=array' 'QUEUE_CONNECTION=sync' 'MAIL_MAILER=array' 'MAIL_DRIVER=array' 'LOG_CHANNEL=stderr' > .env
+          printf 'APP_KEY=base64:%s\n' "$(php -r 'echo base64_encode(random_bytes(32));')" >> .env
+      - name: Discover application packages
+        run: php artisan package:discover --ansi
+      - name: Verify framework startup
+        id: startup
+        run: php artisan --version
+      - name: Verify configured unit test suite
+        run: vendor/bin/phpunit --testsuite Unit
+      - name: Verify isolated mail transport
+        run: |
+          php artisan tinker --execute='if (config("mail.default") !== "array") { throw new \RuntimeException("Unsafe test mail transport"); } $mailer = \Illuminate\Support\Facades\Mail::mailer(); $transport = $mailer->getSymfonyTransport(); if (!($transport instanceof \Illuminate\Mail\Transport\ArrayTransport)) { throw new \RuntimeException("Expected array transport"); } $mailer->raw("Compatibility smoke test", function ($message) { $message->to("recipient@example.test")->subject("Encore CI"); }); if (count($transport->messages()) !== 1) { throw new \RuntimeException("Mail capture failed"); } echo "In-memory mail verified";'
+      - name: Audit all registered controller actions
+        id: controller_audit
+        run: |
+          php artisan tinker --execute='foreach (app("router")->getRoutes() as $route) { $action = $route->getActionName(); if ($action === "Closure") { continue; } [$class, $method] = array_pad(explode("@", $action, 2), 2, "__invoke"); try { if (!class_exists($class) || !method_exists($class, $method) || !(new \ReflectionMethod($class, $method))->isPublic()) { echo implode("|", $route->methods())." ".$route->uri()." => ".$action.PHP_EOL; } } catch (\Throwable $e) { echo $route->uri()." => ".$action." (".get_class($e).")".PHP_EOL; } }'
+      - name: Verify application routes
+        id: routes
+        run: |
+          php artisan route:list --json > /tmp/encore-routes.json
+          php -r '$routes = json_decode(file_get_contents("/tmp/encore-routes.json"), true, 512, JSON_THROW_ON_ERROR); if (!is_array($routes) || count($routes) === 0) { exit(1); } echo "Registered routes: ".count($routes).PHP_EOL;'
+      - name: Verify scheduled command registration
+        if: ${{ !cancelled() && steps.routes.outcome != 'skipped' }}
+        run: php artisan schedule:list
+      - name: Save route inventory
+        if: ${{ steps.routes.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: encore-route-inventory
+          path: /tmp/encore-routes.json
+      - name: Verify MySQL baseline and administrator bootstrap
+        if: ${{ !cancelled() && steps.startup.outcome == 'success' }}
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DB_DATABASE: encore_ci_refactor
+          DB_USERNAME: encore_ci
+          DB_PASSWORD: ci-local-only
+          BOOTSTRAP_ADMIN_EMAIL: admin@example.test
+        run: |
+          export BOOTSTRAP_ADMIN_PASSWORD="$(php -r 'echo bin2hex(random_bytes(24));')"
+          php artisan migrate --path=database/migrations/baseline --force
+          php artisan db:seed --force
+          php artisan tinker --execute='if (\App\Models\User::count() !== 1 || !($user = \App\Models\User::find(1)) || !$user->hasRole("Super Admin") || !\Illuminate\Support\Facades\Hash::check(config("bootstrap_admin.password"), $user->password)) { throw new \RuntimeException("Administrator bootstrap verification failed"); } echo "Administrator bootstrap verified";'
+          php artisan tinker --execute='$guard = \Illuminate\Support\Facades\Auth::guard("web"); $credentials = ["email" => config("bootstrap_admin.email"), "password" => config("bootstrap_admin.password"), "active" => 1]; if (!$guard->attempt($credentials) || (int) $guard->id() !== 1) { throw new \RuntimeException("Administrator authentication failed"); } $guard->logout(); if ($guard->check()) { throw new \RuntimeException("Administrator logout failed"); } $credentials["password"] = "invalid-test-password"; if ($guard->attempt($credentials)) { throw new \RuntimeException("Invalid password accepted"); } echo "Administrator authentication verified";'
+          php artisan migrate:rollback --path=database/migrations/baseline --force

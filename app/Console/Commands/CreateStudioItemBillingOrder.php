@@ -26,19 +26,6 @@ class CreateStudioItemBillingOrder extends Command
      * @var string
      */
     protected $description = 'Command description';
-    protected $inventoryOrgIds;
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
-    }
-
     /**
      * Execute the console command.
      *
@@ -49,11 +36,13 @@ class CreateStudioItemBillingOrder extends Command
         try {
             Log::info('Studio item billing order command started');
 
+            $inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
+
             $orderItems = OrderItem::where('is_studio_item', 1)
                                         ->where('is_billed', 0)
                                         ->where('active', 1)
                                         ->where('order_status_id', 4)
-                                        ->whereNotIn('organization_id', $this->inventoryOrgIds)
+                                        ->whereNotIn('organization_id', $inventoryOrgIds)
                                         ->get();
             $orderItemSubTotal = $orderItems->sum('total');
 

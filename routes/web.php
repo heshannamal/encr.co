@@ -176,7 +176,11 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('change_flag', [App\Http\Controllers\HomeController::class, 'changeFlag'])->name('change_flag');
 	Route::get('under_contruction', [App\Http\Controllers\HomeController::class, 'underContruction'])->name('under_contruction');
 
-	Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
+	Route::get('user', [App\Http\Controllers\UserController::class, 'index'])->name('user.index');
+    Route::get('user/create', static function () { return redirect()->route('users'); })->middleware('can:manage user')->name('user.create');
+    Route::get('user/{user}/edit', [App\Http\Controllers\UserManagementController::class, 'edit'])->name('user.edit');
+    Route::delete('user/{user}', [App\Http\Controllers\UserManagementController::class, 'delete'])->name('user.destroy');
+    Route::post('user', [App\Http\Controllers\UserManagementController::class, 'create'])->name('user.store');
 	// Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
 	Route::get('upgrade', function () {return view('pages.upgrade');})->name('upgrade');
@@ -419,7 +423,8 @@ Route::post(
     Route::get('orders/studio-settings/projects/{project}/sections', [App\Http\Controllers\StudioOrderController::class, 'studioSettingsSections'])->name('studio.settings.sections');
     Route::post('orders/studio-settings', [App\Http\Controllers\StudioOrderController::class, 'updateStudioSettings'])->name('studio.settings.update');
 
-	Route::get('email', [App\Http\Controllers\AppsController::class, 'TestIndexEmails']);
+	// Retired test endpoint: its AppsController implementation is absent.
+    Route::get('email', static function () { abort(404); });
 
 	Route::get('orders/csv/{id}', [App\Http\Controllers\OrderController::class, 'csv'])->name('quoteCSV_Download');
     Route::get('/download-excel/{id}', [App\Http\Controllers\OrderController::class, 'downloadExcel'])->name('download.excel');
@@ -873,11 +878,10 @@ Route::post(
 
     Route::get('activities/add', [App\Http\Controllers\ActivityController::class, 'add'])->name('activities.add');
     Route::get('activities/filter_by_order/{id}', [App\Http\Controllers\ActivityController::class, 'filterByOrder']);
-    Route::get('activities/filter_by_organization/{id}', [App\Http\Controllers\ActivityController::class, 'filterByOrganization']);
+    Route::get('activities/filter_by_organization/{id}', [App\Http\Controllers\ActivityController::class, 'getActivitiesByOrganization']);
 	Route::get('activities/filter_by_contact/{id}', [App\Http\Controllers\ActivityController::class, 'filterByContact']);
 	Route::get('activities/edit_by_organization/{activityId}/{organizationId}', [App\Http\Controllers\ActivityController::class, 'editByOrganization']);
-	Route::get('activities/edit/{activityId}', [App\Http\Controllers\ActivityController::class, 'edit']);
-	Route::post('activities/update', [App\Http\Controllers\ActivityController::class, 'update'])->name('activities.update');
+	Route::get('activities/edit/{activityId}', [App\Http\Controllers\ActivityController::class, 'getActivityById']);
 	Route::get('activities/delete/{activityId}', [App\Http\Controllers\ActivityController::class, 'delete'])->name('activities.delete');
 	Route::post('activities/done', [App\Http\Controllers\ActivityController::class, 'done'])->name('activities.done');
 	Route::get('activity/by_alphabet/{id}', [App\Http\Controllers\ActivityController::class, 'sortApphabet'])->name('activity.by_alphabet');
@@ -1921,7 +1925,7 @@ Route::get('get_password', [App\Http\Controllers\CustomWorkController::class, 'g
 
 Route::get('customer_catalog', [App\Http\Controllers\CustomerProductCatlogController::class, 'index'])->name('customer_catlog');
 Route::match(['get', 'post'],'product_filter', [App\Http\Controllers\CustomerProductCatlogController::class, 'productFilter'])->name('product_filter1');
-Route::match(['get', 'post'],'productFilter', [App\Http\Controllers\CustomerProductCatlogController::class, 'product_filter'])->name('productFilter1');
+Route::match(['get', 'post'],'productFilter', [App\Http\Controllers\CustomerProductCatlogController::class, 'productFilter'])->name('productFilter1');
 Route::match(['get', 'post'], 'search', [App\Http\Controllers\CustomerProductCatlogController::class, 'productSearch'])->name('search.products');
 
 Route::get('upload_product_images', [App\Http\Controllers\CustomerProductCatlogController::class, 'upload_product_images'])->name('upload_product_images');

@@ -36,24 +36,9 @@ use App\Services\EcommerceNotificationService;
 
 class InventoryOrderController extends Controller
 {
-    // private $smptEncryption = 'TLS';
-    // private $smptPort = '587';
-    // private $smptHost = 'smtp-mail.outlook.com';
-    // private $mailUsername = 'info@encorebrand.com';
-    // private $mailPassword = 'EncoreCus!0077';
 
-    private $smptEncryption = 'SSL';
-    private $smptPort = '465';
-    private $smptHost = 'server.encr.co';
-    private $mailUsername = 'info@encr.co';
-    private $mailPassword = 'Encr.co@ec123';
 
-    protected $inventoryOrgIds;
-
-    public function __construct()
-    {
-        $this->inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
-    }
+    use \App\Http\Controllers\Concerns\LoadsInventoryOrganizationIds;
 
     public function index(Request $request){
         $this->userGroupFactories();
@@ -68,7 +53,7 @@ class InventoryOrderController extends Controller
             if($request->org){
                 $orderQuery->whereHas('organizationDetails', function($query) use($request) {
                     $query->where('organization_name', 'LIKE', '%'.$request->org.'%');
-                    $query->whereIn('id', $this->inventoryOrgIds);
+                    $query->whereIn('id', $this->inventoryOrganizationIds());
                 });
                 $orderQuery->orWhere('order_no', 'LIKE', '%'.$request->org.'%');
             }
@@ -98,9 +83,9 @@ class InventoryOrderController extends Controller
                 $orderQuery->with('orderItems.factoryDetails');
             }
 
-        $orderForCount = $orderQuery->whereIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+        $orderForCount = $orderQuery->whereIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
-        $orders = $orderQuery->whereIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->paginate(50);
+        $orders = $orderQuery->whereIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->paginate(50);
 
         $factories = $factoriesQuery->where('active', 1)->orderBy('id')->get();
 
@@ -110,12 +95,12 @@ class InventoryOrderController extends Controller
 
         $columnLayout = ColumnLayout::where('interface_id', 17)->where('user_id', Auth::user()->id)->first();
 
-        $organizations = Organization::select('id', 'organization_name')->whereIn('id', $this->inventoryOrgIds)->where('active', 1)->orderBy('organization_name')->get();
+        $organizations = Organization::select('id', 'organization_name')->whereIn('id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('organization_name')->get();
 
         $sales_rep_users = User::where('active', 1)->where('role_id', 'like', '%"3"%')->get();
 
         $statusCounts = (clone $orderQuery)
-        ->whereNotIn('organization_id', $this->inventoryOrgIds)
+        ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
         ->where('active', 1)
         ->selectRaw("
             SUM(CASE WHEN order_status_id = 3 THEN 1 ELSE 0 END) as production,
@@ -138,7 +123,7 @@ class InventoryOrderController extends Controller
 
         $orderQuery = Order::with('organizationDetails', 'userDetails', 'contactDetails', 'statusDetails', 'teamStoreDetails')
                             ->where('active', 1)
-                            ->whereIn('organization_id', $this->inventoryOrgIds);
+                            ->whereIn('organization_id', $this->inventoryOrganizationIds());
 
             if($oderSearch == 'factory'){
                 $orderQuery->with(['orderItems'=>function($qry) use($factoryIds){
@@ -288,7 +273,7 @@ class InventoryOrderController extends Controller
     }
 
     public function edit($id){
-        $organizations = Organization::select('id', 'organization_name')->whereIn('id', $this->inventoryOrgIds)->where('active', 1)->orderBy('organization_name')->get();
+        $organizations = Organization::select('id', 'organization_name')->whereIn('id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('organization_name')->get();
 
         $orderStatuses = OrderStatus::select('id', 'status_name')->orderBy('id')->get();
 
@@ -519,7 +504,7 @@ class InventoryOrderController extends Controller
         $sortedOrderQuery = Order::with('organizationDetails', 'userDetails', 'contactDetails', 'statusDetails', 'teamStoreDetails')
                             ->whereHas('organizationDetails', function($query) use($id) {
                                 $query->where('organization_name', 'LIKE', $id.'%');
-                                $query->whereIn('id', $this->inventoryOrgIds);
+                                $query->whereIn('id', $this->inventoryOrganizationIds());
                             });
 
             if($oderSearch == 'factory'){
@@ -535,7 +520,7 @@ class InventoryOrderController extends Controller
             } else {
                 $sortedOrderQuery->with('orderItems.factoryDetails');
             }
-        $sortedOrder = $sortedOrderQuery->whereIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->get();
+        $sortedOrder = $sortedOrderQuery->whereIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->get();
 
         return json_encode($sortedOrder);
     }
@@ -633,7 +618,7 @@ class InventoryOrderController extends Controller
 
             $query->whereHas('organizationDetails', function ($q) use ($orgTxt) {
                 $q->where('organization_name', 'LIKE', "%{$orgTxt}%")
-                  ->whereIn('id', $this->inventoryOrgIds);
+                  ->whereIn('id', $this->inventoryOrganizationIds());
             })
             ->orWhere('order_no', 'LIKE', "%{$orgTxt}%");
 
@@ -678,7 +663,7 @@ class InventoryOrderController extends Controller
     |--------------------------------------------------------------------------
     */
     $sortedOrder = (clone $baseQuery)
-        ->whereIn('organization_id', $this->inventoryOrgIds)
+        ->whereIn('organization_id', $this->inventoryOrganizationIds())
         ->where('active', 1)
         ->orderByDesc('id')
         ->skip(($paginateNo - 1) * 50)
@@ -691,7 +676,7 @@ class InventoryOrderController extends Controller
     |--------------------------------------------------------------------------
     */
     $statusCounts = (clone $baseQuery)
-        ->whereIn('organization_id', $this->inventoryOrgIds)
+        ->whereIn('organization_id', $this->inventoryOrganizationIds())
         ->where('active', 1)
         ->selectRaw("
             SUM(CASE WHEN order_status_id = 3 THEN 1 ELSE 0 END) as production,
@@ -729,7 +714,7 @@ class InventoryOrderController extends Controller
 
     public function exportCsv(){
         $fileName = 'inventory_orders.csv';
-        $orders = Order::with('organizationDetails', 'userDetails', 'contactDetails', 'statusDetails')->whereIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->get();
+        $orders = Order::with('organizationDetails', 'userDetails', 'contactDetails', 'statusDetails')->whereIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->get();
 
         $headers = array(
             "Content-type"=>"text/csv",
@@ -1099,17 +1084,6 @@ class InventoryOrderController extends Controller
                                             })->where('active', 1)->get();
 
                 foreach($users as $user){
-                    config(['mail.host' => $this->smptHost]);
-                    config(['mail.port' => $this->smptPort]);
-                    config(['mail.encryption' => $this->smptEncryption]);
-                    config(['mail.username' => $this->mailUsername]); //logged user email
-                    config(['mail.password' => $this->mailPassword]); //logged user email pass
-
-                    $fromSettings = [
-                        'address' => $this->mailUsername,
-                        'name' => 'Encore Custom',
-                    ];
-                    config(['mail.from' => $fromSettings]);
 
                     $orderItems = OrderItem::where('order_id', $orderId)->where('factory_id', $factory_id)->get();
                     $orderItemArray = '';
@@ -1182,17 +1156,6 @@ class InventoryOrderController extends Controller
                                             })->where('active', 1)->get();
 
                 foreach($users as $user){
-                    config(['mail.host' => $this->smptHost]);
-                    config(['mail.port' => $this->smptPort]);
-                    config(['mail.encryption' => $this->smptEncryption]);
-                    config(['mail.username' => $this->mailUsername]); //logged user email
-                    config(['mail.password' => $this->mailPassword]); //logged user email pass
-
-                    $fromSettings = [
-                        'address' => $this->mailUsername,
-                        'name' => 'Encore Custom',
-                    ];
-                    config(['mail.from' => $fromSettings]);
 
                     $orderItemArray = '';
                     foreach ($newOrderItems as $orderItem) {

@@ -55,25 +55,13 @@ use App\Services\NotificationBuilderService;
 
 class OrderController extends Controller
 {
-    // private $smptEncryption = 'TLS';
-    // private $smptPort = '587';
-    // private $smptHost = 'smtp-mail.outlook.com';
-    // private $mailUsername = 'info@encorebrand.com';
-    // private $mailPassword = 'EncoreCus!0077';
 
-    private $smptEncryption = 'SSL';
-    private $smptPort = '465';
-    private $smptHost = 'server.encr.co';
-    private $mailUsername = 'info@encr.co';
-    private $mailPassword = 'Encr.co@ec123';
-
-    protected $inventoryOrgIds;
+    use \App\Http\Controllers\Concerns\LoadsInventoryOrganizationIds;
     protected $PaymentService;
     protected $notification_builder;
 
     public function __construct(PaymentService $PaymentService)
     {
-        $this->inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
         $this->PaymentService = $PaymentService;
         $this->notification_builder = new NotificationBuilderService();
     }
@@ -98,7 +86,7 @@ class OrderController extends Controller
                     $q->whereHas('organizationDetails', function ($query) use ($search) {
 
                         $query->where('organization_name', 'LIKE', '%' . $search . '%')
-                            ->whereNotIn('id', $this->inventoryOrgIds);
+                            ->whereNotIn('id', $this->inventoryOrganizationIds());
 
                     })
                     ->orWhere('order_no', 'LIKE', '%' . $search . '%');
@@ -147,10 +135,10 @@ class OrderController extends Controller
                     $orderQuery->where('user_id', $request->rep);
             }
 
-        // $orderForCount = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+        // $orderForCount = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
         $statusCounts = (clone $orderQuery)
-            ->whereNotIn('organization_id', $this->inventoryOrgIds)
+            ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->selectRaw("
                 SUM(CASE WHEN order_status_id = 3 THEN 1 ELSE 0 END) as production,
@@ -161,7 +149,7 @@ class OrderController extends Controller
             ->first();
 
         // dd($orderForCount);
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->paginate(50);
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->paginate(50);
         // Process each order and add payment status
         $orders->getCollection()->transform(function ($order) {
             $order->payment_status = $this->PaymentService->getPaymentStatus($order->id);
@@ -206,7 +194,7 @@ class OrderController extends Controller
         $orderQuery->where(function ($query) use ($request) {
             $query->whereHas('organizationDetails', function ($subQuery) use ($request) {
                 $subQuery->where('organization_name', 'LIKE', '%' . $request->org . '%')
-                    ->whereNotIn('id', $this->inventoryOrgIds);
+                    ->whereNotIn('id', $this->inventoryOrganizationIds());
             })
             ->orWhere('order_no', 'LIKE', '%' . $request->org . '%'); // Fix: Ensuring this doesn't override other conditions
         });
@@ -248,7 +236,7 @@ class OrderController extends Controller
 
     // Fetch paginated orders with `plorder = 1`
     $orderForCount = $orderQueryForPl
-        ->whereNotIn('organization_id', $this->inventoryOrgIds)
+        ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
         ->where('plorder', 1)
         ->where('active', 1)
         ->orderBy('id', 'DESC')
@@ -256,7 +244,7 @@ class OrderController extends Controller
 
     // Fetch paginated orders with `plorder = 1`
     $orders = $orderQueryForPl
-        ->whereNotIn('organization_id', $this->inventoryOrgIds)
+        ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
         ->where('plorder', 1)
         ->where('active', 1)
         ->orderBy('id', 'DESC')
@@ -293,7 +281,7 @@ class OrderController extends Controller
     $attributes = Attribute::where('active', 1)->get();
 
     $statusCounts = (clone $orderQuery)
-        ->whereNotIn('organization_id', $this->inventoryOrgIds)
+        ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
         ->where('active', 1)
         ->selectRaw("
             SUM(CASE WHEN order_status_id = 3 THEN 1 ELSE 0 END) as production,
@@ -1251,7 +1239,7 @@ class OrderController extends Controller
         $sortedOrderQuery = Order::with('organizationDetails', 'userDetails', 'contactDetails', 'statusDetails', 'teamStoreDetails')
                             ->whereHas('organizationDetails', function($query) use($id) {
                                 $query->where('organization_name', 'LIKE', $id.'%');
-                                $query->whereNotIn('id', $this->inventoryOrgIds);
+                                $query->whereNotIn('id', $this->inventoryOrganizationIds());
                             });
 
             if($oderSearch == 'factory'){
@@ -1267,7 +1255,7 @@ class OrderController extends Controller
             } else {
                 $sortedOrderQuery->with('orderItems.factoryDetails');
             }
-        $sortedOrder = $sortedOrderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->get();
+        $sortedOrder = $sortedOrderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->get();
 
         return json_encode($sortedOrder);
     }
@@ -1345,7 +1333,7 @@ class OrderController extends Controller
             'statusDetails',
             'teamStoreDetails'
         ])
-        ->whereNotIn('organization_id', $this->inventoryOrgIds)
+        ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
         ->where('active', 1)
         ->where('plorder', 0);
 
@@ -1484,7 +1472,7 @@ class OrderController extends Controller
             $sortedOrderQuery->where(function ($query) use ($orgTxt) {
                 $query->whereHas('organizationDetails', function ($subQuery) use ($orgTxt) {
                     $subQuery->where('organization_name', 'LIKE', "%$orgTxt%")
-                             ->whereNotIn('id', $this->inventoryOrgIds);
+                             ->whereNotIn('id', $this->inventoryOrganizationIds());
                 })
                 ->orWhere('order_no', 'LIKE', "%$orgTxt%");
             });
@@ -1521,7 +1509,7 @@ class OrderController extends Controller
         }
 
         $statusCounts = (clone $sortedOrderQuery)
-            ->whereNotIn('organization_id', $this->inventoryOrgIds)
+            ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->where('plorder', 1)
             ->selectRaw("
@@ -1534,7 +1522,7 @@ class OrderController extends Controller
 
         // Apply final filters before execution
         $sortedOrder = $sortedOrderQuery
-            ->whereNotIn('organization_id', $this->inventoryOrgIds)
+            ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->where('plorder', 1) // ✅ Ensuring only `plorder = 1`
             ->orderBy('id', 'DESC')
@@ -1554,7 +1542,7 @@ class OrderController extends Controller
 
     public function exportCsv(){
         $fileName = 'orders.csv';
-        $orders = Order::with('organizationDetails', 'userDetails', 'contactDetails', 'statusDetails')->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->get();
+        $orders = Order::with('organizationDetails', 'userDetails', 'contactDetails', 'statusDetails')->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->get();
 
         $headers = array(
             "Content-type"=>"text/csv",
