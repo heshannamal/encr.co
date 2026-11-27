@@ -42,3 +42,17 @@ jobs:
         with:
           name: laravel-13-candidate-lock
           path: composer.lock
+      - name: Prepare isolated application environment
+        run: |
+          rm -f .env bootstrap/cache/*.php
+          mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs
+          printf '%s\n' 'APP_ENV=testing' 'APP_DEBUG=false' 'APP_URL=http://localhost' 'DB_CONNECTION=sqlite' 'DB_DATABASE=:memory:' 'CACHE_DRIVER=array' 'CACHE_STORE=array' 'SESSION_DRIVER=array' 'QUEUE_CONNECTION=sync' 'MAIL_MAILER=array' 'MAIL_DRIVER=array' 'LOG_CHANNEL=stderr' > .env
+          printf 'APP_KEY=base64:%s\n' "$(php -r 'echo base64_encode(random_bytes(32));')" >> .env
+      - name: Discover application packages
+        run: php artisan package:discover --ansi
+      - name: Verify framework startup
+        run: php artisan --version
+      - name: Verify application routes
+        run: php artisan route:list --json > /tmp/encore-routes.json
+      - name: Verify scheduled command registration
+        run: php artisan schedule:list
