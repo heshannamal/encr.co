@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-require 'vendor/Carbon/autoload.php';
 
 use App\Models\CheckPayment;
 use App\Models\OtherPayment;
@@ -111,12 +110,7 @@ class OrderDetailsController extends Controller
     private $mailUsername = 'info@encr.co';
     private $mailPassword = 'Encr.co@ec123';
 
-    protected $inventoryOrgIds;
-
-    public function __construct()
-    {
-        $this->inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
-    }
+    use \App\Http\Controllers\Concerns\LoadsInventoryOrganizationIds;
 
     public function index(){
         $newOrders = Order::select('id', 'order_no')->where('order_status_id', 1)->where('active', 1)->get();
@@ -221,9 +215,9 @@ class OrderDetailsController extends Controller
 
         $organizationQuery = Organization::select('id', 'organization_name','pl_status');
             if($this->isInventoryOrder($orders[0]->organization_id)){
-                $organizationQuery->whereIn('id', $this->inventoryOrgIds);
+                $organizationQuery->whereIn('id', $this->inventoryOrganizationIds());
             } else {
-                $organizationQuery->whereNotIn('id', $this->inventoryOrgIds);
+                $organizationQuery->whereNotIn('id', $this->inventoryOrganizationIds());
             }
         $organizations = $organizationQuery->where('active', 1)->orderBy('organization_name')->get();
 
@@ -679,9 +673,9 @@ class OrderDetailsController extends Controller
 
         $organizationQuery = Organization::select('id', 'organization_name');
             if($this->isInventoryOrder($orders->organization_id)){
-                $organizationQuery->whereIn('id', $this->inventoryOrgIds);
+                $organizationQuery->whereIn('id', $this->inventoryOrganizationIds());
             } else {
-                $organizationQuery->whereNotIn('id', $this->inventoryOrgIds);
+                $organizationQuery->whereNotIn('id', $this->inventoryOrganizationIds());
             }
 
         $orderStatuses = OrderStatus::select('id', 'status_name')->where('active', 1)->orderBy('id')->get();
