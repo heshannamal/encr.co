@@ -419,7 +419,8 @@ Route::post(
     Route::get('orders/studio-settings/projects/{project}/sections', [App\Http\Controllers\StudioOrderController::class, 'studioSettingsSections'])->name('studio.settings.sections');
     Route::post('orders/studio-settings', [App\Http\Controllers\StudioOrderController::class, 'updateStudioSettings'])->name('studio.settings.update');
 
-	Route::get('email', [App\Http\Controllers\AppsController::class, 'TestIndexEmails']);
+	// Retired test endpoint: its AppsController implementation is absent.
+    Route::get('email', static function () { abort(404); });
 
 	Route::get('orders/csv/{id}', [App\Http\Controllers\OrderController::class, 'csv'])->name('quoteCSV_Download');
     Route::get('/download-excel/{id}', [App\Http\Controllers\OrderController::class, 'downloadExcel'])->name('download.excel');
