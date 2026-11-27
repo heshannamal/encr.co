@@ -53,6 +53,16 @@ jobs:
       - name: Verify framework startup
         run: php artisan --version
       - name: Verify application routes
-        run: php artisan route:list --json > /tmp/encore-routes.json
+        id: routes
+        run: |
+          php artisan route:list --json > /tmp/encore-routes.json
+          php -r '$routes = json_decode(file_get_contents("/tmp/encore-routes.json"), true, 512, JSON_THROW_ON_ERROR); if (!is_array($routes) || count($routes) === 0) { exit(1); } echo "Registered routes: ".count($routes).PHP_EOL;'
       - name: Verify scheduled command registration
+        if: ${{ !cancelled() && steps.routes.outcome != 'skipped' }}
         run: php artisan schedule:list
+      - name: Save route inventory
+        if: ${{ steps.routes.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: encore-route-inventory
+          path: /tmp/encore-routes.json
