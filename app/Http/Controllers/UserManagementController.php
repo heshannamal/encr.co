@@ -16,6 +16,10 @@ use Spatie\Permission\Models\Role;
 use DateTimeZone;
 use DateTime;
 use App\Models\LeaveGroup;
+use App\Services\Users\AccountProtection;
+use App\Services\Users\ProfilePictureService;
+use App\Http\Requests\Users\StoreEmployeeRequest;
+use Illuminate\Support\Facades\DB;
 
 class UserManagementController extends Controller
 {
@@ -43,6 +47,7 @@ class UserManagementController extends Controller
     {
         $data = $request->validated();
         $roles = Role::whereIn('id', $data['new_user_role_id'])->get();
+        app(AccountProtection::class)->assertCanAssign($request->user(), $roles);
         $path = $request->hasFile('new_profile_pic')
             ? $pictures->upload($request->file('new_profile_pic'))
             : 'assets/img/organization/default.png';
@@ -78,6 +83,7 @@ class UserManagementController extends Controller
     {
         $this->authorize('delete users');
         $user = User::findOrFail($id);
+        app(AccountProtection::class)->assertCanDeactivate(auth()->user(), $user);
         $user->active = 0;
         $user->update();
 
@@ -96,6 +102,10 @@ class UserManagementController extends Controller
         $data = $request->validated();
         $user = User::findOrFail($data['user_id']);
         $roles = Role::whereIn('id', $data['edit_user_role_id'])->get();
+        $protection = app(AccountProtection::class);
+        $protection->assertCanEdit($request->user(), $user);
+        $protection->assertCanAssign($request->user(), $roles);
+        abort_if($protection->privileged($user) && ! $roles->contains(fn ($role) => $role->name === 'Super Admin') && $user->hasRole('Super Admin'), 403);
         $path = $request->hasFile('edit_profile_pic')
             ? $pictures->upload($request->file('edit_profile_pic'))
             : $user->profile_pic;
@@ -128,7 +138,7 @@ class UserManagementController extends Controller
     public function layout(Request $request)
     {
         if (UserLayout::where('user_id', Auth::user()->id)->first()) {
-            $userLayout = UserLayout::find($request->layout_id);
+            $userLayout = UserLayout::where('user_id', Auth::id())->findOrFail($request->layout_id);
             $userLayout->profile_pic = $request->profile_pic ?? NULL;
             $userLayout->name = $request->name ?? NULL;
             $userLayout->email = $request->email ?? NULL;
@@ -203,6 +213,7 @@ class UserManagementController extends Controller
     //  SHOW CREATE FORM 
     public function newemployee()
     {
+        $this->authorize('add users');
         // $timezoneset = DateTimeZone::listIdentifiers();
         $timezoneset = collect(DateTimeZone::listIdentifiers())->mapWithKeys(function ($tz) {
             $offset = (new DateTimeZone($tz))->getOffset(new DateTime('now', new DateTimeZone('UTC')));
@@ -491,50 +502,25 @@ class UserManagementController extends Controller
     }
 
     //  HANDLE CREATE FORM SUBMISSION
-    public function employee_store(Request $request)
+    public function employee_store(StoreEmployeeRequest $request, ProfilePictureService $pictures)
     {
-        // dd($request->all());
+        $roles = Role::whereIn('id', $request->input('user_roles') ?? [])->get();
+        app(AccountProtection::class)->assertCanAssign($request->user(), $roles);
 
-        // ── 1. Validate ─────────────────────────────────────────────
-        $request->validate([
-            'first_name'            => 'required|string|max:255',
-            'login_email'           => 'required|email|unique:users,email',
-            'password'              => 'required|string|min:5',
-            'password_confirmation' => 'required|same:password',
-            'user_roles'            => 'nullable|array',
-        ], [
-            'login_email.unique'           => 'This email address is already registered.',
-            'password_confirmation.same'   => 'Passwords do not match.',
-        ]);
+        $profilePicPath = $request->hasFile('profile_picture')
+            ? $pictures->upload($request->file('profile_picture'))
+            : 'assets/img/user/default.png';
 
-        // ── 2. Profile picture ───────────────────────────────────────
-        $profilePicPath = 'assets/img/user/default.png';
-        if ($request->hasFile('profile_picture')) {
-            $file            = $request->file('profile_picture');
-            $fileName        = time() . '_' . $file->getClientOriginalName();
-            $destinationPath = 'assets/img/user';
-            $file->move($destinationPath, $fileName);
-            $profilePicPath  = $destinationPath . '/' . $fileName;
-        }
-
-        // ── 3. Create User ───────────────────────────────────────────
-        // Combine first + last name — this fixes the "name cannot be null" error
-        $fullName = trim($request->first_name . ' ' . $request->last_name);
-
-        $user = User::create([
-            'name'        => $fullName,
-            'email'       => $request->login_email,
-            'password'    => Hash::make($request->password),
-            'role_id'     => json_encode($request->user_roles ?? []),
-            'profile_pic' => $profilePicPath,
-            'active'      => 1,
-        ]);
-
-        // ── 4. Assign Spatie roles ───────────────────────────────────
-        if ($request->filled('user_roles')) {
-            $roles = Role::whereIn('id', $request->user_roles)->get();
-            $user->assignRole($roles);
-        }
+        DB::transaction(function () use ($request, $roles, $profilePicPath): void {
+            $user = new User();
+            $user->name = trim($request->first_name.' '.$request->last_name);
+            $user->email = $request->login_email;
+            $user->password = Hash::make($request->password);
+            $user->role_id = json_encode($request->input('user_roles') ?? []);
+            $user->profile_pic = $profilePicPath;
+            $user->active = 1;
+            $user->save();
+            $user->syncRoles($roles);
 
         // ── 5. Create UserDetails ────────────────────────────────────
         $user->userDetails()->create([
@@ -564,11 +550,13 @@ class UserManagementController extends Controller
             'Employment_Status' => $request->employment_status,
             'joined_date'       => $request->joined_date ?: null,
             'Department'        => $request->department,
-            'leavetype_id'      => $request->leave_type_id
+            'leavetype_id'      => $request->leave_group_id
                 ?: LeaveGroup::where('active', 1)
                 ->orderBy('id')
                 ->value('id'),
         ]);
+
+        });
 
         return redirect()->route('HR.Employee_Managment')
             ->with('success', 'Employee created successfully.');
