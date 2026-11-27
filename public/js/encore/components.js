@@ -29,7 +29,27 @@
         }
     }, true);
 
-    window.EncoreComponents = { initialize };
+    function submitDelete(url) {
+        const target = new URL(url, document.baseURI);
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
+        if (target.origin !== window.location.origin || !token) {
+            throw new Error('Invalid deletion request.');
+        }
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = target.href;
+        for (const [name, value] of [['_token', token], ['_method', 'DELETE']]) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+        }
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    window.EncoreComponents = { initialize, submitDelete };
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => initialize());
     } else {
