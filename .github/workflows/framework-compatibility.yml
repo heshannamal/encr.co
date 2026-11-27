@@ -34,9 +34,11 @@ jobs:
       - name: Verify platform
         run: composer check-platform-reqs
       - name: Run isolated unit tests
-        run: vendor/bin/phpunit tests/Unit/SafeRedirectTest.php
+        run: vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php tests/Unit
+      - name: Audit resolved dependencies
+        run: composer audit --locked
       - name: Save candidate lock file
         uses: actions/upload-artifact@v4
         with:
-          name: laravel-9-candidate-lock
+          name: laravel-13-candidate-lock
           path: composer.lock
