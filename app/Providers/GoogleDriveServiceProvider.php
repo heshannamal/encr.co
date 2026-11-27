@@ -2,37 +2,32 @@
 
 namespace App\Providers;
 
+use Google\Client;
+use Google\Service\Drive;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Filesystem;
-use Hypweb\Flysystem\GoogleDrive\GoogleDriveAdapter;
+use Masbug\Flysystem\GoogleDriveAdapter;
+use RuntimeException;
 
 class GoogleDriveServiceProvider extends ServiceProvider
 {
-    /**
-     * Register services.
-     *
-     * @return void
-     */
-    public function register()
+    public function boot(): void
     {
-        //
-    }
-
-    /**
-     * Bootstrap services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        \Storage::extend('google', function($app, $config){
-            $client = new \Google_Client;
+        Storage::extend('google', function ($app, array $config) {
+            $client = new Client();
             $client->setClientId($config['clientId']);
             $client->setClientSecret($config['clientSecret']);
-            $client->refreshToken($config['refreshToken']);
-            $service = new \Google_Service_Drive($client);
-            $adapter = new GoogleDriveAdapter($service, $config['folderId']);
-            return new Filesystem($adapter);
+            $token = $client->fetchAccessTokenWithRefreshToken($config['refreshToken']);
+
+            if (empty($token['access_token'])) {
+                throw new RuntimeException('Google Drive authentication failed.');
+            }
+
+            $adapter = new GoogleDriveAdapter(new Drive($client), $config['folderId']);
+
+            return new FilesystemAdapter(new Filesystem($adapter, $config), $adapter, $config);
         });
     }
 }
