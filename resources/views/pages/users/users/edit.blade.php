@@ -221,7 +221,6 @@
             type: 'GET',
             dataType: 'json',
             success: function(data){
-                console.log(data);
                 $('#edit_name').val(data.name);
                 $('#edit_email').val(data.email);
                 $('#edit_user_role_id').val(JSON.parse(data.role_id)).change();
@@ -252,7 +251,7 @@
 
         }).then(function(isConfirm) {
             if (isConfirm.value == true) {
-                window.location.replace("../../users/delete/"+userId);
+                window.EncoreComponents.submitDelete(@json(url('users/delete')) + '/' + encodeURIComponent(userId));
             }
         });
     });

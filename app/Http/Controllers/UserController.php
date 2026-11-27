@@ -41,73 +41,9 @@ class UserController extends Controller
         // dd($request->all());
         if(auth()->user()->can('view user logs')){
             $users = User::all();
-            $sr_event = '';
-            $sr_module = '';
-            $sr_id = '';
-            $sr_update = '';
-            $sr_text = '';
-            $userId = '';
-            $std = Carbon::now()->subMonth()->format('Y-m-d');
-            $end = Carbon::now()->format('Y-m-d');
-            $auditQry = Audit::query();
-            if(isset($request->user_id) && $request->user_id != '') {
-                $userId = $request->user_id;
-                if($request->user_id == 'customer') {
-                    $auditQry->where('user_id', null);
-                } else {
-                    $auditQry->where('user_id', $request->user_id);
-                }
-            }
-            if(isset($request->std) && isset($request->end)) {
-                $std = Carbon::parse($request->std)->format('Y-m-d');
-                $end = Carbon::parse($request->end)->format('Y-m-d');
-            }
-
-            if(isset($request->sr_text) && $request->sr_text != '') {
-                $sr_text = $request->sr_text;
-                // $auditQry->where(function ($qr) use($request) { $qr->where('event', 'LIKE', '%'.$request->sr_text.'%')
-                //                                                     ->orWhere('auditable_type', 'LIKE', '%'.$request->sr_text.'%')
-                //                                                     ->orWhere('auditable_id', 'LIKE', '%'.$request->sr_text.'%')
-                //                                                     ->orWhere('source', 'LIKE', '%'.$request->sr_text.'%');});
-                $auditQry->where('source', 'LIKE', '%'.$request->sr_text.'%');
-            }
-            if(isset($request->sr_update) && $request->sr_update != '') {
-                $sr_update = $request->sr_update;
-                $srUpdate = str_replace(' ', '_', $sr_update);
-                $auditQry->where('old_values', 'LIKE', '%'.$srUpdate.'%');
-            }
-            if(isset($request->sr_event) && $request->sr_event != '') {
-                $sr_event = $request->sr_event;
-                $auditQry->where('event', $request->sr_event);
-            }
-            if(isset($request->sr_module) && $request->sr_module != '') {
-                $sr_module = $request->sr_module;
-                $auditQry->where('auditable_type', $request->sr_module);
-            }
-            if(isset($request->sr_id) && $request->sr_id != '') {
-                $sr_id = $request->sr_id;
-                $auditQry->where('auditable_id',  $request->sr_id);
-            }
-            $auditQry->whereBetween('created_at', [$std." 00:00:00", $end." 23:59:59"]);
-            $audits = $auditQry->orderBy('created_at', 'DESC')->paginate(50);
-
-            // $groupedAudits = $audits->groupBy(function ($item) {
-            //     return $item->parent_id . ' ' . $item->created_at->format('Y-m-d H:i:s');
-            // });
-
-            // // Convert grouped audits to a collection
-            // $groupedAuditsCollection = new Collection($groupedAudits->values()->all());
-
-            // // Paginate the grouped audits
-            // $page = $request->input('page', 1);
-            // $perPage = 50;
-            // $paginatedGroupedAudits = new LengthAwarePaginator(
-            //     $groupedAuditsCollection->forPage($page, $perPage),
-            //     $groupedAuditsCollection->count(),
-            //     $perPage,
-            //     $page,
-            //     ['path' => $request->url(), 'query' => $request->query()]
-            // );
+            $service = app(\App\Services\Users\UserAuditQuery::class);
+            $filters = $service->filters($request);
+            $audits = $service->build($filters)->orderBy('created_at', 'DESC')->paginate(50)->withQueryString();
 
             $auditableModels = [];
 
@@ -123,9 +59,7 @@ class UserController extends Controller
                 }
             }
 
-            return view('pages.user_log.index', compact('users', 'auditableModels', 'userId', 'std', 'end', 'audits',
-                        'sr_text', 'sr_event', 'sr_module', 'sr_id', 'sr_update'
-                        ));
+            return view('pages.user_log.index', array_merge($filters, compact('users', 'auditableModels', 'audits')));
         } else {
             return redirect()->back()->withError('Permission Not Granted!');
         }
@@ -133,51 +67,18 @@ class UserController extends Controller
 
     public function getLogDetail($id, $type)
     {
-        $audits = Audit::find($id)->getModified();
+        $this->authorize('view user logs');
+        $audits = Audit::findOrFail($id)->getModified();
         return view('pages.user_log.partials.view', compact('audits', 'type'));
         // return json_encode($audits);
     }
 
     public function user_log_export(Request $request)
     {
-        $std = Carbon::now()->subMonth()->format('Y-m-d');
-        $end = Carbon::now()->format('Y-m-d');
-        $auditQry = Audit::query();
-        if(isset($request->user_id) && $request->user_id != '') {
-            $auditQry->where('user_id', $request->user_id);
-        }
-        if(isset($request->std) && isset($request->end)) {
-            $std = Carbon::parse($request->std)->format('Y-m-d');
-            $end = Carbon::parse($request->end)->format('Y-m-d');
-        }
+        $this->authorize('view user logs');
 
-        if(isset($request->sr_text) && $request->sr_text != '') {
-            $sr_text = $request->sr_text;
-            // $auditQry->where(function ($qr) use($request) { $qr->where('event', 'LIKE', '%'.$request->sr_text.'%')
-            //                                                     ->orWhere('auditable_type', 'LIKE', '%'.$request->sr_text.'%')
-            //                                                     ->orWhere('auditable_id', 'LIKE', '%'.$request->sr_text.'%')
-            //                                                     ->orWhere('source', 'LIKE', '%'.$request->sr_text.'%');});
-            $auditQry->where('source', 'LIKE', '%'.$request->sr_text.'%');
-        }
-        if(isset($request->sr_update) && $request->sr_update != '') {
-            $sr_update = $request->sr_update;
-            $srUpdate = str_replace(' ', '_', $sr_update);
-            $auditQry->where('old_values', 'LIKE', '%'.$srUpdate.'%');
-        }
-        if(isset($request->sr_event) && $request->sr_event != '') {
-            $sr_event = $request->sr_event;
-            $auditQry->where('event', $request->sr_event);
-        }
-        if(isset($request->sr_module) && $request->sr_module != '') {
-            $sr_module = $request->sr_module;
-            $auditQry->where('auditable_type', $request->sr_module);
-        }
-        if(isset($request->sr_id) && $request->sr_id != '') {
-            $sr_id = $request->sr_id;
-            $auditQry->where('auditable_id',  $request->sr_id);
-        }
-        $auditQry->whereBetween('created_at', [$std." 00:00:00", $end." 23:59:59"]);
-        $audits = $auditQry->orderBy('created_at', 'ASC')->get();
+        $service = app(\App\Services\Users\UserAuditQuery::class);
+        $audits = $service->build($service->filters($request))->orderBy('created_at', 'ASC')->get();
 
         return Excel::download(new UserLogExport($audits), 'Customer_Log_Report.xlsx');
 
@@ -218,55 +119,63 @@ class UserController extends Controller
     }
     public function impersonateUser($userId)
     {
-        if (!auth()->user() || !auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
-        }
+        $actor = auth()->user();
+        abort_unless($actor && $actor->isAdmin() && (int) $actor->active === 1, 403);
+        abort_if(session()->has('original_user_id'), 403);
+
         $user = User::findOrFail($userId);
+        $protection = app(\App\Services\Users\AccountProtection::class);
+        abort_if((int) $user->active !== 1 || $protection->privileged($user), 403);
+        abort_if((int) $actor->id === (int) $user->id, 403);
 
-        // Store the original user ID to allow reverting later
-        session(['original_user_id' => auth()->id()]);
-
-        // Log in as the selected user
+        session(['original_user_id' => $actor->id]);
         Auth::login($user);
+        session()->regenerate();
 
-
-        return redirect('/')->with('success', 'You are now logged in as ' . $user->name);
-
-
+        return redirect('/')->with('success', 'You are now logged in as '.$user->name);
     }
+
     public function revertImpersonation()
     {
-        if (session()->has('original_user_id')) {
-            $originalUser = User::find(session('original_user_id'));
-            Auth::login($originalUser);
-            session()->forget('original_user_id');
+        $originalId = session()->pull('original_user_id');
+        abort_unless(auth()->check() && $originalId, 403);
+
+        $originalUser = User::find($originalId);
+        if (! $originalUser || ! $originalUser->isAdmin() || (int) $originalUser->active !== 1) {
+            Auth::logout();
+            session()->invalidate();
+            session()->regenerateToken();
+
+            return redirect()->route('login')->with('error', 'The original administrator account is unavailable.');
         }
+
+        Auth::login($originalUser);
+        session()->regenerate();
 
         return redirect('/')->with('success', 'You are back as Admin');
     }
+
     public function updateUserStatus(Request $request)
     {
-        $request->validate([
+        $this->authorize('edit users');
+        $data = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'status' => 'required|boolean'
+            'status' => 'required|boolean',
         ]);
 
-        $user = User::find($request->user_id);
-
-        if ($user) {
-            $user->active = $request->status; // Assuming 'active' is the column name
-            $user->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'User status updated successfully.'
-            ]);
+        $user = User::findOrFail($data['user_id']);
+        $protection = app(\App\Services\Users\AccountProtection::class);
+        $protection->assertCanEdit($request->user(), $user);
+        if (! (bool) $data['status']) {
+            $protection->assertCanDeactivate($request->user(), $user);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'User not found.'
-        ], 404);
-    }
+        $user->active = (bool) $data['status'];
+        $user->save();
 
+        return response()->json([
+            'success' => true,
+            'message' => 'User status updated successfully.',
+        ]);
+    }
 }

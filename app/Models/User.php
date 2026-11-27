@@ -82,7 +82,9 @@ class User extends Authenticatable implements Auditable
     }
     public function isAdmin()
     {
-        return in_array(1, json_decode($this->role_id, true)); // Assuming role ID 1 is for admin
+        $roles = json_decode((string) $this->role_id, true);
+
+        return is_array($roles) && in_array(1, $roles);
     }
 
     public function transformAudit(array $auditData): array

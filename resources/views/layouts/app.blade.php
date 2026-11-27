@@ -67,6 +67,7 @@
 
         {{-- JsZip --}}
         <script src="{{ asset('argon') }}/js/plugins/jszip.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="{{ asset('css/encore/components.css') }}">
     </head>
 
     <body class="{{ $class ?? '' }}">
@@ -542,6 +543,9 @@ $(document).on(
         <script src="{{ asset('argon') }}/js/datatables.js"></script>
         <script src="{{ asset('argon') }}/js/plugins/dataTables.responsive.min.js"></script>
         <script src="{{ asset('argon') }}/js/plugins/dataTables.colReorder.min.js"></script>
+
+        <script src="{{ asset('js/encore/http.js') }}" defer></script>
+        <script src="{{ asset('js/encore/components.js') }}" defer></script>
 
         @stack('js')
         @include('layouts.california_sales_tax')

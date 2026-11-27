@@ -1,0 +1,15 @@
+/* Scoped admin login styles; other authentication pages are unchanged. */
+body.encore-admin-login { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+.encore-admin-login .main-content { flex: 1 0 auto; display: flex; flex-direction: column; }
+.encore-admin-login .main-content footer { display: none; }
+.encore-login-page { flex: 1 0 auto; display: grid; align-items: center; padding-block: 2rem; }
+.encore-login-page .encore-login-card { background-color: rgba(247, 250, 252, .85); }
+.encore-login-logo { display: block; width: 350px; max-width: 100%; height: auto; margin-inline: auto; }
+.encore-login-page .input-group .encore-password-toggle { border: 0; background: transparent; padding: .65rem .9rem; color: inherit; }
+.encore-password-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
+.encore-login-page .encore-forgot-link { display: block; text-align: end; margin-top: .5rem; }
+.encore-admin-login .copyright { text-align: center; }
+@media (max-width: 767.98px) {
+    .encore-login-page { padding-block: 1.25rem; }
+    .encore-login-page .form-control { font-size: 16px; }
+}
