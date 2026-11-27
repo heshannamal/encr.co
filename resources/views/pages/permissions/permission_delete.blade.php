@@ -337,8 +337,8 @@
 
         /* ── Execute delete ── */
         window.pdmExecuteDelete = function() {
-            if (!_deleteId) return;
-            window.location.replace(_deleteUrl + '/' + _deleteId);
+            if (!_deleteId || document.getElementById('pdm-confirm-input').value.toLowerCase() !== CONFIRM_PHRASE) return;
+            window.EncoreComponents.submitDelete(_deleteUrl + '/' + encodeURIComponent(_deleteId));
         };
     }());
 </script>
