@@ -652,7 +652,12 @@ class HomeController extends Controller
         ];
     }
 
-    protected $inventoryOrgIds;
+    protected ?array $inventoryOrgIds = null;
+
+    private function inventoryOrganizationIds(): array
+    {
+        return $this->inventoryOrgIds ??= OrdersCommenFacade::getEncoreOrgIds()->toArray();
+    }
     protected $PaymentService;
     protected $graphService;
 
@@ -662,7 +667,6 @@ class HomeController extends Controller
         $this->graphService = $graphService;
 
         $this->middleware('auth');
-        $this->inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
     }
 
 
@@ -972,7 +976,7 @@ class HomeController extends Controller
             if ($request->org) {
                 $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                     $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                    $query->whereNotIn('id', $this->inventoryOrgIds);
+                    $query->whereNotIn('id', $this->inventoryOrganizationIds());
                 });
                 $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
             }
@@ -1006,8 +1010,8 @@ class HomeController extends Controller
                     ->whereIn('factory_id', $factoryIds);
             }]);
 
-            $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
-            $orders_for_upcoming = $orderQuery_for_upcoming->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+            $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
+            $orders_for_upcoming = $orderQuery_for_upcoming->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
             $orderUrgent = $orders->where('is_urgent', 1)->where('order_status_id', '!=', 4)->count();
             $orderNew = $orders->where('order_status_id', 1)->count();
@@ -1018,10 +1022,10 @@ class HomeController extends Controller
             $orderStatus = OrderStatus::select('id', 'status_name')->where('active', 1)->orderBy('id')->get();
             $factories = Factory::where('active', 1)->orderBy('id')->get();
 
-            $ordersPegi = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+            $ordersPegi = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
             $urgentOrders = $orderQuery
-                ->whereNotIn('organization_id', $this->inventoryOrgIds)
+                ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
                 ->where('active', 1)
                 ->where('is_urgent', 1)
                 ->where('order_status_id', '!=', 4)
@@ -1145,7 +1149,7 @@ class HomeController extends Controller
             if ($request->org) {
                 $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                     $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                    $query->whereNotIn('id', $this->inventoryOrgIds);
+                    $query->whereNotIn('id', $this->inventoryOrganizationIds());
                 });
                 $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
             }
@@ -1176,7 +1180,7 @@ class HomeController extends Controller
             }
 
             $urgentOrders = $orderQuery
-                ->whereNotIn('organization_id', $this->inventoryOrgIds)
+                ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
                 ->where('active', 1)
                 ->where(function ($query) use ($userId) {
                     $query->where('user_id', $userId)
@@ -1508,7 +1512,7 @@ class HomeController extends Controller
             $orderQueryProductionCalendar = Order::with('organizationDetails', 'userDetails', 'contactDetails', 'statusDetails', 'teamStoreDetails', 'orderItems.factoryDetails');
 
             $productionOrdersThisMonth = $orderQueryProductionCalendar
-                ->whereNotIn('organization_id', $this->inventoryOrgIds)
+                ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
                 ->where('active', 1)
                 ->where(function ($query) use ($userId) {
                     $query->where('user_id', $userId)
@@ -2054,7 +2058,7 @@ class HomeController extends Controller
                 $orderQuery->with('orderItems.factoryDetails');
             }
 
-            $totalOrders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+            $totalOrders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
             $orderTotalCount = $orderQuery->count();
             $orderStatusId1Count = $orderQuery->where('order_status_id', 1)->count();
@@ -2390,7 +2394,7 @@ class HomeController extends Controller
             if ($request->org) {
                 $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                     $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                    $query->whereNotIn('id', $this->inventoryOrgIds);
+                    $query->whereNotIn('id', $this->inventoryOrganizationIds());
                 });
                 $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
             }
@@ -2424,8 +2428,8 @@ class HomeController extends Controller
                     ->whereIn('factory_id', $factoryIds);
             }]);
 
-            $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
-            $orders_for_upcoming = $orderQuery_for_upcoming->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+            $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
+            $orders_for_upcoming = $orderQuery_for_upcoming->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
             $orderUrgent = $orders->where('is_urgent', 1)->where('order_status_id', '!=', 4)->count();
             $orderNew = $orders->where('order_status_id', 1)->count();
@@ -2436,10 +2440,10 @@ class HomeController extends Controller
             $orderStatus = OrderStatus::select('id', 'status_name')->where('active', 1)->orderBy('id')->get();
             $factories = Factory::where('active', 1)->orderBy('id')->get();
 
-            $ordersPegi = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+            $ordersPegi = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
             $urgentOrders = $orderQuery
-                ->whereNotIn('organization_id', $this->inventoryOrgIds)
+                ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
                 ->where('active', 1)
                 ->where('is_urgent', 1)
                 ->where('order_status_id', '!=', 4)
@@ -2561,7 +2565,7 @@ class HomeController extends Controller
             if ($request->org) {
                 $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                     $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                    $query->whereNotIn('id', $this->inventoryOrgIds);
+                    $query->whereNotIn('id', $this->inventoryOrganizationIds());
                 });
                 $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
             }
@@ -2592,7 +2596,7 @@ class HomeController extends Controller
             }
 
             $urgentOrders = $orderQuery
-                ->whereNotIn('organization_id', $this->inventoryOrgIds)
+                ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
                 ->where('active', 1)
                 ->where(function ($query) use ($userId) {
                     $query->where('user_id', $userId)
@@ -2924,7 +2928,7 @@ class HomeController extends Controller
             $orderQueryProductionCalendar = Order::with('organizationDetails', 'userDetails', 'contactDetails', 'statusDetails', 'teamStoreDetails', 'orderItems.factoryDetails');
 
             $productionOrdersThisMonth = $orderQueryProductionCalendar
-                ->whereNotIn('organization_id', $this->inventoryOrgIds)
+                ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
                 ->where('active', 1)
                 ->where(function ($query) use ($userId) {
                     $query->where('user_id', $userId)
@@ -3522,7 +3526,7 @@ class HomeController extends Controller
         if ($request->org) {
             $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                 $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                $query->whereNotIn('id', $this->inventoryOrgIds);
+                $query->whereNotIn('id', $this->inventoryOrganizationIds());
             });
             $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
         }
@@ -3569,7 +3573,7 @@ class HomeController extends Controller
             $orderQuery->with('orderItems.factoryDetails');
         }
 
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->whereBetween('created_at', [$startDate1, $endDate1])->orderBy('id', 'DESC')->get();
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->whereBetween('created_at', [$startDate1, $endDate1])->orderBy('id', 'DESC')->get();
 
         if ($catagoryOption) {
             $orders = $orders->filter(function ($order) use ($catagoryOption) {
@@ -3642,7 +3646,7 @@ class HomeController extends Controller
             $orderQuery->with('orderItems.factoryDetails');
         }
 
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
         $orderTotalCount = $orders->count();
         $orderStatusId1Count = $orders->where('order_status_id', 1)->count();
@@ -4164,7 +4168,7 @@ class HomeController extends Controller
         if ($request->org) {
             $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                 $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                $query->whereNotIn('id', $this->inventoryOrgIds);
+                $query->whereNotIn('id', $this->inventoryOrganizationIds());
             });
             $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
         }
@@ -4207,7 +4211,7 @@ class HomeController extends Controller
         }
 
 
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
         return response()->json(['orders' => $orders]);
     }
@@ -4226,7 +4230,7 @@ class HomeController extends Controller
         if ($request->org) {
             $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                 $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                $query->whereNotIn('id', $this->inventoryOrgIds);
+                $query->whereNotIn('id', $this->inventoryOrganizationIds());
             });
             $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
         }
@@ -4259,14 +4263,14 @@ class HomeController extends Controller
         }
 
         // Get the initial orders
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->orderBy('id', 'DESC')
             ->get();
 
         // Clone the initial query and apply specific conditions for newOrders
         $newOrdersQuery = clone $orderQuery;
-        $newOrders = $newOrdersQuery->whereNotIn('organization_id', $this->inventoryOrgIds)
+        $newOrders = $newOrdersQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->where('order_status_id', 1)
             ->orderByRaw("STR_TO_DATE(ex_factory_date, '%m/%d/%Y') ASC")
@@ -4289,7 +4293,7 @@ class HomeController extends Controller
         if ($request->org) {
             $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                 $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                $query->whereNotIn('id', $this->inventoryOrgIds);
+                $query->whereNotIn('id', $this->inventoryOrganizationIds());
             });
             $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
         }
@@ -4322,14 +4326,14 @@ class HomeController extends Controller
         }
 
         // Get the initial orders
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->orderBy('id', 'DESC')
             ->get();
 
         // Clone the initial query and apply specific conditions for newOrders
         $newOrdersQuery = clone $orderQuery;
-        $productionOrders = $newOrdersQuery->whereNotIn('organization_id', $this->inventoryOrgIds)
+        $productionOrders = $newOrdersQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->where('order_status_id', 3)
             ->orderByRaw("STR_TO_DATE(ex_factory_date, '%m/%d/%Y') ASC")
@@ -4352,7 +4356,7 @@ class HomeController extends Controller
         if ($request->org) {
             $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                 $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                $query->whereNotIn('id', $this->inventoryOrgIds);
+                $query->whereNotIn('id', $this->inventoryOrganizationIds());
             });
             $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
         }
@@ -4385,14 +4389,14 @@ class HomeController extends Controller
         }
 
         // Get the initial orders
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->orderBy('id', 'DESC')
             ->get();
 
         // Clone the initial query and apply specific conditions for newOrders
         $newOrdersQuery = clone $orderQuery;
-        $fulfiledOrders = $newOrdersQuery->whereNotIn('organization_id', $this->inventoryOrgIds)
+        $fulfiledOrders = $newOrdersQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->where('order_status_id', 4)
             ->orderByRaw("STR_TO_DATE(ex_factory_date, '%m/%d/%Y') ASC")
@@ -4477,7 +4481,7 @@ class HomeController extends Controller
         if ($request->org) {
             $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                 $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                $query->whereNotIn('id', $this->inventoryOrgIds);
+                $query->whereNotIn('id', $this->inventoryOrganizationIds());
             });
             $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
         }
@@ -4509,7 +4513,7 @@ class HomeController extends Controller
             $orderQuery->with('orderItems.factoryDetails');
         }
 
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->orderBy('id', 'DESC')
             ->get();
@@ -4548,7 +4552,7 @@ class HomeController extends Controller
         if ($request->org) {
             $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                 $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                $query->whereNotIn('id', $this->inventoryOrgIds);
+                $query->whereNotIn('id', $this->inventoryOrganizationIds());
             });
             $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
         }
@@ -4579,10 +4583,10 @@ class HomeController extends Controller
         }
 
 
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
         $urgentOrders = $orderQuery
-            ->whereNotIn('organization_id', $this->inventoryOrgIds)
+            ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->where('is_urgent', 1)
             ->where('order_status_id', '!=', 4)
@@ -4702,7 +4706,7 @@ class HomeController extends Controller
             $orderQuery->with('orderItems.factoryDetails');
         }
 
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
 
         return json_encode([$activities, $organizations, $contacts, $orders, $input_text]);
@@ -4729,7 +4733,7 @@ class HomeController extends Controller
         if ($request->org) {
             $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                 $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                $query->whereNotIn('id', $this->inventoryOrgIds);
+                $query->whereNotIn('id', $this->inventoryOrganizationIds());
             });
             $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
         }
@@ -4760,10 +4764,10 @@ class HomeController extends Controller
         }
 
 
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
         $urgentOrders = $orderQuery
-            ->whereNotIn('organization_id', $this->inventoryOrgIds)
+            ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->where(function ($query) use ($userId) {
                 $query->where('user_id', $userId)
@@ -4791,7 +4795,7 @@ class HomeController extends Controller
         if ($request->org) {
             $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                 $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                $query->whereNotIn('id', $this->inventoryOrgIds);
+                $query->whereNotIn('id', $this->inventoryOrganizationIds());
             });
             $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
         }
@@ -4822,10 +4826,10 @@ class HomeController extends Controller
         }
 
 
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
         $productionOrders = $orderQuery
-            ->whereNotIn('organization_id', $this->inventoryOrgIds)
+            ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->where(function ($query) use ($userId) {
                 $query->where('user_id', $userId)
@@ -4853,7 +4857,7 @@ class HomeController extends Controller
         if ($request->org) {
             $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                 $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                $query->whereNotIn('id', $this->inventoryOrgIds);
+                $query->whereNotIn('id', $this->inventoryOrganizationIds());
             });
             $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
         }
@@ -4884,10 +4888,10 @@ class HomeController extends Controller
         }
 
 
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
         $fulfiledOrders = $orderQuery
-            ->whereNotIn('organization_id', $this->inventoryOrgIds)
+            ->whereNotIn('organization_id', $this->inventoryOrganizationIds())
             ->where('active', 1)
             ->where(function ($query) use ($userId) {
                 $query->where('user_id', $userId)
@@ -4915,7 +4919,7 @@ class HomeController extends Controller
         if ($request->org) {
             $orderQuery->whereHas('organizationDetails', function ($query) use ($request) {
                 $query->where('organization_name', 'LIKE', '%' . $request->org . '%');
-                $query->whereNotIn('id', $this->inventoryOrgIds);
+                $query->whereNotIn('id', $this->inventoryOrganizationIds());
             });
             $orderQuery->orWhere('order_no', 'LIKE', '%' . $request->org . '%');
         }
@@ -4946,7 +4950,7 @@ class HomeController extends Controller
         }
 
 
-        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrgIds)->where('active', 1)->orderBy('id', 'DESC')->get();
+        $orders = $orderQuery->whereNotIn('organization_id', $this->inventoryOrganizationIds())->where('active', 1)->orderBy('id', 'DESC')->get();
 
         $userId = Auth::id();
         $startOfWeek = Carbon::now()->startOfWeek()->format('Y-m-d');
