@@ -93,20 +93,14 @@ class NewCustomerPortalController extends Controller
                     foreach ($organizations as $organization) {
                         $passwordMatch = Hash::check($request->password, $organization->unique_password);
                         if ($passwordMatch) {
-                            // Normal customer login: clear any previous system-user portal context.
-                            Session::forget([
-                                'customer_portal_admin',
-                                'portal_notice_acknowledged',
-                            ]);
+                            $portal = app(\App\Services\Auth\PortalSession::class);
+                            $intendedUrl = $request->session()->get(\App\Services\Auth\PortalSession::INTENDED, route('customer_portal.orders'));
+                            $portal->clear($request);
+                            $request->session()->regenerate(true);
 
-                            Auth::logout();
-
-                            Session::put('customer_portal_user', [$contact->id , $organization->id]);
+                            Session::put('customer_portal_user', [$contact->id, $organization->id]);
                             Session::put('customer_portal_org_image', [$organization->organization_logo]);
                             Session::put('customer_portal_org_name', [$organization->organization_name]);
-                            // return redirect()->route('customer_portal.orders');
-                            // return redirect()->intended(route('customer_portal.orders'));
-                            $intendedUrl = session()->get('url.intended', route('customer_portal.orders'));
                             return redirect()->to($intendedUrl);
                         }
                     }
@@ -131,73 +125,20 @@ class NewCustomerPortalController extends Controller
 
     public function auth_check()
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Normal customer
-        |--------------------------------------------------------------------------
-        */
-        if (Session::has('customer_portal_user')) {
-            return true;
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | System/Admin user
-        |--------------------------------------------------------------------------
-        */
-        if (Auth::check() && Session::has('customer_portal_admin')) {
-            $portalAdmin = Session::get('customer_portal_admin');
-
-            if (
-                isset($portalAdmin['user_id'], $portalAdmin['organization_id']) &&
-                (int) $portalAdmin['user_id'] === (int) Auth::id() &&
-                !empty($portalAdmin['organization_id'])
-            ) {
-                return true;
-            }
-
-            // Stale or invalid system-user portal context.
-            Session::forget('customer_portal_admin');
-        }
-
-        return false;
+        return app(\App\Services\Auth\PortalSession::class)->authenticated(request());
     }
 
     public function logout()
     {
-        /*
-        |--------------------------------------------------------------------------
-        | System/Admin user exits portal but stays logged into back office
-        |--------------------------------------------------------------------------
-        */
-        if ($this->portalIsAdmin()) {
-            $orgId = $this->portalOrganizationId();
+        $portal = app(\App\Services\Auth\PortalSession::class);
+        $admin = $portal->isAdmin(request());
+        $orgId = $admin ? $this->portalOrganizationId() : null;
+        $portal->clear(request());
+        request()->session()->regenerate(true);
 
-            Session::forget([
-                'customer_portal_admin',
-                'customer_portal_org_image',
-                'customer_portal_org_name',
-                'portal_notice_acknowledged',
-            ]);
-
-            if ($orgId) {
-                return redirect()->route('organizations.info', $orgId);
-            }
-
-            return redirect()->route('home');
+        if ($admin) {
+            return $orgId ? redirect()->route('organizations.info', $orgId) : redirect()->route('home');
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Normal customer logout
-        |--------------------------------------------------------------------------
-        */
-        Session::forget([
-            'customer_portal_user',
-            'customer_portal_org_image',
-            'customer_portal_org_name',
-            'portal_notice_acknowledged',
-        ]);
 
         return redirect()->route('customer_portal.login');
     }
@@ -2354,23 +2295,13 @@ public function adminOpenCustomerPortal($organizationId)
 
 private function portalIsAdmin()
 {
-    if (!Auth::check() || !Session::has('customer_portal_admin')) {
-        return false;
-    }
-
-    $portalAdmin = Session::get('customer_portal_admin');
-
-    return isset($portalAdmin['user_id'], $portalAdmin['organization_id'])
-        && (int) $portalAdmin['user_id'] === (int) Auth::id()
-        && !empty($portalAdmin['organization_id']);
+    return app(\App\Services\Auth\PortalSession::class)->isAdmin(request());
 }
-
 
 private function portalIsCustomer()
 {
-    return Session::has('customer_portal_user');
+    return app(\App\Services\Auth\PortalSession::class)->isCustomer(request());
 }
-
 
 private function portalOrganizationId()
 {
