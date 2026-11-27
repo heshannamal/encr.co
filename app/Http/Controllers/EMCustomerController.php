@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Services\Auth\SafeRedirect;
 use App\Models\EMPackagePaymentLog;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
@@ -34,7 +35,7 @@ class EMCustomerController extends Controller
             return null;
         }
 
-        return EMCustomer::find($customerId);
+        return EMCustomer::where('is_active', 1)->find($customerId);
     }
 
     private function cartCount()
@@ -54,9 +55,9 @@ class EMCustomerController extends Controller
 
     public function login()
     {
-        if (session('em_customer_id')){
-            if(request()->has('redirect')){
-                return redirect(request()->get('redirect'));
+        if ($this->customer()){
+            if ($destination = app(SafeRedirect::class)->resolve(request()->input('redirect'), request()->getSchemeAndHttpHost())) {
+                return redirect($destination);
             }
             return redirect()->route('em.customer.dashboard');
         }
@@ -66,9 +67,9 @@ class EMCustomerController extends Controller
 
     public function register()
     {
-        if (session('em_customer_id')){
-            if(request()->has('redirect')){
-                return redirect(request()->get('redirect'));
+        if ($this->customer()){
+            if ($destination = app(SafeRedirect::class)->resolve(request()->input('redirect'), request()->getSchemeAndHttpHost())) {
+                return redirect($destination);
             }
             return redirect()->route('em.customer.dashboard');
         }
@@ -231,16 +232,17 @@ class EMCustomerController extends Controller
 
         $customer = EMCustomer::create([
             'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
+            'last_name' => $data['last_name'] ?? null,
             'email' => $data['email'],
             'phone' => isset($data['phone']) ? $data['phone'] : null,
             'password' => Hash::make($data['password']),
-            'active' => 1,
+            'is_active' => 1,
         ]);
 
+        session()->regenerate(true);
         session(['em_customer_id' => $customer->id]);
 
-        $redirectUrl = $request->get('redirect') ?? null;
+        $redirectUrl = app(SafeRedirect::class)->resolve($request->input('redirect'), $request->getSchemeAndHttpHost());
 
         if ($redirectUrl) {
             return redirect($redirectUrl)->with('success', 'Logged in successfully.');
@@ -261,7 +263,7 @@ class EMCustomerController extends Controller
 
         $customer = EMCustomer::where('email', $data['email'])->first();
 
-        if (!$customer || !Hash::check($data['password'], $customer->password)) {
+        if (!$customer || !$customer->password || !Hash::check($data['password'], $customer->password)) {
             return back()->withErrors(['email' => 'Invalid email or password.'])->withInput();
         }
 
@@ -269,9 +271,10 @@ class EMCustomerController extends Controller
             return back()->withErrors(['email' => 'Your account is inactive.'])->withInput();
         }
 
+        session()->regenerate(true);
         session(['em_customer_id' => $customer->id]);
 
-        $redirectUrl = $request->get('redirect') ?? null;
+        $redirectUrl = app(SafeRedirect::class)->resolve($request->input('redirect'), $request->getSchemeAndHttpHost());
 
         if ($redirectUrl) {
             return redirect($redirectUrl)->with('success', 'Logged in successfully.');
@@ -282,18 +285,17 @@ class EMCustomerController extends Controller
 
     public function logout()
     {
-        session()->forget('em_customer_id');
-        $redirectUrl = route('em.customer.index');
-
-        if ($redirectUrl) {
-            return redirect($redirectUrl)->with('success', 'Logged in successfully.');
-        }
-        return redirect()->route('em.customer.login')->with('success', 'Logged out successfully.');
+        session()->forget(['em_customer_id', 'em_google_oauth_state']);
+        session()->regenerate(true);
+        return redirect()->route('em.customer.index')->with('success', 'Logged out successfully.');
     }
 
     public function googleRedirect()
     {
+        $state = Str::random(64);
+        session(['em_google_oauth_state' => $state]);
         $query = http_build_query([
+            'state' => $state,
             'client_id' => config('services.google.client_id'),
             'redirect_uri' => config('services.google.redirect'),
             'response_type' => 'code',
@@ -309,7 +311,9 @@ class EMCustomerController extends Controller
 
     public function googleCallback(Request $request)
     {
-        if (!$request->filled('code')) {
+        $expected = $request->session()->pull('em_google_oauth_state');
+        $state = $request->input('state');
+        if (!is_string($expected) || !is_string($state) || !hash_equals($expected, $state) || !$request->filled('code')) {
             return redirect()
                 ->route('em.customer.login')
                 ->with('error', 'Google login was cancelled or failed.');
@@ -345,29 +349,28 @@ class EMCustomerController extends Controller
 
         $google = $profile->json();
 
-        $customer = EMCustomer::updateOrCreate(
-            [
-                'email' => $google['email'],
-            ],
-            [
-                'name' => isset($google['name'])
-                    ? $google['name']
-                    : $google['email'],
+        if (empty($google['email']) || empty($google['id']) || ($google['verified_email'] ?? false) !== true) {
+            return redirect()->route('em.customer.login')->with('error', 'A verified Google email is required.');
+        }
 
-                'google_id' => isset($google['id'])
-                    ? $google['id']
-                    : null,
+        $customer = EMCustomer::where('email', $google['email'])->first();
+        if ($customer && (!$customer->is_active || ($customer->google_id && (string) $customer->google_id !== (string) $google['id']))) {
+            return redirect()->route('em.customer.login')->with('error', 'Google sign-in is not available for this account.');
+        }
 
-                'profile_photo' => isset($google['picture'])
-                    ? $google['picture']
-                    : null,
+        if (!$customer) {
+            $customer = new EMCustomer();
+            $customer->email = $google['email'];
+            $customer->first_name = $google['given_name'] ?? $google['name'] ?? $google['email'];
+            $customer->last_name = $google['family_name'] ?? null;
+            $customer->is_active = true;
+        }
+        $customer->google_id = $google['id'];
+        $customer->profile_photo = $google['picture'] ?? null;
+        $customer->email_verified_at = now();
+        $customer->save();
 
-                'email_verified_at' => now(),
-                'active' => 1,
-            ]
-        );
-
-        session()->regenerate();
+        session()->regenerate(true);
         session(['em_customer_id' => $customer->id]);
 
         return redirect()
