@@ -56,12 +56,7 @@ use App\Services\NotificationBuilderService;
 class OrderController extends Controller
 {
 
-    protected ?array $inventoryOrgIds = null;
-
-    private function inventoryOrganizationIds(): array
-    {
-        return $this->inventoryOrgIds ??= OrdersCommenFacade::getEncoreOrgIds()->toArray();
-    }
+    use \App\Http\Controllers\Concerns\LoadsInventoryOrganizationIds;
     protected $PaymentService;
     protected $notification_builder;
 
