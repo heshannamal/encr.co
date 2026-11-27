@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - modernization/laravel-9
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -25,12 +27,12 @@ jobs:
           coverage: none
       - name: Validate manifest
         run: composer validate --no-check-lock
+      - name: PHP syntax checks
+        run: find app config routes database/seeders tests -type f -name '*.php' -print0 | xargs -0 -n 1 php -l
       - name: Resolve candidate dependencies
         run: composer update --with-all-dependencies --no-interaction --no-scripts --prefer-dist
       - name: Verify platform
         run: composer check-platform-reqs
-      - name: PHP syntax checks
-        run: find app config routes database/seeders tests -type f -name '*.php' -print0 | xargs -0 -n 1 php -l
       - name: Run isolated unit tests
         run: vendor/bin/phpunit tests/Unit/SafeRedirectTest.php
       - name: Save candidate lock file
