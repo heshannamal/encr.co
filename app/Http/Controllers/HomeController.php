@@ -652,12 +652,7 @@ class HomeController extends Controller
         ];
     }
 
-    protected ?array $inventoryOrgIds = null;
-
-    private function inventoryOrganizationIds(): array
-    {
-        return $this->inventoryOrgIds ??= OrdersCommenFacade::getEncoreOrgIds()->toArray();
-    }
+    use \App\Http\Controllers\Concerns\LoadsInventoryOrganizationIds;
     protected $PaymentService;
     protected $graphService;
 
