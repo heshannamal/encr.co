@@ -1140,7 +1140,7 @@ Route::get(
     // Route::get('user_roles/add', [App\Http\Controllers\UserRoleController::class, 'add'])->name('user_roles.add');
     Route::post('user_roles/create', [App\Http\Controllers\UserRoleController::class, 'create'])->name('user_roles.create');
     // Route::get('user_roles/sort_by_alphabet/{id}', [App\Http\Controllers\UserRoleController::class, 'sortByAlphabet']);
-    Route::get('user_roles/delete/{id}', [App\Http\Controllers\UserRoleController::class, 'delete'])->name('user_roles.delete');
+    Route::delete('user_roles/delete/{id}', [App\Http\Controllers\UserRoleController::class, 'delete'])->name('user_roles.delete');
     Route::get('user_roles/edit/{userRoleId}', [App\Http\Controllers\UserRoleController::class, 'edit']);
     Route::post('user_roles/update', [App\Http\Controllers\UserRoleController::class, 'update'])->name('user_roles.update');
     Route::post('user_roles/layout', [App\Http\Controllers\UserRoleController::class, 'layout'])->name('user_roles.layout');
@@ -1165,7 +1165,7 @@ Route::get(
 	// Users
     Route::get('users', [App\Http\Controllers\UserManagementController::class, 'index'])->name('users');
 	Route::post('users/create', [App\Http\Controllers\UserManagementController::class, 'create'])->name('users.create');
-	Route::get('users/delete/{id}', [App\Http\Controllers\UserManagementController::class, 'delete'])->name('users.delete');
+	Route::delete('users/delete/{id}', [App\Http\Controllers\UserManagementController::class, 'delete'])->name('users.delete');
 	Route::get('users/edit/{userId}', [App\Http\Controllers\UserManagementController::class, 'edit']);
 	Route::post('users/update', [App\Http\Controllers\UserManagementController::class, 'update'])->name('users.update');
 	Route::post('Employee/users/layout', [App\Http\Controllers\UserManagementController::class, 'layout'])->name('users.layout');
@@ -1380,7 +1380,7 @@ Route::get('email/info-debugg/{id?}', [App\Http\Controllers\EmailController::cla
     Route::post('user_permission/create', [App\Http\Controllers\UserRoleController::class, 'createPermissions'])->name('user_permission.create');
     Route::get('permission/edit/{id}', [App\Http\Controllers\UserRoleController::class, 'editPermissions']);
     Route::post('user_permission/update', [App\Http\Controllers\UserRoleController::class, 'updatePermissions'])->name('user_permission.update');
-    Route::get('permission/delete/{id}', [App\Http\Controllers\UserRoleController::class, 'deletePermissions']);
+    Route::delete('permission/delete/{id}', [App\Http\Controllers\UserRoleController::class, 'deletePermissions']);
 
     // Pipedrive
     Route::get('pipedrive/organizations', [App\Http\Controllers\PipedriveController::class, 'organizations'])->name('pipedrive.organizations');
