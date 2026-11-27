@@ -28,12 +28,7 @@ use Illuminate\Support\Facades\Log;
 
 class OrderRemakeController extends Controller
 {
-    protected $inventoryOrgIds;
-
-    public function __construct()
-    {
-        $this->inventoryOrgIds = OrdersCommenFacade::getEncoreOrgIds()->toArray();
-    }
+    use \App\Http\Controllers\Concerns\LoadsInventoryOrganizationIds;
 
     public function add_to_remake_list(Request $request){
         if($request->shipping_order_details_id == null){
@@ -676,7 +671,7 @@ class OrderRemakeController extends Controller
 
         DB::beginTransaction();
         try {
-            if(in_array($order_item->organization_id, $this->inventoryOrgIds)){
+            if(in_array($order_item->organization_id, $this->inventoryOrganizationIds())){
                 $order_item->is_studio_item = 1;
                 $order_item->update();
                 DB::commit();
