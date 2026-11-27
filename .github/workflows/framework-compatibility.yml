@@ -15,6 +15,21 @@ jobs:
   compatibility:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-local-only
+          MYSQL_DATABASE: encore_ci_refactor
+          MYSQL_USER: encore_ci
+          MYSQL_PASSWORD: ci-local-only
+        ports:
+          - 3306/tcp
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -66,3 +81,18 @@ jobs:
         with:
           name: encore-route-inventory
           path: /tmp/encore-routes.json
+      - name: Verify MySQL baseline and administrator bootstrap
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DB_DATABASE: encore_ci_refactor
+          DB_USERNAME: encore_ci
+          DB_PASSWORD: ci-local-only
+          BOOTSTRAP_ADMIN_EMAIL: admin@example.test
+        run: |
+          export BOOTSTRAP_ADMIN_PASSWORD="$(php -r 'echo bin2hex(random_bytes(24));')"
+          php artisan migrate --path=database/migrations/baseline --force
+          php artisan db:seed --force
+          php artisan tinker --execute='if (\App\Models\User::count() !== 1 || !($user = \App\Models\User::find(1)) || !$user->hasRole("Super Admin") || !\Illuminate\Support\Facades\Hash::check(config("bootstrap_admin.password"), $user->password)) { throw new \RuntimeException("Administrator bootstrap verification failed"); } echo "Administrator bootstrap verified";'
+          php artisan migrate:rollback --path=database/migrations/baseline --force
