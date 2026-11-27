@@ -55,17 +55,6 @@ use App\Services\NotificationBuilderService;
 
 class OrderController extends Controller
 {
-    // private $smptEncryption = 'TLS';
-    // private $smptPort = '587';
-    // private $smptHost = 'smtp-mail.outlook.com';
-    // private $mailUsername = 'info@encorebrand.com';
-    // private $mailPassword = 'EncoreCus!0077';
-
-    private $smptEncryption = 'SSL';
-    private $smptPort = '465';
-    private $smptHost = 'server.encr.co';
-    private $mailUsername = 'info@encr.co';
-    private $mailPassword = 'Encr.co@ec123';
 
     protected ?array $inventoryOrgIds = null;
 
