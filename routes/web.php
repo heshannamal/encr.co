@@ -1922,7 +1922,7 @@ Route::get('get_password', [App\Http\Controllers\CustomWorkController::class, 'g
 
 Route::get('customer_catalog', [App\Http\Controllers\CustomerProductCatlogController::class, 'index'])->name('customer_catlog');
 Route::match(['get', 'post'],'product_filter', [App\Http\Controllers\CustomerProductCatlogController::class, 'productFilter'])->name('product_filter1');
-Route::match(['get', 'post'],'productFilter', [App\Http\Controllers\CustomerProductCatlogController::class, 'product_filter'])->name('productFilter1');
+Route::match(['get', 'post'],'productFilter', [App\Http\Controllers\CustomerProductCatlogController::class, 'productFilter'])->name('productFilter1');
 Route::match(['get', 'post'], 'search', [App\Http\Controllers\CustomerProductCatlogController::class, 'productSearch'])->name('search.products');
 
 Route::get('upload_product_images', [App\Http\Controllers\CustomerProductCatlogController::class, 'upload_product_images'])->name('upload_product_images');
