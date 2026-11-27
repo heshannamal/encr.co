@@ -73,6 +73,10 @@ jobs:
       - name: Verify isolated mail transport
         run: |
           php artisan tinker --execute='if (config("mail.default") !== "array") { throw new \RuntimeException("Unsafe test mail transport"); } $mailer = \Illuminate\Support\Facades\Mail::mailer(); $transport = $mailer->getSymfonyTransport(); if (!($transport instanceof \Illuminate\Mail\Transport\ArrayTransport)) { throw new \RuntimeException("Expected array transport"); } $mailer->raw("Compatibility smoke test", function ($message) { $message->to("recipient@example.test")->subject("Encore CI"); }); if (count($transport->messages()) !== 1) { throw new \RuntimeException("Mail capture failed"); } echo "In-memory mail verified";'
+      - name: Audit all registered controller actions
+        id: controller_audit
+        run: |
+          php artisan tinker --execute='foreach (app("router")->getRoutes() as $route) { $action = $route->getActionName(); if ($action === "Closure") { continue; } [$class, $method] = array_pad(explode("@", $action, 2), 2, "__invoke"); try { if (!class_exists($class) || !method_exists($class, $method) || !(new \ReflectionMethod($class, $method))->isPublic()) { echo implode("|", $route->methods())." ".$route->uri()." => ".$action.PHP_EOL; } } catch (\Throwable $e) { echo $route->uri()." => ".$action." (".get_class($e).")".PHP_EOL; } }'
       - name: Verify application routes
         id: routes
         run: |
