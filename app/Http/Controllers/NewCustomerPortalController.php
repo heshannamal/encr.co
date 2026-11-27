@@ -63,11 +63,6 @@ use App\Models\ShippingOrderDetails;
 
 class NewCustomerPortalController extends Controller
 {
-    private $smtpEncryption = 'SSL';
-    private $smtpPort = '465';
-    private $smtpHost = 'server.encr.co';
-    private $mailUsername = 'info@encr.co';
-    private $mailPassword = 'Encr.co@ec123';
 
     public function common(){
 
@@ -1420,12 +1415,6 @@ public function getOrderSummaryChart(Request $request)
         //     foreach ($users as $user) {
 
         //         config([
-        //             'mail.mailers.smtp.host' => $this->smtpHost,
-        //             'mail.mailers.smtp.port' => $this->smtpPort,
-        //             'mail.mailers.smtp.encryption' => $this->smtpEncryption,
-        //             'mail.mailers.smtp.username' => $this->mailUsername,
-        //             'mail.mailers.smtp.password' => $this->mailPassword,
-        //             'mail.from.address' => $this->mailUsername,
         //             'mail.from.name' => 'Encore Custom',
         //         ]);
 
