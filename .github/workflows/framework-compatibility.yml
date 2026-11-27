@@ -68,6 +68,11 @@ jobs:
       - name: Verify framework startup
         id: startup
         run: php artisan --version
+      - name: Verify configured unit test suite
+        run: vendor/bin/phpunit --testsuite Unit
+      - name: Verify isolated mail transport
+        run: |
+          php artisan tinker --execute='if (config("mail.default") !== "array") { throw new \RuntimeException("Unsafe test mail transport"); } $mailer = \Illuminate\Support\Facades\Mail::mailer(); $transport = $mailer->getSymfonyTransport(); if (!($transport instanceof \Illuminate\Mail\Transport\ArrayTransport)) { throw new \RuntimeException("Expected array transport"); } $mailer->raw("Compatibility smoke test", function ($message) { $message->to("recipient@example.test")->subject("Encore CI"); }); if (count($transport->messages()) !== 1) { throw new \RuntimeException("Mail capture failed"); } echo "In-memory mail verified";'
       - name: Verify application routes
         id: routes
         run: |
@@ -97,4 +102,5 @@ jobs:
           php artisan migrate --path=database/migrations/baseline --force
           php artisan db:seed --force
           php artisan tinker --execute='if (\App\Models\User::count() !== 1 || !($user = \App\Models\User::find(1)) || !$user->hasRole("Super Admin") || !\Illuminate\Support\Facades\Hash::check(config("bootstrap_admin.password"), $user->password)) { throw new \RuntimeException("Administrator bootstrap verification failed"); } echo "Administrator bootstrap verified";'
+          php artisan tinker --execute='$guard = \Illuminate\Support\Facades\Auth::guard("web"); $credentials = ["email" => config("bootstrap_admin.email"), "password" => config("bootstrap_admin.password"), "active" => 1]; if (!$guard->attempt($credentials) || (int) $guard->id() !== 1) { throw new \RuntimeException("Administrator authentication failed"); } $guard->logout(); if ($guard->check()) { throw new \RuntimeException("Administrator logout failed"); } $credentials["password"] = "invalid-test-password"; if ($guard->attempt($credentials)) { throw new \RuntimeException("Invalid password accepted"); } echo "Administrator authentication verified";'
           php artisan migrate:rollback --path=database/migrations/baseline --force
