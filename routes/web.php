@@ -176,7 +176,11 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('change_flag', [App\Http\Controllers\HomeController::class, 'changeFlag'])->name('change_flag');
 	Route::get('under_contruction', [App\Http\Controllers\HomeController::class, 'underContruction'])->name('under_contruction');
 
-	Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
+	Route::get('user', [App\Http\Controllers\UserController::class, 'index'])->name('user.index');
+    Route::get('user/create', static function () { return redirect()->route('users'); })->middleware('can:manage user')->name('user.create');
+    Route::get('user/{user}/edit', [App\Http\Controllers\UserManagementController::class, 'edit'])->name('user.edit');
+    Route::delete('user/{user}', [App\Http\Controllers\UserManagementController::class, 'delete'])->name('user.destroy');
+    Route::post('user', [App\Http\Controllers\UserManagementController::class, 'create'])->name('user.store');
 	// Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
 	Route::get('upgrade', function () {return view('pages.upgrade');})->name('upgrade');
